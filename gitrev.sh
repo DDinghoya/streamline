@@ -1,9 +1,6 @@
 #! /bin/bash
 #
-rev_branch_raw=$(git rev-parse --abbrev-ref HEAD 2>/dev/null | tr '\n' ' ' | tr -d '\r' | tr -d ' ')
 rev_new_raw=$(git rev-list --count HEAD 2>/dev/null | tr '\n' ' ' | tr -d '\r')
-
-echo $rev_branch_raw $rev_new_raw
 
 rev_new=0
 a=$(echo $rev_new_raw | sed 's/\([0-9]*\).*/\1/')
@@ -21,16 +18,10 @@ if [ "$rev_new" != "$rev_old" ] || [ ! -f ./source/svnrev.c ]; then
 
 	cat <<EOF > ./source/svnrev.c
 #define SVN_REV "$rev_new"
-#define SVN_BRANCH "$rev_branch_raw"
 
 const char *GetRev()
 {
 	return SVN_REV;
-}
-
-const char *GetBranch()
-{
-	return SVN_BRANCH;
 }
 EOF
 
