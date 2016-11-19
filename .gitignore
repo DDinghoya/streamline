@@ -1,0 +1,4 @@
+/build
+/boot.elf
+/boot.dol
+/source/svnrev.c
