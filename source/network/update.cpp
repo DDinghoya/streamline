@@ -169,6 +169,7 @@ int UpdateGameTDB()
 
 static void UpdateIconPng()
 {
+	return;
 	char iconpath[200];
 	struct block file = downloadfile("http://svn.code.sf.net/p/usbloadergx/code/branches/updates/icon.png");
 	if (file.data != NULL)
@@ -186,6 +187,7 @@ static void UpdateIconPng()
 
 static void UpdateMetaXml()
 {
+	return;
 	char xmlpath[200];
 	struct block file = downloadfile("http://svn.code.sf.net/p/usbloadergx/code/branches/updates/meta.xml");
 	// if not working, use this url form: http://sourceforge.net/p/usbloadergx/code/1254/tree//branches/updates/meta.xml?format=raw
@@ -204,6 +206,8 @@ static void UpdateMetaXml()
 
 int CheckUpdate()
 {
+	return -1;
+
 	if (!IsNetworkInit())
 		return -1;
 
@@ -230,6 +234,7 @@ int CheckUpdate()
 
 static int ApplicationDownload(void)
 {
+	return 0;
 	std::string DownloadURL;
 	int newrev = 0;
 	int currentrev = atoi(GetRev());
@@ -360,6 +365,8 @@ int UpdateApp()
 
 	if(choice == 1)
 	{
+			WindowPrompt(fmt("%s", tr( "Updates are disabled." )), 0, tr("OK"));
+			return 1;
 		return ApplicationDownload();
 	}
 	else if (choice == 2)

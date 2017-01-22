@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: USB Loader GX\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-19 14:43+0200\n"
+"POT-Creation-Date: 2017-01-22 17:12-0500\n"
 "PO-Revision-Date: 2011-11-03 11:00+0000\n"
 "Last-Translator: pplucky <pplucky@gmail.com>\n"
 "Language-Team: Sky8000, pplucky\n"
@@ -325,6 +325,9 @@ msgstr "Ambos"
 
 msgid "Both Ports"
 msgstr "Ambas as Portas"
+
+msgid "CC Rumble"
+msgstr ""
 
 msgid "Cache BNR Files"
 msgstr ""
@@ -1935,6 +1938,9 @@ msgstr "Desligar Wii"
 msgid "Skip Errors"
 msgstr "Saltar Erros"
 
+msgid "Skip IPL"
+msgstr ""
+
 msgid "Sneek Video Patch"
 msgstr "Patch Vídeo Sneek"
 
@@ -2261,6 +2267,9 @@ msgstr "Actualização falhada"
 
 msgid "Update successfull"
 msgstr "Actualização com sucesso"
+
+msgid "Updates are disabled."
+msgstr ""
 
 msgid "Updating Language Files:"
 msgstr "A actualizar ficheiros de Idioma:"

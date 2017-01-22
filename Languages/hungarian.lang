@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: USB Loader GX\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-19 14:43+0200\n"
+"POT-Creation-Date: 2017-01-22 17:12-0500\n"
 "PO-Revision-Date: 2009-12-29 11:05+0100\n"
 "Last-Translator: Springdale\n"
 "Language-Team: Tusk, Springdale\n"
@@ -324,6 +324,9 @@ msgid "Both"
 msgstr "Mindkettõ"
 
 msgid "Both Ports"
+msgstr ""
+
+msgid "CC Rumble"
 msgstr ""
 
 msgid "Cache BNR Files"
@@ -1935,6 +1938,9 @@ msgstr ""
 msgid "Skip Errors"
 msgstr ""
 
+msgid "Skip IPL"
+msgstr ""
+
 msgid "Sneek Video Patch"
 msgstr ""
 
@@ -2260,6 +2266,9 @@ msgid "Update failed"
 msgstr "Frissítési hiba"
 
 msgid "Update successfull"
+msgstr ""
+
+msgid "Updates are disabled."
 msgstr ""
 
 msgid "Updating Language Files:"

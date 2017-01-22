@@ -249,7 +249,7 @@ static void UpdateProgressValues(GuiImage *progressbarImg, GuiText *prTxt, GuiTe
 
 	if (showTime == true)
 	{
-		timeTxt->SetTextf("%s %d:%02d:%02d", tr( "Time left:" ), h, m, s);
+		timeTxt->SetTextf("%s %ld:%02ld:%02ld", tr( "Time left:" ), h, m, s);
 	}
 
 	if (showSize == true)

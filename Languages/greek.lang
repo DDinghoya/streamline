@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: USB Loader GX\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-19 14:43+0200\n"
+"POT-Creation-Date: 2017-01-22 17:12-0500\n"
 "Last-Translator: nakata6790\n"
 "Language-Team: nakata6790 (aka0107@gmail.com)\n"
 "MIME-Version: 1.0\n"
@@ -324,6 +324,9 @@ msgstr "êáé ôá äõï"
 
 msgid "Both Ports"
 msgstr "êáé ïé 2 èýñåò"
+
+msgid "CC Rumble"
+msgstr ""
 
 msgid "Cache BNR Files"
 msgstr "áðïèÞêåõóç áñ÷åßùí BNR"
@@ -1934,6 +1937,9 @@ msgstr "Êëåßóéìï Wii"
 msgid "Skip Errors"
 msgstr "Áãíüçóç óöáëìÜôùí"
 
+msgid "Skip IPL"
+msgstr ""
+
 msgid "Sneek Video Patch"
 msgstr "Patch åéêüíáò ãéá sneek"
 
@@ -2260,6 +2266,9 @@ msgstr "Áðïôõ÷ßá áíáâÜèìéóçò"
 
 msgid "Update successfull"
 msgstr "Åðéôõ÷Þò áíáâÜèìéóç"
+
+msgid "Updates are disabled."
+msgstr ""
 
 msgid "Updating Language Files:"
 msgstr "ÁíáâÜèìéóç áñ÷åßùí ìåôáöñÜóåùí:"

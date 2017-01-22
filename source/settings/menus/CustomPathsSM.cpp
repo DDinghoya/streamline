@@ -22,6 +22,7 @@
  * distribution.
  ***************************************************************************/
 #include <unistd.h>
+#include <sys/param.h>
 #include "Channels/channels.h"
 #include "Controls/DeviceHandler.hpp"
 #include "GameCube/GCGames.h"

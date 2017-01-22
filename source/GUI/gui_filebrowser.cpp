@@ -8,6 +8,7 @@
  * GUI class definitions
  ***************************************************************************/
 
+#include <sys/param.h>
 #include "gui_filebrowser.h"
 #include "prompts/filebrowser.h"
 #include "settings/CSettings.h"

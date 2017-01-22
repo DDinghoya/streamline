@@ -1,6 +1,7 @@
 #include <gccore.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/param.h>
 
 #include "language/gettext.h"
 #include "language/UpdateLanguage.h"

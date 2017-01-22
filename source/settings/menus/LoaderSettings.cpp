@@ -236,6 +236,8 @@ LoaderSettings::LoaderSettings()
 	Options->SetName(Idx++, "%s", tr( "Video offset" ));
 	Options->SetName(Idx++, "%s", tr( "Remove Read Speed Limit" ));
 	Options->SetName(Idx++, "%s", tr( "Triforce Arcade Mode" ));
+	Options->SetName(Idx++, "%s", tr( "CC Rumble" ));
+	Options->SetName(Idx++, "%s", tr( "Skip IPL" ));
 	Options->SetName(Idx++, "%s", tr( "Memory Card Emulation" ));
 	Options->SetName(Idx++, "%s", tr( "Memory Card Blocks Size" ));
 	Options->SetName(Idx++, "%s", tr( "USB-HID Controller" ));
@@ -440,6 +442,12 @@ void LoaderSettings::SetOptionValues()
 
 	//! Settings: NIN Arcade Mode
 	Options->SetValue(Idx++, "%s", tr(OnOffText[Settings.NINArcadeMode]));
+
+	//! Settings: NIN CC Rumble
+	Options->SetValue(Idx++, "%s", tr(OnOffText[Settings.NINCCRumble]));
+
+	//! Settings: NIN Skip IPL
+	Options->SetValue(Idx++, "%s", tr(OnOffText[Settings.NINSkipIPL]));
 
 	//! Settings: NIN Memory Card Emulation
 	Options->SetValue(Idx++, "%s", tr(NINMCText[Settings.NINMCEmulation]));
@@ -830,6 +838,18 @@ int LoaderSettings::GetMenuInternal()
 	else if (ret == ++Idx)
 	{
 		if (++Settings.NINArcadeMode >= MAX_ON_OFF) Settings.NINArcadeMode = 0;
+	}
+
+	//! Settings: NIN CC Rumble
+	else if (ret == ++Idx)
+	{
+		if (++Settings.NINCCRumble >= MAX_ON_OFF) Settings.NINCCRumble = 0;
+	}
+
+	//! Settings: NIN Skip IPL
+	else if (ret == ++Idx)
+	{
+		if (++Settings.NINSkipIPL >= MAX_ON_OFF) Settings.NINSkipIPL = 0;
 	}
 
 	//! Settings: NIN Memory Card Emulation
