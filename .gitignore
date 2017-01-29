@@ -2,3 +2,10 @@
 /boot.elf
 /boot.dol
 /source/svnrev.c
+/.vscode
+/*.sln
+/*.VC.db
+/*.vcxproj
+/*.vcxproj.filters
+/*.vcxproj.user
+/obj
