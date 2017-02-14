@@ -37,8 +37,6 @@
 
 using namespace tinyxml2;
 
-#define VALID_CONFIG_REV	1084
-
 CGameCategories GameCategories;
 
 CGameCategories::CGameCategories()
@@ -74,9 +72,6 @@ bool CGameCategories::Load(string filepath)
 
 	XMLDocument xmlDoc;
 	if(xmlDoc.LoadFile(filepath.c_str()) != 0)
-		return false;
-
-	if(!ValidVersion(xmlDoc.FirstChildElement("Revision")))
 		return false;
 
 	XMLElement * node =  xmlDoc.FirstChildElement("Categories");
@@ -213,16 +208,6 @@ bool CGameCategories::Save()
 	ProgressStop();
 
 	return true;
-}
-
-bool CGameCategories::ValidVersion(XMLElement *revisionNode)
-{
-	if(!revisionNode) return false;
-
-	if(!revisionNode->FirstChild() || !revisionNode->FirstChild()->Value())
-		return false;
-
-	return atoi(revisionNode->FirstChild()->Value()) >= VALID_CONFIG_REV;
 }
 
 bool CGameCategories::SetCategory(const char *gameID, unsigned int id)

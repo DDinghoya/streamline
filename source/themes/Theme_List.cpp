@@ -31,7 +31,7 @@
 
 #include "network/networkops.h"
 #include "Theme_List.h"
-#include "xml/tinyxml2.h"
+#include <tinyxml2.h>
 
 using namespace tinyxml2;
 

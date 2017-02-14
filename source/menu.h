@@ -13,7 +13,7 @@
 #include "GUI/gui.h"
 #include "Controls/WiiPointer.h"
 #include "settings/CSettings.h"
-#include "main.h"
+#include "App.h"
 
 void InitGUIThreads(void);
 void ExitGUIThreads(void);

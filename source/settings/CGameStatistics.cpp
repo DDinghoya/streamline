@@ -7,8 +7,6 @@
 #include "FileOperations/fileops.h"
 #include "svnrev.h"
 
-#define VALID_CONFIG_REV	1031
-
 CGameStatistics GameStatistics;
 
 
@@ -88,12 +86,6 @@ bool CGameStatistics::Load(const char * path)
 	FILE *file = fopen(filepath, "r");
 	if (!file) return false;
 
-	if(!ValidVersion(file))
-	{
-		fclose(file);
-		return false;
-	}
-
 	while (fgets(line, sizeof(line), file))
 	{
 		if (line[0] == '#')
@@ -104,29 +96,6 @@ bool CGameStatistics::Load(const char * path)
 	fclose(file);
 
 	return true;
-}
-
-bool CGameStatistics::ValidVersion(FILE * file)
-{
-	if(!file) return false;
-
-	char line[255];
-	int revision = 0;
-
-	while (fgets(line, sizeof(line), file))
-	{
-		const char * ptr = strcasestr(line, "USB Loader GX R");
-		if(ptr)
-		{
-			ptr += strlen("USB Loader GX R");
-			revision = atoi(ptr);
-			break;
-		}
-	}
-
-	rewind(file);
-
-	return revision >= VALID_CONFIG_REV;
 }
 
 bool CGameStatistics::Save()

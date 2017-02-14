@@ -9,8 +9,8 @@
  ***************************************************************************/
 
 #include "gui.h"
-#include "../main.h"
-#include "../settings/CSettings.h"
+#include "App.h"
+#include "settings/CSettings.h"
 #include <stdio.h>
 #include <string.h>
 #include "themes/CTheme.h"

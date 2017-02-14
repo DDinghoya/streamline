@@ -20,7 +20,7 @@
 #include "mload/mload.h"
 #include "mload/mload_modules.h"
 #include "system/IosLoader.h"
-#include "system/runtimeiospatch.h"
+#include <runtimeiospatch.h>
 #include "Controls/DeviceHandler.hpp"
 #include "Channels/channels.h"
 #include "usbloader/disc.h"

@@ -8,9 +8,8 @@
 #include "gecko.h"
 #include "Controls/DeviceHandler.hpp"
 #include "wad/nandtitle.h"
-#include "SystemMenu/SystemMenuResources.h"
 #include "system/IosLoader.h"
-#include "system/runtimeiospatch.h"
+#include <runtimeiospatch.h>
 #include "utils/timer.h"
 #include "settings/CSettings.h"
 #include "settings/CGameSettings.h"
@@ -50,9 +49,9 @@ StartUpProcess::StartUpProcess()
 	versionTxt->SetPosition(20, screenheight-20);
 
 #ifdef FULLCHANNEL
-	versionTxt->SetTextf("v3.0c Rev. %s", GetRev());
+	versionTxt->SetTextf("v3.0c Rev. %s (%s)", GetRev(), GetBranch());
 #else
-	versionTxt->SetTextf("v3.0  Rev. %s", GetRev());
+	versionTxt->SetTextf("v3.0  Rev. %s (%s)", GetRev(), GetBranch());
 #endif
 
 #if 0 // enable if you release a modded version
@@ -353,25 +352,7 @@ int StartUpProcess::Execute()
 	SetTextf("Checking installed MIOS... ");
 	IosLoader::GetMIOSInfo();
 
-	SetTextf("Loading resources\n");
-	// Do not allow banner grid mode without AHBPROT
-	// this function does nothing if it was already initiated before
-	if(   !SystemMenuResources::Instance()->IsLoaded() && !SystemMenuResources::Instance()->Init()
-		&& Settings.gameDisplay == BANNERGRID_MODE)
-	{
-		Settings.gameDisplay = LIST_MODE;
-		Settings.GameWindowMode = GAMEWINDOW_DISC;
-	}
-
-	gprintf("\tLoading font...%s\n", Theme::LoadFont(Settings.ConfigPath) ? "done" : "failed (using default)");
-	gprintf("\tLoading theme...%s\n", Theme::Load(Settings.theme) ? "done" : "failed (using default)");
-
-	//! Init the rest of the System
-	Sys_Init();
-	InitAudio();
-	setlocale(LC_CTYPE, "C-UTF-8");
-	setlocale(LC_MESSAGES, "C-UTF-8");
-	AdjustOverscan(Settings.AdjustOverscanX, Settings.AdjustOverscanY);
+	SetTextf("Starting UI\n");
 
 	return 0;
 }

@@ -26,7 +26,7 @@
 #include "settings/CSettings.h"
 #include "network/networkops.h"
 #include "utils/StringTools.h"
-#include "xml/tinyxml2.h"
+#include <tinyxml2.h>
 #include "gecko.h"
 
 using namespace tinyxml2;

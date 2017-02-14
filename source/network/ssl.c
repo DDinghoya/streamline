@@ -3,7 +3,7 @@
 #include <gccore.h>
 #include <string.h>
 #include "ssl.h"
-#include "system/runtimeiospatch.h"
+#include <runtimeiospatch.h>
  
 #define ISALIGNED(x) ((((u32)x)&0x1F)==0)
  

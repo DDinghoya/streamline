@@ -7,10 +7,10 @@
  ***************************************************************************/
 
 #include "gui.h"
-#include "../wpad.h"
-#include "../main.h"
-#include "../gecko.h"
-#include "../settings/CSettings.h"
+#include "wpad.h"
+#include "App.h"
+#include "gecko.h"
+#include "settings/CSettings.h"
 #include "gui_optionbrowser.h"
 #include "themes/CTheme.h"
 #include "utils/tools.h"

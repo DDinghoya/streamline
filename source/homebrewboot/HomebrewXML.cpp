@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "FileOperations/fileops.h"
-#include "xml/tinyxml2.h"
+#include <tinyxml2.h>
 #include "gecko.h"
 
 #include "HomebrewXML.h"

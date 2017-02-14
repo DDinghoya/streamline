@@ -1,7 +1,7 @@
 #! /bin/bash
 #
 rev_new_raw=$(git rev-list --count HEAD 2>/dev/null | tr '\n' ' ' | tr -d '\r')
-
+rev_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 rev_new=0
 a=$(echo $rev_new_raw | sed 's/\([0-9]*\).*/\1/')
 let "a+=0"
@@ -18,10 +18,16 @@ if [ "$rev_new" != "$rev_old" ] || [ ! -f ./source/svnrev.c ]; then
 
 	cat <<EOF > ./source/svnrev.c
 #define SVN_REV "$rev_new"
+#define SVN_BRANCH "$rev_branch"
 
 const char *GetRev()
 {
 	return SVN_REV;
+}
+
+const char *GetBranch()
+{
+	return SVN_BRANCH;
 }
 EOF
 
@@ -40,9 +46,9 @@ rev_date=`date -u +%Y%m%d%H%M%S`
 cat <<EOF > ./HBC/meta.xml
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<app version="1">
-		<name> USB Loader GX</name>
+		<name>USB Loader GX</name>
 		<coder>USB Loader GX Team</coder>
-		<version>$rev_branch_raw r$rev_new</version>
+		<version>r$rev_new ($rev_branch)</version>
 		<release_date>$rev_date</release_date>
 		<!--   // remove this line to enable arguments
 		<arguments>

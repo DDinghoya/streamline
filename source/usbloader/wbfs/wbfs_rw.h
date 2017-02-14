@@ -7,7 +7,7 @@ extern "C"
 #endif
 
 #include <gccore.h>
-#include "libs/libwbfs/libwbfs.h"
+#include "libwbfs/libwbfs.h"
 
 	typedef struct _WBFS_PartInfo
 	{

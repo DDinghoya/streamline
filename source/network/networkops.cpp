@@ -17,7 +17,7 @@
 #include "settings/CSettings.h"
 #include "utils/timer.h"
 #include "networkops.h"
-#include "main.h"
+#include "App.h"
 #include "http.h"
 #include "svnrev.h"
 #include "gecko.h"

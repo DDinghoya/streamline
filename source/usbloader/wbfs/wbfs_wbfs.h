@@ -2,7 +2,7 @@
 #define _WBFS_WBFS_H
 
 #include "wbfs_base.h"
-#include "libs/libwbfs/libwbfs.h"
+#include "libwbfs/libwbfs.h"
 #include "usbloader/wbfs.h"
 #include "wbfs_rw.h"
 

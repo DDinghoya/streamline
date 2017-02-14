@@ -19,7 +19,7 @@
 #include "GUI/LoadCoverImage.h"
 #include "themes/CTheme.h"
 #include "utils/tools.h"
-#include "main.h"
+#include "App.h"
 
 #include <string.h>
 #include <math.h>

@@ -8,12 +8,14 @@
  * Menu flow routines - handles all menu logic
  ***************************************************************************/
 #include <unistd.h>
+#include <locale.h>
 
 #include "GUI/gui.h"
 #include "homebrewboot/BootHomebrew.h"
 #include "homebrewboot/HomebrewBrowser.hpp"
 #include "prompts/ProgressWindow.h"
 #include "menu/GameBrowseMenu.hpp"
+#include "SystemMenu/SystemMenuResources.h"
 #include "menu/menus.h"
 #include "mload/mload.h"
 #include "mload/mload_modules.h"
@@ -160,11 +162,35 @@ void ExitGUIThreads()
 	}
 }
 
+static void MenuStartup()
+{
+	// Do not allow banner grid mode without AHBPROT
+	// this function does nothing if it was already initiated before
+	if (!SystemMenuResources::Instance()->IsLoaded() && !SystemMenuResources::Instance()->Init()
+		&& Settings.gameDisplay == BANNERGRID_MODE)
+	{
+		Settings.gameDisplay = LIST_MODE;
+		Settings.GameWindowMode = GAMEWINDOW_DISC;
+	}
+
+	gprintf("\tLoading font...%s\n", Theme::LoadFont(Settings.ConfigPath) ? "done" : "failed (using default)");
+	gprintf("\tLoading theme...%s\n", Theme::Load(Settings.theme) ? "done" : "failed (using default)");
+
+	//! Init the rest of the System
+	Sys_Init();
+	InitAudio();
+	setlocale(LC_CTYPE, "C-UTF-8");
+	setlocale(LC_MESSAGES, "C-UTF-8");
+	AdjustOverscan(Settings.AdjustOverscanX, Settings.AdjustOverscanY);
+}
+
 /****************************************************************************
  * MainMenu
  ***************************************************************************/
 int MainMenu(int menu)
 {
+	MenuStartup();
+
 	currentMenu = menu;
 
 	InitGUIThreads();
@@ -194,7 +220,7 @@ int MainMenu(int menu)
 	bgImg = new GuiImage(background);
 	mainWindow->Append(bgImg);
 
-	ResumeGui();
+	//ResumeGui();
 
 	bgMusic = new GuiBGM(Resources::GetFile("bg_music.ogg"), Resources::GetFileSize("bg_music.ogg"), Settings.volume);
 	bgMusic->SetLoop(Settings.musicloopmode); //loop music
@@ -202,6 +228,8 @@ int MainMenu(int menu)
 	bgMusic->Play();
 
 	MountGamePartition();
+
+	ResumeGui();
 
 	while (currentMenu != MENU_EXIT)
 	{

@@ -22,7 +22,7 @@
  * distribution.
  ***************************************************************************/
 #include "gui_numpad.h"
-#include "main.h"
+#include "App.h"
 #include "language/gettext.h"
 #include "settings/CSettings.h"
 #include "themes/CTheme.h"

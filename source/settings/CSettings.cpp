@@ -36,8 +36,6 @@
 #include "utils/encrypt.h"
 #include "svnrev.h"
 
-#define VALID_CONFIG_REV	1031
-
 CSettings Settings;
 
 CSettings::CSettings()
@@ -229,12 +227,6 @@ bool CSettings::Load()
 	FILE * file = fopen(filepath, "r");
 	if (!file) return false;
 
-	if(!ValidVersion(file))
-	{
-		fclose(file);
-		return false;
-	}
-
 	char line[1024];
 
 	while (fgets(line, sizeof(line), file))
@@ -250,29 +242,6 @@ bool CSettings::Load()
 	FirstTimeRun = false;
 
 	return true;
-}
-
-bool CSettings::ValidVersion(FILE * file)
-{
-	if(!file) return false;
-
-	char line[255];
-	int revision = 0;
-
-	while (fgets(line, sizeof(line), file))
-	{
-		const char * ptr = strcasestr(line, "USB Loader GX R");
-		if(ptr)
-		{
-			ptr += strlen("USB Loader GX R");
-			revision = atoi(ptr);
-			break;
-		}
-	}
-
-	rewind(file);
-
-	return revision >= VALID_CONFIG_REV;
 }
 
 bool CSettings::Reset()

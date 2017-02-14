@@ -20,7 +20,7 @@ SOURCES		:=	source \
 				source/GUI \
 				source/Controls \
 				source/system \
-				source/libs/libwbfs \
+				source/libwbfs \
 				source/language \
 				source/mload \
 				source/mload/modules \
@@ -52,7 +52,8 @@ DATA		:=	data \
 				data/images \
 				data/fonts \
 				data/sounds \
-				data/binary
+				data/binary \
+				data/xml
 INCLUDES	:=	source
 
 #---------------------------------------------------------------------------------
@@ -83,12 +84,13 @@ endif
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
 LIBS := -lcustomfat -lcustomntfs -lcustomext2fs -lvorbisidec -lmad -lfreetype \
-		-lgd -ljpeg -lpng -lzip -lm -lz -lwiiuse -lwupc -lbte -lasnd -logc
+		-lgd -ljpeg -lpng -lzip -lm -lz -lwiiuse -lwupc -lbte -lasnd -logc \
+		-ltinyxml2 -lruntimeiospatch
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= $(DEVKITPPC)/lib $(CURDIR)
+LIBDIRS	:= $(DEVKITPPC)/lib $(CURDIR)/libs
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
 # rules for different file extensions

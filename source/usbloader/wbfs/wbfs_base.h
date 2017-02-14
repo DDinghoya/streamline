@@ -1,7 +1,7 @@
 #ifndef _H
 #define _H
 
-#include "libs/libwbfs/libwbfs.h"
+#include "libwbfs/libwbfs.h"
 #include "usbloader/frag.h"
 #include "usbloader/wbfs.h"
 

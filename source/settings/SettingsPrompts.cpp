@@ -15,7 +15,7 @@
 #include "network/URL_List.h"
 #include "FileOperations/fileops.h"
 #include "FileOperations/DirList.h"
-#include "main.h"
+#include "App.h"
 #include "prompts/filebrowser.h"
 #include "sys.h"
 #include "menu/menus.h"

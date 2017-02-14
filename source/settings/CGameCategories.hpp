@@ -28,7 +28,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "xml/tinyxml2.h"
+#include <tinyxml2.h>
 #include "CCategoryList.hpp"
 
 using namespace tinyxml2;
@@ -58,8 +58,6 @@ class CGameCategories
 
 		CCategoryList CategoryList;
 	protected:
-		bool ValidVersion(XMLElement *xmlfile);
-
 		string configPath;
 		const vector<unsigned int> defaultCategory;
 		map<string, vector<unsigned int> > List;

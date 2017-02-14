@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
-#include "libs/libwbfs/libwbfs.h"
+#include "libwbfs/libwbfs.h"
 #include "utils/uncompress.h"
 #include "PartitionHandle.h"
 

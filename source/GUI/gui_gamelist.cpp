@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include "gui_gamelist.h"
 #include "settings/CSettings.h"
-#include "main.h"
+#include "App.h"
 #include "settings/newtitles.h"
 #include "settings/GameTitles.h"
 #include "usbloader/GameList.h"

@@ -1,7 +1,7 @@
 #ifndef SETTINGS_ENUMS_H_
 #define SETTINGS_ENUMS_H_
 
-#include "libs/libwbfs/wiidisc.h"
+#include "libwbfs/wiidisc.h"
 
 enum
 {

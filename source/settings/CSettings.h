@@ -223,7 +223,6 @@ class CSettings
 		// This variable is not saved to the settings file
 		bool FirstTimeRun;
 	protected:
-		bool ValidVersion(FILE * file);
 		bool SetSetting(char *name, char *value);
 		//!Find the config file in the default paths
 		bool FindConfig();

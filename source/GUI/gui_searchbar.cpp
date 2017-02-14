@@ -2,12 +2,12 @@
 #include "gui.h"
 #include "gui_searchbar.h"
 
-#include "../wpad.h"
-#include "../main.h"
-#include "../settings/CSettings.h"
-#include "../settings/GameTitles.h"
-#include "../themes/CTheme.h"
-#include "../usbloader/GameList.h"
+#include "wpad.h"
+#include "App.h"
+#include "settings/CSettings.h"
+#include "settings/GameTitles.h"
+#include "themes/CTheme.h"
+#include "usbloader/GameList.h"
 
 extern GuiWindow * mainWindow;
 
