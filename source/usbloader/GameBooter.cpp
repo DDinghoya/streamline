@@ -37,7 +37,6 @@
 #include "usbloader/AlternateDOLOffsets.h"
 #include "GameCube/GCGames.h"
 #include "settings/newtitles.h"
-#include "network/Wiinnertag.h"
 #include "patches/patchcode.h"
 #include "patches/gamepatches.h"
 #include "patches/wip.h"
@@ -244,9 +243,6 @@ int GameBooter::BootGame(struct discHdr *gameHdr)
 	memcpy(&gameHeader, gameHdr, sizeof(struct discHdr));
 
 	gprintf("\tBootGame: %.6s\n", gameHeader.id);
-
-	if(Settings.Wiinnertag)
-		Wiinnertag::TagGame((const char *) gameHeader.id);
 
 	if(gameHeader.type == TYPE_GAME_GC_IMG || gameHeader.type == TYPE_GAME_GC_DISC  || gameHdr->type == TYPE_GAME_GC_EXTRACTED)
 		return BootGCMode(&gameHeader);

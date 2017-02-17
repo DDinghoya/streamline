@@ -25,7 +25,6 @@
 #include "settings/CGameSettings.h"
 #include "themes/CTheme.h"
 #include "themes/ThemeMenu.h"
-#include "themes/ThemeDownloader.h"
 #include "usbloader/disc.h"
 #include "usbloader/GameList.h"
 #include "usbloader/MountGamePartition.h"
@@ -220,7 +219,7 @@ int MainMenu(int menu)
 	bgImg = new GuiImage(background);
 	mainWindow->Append(bgImg);
 
-	//ResumeGui();
+	ResumeGui();
 
 	bgMusic = new GuiBGM(Resources::GetFile("bg_music.ogg"), Resources::GetFileSize("bg_music.ogg"), Settings.volume);
 	bgMusic->SetLoop(Settings.musicloopmode); //loop music
@@ -228,8 +227,6 @@ int MainMenu(int menu)
 	bgMusic->Play();
 
 	MountGamePartition();
-
-	ResumeGui();
 
 	while (currentMenu != MENU_EXIT)
 	{
@@ -243,9 +240,6 @@ int MainMenu(int menu)
 			case MENU_THEMEMENU:
 				currentMenu = ThemeMenu::Execute();
 				break;
-		//	case MENU_THEMEDOWNLOADER:
-		//		currentMenu = ThemeDownloader::Execute();
-		//		break;
 			case MENU_HOMEBREWBROWSE:
 				currentMenu = HomebrewBrowser::Execute();
 				break;

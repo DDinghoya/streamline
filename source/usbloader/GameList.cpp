@@ -37,6 +37,8 @@
 #include "GameList.h"
 #include "memory/memory.h"
 #include "Channels/channels.h"
+#include "prompts/ProgressWindow.h"
+#include "language/gettext.h"
 
 enum { DISABLED, ENABLED, HIDEFORBIDDEN };
 
@@ -349,6 +351,11 @@ void GameList::InternalLoadUnfiltered(std::vector<struct discHdr> &FullList)
 
 int GameList::LoadUnfiltered()
 {
+	ProgressCancelEnable(false);
+	StartProgress(tr("Reading titles..."), tr("Please wait"), 0, false, false);
+	ShowProgress(0, 5);
+
+	ShowProgress(tr("Wii"), 1, 5);
 	if((Settings.LoaderMode & MODE_WIIGAMES) && (FullGameList.size() == 0))
 		ReadGameList();
 
@@ -356,25 +363,30 @@ int GameList::LoadUnfiltered()
 	FilteredList.clear();
 
 	// Filter current game list if selected
-	if(Settings.LoaderMode & MODE_WIIGAMES)
+	if (Settings.LoaderMode & MODE_WIIGAMES)
 		InternalLoadUnfiltered(FullGameList);
 
 	// Filter gc game list if selected
+	ShowProgress(tr("Gamecube"), 2, 5);
 	if(Settings.LoaderMode & MODE_GCGAMES)
 		InternalLoadUnfiltered(GCGames::Instance()->GetHeaders());
 
 	// Filter nand channel list if selected
+	ShowProgress(tr("NAND"), 3, 5);
 	if(Settings.LoaderMode & MODE_NANDCHANNELS)
 		InternalLoadUnfiltered(Channels::Instance()->GetNandHeaders());
 
 	// Filter emu nand channel list if selected
+	ShowProgress(tr("EmuNAND"), 4, 5);
 	if(Settings.LoaderMode & MODE_EMUCHANNELS)
 		InternalLoadUnfiltered(Channels::Instance()->GetEmuHeaders());
 
+	ShowProgress(tr("Applying sorting and filtering"), 5, 5);
 	NewTitles::Instance()->Save();
 	GuiSearchBar::FilterList(FilteredList, GameFilter);
 
 	SortList();
+	ProgressStop();
 
 	return FilteredList.size();
 }

@@ -30,7 +30,6 @@
 #include "settings/GameTitles.h"
 #include "settings/CSettings.h"
 #include "settings/SettingsPrompts.h"
-#include "network/Wiinnertag.h"
 #include "network/networkops.h"
 #include "FileOperations/fileops.h"
 #include "FileOperations/DirList.h"
@@ -69,7 +68,6 @@ FeatureSettingsMenu::FeatureSettingsMenu()
 	Options->SetName(Idx++, "%s", tr( "Rumble" ));
 	Options->SetName(Idx++, "%s", tr( "AutoInit Network" ));
 	Options->SetName(Idx++, "%s", tr( "Messageboard Update" ));
-	Options->SetName(Idx++, "%s", tr( "Wiinnertag" ));
 	Options->SetName(Idx++, "%s", tr( "Import Categories" ));
 	Options->SetName(Idx++, "%s", tr( "Export All Saves to EmuNand" ));
 	Options->SetName(Idx++, "%s", tr( "Export Miis to EmuNand" ));
@@ -134,9 +132,6 @@ void FeatureSettingsMenu::SetOptionValues()
 
 	//! Settings: Messageboard Update
 	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.PlaylogUpdate] ));
-
-	//! Settings: Wiinnertag
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.Wiinnertag] ));
 
 	//! Settings: Import categories from GameTDB
 	Options->SetValue(Idx++, " ");
@@ -217,46 +212,6 @@ int FeatureSettingsMenu::GetMenuInternal()
 	else if (ret == ++Idx )
 	{
 		if (++Settings.PlaylogUpdate >= MAX_ON_OFF) Settings.PlaylogUpdate = 0;
-	}
-
-	//! Settings: Winnertag
-	else if (ret == ++Idx)
-	{
-		if (++Settings.Wiinnertag >= MAX_ON_OFF) Settings.Wiinnertag = 0;
-
-		if(Settings.Wiinnertag == ON && !Settings.autonetwork)
-		{
-			int choice = WindowPrompt(tr("Warning"), tr("Wiinnertag requires you to enable automatic network connect on application start. Do you want to enable it now?"), tr("Yes"), tr("Cancel"));
-			if(choice)
-			{
-				Settings.autonetwork = ON;
-				if(!IsNetworkInit())
-					Initialize_Network();
-			}
-		}
-
-		char filepath[200];
-		snprintf(filepath, sizeof(filepath), "%sWiinnertag.xml", Settings.WiinnertagPath);
-
-		if(Settings.Wiinnertag == ON && !CheckFile(filepath))
-		{
-			int choice = WindowPrompt(tr("Warning"), tr("No Wiinnertag.xml found in the config path. Do you want an example file created?"), tr("Yes"), tr("No"));
-			if(choice)
-			{
-				if(Wiinnertag::CreateExample(Settings.WiinnertagPath))
-				{
-					char text[200];
-					snprintf(text, sizeof(text), "%s %s", tr("An example file was created here:"), filepath);
-					WindowPrompt(tr("Success"), text, tr("OK"));
-				}
-				else
-				{
-					char text[200];
-					snprintf(text, sizeof(text), "%s %s", tr("Could not write to:"), filepath);
-					WindowPrompt(tr("Failed"), text, tr("OK"));
-				}
-			}
-		}
 	}
 
 	//! Settings: Import categories from GameTDB

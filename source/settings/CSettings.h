@@ -81,7 +81,6 @@ class CSettings
 		char update_path[100];
 		char homebrewapps_path[100];
 		char WDMpath[100];
-		char WiinnertagPath[100];
 		char NandEmuPath[50];
 		char NandEmuChanPath[50];
 		char BNRCachePath[50];
@@ -140,7 +139,6 @@ class CSettings
 		f32 FontScaleFactor;
 		f32 ClockFontScaleFactor;
 		f32 PointerSpeed;
-		short Wiinnertag;
 		short SelectedGame;
 		short GameListOffset;
 		short sneekVideoPatch;

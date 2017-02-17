@@ -18,7 +18,7 @@
 */
 
 #include "http.h"
-#include "../svnrev.h"
+#include "../Version.h"
 #include "gecko.h"
 
 extern char incommingIP[50];
@@ -230,7 +230,7 @@ struct block downloadfile(const char *url)
 	//Form a nice request header to send to the webserver
 	char* headerformat = "GET %s HTTP/1.0\r\nHost: %s\r\n%sUser-Agent: USBLoaderGX r%s\r\n\r\n";
 	char header[strlen(headerformat) + strlen(path) + strlen(domain) + strlen(referer) + 100];
-	sprintf(header, headerformat, path, domain, referer, GetRev());
+	sprintf(header, headerformat, path, domain, referer, Version_GetPatch());
 	//gprintf("\nHTTP Request:\n");
 	//gprintf("%s\n",header);
 

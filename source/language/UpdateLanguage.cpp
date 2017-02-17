@@ -20,7 +20,7 @@
 #include "prompts/ProgressWindow.h"
 #include "utils/ShowError.h"
 #include "gecko.h"
-#include "svnrev.h"
+#include "Version.h"
 
 static const char * LanguageFilesURL = "http://svn.code.sf.net/p/usbloadergx/code/trunk/Languages/";
 
@@ -46,7 +46,7 @@ int DownloadAllLanguageFiles(int revision)
 	if(revision > 0)
 		snprintf(target, sizeof(target), "%d", revision);
 	else
-		snprintf(target, sizeof(target), "%s", GetRev());
+		snprintf(target, sizeof(target), "%s", Version_GetPatch());
 
 	ShowProgress(tr("Updating Language Files:"), 0, 0, 0, listsize, false, true);
 
@@ -131,7 +131,7 @@ int UpdateLanguageFiles()
 	//build the URL, save path, and download each file and save it
 	for(int i = 0; i < Dir.GetFilecount(); ++i)
 	{
-		snprintf(codeurl, sizeof(codeurl), "%s%s?p=%s", LanguageFilesURL, Dir.GetFilename(i), GetRev());
+		snprintf(codeurl, sizeof(codeurl), "%s%s?p=%s", LanguageFilesURL, Dir.GetFilename(i), Version_GetPatch());
 		snprintf(savepath, sizeof(savepath), "%s/%s", Settings.languagefiles_path, Dir.GetFilename(i));
 
 		struct block file = downloadfile(codeurl);

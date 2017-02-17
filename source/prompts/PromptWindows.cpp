@@ -36,7 +36,7 @@
 #include "wpad.h"
 #include "wad/wad.h"
 #include "zlib.h"
-#include "svnrev.h"
+#include "Version.h"
 #include "audio.h"
 #include "language/UpdateLanguage.h"
 #include "system/IosLoader.h"
@@ -296,11 +296,7 @@ void WindowCredits()
 	txt.push_back(currentTxt);
 
 	char SvnRev[80];
-#ifdef FULLCHANNEL
-	snprintf(SvnRev, sizeof(SvnRev), "Rev%sc   IOS%ld (Rev %ld)%s", GetRev(), IOS_GetVersion(), IOS_GetRevision(), (*(vu32*)0xcd800064 == 0xFFFFFFFF)? " + AHB" : "" );
-#else
-	snprintf(SvnRev, sizeof(SvnRev), "Rev%s   IOS%ld (Rev %ld)%s", GetRev(), IOS_GetVersion(), IOS_GetRevision(), (*(vu32*)0xcd800064 == 0xFFFFFFFF)? " + AHB" : "" );
-#endif
+	snprintf(SvnRev, sizeof(SvnRev), "r%s   IOS%ld (Rev %ld)%s", Version_GetPatch(), IOS_GetVersion(), IOS_GetRevision(), (*(vu32*)0xcd800064 == 0xFFFFFFFF)? " + AHB" : "" );
 
 	char IosInfo[80] = "";
 	iosinfo_t * info = IosLoader::GetIOSInfo(IOS_GetVersion());

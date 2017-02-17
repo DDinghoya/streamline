@@ -27,7 +27,7 @@
 #include "CCategoryList.hpp"
 #include "language/gettext.h"
 #include "FileOperations/fileops.h"
-#include "svnrev.h"
+#include "Version.h"
 
 CCategoryList CategoryList;
 

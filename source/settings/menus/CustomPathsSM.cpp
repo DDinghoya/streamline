@@ -58,7 +58,6 @@ CustomPathsSM::CustomPathsSM()
 	Options->SetName(Idx++, tr("WIP Patches Path"));
 	Options->SetName(Idx++, tr("Languagefiles Path"));
 	Options->SetName(Idx++, tr("WDM Files Path"));
-	Options->SetName(Idx++, tr("Wiinnertag Path"));
 	Options->SetName(Idx++, tr("Nand Emu Path"));
 	Options->SetName(Idx++, tr("Nand Emu Channel Path"));
 	Options->SetName(Idx++, tr("Main GameCube Path"));
@@ -118,9 +117,6 @@ void CustomPathsSM::SetOptionValues()
 
 	//! Settings: WDM Files Path
 	Options->SetValue(Idx++, Settings.WDMpath);
-
-	//! Settings: Wiinnertag Path
-	Options->SetValue(Idx++, Settings.WiinnertagPath);
 
 	//! Settings: Nand Emu Path
 	Options->SetValue(Idx++, Settings.NandEmuPath);
@@ -273,13 +269,6 @@ int CustomPathsSM::GetMenuInternal()
 	{
 		titleTxt->SetText(tr( "WDM Files Path" ));
 		ChangePath(Settings.WDMpath, sizeof(Settings.WDMpath));
-	}
-
-	//! Settings: Wiinnertag Path
-	else if (ret == ++Idx)
-	{
-		titleTxt->SetText(tr( "Wiinnertag Path" ));
-		ChangePath(Settings.WiinnertagPath, sizeof(Settings.WiinnertagPath));
 	}
 
 	//! Settings: Nand Emu Path

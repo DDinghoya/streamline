@@ -19,7 +19,7 @@
 #include "networkops.h"
 #include "App.h"
 #include "http.h"
-#include "svnrev.h"
+#include "Version.h"
 #include "gecko.h"
 #include "update.h"
 

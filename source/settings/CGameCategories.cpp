@@ -33,7 +33,7 @@
 #include "prompts/ProgressWindow.h"
 #include "xml/GameTDB.hpp"
 #include "utils/StringTools.h"
-#include "svnrev.h"
+#include "Version.h"
 
 using namespace tinyxml2;
 
@@ -137,7 +137,7 @@ bool CGameCategories::Save()
 	XMLDeclaration *declaration = xmlDoc.NewDeclaration();
 	xmlDoc.InsertEndChild(declaration);
 	XMLElement *Revision = xmlDoc.NewElement("Revision");
-	XMLText *revText = xmlDoc.NewText(GetRev());
+	XMLText *revText = xmlDoc.NewText(Version_GetPatch());
 	Revision->InsertEndChild(revText);
 	xmlDoc.InsertEndChild(Revision);
 

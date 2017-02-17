@@ -23,7 +23,7 @@ distribution.
 #include "homebrewboot/HomebrewXML.h"
 #include "FileOperations/fileops.h"
 #include "settings/CSettings.h"
-#include "svnrev.h"
+#include "Version.h"
 
 int updateMetaXML (void)
 {
@@ -40,7 +40,7 @@ int updateMetaXML (void)
 	MetaXML.SetArgument(line);
 	snprintf(line, sizeof(line), "--mountusb=%d", Settings.USBAutoMount);
 	MetaXML.SetArgument(line);
-	snprintf(line, sizeof(line), "3.0 r%s", GetRev());
+	snprintf(line, sizeof(line), "%s", Version_GetName());
 	MetaXML.SetVersion(line);
 
 	int ret = MetaXML.SaveHomebrewXMLData(filepath);

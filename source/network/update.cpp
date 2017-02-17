@@ -50,7 +50,7 @@
 #include "wad/nandtitle.h"
 #include "wad/wad.h"
 #include "sys.h"
-#include "svnrev.h"
+#include "Version.h"
 
 static const char * GameTDB_URL = "http://www.gametdb.com/wiitdb.zip";
 
@@ -212,7 +212,7 @@ int CheckUpdate()
 		return -1;
 
 	int revnumber = 0;
-	int currentrev = atoi(GetRev());
+	int currentrev = atoi(Version_GetPatch());
 
 #ifdef FULLCHANNEL
 	struct block file = downloadfile( "http://svn.code.sf.net/p/usbloadergx/code/branches/updates/update_wad.txt" );
@@ -237,7 +237,7 @@ static int ApplicationDownload(void)
 	return 0;
 	std::string DownloadURL;
 	int newrev = 0;
-	int currentrev = atoi(GetRev());
+	int currentrev = atoi(Version_GetPatch());
 
 #ifdef FULLCHANNEL
 	struct block file = downloadfile( "http://svn.code.sf.net/p/usbloadergx/code/branches/updates/update_wad.txt" );
