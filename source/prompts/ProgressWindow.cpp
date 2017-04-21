@@ -237,11 +237,11 @@ static void UpdateProgressValues(GuiImage *progressbarImg, GuiText *prTxt, GuiTe
 
 	prTxt->SetTextf("%.2f", progressPercent);
 
-	if (Settings.widescreen && Settings.wsprompt)
+	if (App.Settings.widescreen && App.Settings.wsprompt)
 		progressbarImg->SetSkew(0, 0, (progressbarImg->GetWidth() * progressPercent
-										- progressbarImg->GetWidth()) * Settings.WSFactor,
+										- progressbarImg->GetWidth()) * App.Settings.WSFactor,
 								0,	(progressbarImg->GetWidth() * progressPercent
-										- progressbarImg->GetWidth()) * Settings.WSFactor, 0, 0, 0);
+										- progressbarImg->GetWidth()) * App.Settings.WSFactor, 0, 0, 0);
 	else
 		progressbarImg->SetSkew(0, 0, (progressbarImg->GetWidth() * progressPercent)
 			- progressbarImg->GetWidth(), 0, (progressbarImg->GetWidth() * progressPercent)
@@ -295,17 +295,17 @@ static void ProgressWindow(const char *title, const char *msg1, const char *msg2
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 
 	GuiImage dialogBoxImg(&dialogBox);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		dialogBoxImg.SetWidescreen(Settings.widescreen);
+		dialogBoxImg.SetWidescreen(App.Settings.widescreen);
 	}
 
 	GuiImageData progressbarOutline(Resources::GetFile("progressbar_outline.png"), Resources::GetFileSize("progressbar_outline.png"));
 
 	GuiImage progressbarOutlineImg(&progressbarOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		progressbarOutlineImg.SetWidescreen(Settings.widescreen);
+		progressbarOutlineImg.SetWidescreen(App.Settings.widescreen);
 	}
 	progressbarOutlineImg.SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 	progressbarOutlineImg.SetPosition(35, ProgressPosY);
@@ -355,7 +355,7 @@ static void ProgressWindow(const char *title, const char *msg1, const char *msg2
 	prTxt.SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 	prTxt.SetPosition(210, ProgressPosY);
 
-	if ((Settings.wsprompt) && (Settings.widescreen)) /////////////adjust for widescreen
+	if ((App.Settings.wsprompt) && (App.Settings.widescreen)) /////////////adjust for widescreen
 	{
 		progressbarOutlineImg.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 		progressbarOutlineImg.SetPosition(0, ProgressPosY);
@@ -376,10 +376,10 @@ static void ProgressWindow(const char *title, const char *msg1, const char *msg2
 	cancelImg.SetScale(cancelScale);
 	cancelTxt.SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 	cancelTxt.SetPosition(cancelImg.GetWidth()/2*cancelScale-cancelTxt.GetTextWidth()/2, 0);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		cancelTxt.SetWidescreen(Settings.widescreen);
-		cancelImg.SetWidescreen(Settings.widescreen);
+		cancelTxt.SetWidescreen(App.Settings.widescreen);
+		cancelImg.SetWidescreen(App.Settings.widescreen);
 	}
 
 	GuiButton cancelBtn(&cancelImg, &cancelImg, ALIGN_LEFT, ALIGN_MIDDLE, 0, 0, &trigA, btnSoundOver, btnSoundClick2, 1);

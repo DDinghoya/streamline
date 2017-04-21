@@ -9,7 +9,7 @@
 #include "themes/CTheme.h"
 #include "FileOperations/fileops.h"
 #include "settings/menus/GameSettingsMenu.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/CGameSettings.h"
 #include "settings/CGameStatistics.h"
 #include "settings/GameTitles.h"
@@ -60,7 +60,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	if(gameIdx == gameList.size())
 		dvdheader = header;
 
-	dialogBox = Resources::GetImageData(Settings.widescreen ? "wdialogue_box_startgame.png" : "dialogue_box_startgame.png");
+	dialogBox = Resources::GetImageData(App.Settings.widescreen ? "wdialogue_box_startgame.png" : "dialogue_box_startgame.png");
 	btnOutline = Resources::GetImageData("button_dialogue_box.png");
 	imgFavorite = Resources::GetImageData("favorite.png");
 	imgNotFavorite = Resources::GetImageData("not_favorite.png");
@@ -83,9 +83,9 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	dialogBoxImg = new GuiImage(dialogBox);
 
 	nameBtnTT = new GuiTooltip(tr( "Rename Game Title" ));
-	if (Settings.wsprompt) nameBtnTT->SetWidescreen(Settings.widescreen);
+	if (App.Settings.wsprompt) nameBtnTT->SetWidescreen(App.Settings.widescreen);
 	nameTxt = new GuiText("", 22, thColor("r=0 g=0 b=0 a=255 - game window name text color"));
-	if (Settings.wsprompt) nameTxt->SetWidescreen(Settings.widescreen);
+	if (App.Settings.wsprompt) nameTxt->SetWidescreen(App.Settings.widescreen);
 	nameTxt->SetMaxWidth(350, SCROLL_HORIZONTAL);
 	nameBtn = new GuiButton(120, 50);
 	nameBtn->SetLabel(nameTxt);
@@ -94,7 +94,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	nameBtn->SetSoundOver(btnSoundOver);
 	nameBtn->SetSoundClick(btnSoundClick2);
 
-	if (Settings.godmode == 1 && !dvdheader)
+	if (App.Settings.godmode == 1 && !dvdheader)
 	{
 		nameBtn->SetToolTip(nameBtnTT, 24, -30, ALIGN_LEFT);
 		nameBtn->SetTrigger(trigA);
@@ -106,11 +106,11 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	sizeTxt->SetPosition(135, 70);
 
 	diskImg = new GuiDiskCover;
-	diskImg->SetWidescreen(Settings.widescreen);
+	diskImg->SetWidescreen(App.Settings.widescreen);
 	diskImg->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	diskImg->SetAngle(0);
 	diskImg2 = new GuiDiskCover;
-	diskImg2->SetWidescreen(Settings.widescreen);
+	diskImg2->SetWidescreen(App.Settings.widescreen);
 	diskImg2->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	diskImg2->SetPosition(0, -20);
 	diskImg2->SetAngle(0);
@@ -131,10 +131,10 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 
 	backBtnTxt = new GuiText(tr( "Back" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	backBtnImg = new GuiImage(btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		backBtnTxt->SetWidescreen(Settings.widescreen);
-		backBtnImg->SetWidescreen(Settings.widescreen);
+		backBtnTxt->SetWidescreen(App.Settings.widescreen);
+		backBtnImg->SetWidescreen(App.Settings.widescreen);
 	}
 	backBtn = new GuiButton(backBtnImg, backBtnImg, 1, 5, 0, 0, trigA, btnSoundOver, btnSoundClick2, 1);
 	backBtn->SetLabel(backBtnTxt);
@@ -144,10 +144,10 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 
 	settingsBtnTxt = new GuiText(tr( "Settings" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	settingsBtnImg = new GuiImage(btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		settingsBtnTxt->SetWidescreen(Settings.widescreen);
-		settingsBtnImg->SetWidescreen(Settings.widescreen);
+		settingsBtnTxt->SetWidescreen(App.Settings.widescreen);
+		settingsBtnImg->SetWidescreen(App.Settings.widescreen);
 	}
 	settingsBtn = new GuiButton(settingsBtnImg, settingsBtnImg, 0, 4, 50, -40, trigA, btnSoundOver, btnSoundClick2, 1);
 	settingsBtn->SetLabel(settingsBtnTxt);
@@ -156,7 +156,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	for(int i = 0; i < FAVORITE_STARS; ++i)
 	{
 		FavoriteBtnImg[i] = new GuiImage;
-		FavoriteBtnImg[i]->SetWidescreen(Settings.widescreen);
+		FavoriteBtnImg[i]->SetWidescreen(App.Settings.widescreen);
 		FavoriteBtn[i] = new GuiButton(imgFavorite->GetWidth(), imgFavorite->GetHeight());
 		FavoriteBtn[i]->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 		FavoriteBtn[i]->SetPosition(xPos, -60);
@@ -170,13 +170,13 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	}
 
 	btnLeftImg = new GuiImage(imgLeft);
-	if (Settings.wsprompt) btnLeftImg->SetWidescreen(Settings.widescreen);
+	if (App.Settings.wsprompt) btnLeftImg->SetWidescreen(App.Settings.widescreen);
 	btnLeft = new GuiButton(btnLeftImg, btnLeftImg, 0, 5, 20, 0, trigA, btnSoundOver, btnSoundClick2, 1);
 	btnLeft->SetTrigger(trigL);
 	btnLeft->SetTrigger(trigMinus);
 
 	btnRightImg = new GuiImage(imgRight);
-	if (Settings.wsprompt) btnRightImg->SetWidescreen(Settings.widescreen);
+	if (App.Settings.wsprompt) btnRightImg->SetWidescreen(App.Settings.widescreen);
 	btnRight = new GuiButton(btnRightImg, btnRightImg, 1, 5, -20, 0, trigA, btnSoundOver, btnSoundClick2, 1);
 	btnRight->SetTrigger(trigR);
 	btnRight->SetTrigger(trigPlus);
@@ -192,7 +192,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	detailsBtn->SetEffectGrow();
 
 	Append(dialogBoxImg);
-	if (Settings.ShowPlayCount) Append(playcntTxt);
+	if (App.Settings.ShowPlayCount) Append(playcntTxt);
 	Append(backBtn);
 	Append(detailsBtn);
 	Append(nameBtn);
@@ -205,7 +205,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 			Append(FavoriteBtn[i]);
 	}
 	//check if unlocked
-	if (Settings.godmode || !(Settings.ParentalBlocks & BLOCK_GAME_SETTINGS))
+	if (App.Settings.godmode || !(App.Settings.ParentalBlocks & BLOCK_GAME_SETTINGS))
 	{
 		backBtn->SetAlignment(ALIGN_RIGHT, ALIGN_BOTTOM);
 		backBtn->SetPosition(-50, -40);
@@ -290,14 +290,14 @@ GameWindow::~GameWindow()
 
 	if(gameSound) gameSound->Stop();
 	delete gameSound;
-	bgMusic->SetVolume(Settings.volume);
+	bgMusic->SetVolume(App.Settings.volume);
 
 	ResumeGui();
 }
 
 void GameWindow::LoadGameSound(const struct discHdr * header)
 {
-	if (Settings.gamesoundvolume == 0)
+	if (App.Settings.gamesoundvolume == 0)
 		return;
 
 	BNRInstance::Instance()->Load(header);
@@ -313,17 +313,17 @@ void GameWindow::LoadGameSound(const struct discHdr * header)
 	   &&  gameBanner.LoadSound(BNRInstance::Instance()->Get(), BNRInstance::Instance()->GetSize())
 	   &&  gameBanner.getSound())
 	{
-		gameSound = new GuiSound(gameBanner.getSound(), gameBanner.getSoundSize(), Settings.gamesoundvolume);
+		gameSound = new GuiSound(gameBanner.getSound(), gameBanner.getSoundSize(), App.Settings.gamesoundvolume);
 	}
 	else if((header->type == TYPE_GAME_GC_IMG) || (header->type == TYPE_GAME_GC_DISC) || (header->type == TYPE_GAME_GC_EXTRACTED))
 	{
 		//! on game cube load the default sound
-		gameSound = new GuiSound(Resources::GetFile("gc_banner.ogg"), Resources::GetFileSize("gc_banner.ogg"), Settings.gamesoundvolume);
+		gameSound = new GuiSound(Resources::GetFile("gc_banner.ogg"), Resources::GetFileSize("gc_banner.ogg"), App.Settings.gamesoundvolume);
 	}
 	if(gameSound)
 	{
 		bgMusic->SetVolume(0);
-		if (Settings.gamesound == 2)
+		if (App.Settings.gamesound == 2)
 			gameSound->SetLoop(1);
 		gameSound->Play();
 	}
@@ -344,19 +344,19 @@ void GameWindow::LoadDiscImage(const u8 * id)
 	snprintf(ID3, sizeof(ID3), "%s", IDFull);
 	snprintf(ID4, sizeof(ID4), "%s", IDFull);
 
-	snprintf(imgPath, sizeof(imgPath), "%s%s.png", Settings.disc_path, IDFull); //changed to current full id
+	snprintf(imgPath, sizeof(imgPath), "%s%s.png", App.Settings.disc_path, IDFull); //changed to current full id
 	diskImgData = new GuiImageData(imgPath);
 
 	if (!diskImgData->GetImage())
 	{
 		delete diskImgData;
-		snprintf(imgPath, sizeof(imgPath), "%s%s.png", Settings.disc_path, ID3); //changed to current id
+		snprintf(imgPath, sizeof(imgPath), "%s%s.png", App.Settings.disc_path, ID3); //changed to current id
 		diskImgData = new GuiImageData(imgPath);
 	}
 	if (!diskImgData->GetImage())
 	{
 		delete diskImgData;
-		snprintf(imgPath, sizeof(imgPath), "%s%s.png", Settings.disc_path, ID4); //changed to current id
+		snprintf(imgPath, sizeof(imgPath), "%s%s.png", App.Settings.disc_path, ID4); //changed to current id
 		diskImgData = new GuiImageData(imgPath);
 	}
 	if (!diskImgData->GetImage())
@@ -368,7 +368,7 @@ void GameWindow::LoadDiscImage(const u8 * id)
 
 void GameWindow::SetWindowEffect(int direction, int in_out)
 {
-	if(direction == LEFT && Settings.xflip == XFLIP_DISK3D)
+	if(direction == LEFT && App.Settings.xflip == XFLIP_DISK3D)
 	{
 		if(in_out == IN)
 		{
@@ -394,7 +394,7 @@ void GameWindow::SetWindowEffect(int direction, int in_out)
 			nameTxt->SetEffect(EFFECT_FADE, -17);
 		}
 	}
-	else if(direction == RIGHT && Settings.xflip == XFLIP_DISK3D)
+	else if(direction == RIGHT && App.Settings.xflip == XFLIP_DISK3D)
 	{
 		if(in_out == IN)
 		{
@@ -626,17 +626,17 @@ int GameWindow::MainLoop()
 
 	else if (btnRight->GetState() == STATE_CLICKED) //next game
 	{
-		if(Settings.xflip == XFLIP_YES)
+		if(App.Settings.xflip == XFLIP_YES)
 		{
 			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
 			ChangeGame(LEFT);
 		}
-		else if(Settings.xflip == XFLIP_SYSMENU)
+		else if(App.Settings.xflip == XFLIP_SYSMENU)
 		{
 			gameSelected = (gameSelected + 1) % gameList.size();
 			ChangeGame(LEFT);
 		}
-		else if(Settings.xflip == XFLIP_WTF)
+		else if(App.Settings.xflip == XFLIP_WTF)
 		{
 			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
 			ChangeGame(RIGHT);
@@ -652,17 +652,17 @@ int GameWindow::MainLoop()
 
 	else if (btnLeft->GetState() == STATE_CLICKED) //previous game
 	{
-		if(Settings.xflip == XFLIP_YES)
+		if(App.Settings.xflip == XFLIP_YES)
 		{
 			gameSelected = (gameSelected + 1) % gameList.size();
 			ChangeGame(RIGHT);
 		}
-		else if(Settings.xflip == XFLIP_SYSMENU)
+		else if(App.Settings.xflip == XFLIP_SYSMENU)
 		{
 			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
 			ChangeGame(RIGHT);
 		}
-		else if(Settings.xflip == XFLIP_WTF)
+		else if(App.Settings.xflip == XFLIP_WTF)
 		{
 			gameSelected = (gameSelected + 1) % gameList.size();
 			ChangeGame(LEFT);
@@ -689,15 +689,15 @@ int GameWindow::MainLoop()
 	{
 		if (gameSound)
 		{
-			if (Settings.gamesound == 1 && !gameSound->IsPlaying())
+			if (App.Settings.gamesound == 1 && !gameSound->IsPlaying())
 			{
-				bgMusic->SetVolume(Settings.volume);
+				bgMusic->SetVolume(App.Settings.volume);
 				reducedVol = false;
 			}
 		}
 		else
 		{
-			bgMusic->SetVolume(Settings.volume);
+			bgMusic->SetVolume(App.Settings.volume);
 			reducedVol = false;
 		}
 	}
@@ -732,15 +732,15 @@ void GameWindow::BootGame(struct discHdr *header)
 	char IDfull[7];
 	snprintf(IDfull, sizeof(IDfull), "%s", (char *) header->id);
 
-	int gameIOS = game_cfg->ios == INHERIT ? Settings.cios : game_cfg->ios;
-	int gameNandEmuMode = game_cfg->NandEmuMode == INHERIT ? Settings.NandEmuMode : game_cfg->NandEmuMode;
+	int gameIOS = game_cfg->ios == INHERIT ? App.Settings.cios : game_cfg->ios;
+	int gameNandEmuMode = game_cfg->NandEmuMode == INHERIT ? App.Settings.NandEmuMode : game_cfg->NandEmuMode;
 	if(header->type == TYPE_GAME_EMUNANDCHAN)
-		gameNandEmuMode = game_cfg->NandEmuMode == INHERIT ? Settings.NandEmuChanMode : game_cfg->NandEmuMode;
+		gameNandEmuMode = game_cfg->NandEmuMode == INHERIT ? App.Settings.NandEmuChanMode : game_cfg->NandEmuMode;
 
 	if (game_cfg->loadalternatedol == 2)
 	{
 		char filepath[200];
-		snprintf(filepath, sizeof(filepath), "%s%s.dol", Settings.dolpath, IDfull);
+		snprintf(filepath, sizeof(filepath), "%s%s.dol", App.Settings.dolpath, IDfull);
 		if (CheckFile(filepath) == false)
 		{
 			sprintf(filepath, "%s %s", filepath, tr( "does not exist!" ));
@@ -759,10 +759,10 @@ void GameWindow::BootGame(struct discHdr *header)
 			defaultDolPrompt((char *) header->id);
 	}
 
-	if (game_cfg->ocarina == ON || (game_cfg->ocarina == INHERIT && Settings.ocarina == ON))
+	if (game_cfg->ocarina == ON || (game_cfg->ocarina == INHERIT && App.Settings.ocarina == ON))
 	{
 		char filepath[200];
-		snprintf(filepath, sizeof(filepath), "%s%s.gct", Settings.Cheatcodespath, IDfull);
+		snprintf(filepath, sizeof(filepath), "%s%s.gct", App.Settings.Cheatcodespath, IDfull);
 		if (CheckFile(filepath) == false)
 		{
 			sprintf(filepath, "%s %s", filepath, tr( "does not exist!  Loading game without cheats." ));
@@ -777,7 +777,7 @@ void GameWindow::BootGame(struct discHdr *header)
 		{
 			// If NandEmuPath is on root of the first FAT32 partition, allow Waninkoko's rev17-21 cIOS for EmuNAND Channels
 			bool NandEmu_compatible = false;
-			const char *NandEmuChanPath = game_cfg->NandEmuPath.size() == 0 ? Settings.NandEmuChanPath : game_cfg->NandEmuPath.c_str();
+			const char *NandEmuChanPath = game_cfg->NandEmuPath.size() == 0 ? App.Settings.NandEmuChanPath : game_cfg->NandEmuPath.c_str();
 			NandEmu_compatible = IosLoader::is_NandEmu_compatible(NandEmuChanPath, gameIOS);
 				
 			if(!IosLoader::IsD2X(gameIOS) && !NandEmu_compatible)

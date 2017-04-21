@@ -15,7 +15,7 @@
 #include "GUI/LoadCoverImage.h"
 #include "usbloader/GameList.h"
 #include "settings/GameTitles.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "themes/CTheme.h"
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
@@ -260,7 +260,7 @@ GuiGameGrid::GuiGameGrid(int w, int h, const char *themePath, int offset) :
 	btnRowDown->SetPosition(0, 0);
 	btnRowDown->SetTrigger(trig1);
 
-	Reload(Settings.gridRows, listOffset);
+	Reload(App.Settings.gridRows, listOffset);
 }
 
 /**
@@ -371,7 +371,7 @@ void GuiGameGrid::Draw()
 	if (goLeft > 0)
 	{
 		goLeft--;
-		int wsi = Settings.widescreen ? 0 : 1;
+		int wsi = App.Settings.widescreen ? 0 : 1;
 		float f2 = ((float) goLeft) / goSteps;
 		float f1 = 1.0 - f2;
 		int (*Pos)[2][2] = VALUE4ROWS( rows, Pos1, Pos2, Pos3 );
@@ -391,7 +391,7 @@ void GuiGameGrid::Draw()
 	else if (goRight > 0)
 	{
 		goRight--;
-		int wsi = Settings.widescreen ? 0 : 1;
+		int wsi = App.Settings.widescreen ? 0 : 1;
 		float f2 = ((float) goRight) / goSteps;
 		float f1 = 1.0 - f2;
 		int (*Pos)[2][2] = VALUE4ROWS( rows, Pos1, Pos2, Pos3 );
@@ -419,7 +419,7 @@ void GuiGameGrid::Draw()
 	btnRowUp->Draw();
 	btnRowDown->Draw();
 
-	if (Settings.tooltips == ON)
+	if (App.Settings.tooltips == ON)
 		for (int i = 0; i < pagesize; i++)
 			game[i]->DrawTooltip();
 
@@ -482,7 +482,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 				return;
 			}
 
-			if (Settings.xflip == XFLIP_SYSMENU || Settings.xflip == XFLIP_YES || Settings.xflip == XFLIP_DISK3D)
+			if (App.Settings.xflip == XFLIP_SYSMENU || App.Settings.xflip == XFLIP_YES || App.Settings.xflip == XFLIP_DISK3D)
 				goRight = goSteps;
 			else goLeft = goSteps;
 		}
@@ -497,7 +497,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 				btnRight->ResetState();
 				return;
 			}
-			if (Settings.xflip == XFLIP_SYSMENU || Settings.xflip == XFLIP_YES || Settings.xflip == XFLIP_DISK3D)
+			if (App.Settings.xflip == XFLIP_SYSMENU || App.Settings.xflip == XFLIP_YES || App.Settings.xflip == XFLIP_DISK3D)
 				goLeft = goSteps;
 			else goRight = goSteps;
 		}
@@ -525,7 +525,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 				gameIndex[i] = gameIndex[i + rows];
 			}
 			// set saved Tooltip, Button & gameIndex to right
-			int wsi = Settings.widescreen ? 0 : 1;
+			int wsi = App.Settings.widescreen ? 0 : 1;
 			int (*Pos)[2][2] = VALUE4ROWS( rows, Pos1, Pos2, Pos3 );
 			int (*Skew)[8] = VALUE4ROWS( rows, Skew1, Skew2, Skew3 );
 
@@ -541,7 +541,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 							sizeof(struct discHdr), &noCover);
 					if (coverImg[ii])
 					{
-						coverImg[ii] ->SetWidescreen(Settings.widescreen);
+						coverImg[ii] ->SetWidescreen(App.Settings.widescreen);
 						coverImg[ii] ->SetScale(VALUE4ROWS( rows, 1.0, 0.6, 0.26 ));
 						coverImg[ii] ->SetPosition(0, VALUE4ROWS( rows, 0, -50, -80 ));
 					}
@@ -570,7 +570,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 				}
 			}
 			// Set Tooltip-Position
-			int ttoffset_x = Settings.widescreen ? VALUE4ROWS( rows, 70, 35, 0 ) : VALUE4ROWS( rows, 150, 55, 25 );
+			int ttoffset_x = App.Settings.widescreen ? VALUE4ROWS( rows, 70, 35, 0 ) : VALUE4ROWS( rows, 150, 55, 25 );
 			int ttoffset_y = -VALUE4ROWS( rows, 224, 133, 68 ) / 4;
 			for (int i = 0; i < pagesize; i++)
 			{
@@ -614,7 +614,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 				gameIndex[i] = gameIndex[i - rows];
 			}
 			// set saved Image, Button & gameIndex to left
-			int wsi = Settings.widescreen ? 0 : 1;
+			int wsi = App.Settings.widescreen ? 0 : 1;
 			int (*Pos)[2][2] = VALUE4ROWS( rows, Pos1, Pos2, Pos3 );
 			int (*Skew)[8] = VALUE4ROWS( rows, Skew1, Skew2, Skew3 );
 
@@ -629,7 +629,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 							sizeof(struct discHdr), &noCover);
 					if (coverImg[i])
 					{
-						coverImg[i] ->SetWidescreen(Settings.widescreen);
+						coverImg[i] ->SetWidescreen(App.Settings.widescreen);
 						coverImg[i] ->SetScale(VALUE4ROWS( rows, 1.0, 0.6, 0.26 ));
 						coverImg[i] ->SetPosition(0, VALUE4ROWS( rows, 0, -50, -80 ));
 					}
@@ -657,7 +657,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 				}
 			}
 			// Set Tooltip-Position
-			int ttoffset_x = Settings.widescreen ? VALUE4ROWS( rows, 70, 35, 0 ) : VALUE4ROWS( rows, 150, 55, 25 );
+			int ttoffset_x = App.Settings.widescreen ? VALUE4ROWS( rows, 70, 35, 0 ) : VALUE4ROWS( rows, 150, 55, 25 );
 			int ttoffset_y = -VALUE4ROWS( rows, 224, 133, 68 ) / 4;
 			for (int i = 0; i < pagesize; i++)
 			{
@@ -754,11 +754,11 @@ void GuiGameGrid::Reload(int Rows, int ListOffset)
 	coverImg.resize(pagesize);
 	game.resize(pagesize);
 
-	int wsi = Settings.widescreen ? 0 : 1;
+	int wsi = App.Settings.widescreen ? 0 : 1;
 	int (*Pos)[2][2] = VALUE4ROWS( rows, Pos1, Pos2, Pos3 );
 	int (*Skew)[8] = VALUE4ROWS( rows, Skew1, Skew2, Skew3 );
 
-	int ttoffset_x = Settings.widescreen ? VALUE4ROWS( rows, 70, 35, 0 ) : VALUE4ROWS( rows, 150, 55, 25 );
+	int ttoffset_x = App.Settings.widescreen ? VALUE4ROWS( rows, 70, 35, 0 ) : VALUE4ROWS( rows, 150, 55, 25 );
 	int ttoffset_y = -VALUE4ROWS( rows, 224, 133, 68 ) / 4;
 
 	for (int i = 0; i < pagesize; i++)
@@ -793,7 +793,7 @@ void GuiGameGrid::Reload(int Rows, int ListOffset)
 			coverImg[i] = new GuiImageAsync(GameGridLoadCoverImage, gameList[gameIndex[i]], sizeof(struct discHdr), &noCover);
 			if (coverImg[i])
 			{
-				coverImg[i]->SetWidescreen(Settings.widescreen);
+				coverImg[i]->SetWidescreen(App.Settings.widescreen);
 				//	  if ( rows == 2 )		coverImg[i]->SetScale(.6);	  //these are the numbers for 2 rows
 				//	  else if ( rows == 3 )   coverImg[i]->SetScale(.26); //these are the numbers for 3 rows
 				coverImg[i]->SetScale(VALUE4ROWS( rows, 1.0, 0.6, 0.26 ));
@@ -840,6 +840,6 @@ void GuiGameGrid::Reload(int Rows, int ListOffset)
 			//	  game[i]->RemoveSoundOver();
 		}
 	}
-	Settings.gridRows = rows;
+	App.Settings.gridRows = rows;
 }
 

@@ -14,7 +14,7 @@
 
 #include "Controls/DeviceHandler.hpp"
 #include "FileOperations/fileops.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/GameTitles.h"
 #include "usbloader/disc.h"
 #include "usbloader/usbstorage2.h"
@@ -183,7 +183,7 @@ s32 Wbfs_Fat::AddGame(void)
 	part = CreatePart(header.id, path);
 	if (!part) return -1;
 	/* Add game to device */
-	partition_selector_t part_sel = (partition_selector_t) Settings.InstallPartitions;
+	partition_selector_t part_sel = (partition_selector_t) App.Settings.InstallPartitions;
 
 	ret = wbfs_add_disc(part, __ReadDVD, NULL, ShowProgress, part_sel, 0);
 	wbfs_trim(part);
@@ -331,7 +331,7 @@ u64 Wbfs_Fat::EstimateGameSize()
 	wbfs_set_force_mode(0);
 	if (!part) return -1;
 
-	partition_selector_t part_sel = (partition_selector_t) Settings.InstallPartitions;
+	partition_selector_t part_sel = (partition_selector_t) App.Settings.InstallPartitions;
 
 	u64 estimated_size = wbfs_estimate_disc(part, __ReadDVD, NULL, part_sel);
 
@@ -495,7 +495,7 @@ s32 Wbfs_Fat::GetHeadersCount()
 		// if we have titles.txt entry use that
 		title = GameTitles.GetTitle(id);
 		// if no titles.txt get title from dir or file name
-		if (strlen(title) == 0 && !Settings.ForceDiscTitles && strlen(fname_title) > 0)
+		if (strlen(title) == 0 && !App.Settings.ForceDiscTitles && strlen(fname_title) > 0)
 			title = fname_title;
 
 		if (strlen(title) > 0)
@@ -731,11 +731,11 @@ void Wbfs_Fat::GetDir(struct discHdr *header, char *path)
 {
 	strcpy(path, wbfs_fs_drive);
 	strcat(path, wbfs_fat_dir);
-	if (Settings.InstallToDir)
+	if (App.Settings.InstallToDir)
 	{
 		strcat(path, "/");
 		int layout = 0;
-		if (Settings.InstallToDir == 2) layout = 1;
+		if (App.Settings.InstallToDir == 2) layout = 1;
 		mk_gameid_title(header, path + strlen(path), 0, layout);
 	}
 }
@@ -758,10 +758,10 @@ wbfs_t* Wbfs_Fat::CreatePart(u8 *id, char *path)
 	// 1 cluster less than 4gb
 	u64 OPT_split_size = 4LL * 1024 * 1024 * 1024 - 32 * 1024;
 
-	if(Settings.GameSplit == GAMESPLIT_NONE && DeviceHandler::GetFilesystemType(USB1+Settings.partition) != PART_FS_FAT)
+	if(App.Settings.GameSplit == GAMESPLIT_NONE && DeviceHandler::GetFilesystemType(USB1+App.Settings.partition) != PART_FS_FAT)
 		OPT_split_size = (u64) 100LL * 1024 * 1024 * 1024 - 32 * 1024;
 
-	else if(Settings.GameSplit == GAMESPLIT_2GB)
+	else if(App.Settings.GameSplit == GAMESPLIT_2GB)
 		// 1 cluster less than 2gb
 		OPT_split_size = (u64)2LL * 1024 * 1024 * 1024 - 32 * 1024;
 

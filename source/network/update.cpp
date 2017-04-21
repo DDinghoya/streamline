@@ -37,7 +37,7 @@
 #include "networkops.h"
 #include "HTML_Stream.h"
 #include "FileDownloader.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/GameTitles.h"
 #include "language/gettext.h"
 #include "language/UpdateLanguage.h"
@@ -115,8 +115,8 @@ static bool CheckNewGameTDBVersion(const char *url)
 	free(HEAD_Responde);
 
 	std::string Title;
-	std::string Filepath = Settings.titlestxt_path;
-	if(Settings.titlestxt_path[Filepath.size()-1] != '/')
+	std::string Filepath = App.Settings.titlestxt_path;
+	if(App.Settings.titlestxt_path[Filepath.size()-1] != '/')
 		Filepath += '/';
 	Filepath += "wiitdb.xml";
 
@@ -142,8 +142,8 @@ int UpdateGameTDB()
 
 	gprintf("Updating GameTDB...\n");
 
-	string ZipPath = Settings.titlestxt_path;
-	if(Settings.titlestxt_path[ZipPath.size()-1] != '/')
+	string ZipPath = App.Settings.titlestxt_path;
+	if(App.Settings.titlestxt_path[ZipPath.size()-1] != '/')
 		ZipPath += '/';
 
 	ZipPath += "wiitdb.zip";
@@ -155,14 +155,14 @@ int UpdateGameTDB()
 
 	ZipFile zFile(ZipPath.c_str());
 
-	bool result = zFile.ExtractAll(Settings.titlestxt_path);
+	bool result = zFile.ExtractAll(App.Settings.titlestxt_path);
 
 	//! The zip file is not needed anymore so we can remove it
 	remove(ZipPath.c_str());
 
 	//! Reload all titles and reload cached titles because the file changed now.
 	GameTitles.SetDefault();
-	GameTitles.LoadTitlesFromGameTDB(Settings.titlestxt_path);
+	GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 
 	return (result ? filesize : -1);
 }
@@ -174,7 +174,7 @@ static void UpdateIconPng()
 	struct block file = downloadfile("http://svn.code.sf.net/p/usbloadergx/code/branches/updates/icon.png");
 	if (file.data != NULL)
 	{
-		snprintf(iconpath, sizeof(iconpath), "%sicon.png", Settings.update_path);
+		snprintf(iconpath, sizeof(iconpath), "%sicon.png", App.Settings.update_path);
 		FILE * pfile = fopen(iconpath, "wb");
 		if(pfile)
 		{
@@ -193,7 +193,7 @@ static void UpdateMetaXml()
 	// if not working, use this url form: http://sourceforge.net/p/usbloadergx/code/1254/tree//branches/updates/meta.xml?format=raw
 	if (file.data != NULL)
 	{
-		snprintf(xmlpath, sizeof(xmlpath), "%smeta.xml", Settings.update_path);
+		snprintf(xmlpath, sizeof(xmlpath), "%smeta.xml", App.Settings.update_path);
 		FILE *pfile = fopen(xmlpath, "wb");
 		if(pfile)
 		{
@@ -272,11 +272,11 @@ static int ApplicationDownload(void)
 	char tmppath[250];
 
 	#ifdef FULLCHANNEL
-		snprintf(tmppath, sizeof(tmppath), "%s/ULNR.wad", Settings.BootDevice);
+		snprintf(tmppath, sizeof(tmppath), "%s/ULNR.wad", App.Settings.BootDevice);
 	#else
 		char realpath[250];
-		snprintf(realpath, sizeof(realpath), "%sboot.dol", Settings.update_path);
-		snprintf(tmppath, sizeof(tmppath), "%sboot.tmp", Settings.update_path);
+		snprintf(realpath, sizeof(realpath), "%sboot.dol", App.Settings.update_path);
+		snprintf(tmppath, sizeof(tmppath), "%sboot.tmp", App.Settings.update_path);
 	#endif
 
 	int update_choice = WindowPrompt(fmt("Rev%i %s.", newrev, tr( "available" )), tr( "How do you want to update?" ), tr( "Update DOL" ), tr( "Update All" ), tr( "Cancel" ));
@@ -353,7 +353,7 @@ int UpdateApp()
 		return -1;
 	}
 
-	if (!CreateSubfolder(Settings.update_path))
+	if (!CreateSubfolder(App.Settings.update_path))
 	{
 		WindowPrompt(tr("Error:"), tr("Can't create directory"), tr("OK"));
 		return -1;

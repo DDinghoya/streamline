@@ -84,10 +84,10 @@ FlyingButtonsMenu::FlyingButtonsMenu(const char * menu_title)
 	backBtnTxt = new GuiText(tr( "Back" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	backBtnTxt->SetMaxWidth(btnOutline->GetWidth() - 30);
 	backBtnImg = new GuiImage(btnOutline);
-	if (Settings.wsprompt == ON)
+	if (App.Settings.wsprompt == ON)
 	{
-		backBtnTxt->SetWidescreen(Settings.widescreen);
-		backBtnImg->SetWidescreen(Settings.widescreen);
+		backBtnTxt->SetWidescreen(App.Settings.widescreen);
+		backBtnImg->SetWidescreen(App.Settings.widescreen);
 	}
 	backBtn = new GuiButton(backBtnImg, backBtnImg, 2, 3, -195, 400, trigA, btnSoundOver, btnSoundClick2, 1);
 	backBtn->SetLabel(backBtnTxt);
@@ -428,7 +428,7 @@ int FlyingButtonsMenu::MainLoop()
 	}
 	else if(homeBtn->GetState() == STATE_CLICKED)
 	{
-		Settings.Save();
+		App.Settings.Save();
 		if(CurrentMenu) CurrentMenu->SetState(STATE_DISABLED);
 		WindowExitPrompt();
 		homeBtn->ResetState();

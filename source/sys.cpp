@@ -8,7 +8,7 @@
 #include "FileOperations/fileops.h"
 #include "homebrewboot/BootHomebrew.h"
 #include "homebrewboot/HomebrewXML.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/GameTitles.h"
 #include "settings/newtitles.h"
 #include "settings/meta.h"
@@ -38,7 +38,7 @@ void wiilight(int enable) // Toggle wiilight (thanks Bool for wiilight source)
 {
 	static vu32 *_wiilight_reg = (u32*) 0xCD0000C0;
 	u32 val = (*_wiilight_reg & ~0x20);
-	if (enable && Settings.wiilight) val |= 0x20;
+	if (enable && App.Settings.wiilight) val |= 0x20;
 	*_wiilight_reg = val;
 }
 
@@ -78,9 +78,9 @@ void AppCleanUp(void)
 
 	BannerAsync::ThreadExit();
 
-	if(Settings.CacheTitles)
-		GameTitles.WriteCachedTitles(Settings.titlestxt_path);
-	Settings.Save();
+	if(App.Settings.CacheTitles)
+		GameTitles.WriteCachedTitles(App.Settings.titlestxt_path);
+	App.Settings.Save();
 
 	ExitGUIThreads();
 	StopGX();
@@ -119,7 +119,7 @@ void ExitApp(void)
 	WBFS_CloseAll();
 	DeviceHandler::DestroyInstance();
 	USB_Deinitialize();
-	if(Settings.PlaylogUpdate)
+	if(App.Settings.PlaylogUpdate)
 		Playlog_Delete(); // Don't show USB Loader GX in the Wii message board
 
 	MagicPatches(0);
@@ -179,7 +179,7 @@ void Sys_LoadMenu(void)
 	ExitApp();
 
 	// Priiloader shutup
-	if (Settings.godmode || !(Settings.ParentalBlocks & BLOCK_PRIILOADER_OVERRIDE))
+	if (App.Settings.godmode || !(App.Settings.ParentalBlocks & BLOCK_PRIILOADER_OVERRIDE))
 	{
 		*(u32 *)0x8132fffb = 0x50756e65;
 		*(u32 *)0x817feff0 = 0x50756e65;	// priiloader 0.8 beta 4+
@@ -236,12 +236,12 @@ bool RebootApp(void)
 	// Load meta.xml arguments
 	char filepath[255];
 	HomebrewXML MetaXML;
-	snprintf(filepath, sizeof(filepath), "%s/meta.xml", Settings.update_path);
+	snprintf(filepath, sizeof(filepath), "%s/meta.xml", App.Settings.update_path);
 	MetaXML.LoadHomebrewXMLData(filepath);
 
 	u8 *buffer = NULL;
 	u32 filesize = 0;
-	snprintf(filepath, sizeof(filepath), "%s/boot.dol", Settings.update_path);
+	snprintf(filepath, sizeof(filepath), "%s/boot.dol", App.Settings.update_path);
 	LoadFileToMem(filepath, &buffer, &filesize);
 	if(!buffer)
 	{
@@ -282,9 +282,9 @@ void ScreenShot()
 	}
 
 	// Create the full pathname.
-	snprintf(fullPath, sizeof(fullPath), "%s%s", Settings.ConfigPath, filename);
+	snprintf(fullPath, sizeof(fullPath), "%s%s", App.Settings.ConfigPath, filename);
 
-	if(!CreateSubfolder(Settings.ConfigPath))
+	if(!CreateSubfolder(App.Settings.ConfigPath))
 	{
 		gprintf("Can't create screenshot folder\n");
 		return;

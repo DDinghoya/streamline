@@ -56,10 +56,10 @@ ThemeMenu::ThemeMenu()
 	defaultBtnTxt = new GuiText(tr( "Default" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	defaultBtnTxt->SetMaxWidth(btnOutline->GetWidth() - 30);
 	defaultBtnImg = new GuiImage(btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		defaultBtnTxt->SetWidescreen(Settings.widescreen);
-		defaultBtnImg->SetWidescreen(Settings.widescreen);
+		defaultBtnTxt->SetWidescreen(App.Settings.widescreen);
+		defaultBtnImg->SetWidescreen(App.Settings.widescreen);
 	}
 	defaultBtn = new GuiButton(btnOutline->GetWidth(), btnOutline->GetHeight());
 	defaultBtn->SetAlignment(ALIGN_CENTER, ALIGN_TOP);
@@ -187,7 +187,7 @@ void ThemeMenu::SetupMainButtons()
 {
 	ThemeList.clear();
 
-	DirList ThemeDir(Settings.theme_path, ".them", DirList::Files);
+	DirList ThemeDir(App.Settings.theme_path, ".them", DirList::Files);
 	if (ThemeDir.GetFilecount() == 0)
 	{
 		WindowPrompt(tr( "No themes found." ), 0, "OK");
@@ -232,7 +232,7 @@ void ThemeMenu::SetupMainButtons()
 		else
 		{
 			std::string tempString = ThemeList[size].ImageFolder;
-			ThemeList[size].ImageFolder = Settings.theme_path;
+			ThemeList[size].ImageFolder = App.Settings.theme_path;
 			ThemeList[size].ImageFolder += tempString;
 			ThemeList[size].ImageFolder += '/';
 		}
@@ -351,10 +351,10 @@ void ThemeMenu::MainButtonClicked(int button)
 	GuiText applyBtnTxt(tr( "Apply" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	applyBtnTxt.SetMaxWidth(btnOutline.GetWidth() - 30);
 	GuiImage applyBtnImg(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		applyBtnTxt.SetWidescreen(Settings.widescreen);
-		applyBtnImg.SetWidescreen(Settings.widescreen);
+		applyBtnTxt.SetWidescreen(App.Settings.widescreen);
+		applyBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton applyBtn(&applyBtnImg, &applyBtnImg, ALIGN_RIGHT, ALIGN_TOP, -5, 170, &trigA, btnSoundOver, btnSoundClick2, 1);
 	applyBtn.SetLabel(&applyBtnTxt);
@@ -363,10 +363,10 @@ void ThemeMenu::MainButtonClicked(int button)
 	GuiText backBtnTxt(tr( "Back" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	backBtnTxt.SetMaxWidth(btnOutline.GetWidth() - 30);
 	GuiImage backBtnImg(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		backBtnTxt.SetWidescreen(Settings.widescreen);
-		backBtnImg.SetWidescreen(Settings.widescreen);
+		backBtnTxt.SetWidescreen(App.Settings.widescreen);
+		backBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton backBtn(&backBtnImg, &backBtnImg, ALIGN_RIGHT, ALIGN_TOP, -5, 220, &trigA, btnSoundOver, btnSoundClick2, 1);
 	backBtn.SetLabel(&backBtnTxt);
@@ -411,7 +411,7 @@ void ThemeMenu::MainButtonClicked(int button)
 			{
 				if (Theme::Load(ThemeList[button].Filepath.c_str()))
 				{
-					snprintf(Settings.theme, sizeof(Settings.theme), ThemeList[button].Filepath.c_str());
+					snprintf(App.Settings.theme, sizeof(App.Settings.theme), ThemeList[button].Filepath.c_str());
 					Theme::Reload();
 					returnMenu = MENU_THEMEMENU;
 					leave = true;

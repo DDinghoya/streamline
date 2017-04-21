@@ -9,7 +9,7 @@
 #include "prompts/ProgressWindow.h"
 #include "GUI/gui.h"
 #include "GUI/gui_optionbrowser.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/GameTitles.h"
 #include "themes/CTheme.h"
 #include "network/URL_List.h"
@@ -33,13 +33,13 @@ bool MenuBackgroundMusic()
 	bool ret = false;
 	int result = -1;
 	char entered[1024];
-	strlcpy(entered, Settings.ogg_path, sizeof(entered));
+	strlcpy(entered, App.Settings.ogg_path, sizeof(entered));
 
 	// Check the OGG path.
 	if (entered[0] == 0 )
 	{
 		// OGG path is empty.
-		strlcpy(entered, Settings.BootDevice, sizeof(entered));
+		strlcpy(entered, App.Settings.BootDevice, sizeof(entered));
 	}
 	else
 	{
@@ -64,7 +64,7 @@ bool MenuBackgroundMusic()
 				return true;
 		}
 		else
-			strlcpy(entered, Settings.BootDevice, sizeof(entered));
+			strlcpy(entered, App.Settings.BootDevice, sizeof(entered));
 	}
 
 	result = BrowseDevice( entered, sizeof( entered ), FB_DEFAULT );
@@ -78,7 +78,7 @@ bool MenuBackgroundMusic()
 		else
 			ret = true;
 		bgMusic->Play();
-		bgMusic->SetVolume( Settings.volume );
+		bgMusic->SetVolume( App.Settings.volume );
 	}
 
 	return ret;
@@ -102,13 +102,13 @@ int MenuLanguageSelect()
 	trigB.SetButtonOnlyTrigger( -1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B );
 
 	char fullpath[150];
-	DirList Dir(Settings.languagefiles_path, ".lang");
+	DirList Dir(App.Settings.languagefiles_path, ".lang");
 
 	// Check if a language is specified.
-	if (Settings.language_path[0] == 0)
+	if (App.Settings.language_path[0] == 0)
 		strlcpy(fullpath, tr( "Default" ), sizeof(fullpath));
 	else
-		strlcpy(fullpath, Settings.languagefiles_path, sizeof(fullpath));
+		strlcpy(fullpath, App.Settings.languagefiles_path, sizeof(fullpath));
 
 	GuiText titleTxt( fullpath, 24, ( GXColor ) {0, 0, 0, 255} );
 	titleTxt.SetAlignment( ALIGN_CENTER, ALIGN_MIDDLE );
@@ -129,10 +129,10 @@ int MenuLanguageSelect()
 	GuiText backBtnTxt( tr( "Back" ) , 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	backBtnTxt.SetMaxWidth( btnOutline.GetWidth() - 30 );
 	GuiImage backBtnImg( &btnOutline );
-	if ( Settings.wsprompt == ON )
+	if ( App.Settings.wsprompt == ON )
 	{
-		backBtnTxt.SetWidescreen( Settings.widescreen );
-		backBtnImg.SetWidescreen( Settings.widescreen );
+		backBtnTxt.SetWidescreen( App.Settings.widescreen );
+		backBtnImg.SetWidescreen( App.Settings.widescreen );
 	}
 	GuiButton backBtn( btnOutline.GetWidth(), btnOutline.GetHeight() );
 	backBtn.SetAlignment( ALIGN_CENTER, ALIGN_TOP );
@@ -148,10 +148,10 @@ int MenuLanguageSelect()
 	GuiText defaultBtnTxt( tr( "Default" ) , 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	defaultBtnTxt.SetMaxWidth( btnOutline.GetWidth() - 30 );
 	GuiImage defaultBtnImg( &btnOutline );
-	if ( Settings.wsprompt == ON )
+	if ( App.Settings.wsprompt == ON )
 	{
-		defaultBtnTxt.SetWidescreen( Settings.widescreen );
-		defaultBtnImg.SetWidescreen( Settings.widescreen );
+		defaultBtnTxt.SetWidescreen( App.Settings.widescreen );
+		defaultBtnImg.SetWidescreen( App.Settings.widescreen );
 	}
 	GuiButton defaultBtn( btnOutline.GetWidth(), btnOutline.GetHeight() );
 	defaultBtn.SetAlignment( ALIGN_CENTER, ALIGN_TOP );
@@ -166,10 +166,10 @@ int MenuLanguageSelect()
 	GuiText updateBtnTxt( tr( "Update Files" ) , 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	updateBtnTxt.SetMaxWidth( btnOutline.GetWidth() - 30 );
 	GuiImage updateBtnImg( &btnOutline );
-	if ( Settings.wsprompt == ON )
+	if ( App.Settings.wsprompt == ON )
 	{
-		updateBtnTxt.SetWidescreen( Settings.widescreen );
-		updateBtnImg.SetWidescreen( Settings.widescreen );
+		updateBtnTxt.SetWidescreen( App.Settings.widescreen );
+		updateBtnImg.SetWidescreen( App.Settings.widescreen );
 	}
 	GuiButton updateBtn( btnOutline.GetWidth(), btnOutline.GetHeight() );
 	updateBtn.SetAlignment( ALIGN_CENTER, ALIGN_TOP );
@@ -236,8 +236,8 @@ int MenuLanguageSelect()
 			choice = WindowPrompt( tr( "Loading standard language." ), 0, tr( "OK" ), tr( "Cancel" ) );
 			if ( choice == 1 )
 			{
-				Settings.LoadLanguage(NULL, CONSOLE_DEFAULT);
-				Settings.Save();
+				App.Settings.LoadLanguage(NULL, CONSOLE_DEFAULT);
+				App.Settings.Save();
 				returnhere = 2;
 			}
 			defaultBtn.ResetState();
@@ -268,7 +268,7 @@ int MenuLanguageSelect()
 			w.Remove( &pathBtn );
 			w.Remove( &defaultBtn );
 			char entered[43] = "";
-			strlcpy( entered, Settings.languagefiles_path, sizeof( entered ) );
+			strlcpy( entered, App.Settings.languagefiles_path, sizeof( entered ) );
 			int result = OnScreenKeyboard( entered, 43, 0 );
 			w.Append( &optionBrowser4 );
 			w.Append( &pathBtn );
@@ -278,7 +278,7 @@ int MenuLanguageSelect()
 			{
 				if (entered[strlen(entered)-1] != '/')
 					strcat (entered, "/");
-				snprintf(Settings.languagefiles_path, sizeof(Settings.languagefiles_path), entered);
+				snprintf(App.Settings.languagefiles_path, sizeof(App.Settings.languagefiles_path), entered);
 				WindowPrompt(tr("Languagepath changed."), 0, tr("OK"));
 			}
 			pathBtn.ResetState();
@@ -292,20 +292,20 @@ int MenuLanguageSelect()
 			if (choice == 1)
 			{
 				char newLangPath[150];
-				snprintf(Settings.languagefiles_path, sizeof( Settings.languagefiles_path ), "%s", Dir.GetFilepath(ret));
-				char * ptr = strrchr(Settings.languagefiles_path, '/');
+				snprintf(App.Settings.languagefiles_path, sizeof( App.Settings.languagefiles_path ), "%s", Dir.GetFilepath(ret));
+				char * ptr = strrchr(App.Settings.languagefiles_path, '/');
 				if(ptr) ptr[1] = 0;
 				snprintf(newLangPath, sizeof(newLangPath), "%s", Dir.GetFilepath(ret));
 				if (!CheckFile(newLangPath))
 				{
 					WindowPrompt(tr("File not found."), tr("Loading standard language."), tr("OK"));
-					Settings.LoadLanguage(NULL, CONSOLE_DEFAULT);
+					App.Settings.LoadLanguage(NULL, CONSOLE_DEFAULT);
 				}
 				else
 				{
-					Settings.LoadLanguage(newLangPath);
+					App.Settings.LoadLanguage(newLangPath);
 				}
-				Settings.Save();
+				App.Settings.Save();
 				returnhere = 2;
 				break;
 			}

@@ -17,7 +17,7 @@
  ****************************************************************************/
 #include <unistd.h>
 #include <gccore.h>
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/CGameStatistics.h"
 #include "themes/CTheme.h"
 #include "prompts/PromptWindows.h"
@@ -123,16 +123,16 @@ GCGameLoadSM::GCGameLoadSM(struct discHdr *hdr)
 	saveBtnTxt = new GuiText(tr( "Save" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	saveBtnTxt->SetMaxWidth(btnOutline->GetWidth() - 30);
 	saveBtnImg = new GuiImage (btnOutline);
-	if (Settings.wsprompt == ON)
+	if (App.Settings.wsprompt == ON)
 	{
-		saveBtnTxt->SetWidescreen(Settings.widescreen);
-		saveBtnImg->SetWidescreen(Settings.widescreen);
+		saveBtnTxt->SetWidescreen(App.Settings.widescreen);
+		saveBtnImg->SetWidescreen(App.Settings.widescreen);
 	}
 	saveBtn = new GuiButton(saveBtnImg, saveBtnImg, 2, 3, 180, 400, trigA, btnSoundOver, btnSoundClick2, 1);
 	saveBtn->SetLabel(saveBtnTxt);
 	Append(saveBtn);
 
-	currentGCmode = GameConfig.GameCubeMode == INHERIT ? Settings.GameCubeMode : GameConfig.GameCubeMode;
+	currentGCmode = GameConfig.GameCubeMode == INHERIT ? App.Settings.GameCubeMode : GameConfig.GameCubeMode;
 	
 	SetOptionNames();
 	SetOptionValues();
@@ -588,7 +588,7 @@ int GCGameLoadSM::GetMenuInternal()
 	else if (ret == ++Idx)
 	{
 		if (++GameConfig.GameCubeMode >= CG_MODE_MAX_CHOICE) GameConfig.GameCubeMode = INHERIT;
-		currentGCmode = GameConfig.GameCubeMode == INHERIT ? Settings.GameCubeMode : GameConfig.GameCubeMode;
+		currentGCmode = GameConfig.GameCubeMode == INHERIT ? App.Settings.GameCubeMode : GameConfig.GameCubeMode;
 			Options->ClearList();
 			SetOptionNames();
 			SetOptionValues();

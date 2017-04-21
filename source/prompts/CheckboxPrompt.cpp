@@ -82,7 +82,7 @@ void CheckboxPrompt::AddCheckBox(const char *text)
 	Checkbox[size]->Clicked.connect(this, &CheckboxPrompt::OnCheckBoxClick);
 	Append(Checkbox[size]);
 
-	if (Settings.wsprompt && Settings.widescreen)
+	if (App.Settings.wsprompt && App.Settings.widescreen)
 	{
 		if(size == 0)
 		{

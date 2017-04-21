@@ -17,6 +17,7 @@ include $(DEVKITPPC)/wii_rules
 TARGET		:=	boot
 BUILD		:=	build
 SOURCES		:=	source \
+				source/Core \
 				source/GUI \
 				source/Controls \
 				source/system \

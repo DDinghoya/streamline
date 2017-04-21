@@ -23,7 +23,7 @@
  ***************************************************************************/
 #include <gctypes.h>
 #include <stdio.h>
-#include "settings/CSettings.h"
+#include "App.h"
 #include "usbloader/disc.h"
 #include "usbloader/wbfs.h"
 #include "FileOperations/fileops.h"

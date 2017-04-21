@@ -12,7 +12,7 @@
 #include <ogcsys.h>
 #include "GUI/gui.h"
 #include "Controls/WiiPointer.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "App.h"
 
 void InitGUIThreads(void);

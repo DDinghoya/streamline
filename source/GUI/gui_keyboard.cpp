@@ -10,7 +10,7 @@
 
 #include "gui.h"
 #include "App.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include <stdio.h>
 #include <string.h>
 #include "themes/CTheme.h"

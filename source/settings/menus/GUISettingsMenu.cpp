@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include "GUISettingsMenu.hpp"
 #include "Controls/DeviceHandler.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
 #include "settings/SettingsPrompts.h"
@@ -162,88 +162,88 @@ void GuiSettingsMenu::SetOptionValues()
 	int Idx = 0;
 
 	//! Settings: App Language
-	const char * language = strrchr(Settings.language_path, '/');
+	const char * language = strrchr(App.Settings.language_path, '/');
 	if(language)
 		language += 1;
-	if (!language || strcmp(Settings.language_path, "") == 0)
+	if (!language || strcmp(App.Settings.language_path, "") == 0)
 		Options->SetValue(Idx++, "%s", tr( "Default" ));
 	else
 		Options->SetValue(Idx++, "%s", language);
 
 	//! Settings: Display
-	Options->SetValue(Idx++, "%s", tr( GameInfoText[Settings.sinfo] ));
+	Options->SetValue(Idx++, "%s", tr( GameInfoText[App.Settings.sinfo] ));
 
 	//! Settings: Clock
-	if (Settings.hddinfo == CLOCK_HR12)
+	if (App.Settings.hddinfo == CLOCK_HR12)
 		Options->SetValue(Idx++, "12 %s", tr( "Hour" ));
-	else if (Settings.hddinfo == CLOCK_HR24)
+	else if (App.Settings.hddinfo == CLOCK_HR24)
 		Options->SetValue(Idx++, "24 %s", tr( "Hour" ));
-	else if (Settings.hddinfo == OFF)
+	else if (App.Settings.hddinfo == OFF)
 		Options->SetValue(Idx++, "%s", tr( "OFF" ));
 
 	//! Settings: Clock Font Scale Factor
-	Options->SetValue(Idx++, "%g", Settings.ClockFontScaleFactor);
+	Options->SetValue(Idx++, "%g", App.Settings.ClockFontScaleFactor);
 
 	//! Settings: Tooltips
-	Options->SetValue(Idx++, "%s", tr(OnOffText[Settings.tooltips]));
+	Options->SetValue(Idx++, "%s", tr(OnOffText[App.Settings.tooltips]));
 
 	//! Settings: Tooltip Delay
-	Options->SetValue(Idx++, "%i %s", Settings.TooltipDelay, tr("ms"));
+	Options->SetValue(Idx++, "%i %s", App.Settings.TooltipDelay, tr("ms"));
 
 	//! Settings: Flip-X
-	Options->SetValue(Idx++, "%s%s%s", tr(FlipXText[Settings.xflip][0]),
-				FlipXText[Settings.xflip][1], tr( FlipXText[Settings.xflip][2] ));
+	Options->SetValue(Idx++, "%s%s%s", tr(FlipXText[App.Settings.xflip][0]),
+				FlipXText[App.Settings.xflip][1], tr( FlipXText[App.Settings.xflip][2] ));
 
 	//! Settings: Game Window Mode
-	Options->SetValue(Idx++, "%s", tr( GameWindowText[Settings.GameWindowMode] ));
+	Options->SetValue(Idx++, "%s", tr( GameWindowText[App.Settings.GameWindowMode] ));
 
 	//! Settings: Prompts Buttons
-	Options->SetValue(Idx++, "%s", tr( PromptButtonsText[Settings.wsprompt] ));
+	Options->SetValue(Idx++, "%s", tr( PromptButtonsText[App.Settings.wsprompt] ));
 
 	//! Settings: Widescreen Factor
-	Options->SetValue(Idx++, "%g", Settings.WSFactor);
+	Options->SetValue(Idx++, "%g", App.Settings.WSFactor);
 
 	//! Settings: Font Scale Factor
-	Options->SetValue(Idx++, "%g", Settings.FontScaleFactor);
+	Options->SetValue(Idx++, "%g", App.Settings.FontScaleFactor);
 
 	//! Settings: Keyboard
-	Options->SetValue(Idx++, "%s", KeyboardText[Settings.keyset]);
+	Options->SetValue(Idx++, "%s", KeyboardText[App.Settings.keyset]);
 
 	//! Settings: Disc Artwork Download
-	Options->SetValue(Idx++, "%s", tr( DiscArtDownloadText[Settings.discart] ));
+	Options->SetValue(Idx++, "%s", tr( DiscArtDownloadText[App.Settings.discart] ));
 
 	//! Settings: Covers Full Artwork Download
-	Options->SetValue(Idx++, "%s", tr( CoversFullDownloadText[Settings.coversfull] ));
+	Options->SetValue(Idx++, "%s", tr( CoversFullDownloadText[App.Settings.coversfull] ));
 
 	//! Settings: Screensaver
-	Options->SetValue(Idx++, "%s", tr( ScreensaverText[Settings.screensaver] ));
+	Options->SetValue(Idx++, "%s", tr( ScreensaverText[App.Settings.screensaver] ));
 
 	//! Settings: Mark new games
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.marknewtitles] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.marknewtitles] ));
 
 	//! Settings: Show Play Count
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.ShowPlayCount] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.ShowPlayCount] ));
 
 	//! Settings: Show Favorite on banner window
-	Options->SetValue(Idx++, "%s", tr( BannerFavIconText[Settings.bannerFavIcon] ));
+	Options->SetValue(Idx++, "%s", tr( BannerFavIconText[App.Settings.bannerFavIcon] ));
 
 	//! Settings: Show Free Space
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.ShowFreeSpace] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.ShowFreeSpace] ));
 
 	//! Settings: Home Menu style
-	Options->SetValue(Idx++, "%s", tr( HomeMenuText[Settings.HomeMenu] ));
+	Options->SetValue(Idx++, "%s", tr( HomeMenuText[App.Settings.HomeMenu] ));
 
 	//! Settings: Use System Font
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.UseSystemFont] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.UseSystemFont] ));
 
 	//! Settings: Virtual Pointer Speed
-	Options->SetValue(Idx++, "%g", Settings.PointerSpeed);
+	Options->SetValue(Idx++, "%g", App.Settings.PointerSpeed);
 
 	//! Settings: Adjust Overscan X
-	Options->SetValue(Idx++, "%i", Settings.AdjustOverscanX);
+	Options->SetValue(Idx++, "%i", App.Settings.AdjustOverscanX);
 
 	//! Settings: Adjust Overscan Y
-	Options->SetValue(Idx++, "%i", Settings.AdjustOverscanY);
+	Options->SetValue(Idx++, "%i", App.Settings.AdjustOverscanY);
 }
 
 int GuiSettingsMenu::GetMenuInternal()
@@ -258,7 +258,7 @@ int GuiSettingsMenu::GetMenuInternal()
 	//! Settings: App Language
 	if (ret == ++Idx)
 	{
-		if (!Settings.godmode)
+		if (!App.Settings.godmode)
 		{
 			WindowPrompt(tr( "Language change:" ), tr( "Console should be unlocked to modify it." ), tr( "OK" ));
 			return MENU_NONE;
@@ -281,7 +281,7 @@ int GuiSettingsMenu::GetMenuInternal()
 		{
 			//! Language changed. Reload game titles with new lang code.
 			GameTitles.SetDefault();
-			GameTitles.LoadTitlesFromGameTDB(Settings.titlestxt_path);
+			GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 			return MENU_SETTINGS;
 		}
 
@@ -299,106 +299,106 @@ int GuiSettingsMenu::GetMenuInternal()
 	//! Settings: Display
 	else if (ret == ++Idx)
 	{
-		if (++Settings.sinfo >= GAMEINFO_MAX) Settings.sinfo = 0;
+		if (++App.Settings.sinfo >= GAMEINFO_MAX) App.Settings.sinfo = 0;
 	}
 
 	//! Settings: Clock
 	else if (ret == ++Idx)
 	{
-		if (++Settings.hddinfo >= CLOCK_MAX) Settings.hddinfo = 0; //CLOCK
+		if (++App.Settings.hddinfo >= CLOCK_MAX) App.Settings.hddinfo = 0; //CLOCK
 	}
 
 	//! Settings: Clock Font Scale Factor
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%g", Settings.ClockFontScaleFactor);
+		snprintf(entrie, sizeof(entrie), "%g", App.Settings.ClockFontScaleFactor);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.ClockFontScaleFactor = LIMIT(atof(entrie), 0.01f, 1.5f);
+			App.Settings.ClockFontScaleFactor = LIMIT(atof(entrie), 0.01f, 1.5f);
 	}
 
 	//! Settings: Tooltips
 	else if (ret == ++Idx)
 	{
-		if (++Settings.tooltips >= MAX_ON_OFF) Settings.tooltips = 0;
+		if (++App.Settings.tooltips >= MAX_ON_OFF) App.Settings.tooltips = 0;
 	}
 
 	//! Settings: Tooltip Delay
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%i", Settings.TooltipDelay);
+		snprintf(entrie, sizeof(entrie), "%i", App.Settings.TooltipDelay);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.TooltipDelay = atoi(entrie);
+			App.Settings.TooltipDelay = atoi(entrie);
 	}
 
 	//! Settings: Flip-X
 	else if (ret == ++Idx)
 	{
-		if (++Settings.xflip >= XFLIP_MAX) Settings.xflip = 0;
+		if (++App.Settings.xflip >= XFLIP_MAX) App.Settings.xflip = 0;
 	}
 
 	//! Settings: Game Window Mode
 	else if (ret == ++Idx)
 	{
-		if (++Settings.GameWindowMode >= 3) Settings.GameWindowMode = 0;
+		if (++App.Settings.GameWindowMode >= 3) App.Settings.GameWindowMode = 0;
 
-		if(Settings.GameWindowMode != GAMEWINDOW_DISC && !SystemMenuResources::Instance()->IsLoaded()) {
+		if(App.Settings.GameWindowMode != GAMEWINDOW_DISC && !SystemMenuResources::Instance()->IsLoaded()) {
 			WindowPrompt(tr( "Error:" ), tr( "Banner window is only available with AHBPROT! Please consider installing new HBC version." ), tr( "OK" ));
-			Settings.GameWindowMode = GAMEWINDOW_DISC;
+			App.Settings.GameWindowMode = GAMEWINDOW_DISC;
 		}
 	}
 
 	//! Settings: Prompts Buttons
 	else if (ret == ++Idx)
 	{
-		if (++Settings.wsprompt >= MAX_ON_OFF) Settings.wsprompt = 0;
+		if (++App.Settings.wsprompt >= MAX_ON_OFF) App.Settings.wsprompt = 0;
 	}
 
 	//! Settings: Widescreen Factor
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%g", Settings.WSFactor);
+		snprintf(entrie, sizeof(entrie), "%g", App.Settings.WSFactor);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.WSFactor = LIMIT(atof(entrie), 0.01f, 1.5f);
+			App.Settings.WSFactor = LIMIT(atof(entrie), 0.01f, 1.5f);
 	}
 
 	//! Settings: Font Scale Factor
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%g", Settings.FontScaleFactor);
+		snprintf(entrie, sizeof(entrie), "%g", App.Settings.FontScaleFactor);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.FontScaleFactor = LIMIT(atof(entrie), 0.01f, 1.5f);
+			App.Settings.FontScaleFactor = LIMIT(atof(entrie), 0.01f, 1.5f);
 	}
 
 	//! Settings: Keyboard
 	else if (ret == ++Idx)
 	{
-		if (++Settings.keyset >= KEYBOARD_MAX) Settings.keyset = 0;
+		if (++App.Settings.keyset >= KEYBOARD_MAX) App.Settings.keyset = 0;
 	}
 
 	//! Settings: Disc Artwork Download
 	else if (ret == ++Idx)
 	{
-		if (++Settings.discart >= DISCARTS_MAX_CHOICE) Settings.discart = 0;
+		if (++App.Settings.discart >= DISCARTS_MAX_CHOICE) App.Settings.discart = 0;
 	}
 
 	//! Settings: Covers Full Artwork Download
 	else if (ret == ++Idx)
 	{
-		if (++Settings.coversfull >= COVERSFULL_MAX_CHOICE) Settings.coversfull = 0;
+		if (++App.Settings.coversfull >= COVERSFULL_MAX_CHOICE) App.Settings.coversfull = 0;
 	}
 
 	//! Settings: Screensaver
 	else if (ret == ++Idx)
 	{
-		if (++Settings.screensaver >= SCREENSAVER_MAX) Settings.screensaver = 0;
+		if (++App.Settings.screensaver >= SCREENSAVER_MAX) App.Settings.screensaver = 0;
 
 		SetWPADTimeout();
 	}
@@ -406,68 +406,68 @@ int GuiSettingsMenu::GetMenuInternal()
 	//! Settings: Mark new games
 	else if (ret == ++Idx)
 	{
-		if (++Settings.marknewtitles >= MAX_ON_OFF) Settings.marknewtitles = 0;
+		if (++App.Settings.marknewtitles >= MAX_ON_OFF) App.Settings.marknewtitles = 0;
 	}
 
 	//! Settings: Show Play Count
 	else if (ret == ++Idx)
 	{
-		if (++Settings.ShowPlayCount >= MAX_ON_OFF) Settings.ShowPlayCount = 0;
+		if (++App.Settings.ShowPlayCount >= MAX_ON_OFF) App.Settings.ShowPlayCount = 0;
 	}
 
 	//! Settings: Show favorite on banner window
 	else if (ret == ++Idx)
 	{
-		if (++Settings.bannerFavIcon >= BANNER_FAVICON_MAX_CHOICE) Settings.bannerFavIcon = 0;
+		if (++App.Settings.bannerFavIcon >= BANNER_FAVICON_MAX_CHOICE) App.Settings.bannerFavIcon = 0;
 	}
 
 	//! Settings: Show Free Space
 	else if (ret == ++Idx)
 	{
-		if (++Settings.ShowFreeSpace >= MAX_ON_OFF) Settings.ShowFreeSpace = 0;
+		if (++App.Settings.ShowFreeSpace >= MAX_ON_OFF) App.Settings.ShowFreeSpace = 0;
 	}
 
 	//! Settings: Home Menu Style
 	else if (ret == ++Idx)
 	{
-		if (++Settings.HomeMenu >= HOME_MENU_MAX_CHOICE) Settings.HomeMenu = 0;
+		if (++App.Settings.HomeMenu >= HOME_MENU_MAX_CHOICE) App.Settings.HomeMenu = 0;
 	}
 
 	//! Settings: Use System Font
 	else if (ret == ++Idx)
 	{
-		if (++Settings.UseSystemFont >= MAX_ON_OFF) Settings.UseSystemFont = 0;
+		if (++App.Settings.UseSystemFont >= MAX_ON_OFF) App.Settings.UseSystemFont = 0;
 
 		HaltGui();
-		Theme::LoadFont(Settings.ConfigPath);
+		Theme::LoadFont(App.Settings.ConfigPath);
 		ResumeGui();
 
-		if(Settings.FontScaleFactor == 1.0f && Settings.UseSystemFont == ON)
-			Settings.FontScaleFactor = 0.8f;
-		else if(Settings.FontScaleFactor == 0.8f && Settings.UseSystemFont == OFF)
-			Settings.FontScaleFactor = 1.0f;
+		if(App.Settings.FontScaleFactor == 1.0f && App.Settings.UseSystemFont == ON)
+			App.Settings.FontScaleFactor = 0.8f;
+		else if(App.Settings.FontScaleFactor == 0.8f && App.Settings.UseSystemFont == OFF)
+			App.Settings.FontScaleFactor = 1.0f;
 	}
 
 	//! Settings: Virtual Pointer Speed
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%g", Settings.PointerSpeed);
+		snprintf(entrie, sizeof(entrie), "%g", App.Settings.PointerSpeed);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.PointerSpeed = atof(entrie);
+			App.Settings.PointerSpeed = atof(entrie);
 	}
 
 	//! Settings: Adjust Overscan X
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%i", Settings.AdjustOverscanX);
+		snprintf(entrie, sizeof(entrie), "%i", App.Settings.AdjustOverscanX);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
 		{
-			Settings.AdjustOverscanX = atoi(entrie);
-			AdjustOverscan(Settings.AdjustOverscanX, Settings.AdjustOverscanY);
+			App.Settings.AdjustOverscanX = atoi(entrie);
+			AdjustOverscan(App.Settings.AdjustOverscanX, App.Settings.AdjustOverscanY);
 		}
 	}
 
@@ -475,12 +475,12 @@ int GuiSettingsMenu::GetMenuInternal()
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%i", Settings.AdjustOverscanY);
+		snprintf(entrie, sizeof(entrie), "%i", App.Settings.AdjustOverscanY);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
 		{
-			Settings.AdjustOverscanY = atoi(entrie);
-			AdjustOverscan(Settings.AdjustOverscanX, Settings.AdjustOverscanY);
+			App.Settings.AdjustOverscanY = atoi(entrie);
+			AdjustOverscan(App.Settings.AdjustOverscanX, App.Settings.AdjustOverscanY);
 		}
 	}
 

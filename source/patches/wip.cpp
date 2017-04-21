@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "gecko.h"
 
-#include "settings/CSettings.h"
+#include "App.h"
 #include "memory/mem2.h"
 #include "wip.h"
 
@@ -90,21 +90,21 @@ extern "C" int load_wip_code(u8 *gameid)
 	char GameID[8];
 	memset(GameID, 0, sizeof(GameID));
 	memcpy(GameID, gameid, 6);
-	snprintf(filepath, sizeof(filepath), "%s%s.wip", Settings.WipCodepath, GameID);
+	snprintf(filepath, sizeof(filepath), "%s%s.wip", App.Settings.WipCodepath, GameID);
 
 	FILE * fp = fopen(filepath, "rb");
 	if (!fp)
 	{
 		memset(GameID, 0, sizeof(GameID));
 		memcpy(GameID, gameid, 4);
-		snprintf(filepath, sizeof(filepath), "%s%s.wip", Settings.WipCodepath, GameID);
+		snprintf(filepath, sizeof(filepath), "%s%s.wip", App.Settings.WipCodepath, GameID);
 		fp = fopen(filepath, "rb");
 	}
 	if (!fp)
 	{
 		memset(GameID, 0, sizeof(GameID));
 		memcpy(GameID, gameid, 3);
-		snprintf(filepath, sizeof(filepath), "%s%s.wip", Settings.WipCodepath, GameID);
+		snprintf(filepath, sizeof(filepath), "%s%s.wip", App.Settings.WipCodepath, GameID);
 		fp = fopen(filepath, "rb");
 	}
 

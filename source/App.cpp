@@ -32,6 +32,19 @@ extern "C"
 	void __exception_setreload(int t);
 }
 
+// Main loader application reference
+LoaderApp App;
+
+LoaderApp::LoaderApp()
+{
+
+}
+
+LoaderApp::~LoaderApp()
+{
+	
+}
+
 int main(int argc, char *argv[])
 {
 	__exception_setreload(20);

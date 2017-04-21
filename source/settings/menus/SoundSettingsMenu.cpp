@@ -23,7 +23,7 @@
  ***************************************************************************/
 #include <unistd.h>
 #include "SoundSettingsMenu.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/SettingsPrompts.h"
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
@@ -63,35 +63,35 @@ void SoundSettingsMenu::SetOptionValues()
 	int Idx = 0;
 
 	//! Settings: Backgroundmusic
-	const char * filename = strrchr(Settings.ogg_path, '/');
+	const char * filename = strrchr(App.Settings.ogg_path, '/');
 	if (filename)
 		Options->SetValue(Idx++, filename+1);
 	else
 		Options->SetValue(Idx++, tr( "Default" ));
 
 	//! Settings: Music Volume
-	if (Settings.volume > 0)
-		Options->SetValue(Idx++, "%i", Settings.volume);
+	if (App.Settings.volume > 0)
+		Options->SetValue(Idx++, "%i", App.Settings.volume);
 	else
 		Options->SetValue(Idx++, tr( "OFF" ));
 
 	//! Settings: SFX Volume
-	if (Settings.sfxvolume > 0)
-		Options->SetValue(Idx++, "%i", Settings.sfxvolume);
+	if (App.Settings.sfxvolume > 0)
+		Options->SetValue(Idx++, "%i", App.Settings.sfxvolume);
 	else
 		Options->SetValue(Idx++, tr( "OFF" ));
 
 	//! Settings: Game Sound Mode
-	Options->SetValue(Idx++, "%s", tr( GameSoundText[Settings.gamesound] ));
+	Options->SetValue(Idx++, "%s", tr( GameSoundText[App.Settings.gamesound] ));
 
 	//! Settings: Game Sound Volume
-	if (Settings.gamesoundvolume > 0)
-		Options->SetValue(Idx++, "%i", Settings.gamesoundvolume);
+	if (App.Settings.gamesoundvolume > 0)
+		Options->SetValue(Idx++, "%i", App.Settings.gamesoundvolume);
 	else
 		Options->SetValue(Idx++, tr( "OFF" ));
 
 	//! Settings: Music Loop Mode
-	Options->SetValue(Idx++, tr( MusicLoopText[Settings.musicloopmode] ));
+	Options->SetValue(Idx++, tr( MusicLoopText[App.Settings.musicloopmode] ));
 
 	//! Settings: Reset BG Music
 	Options->SetValue(Idx++, " ");
@@ -120,39 +120,39 @@ int SoundSettingsMenu::GetMenuInternal()
 	//! Settings: Music Volume
 	else if (ret == ++Idx)
 	{
-		Settings.volume += 10;
-		if (Settings.volume > 100) Settings.volume = 0;
-		bgMusic->SetVolume(Settings.volume);
+		App.Settings.volume += 10;
+		if (App.Settings.volume > 100) App.Settings.volume = 0;
+		bgMusic->SetVolume(App.Settings.volume);
 	}
 
 	//! Settings: SFX Volume
 	else if (ret == ++Idx)
 	{
-		Settings.sfxvolume += 10;
-		if (Settings.sfxvolume > 100) Settings.sfxvolume = 0;
-		btnSoundOver->SetVolume(Settings.sfxvolume);
-		btnSoundClick->SetVolume(Settings.sfxvolume);
-		btnSoundClick2->SetVolume(Settings.sfxvolume);
+		App.Settings.sfxvolume += 10;
+		if (App.Settings.sfxvolume > 100) App.Settings.sfxvolume = 0;
+		btnSoundOver->SetVolume(App.Settings.sfxvolume);
+		btnSoundClick->SetVolume(App.Settings.sfxvolume);
+		btnSoundClick2->SetVolume(App.Settings.sfxvolume);
 	}
 
 	//! Settings: Game Sound Mode
 	else if (ret == ++Idx)
 	{
-		if (++Settings.gamesound > 2) Settings.gamesound = 0;
+		if (++App.Settings.gamesound > 2) App.Settings.gamesound = 0;
 	}
 
 	//! Settings: Game Sound Volume
 	else if (ret == ++Idx)
 	{
-		Settings.gamesoundvolume += 10;
-		if (Settings.gamesoundvolume > 100) Settings.gamesoundvolume = 0;
+		App.Settings.gamesoundvolume += 10;
+		if (App.Settings.gamesoundvolume > 100) App.Settings.gamesoundvolume = 0;
 	}
 
 	//! Settings: Music Loop Mode
 	else if (ret == ++Idx)
 	{
-		if (++Settings.musicloopmode > 3) Settings.musicloopmode = 0;
-		bgMusic->SetLoop(Settings.musicloopmode);
+		if (++App.Settings.musicloopmode > 3) App.Settings.musicloopmode = 0;
+		bgMusic->SetLoop(App.Settings.musicloopmode);
 	}
 
 	//! Settings: Reset BG Music

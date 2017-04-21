@@ -76,7 +76,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 	strlcpy(ID, (char *) header->id, sizeof(ID));
 
 	char xmlpath[300];
-	snprintf(xmlpath, sizeof(xmlpath), "%swiitdb.xml", Settings.titlestxt_path);
+	snprintf(xmlpath, sizeof(xmlpath), "%swiitdb.xml", App.Settings.titlestxt_path);
 
 	GameTDB XML_DB;
 
@@ -86,7 +86,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 		return -1;
 	}
 
-	XML_DB.SetLanguageCode(Settings.db_language);
+	XML_DB.SetLanguageCode(App.Settings.db_language);
 
 	GameXMLInfo GameInfo;
 
@@ -374,17 +374,17 @@ static int InternalShowGameInfo(struct discHdr *header)
 	bool loadFlatCover = false;
 	bool load3DCover = false;
 	char imgPath[150];
-	snprintf(imgPath, sizeof(imgPath), "%s/%s.png", Settings.coversFull_path, ID);
+	snprintf(imgPath, sizeof(imgPath), "%s/%s.png", App.Settings.coversFull_path, ID);
 	if(!CheckFile(imgPath))
 	{
 		loadFlatCover = true;
-		snprintf(imgPath, sizeof(imgPath), "%s/%s.png", Settings.covers2d_path, ID);
+		snprintf(imgPath, sizeof(imgPath), "%s/%s.png", App.Settings.covers2d_path, ID);
 	}
 	if(!CheckFile(imgPath))
 	{
 		loadFlatCover = false;
 		load3DCover = true;
-		snprintf(imgPath, sizeof(imgPath), "%s/%s.png", Settings.covers_path, ID);
+		snprintf(imgPath, sizeof(imgPath), "%s/%s.png", App.Settings.covers_path, ID);
 	}
 	cover = new GuiImageData(imgPath); //load full id image
 	if (!cover->GetImage())
@@ -396,7 +396,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 	if(load3DCover && cover) //! No cover is always 3D box
 	{
 		coverImg = new GuiImage(cover);
-		coverImg->SetWidescreen(Settings.widescreen);
+		coverImg->SetWidescreen(App.Settings.widescreen);
 		coverImg->SetPosition(15, 30);
 	}
 	else
@@ -434,130 +434,130 @@ static int InternalShowGameInfo(struct discHdr *header)
 			playersImgData = Resources::GetImageData("wiimote4.png");
 
 		playersImg = new GuiImage(playersImgData);
-		playersImg->SetWidescreen(Settings.widescreen);
+		playersImg->SetWidescreen(App.Settings.widescreen);
 		playersImg->SetPosition(intputX, inputY);
 		playersImg->SetAlignment(0, 4);
 		InfoWindow.Append(playersImg);
-		intputX += (Settings.widescreen ? playersImg->GetWidth() * Settings.WSFactor : playersImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? playersImg->GetWidth() * App.Settings.WSFactor : playersImg->GetWidth()) + 5;
 	}
 
 	//draw the input types for this game
 	if (motionplus == 1)
 	{
 		motionplusImg = new GuiImage(motionplusImgData);
-		motionplusImg->SetWidescreen(Settings.widescreen);
+		motionplusImg->SetWidescreen(App.Settings.widescreen);
 		motionplusImg->SetPosition(intputX, inputY);
 		motionplusImg->SetAlignment(0, 4);
 		InfoWindow.Append(motionplusImg);
-		intputX += (Settings.widescreen ? motionplusImg->GetWidth() * Settings.WSFactor : motionplusImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? motionplusImg->GetWidth() * App.Settings.WSFactor : motionplusImg->GetWidth()) + 5;
 	}
 	if (nunchuk == 1)
 	{
 		nunchukImg = new GuiImage(nunchukImgData);
-		nunchukImg->SetWidescreen(Settings.widescreen);
+		nunchukImg->SetWidescreen(App.Settings.widescreen);
 		nunchukImg->SetPosition(intputX, inputY);
 		nunchukImg->SetAlignment(0, 4);
 		InfoWindow.Append(nunchukImg);
-		intputX += (Settings.widescreen ? nunchukImg->GetWidth() * Settings.WSFactor : nunchukImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? nunchukImg->GetWidth() * App.Settings.WSFactor : nunchukImg->GetWidth()) + 5;
 	}
 	if (classiccontroller == 1)
 	{
 		classiccontrollerImg = new GuiImage(classiccontrollerImgData);
-		classiccontrollerImg->SetWidescreen(Settings.widescreen);
+		classiccontrollerImg->SetWidescreen(App.Settings.widescreen);
 		classiccontrollerImg->SetPosition(intputX, inputY);
 		classiccontrollerImg->SetAlignment(0, 4);
 		InfoWindow.Append(classiccontrollerImg);
-		intputX += (Settings.widescreen ? classiccontrollerImg->GetWidth() * Settings.WSFactor : classiccontrollerImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? classiccontrollerImg->GetWidth() * App.Settings.WSFactor : classiccontrollerImg->GetWidth()) + 5;
 	}
 	if (gamecube == 1)
 	{
 		gcImg = new GuiImage(gamecubeImgData);
-		gcImg->SetWidescreen(Settings.widescreen);
+		gcImg->SetWidescreen(App.Settings.widescreen);
 		gcImg->SetPosition(intputX, inputY);
 		gcImg->SetAlignment(0, 4);
 		InfoWindow.Append(gcImg);
-		intputX += (Settings.widescreen ? gcImg->GetWidth() * Settings.WSFactor : gcImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? gcImg->GetWidth() * App.Settings.WSFactor : gcImg->GetWidth()) + 5;
 	}
 	if (wheel == 1)
 	{
 		wheelImg = new GuiImage(wheelImgData);
-		wheelImg->SetWidescreen(Settings.widescreen);
+		wheelImg->SetWidescreen(App.Settings.widescreen);
 		wheelImg->SetPosition(intputX, inputY);
 		wheelImg->SetAlignment(0, 4);
 		InfoWindow.Append(wheelImg);
-		intputX += (Settings.widescreen ? wheelImg->GetWidth() * Settings.WSFactor : wheelImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? wheelImg->GetWidth() * App.Settings.WSFactor : wheelImg->GetWidth()) + 5;
 	}
 	if (guitar == 1)
 	{
 		guitarImg = new GuiImage(guitarImgData);
-		guitarImg->SetWidescreen(Settings.widescreen);
+		guitarImg->SetWidescreen(App.Settings.widescreen);
 		guitarImg->SetPosition(intputX, inputY);
 		guitarImg->SetAlignment(0, 4);
 		InfoWindow.Append(guitarImg);
-		intputX += (Settings.widescreen ? guitarImg->GetWidth() * Settings.WSFactor : guitarImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? guitarImg->GetWidth() * App.Settings.WSFactor : guitarImg->GetWidth()) + 5;
 	}
 	if (drums == 1)
 	{
 		drumsImg = new GuiImage(drumsImgData);
-		drumsImg->SetWidescreen(Settings.widescreen);
+		drumsImg->SetWidescreen(App.Settings.widescreen);
 		drumsImg->SetPosition(intputX, inputY);
 		drumsImg->SetAlignment(0, 4);
 		InfoWindow.Append(drumsImg);
-		intputX += (Settings.widescreen ? drumsImg->GetWidth() * Settings.WSFactor : drumsImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? drumsImg->GetWidth() * App.Settings.WSFactor : drumsImg->GetWidth()) + 5;
 	}
 	if (microphone == 1)
 	{
 		microphoneImg = new GuiImage(microphoneImgData);
-		microphoneImg->SetWidescreen(Settings.widescreen);
+		microphoneImg->SetWidescreen(App.Settings.widescreen);
 		microphoneImg->SetPosition(intputX, inputY);
 		microphoneImg->SetAlignment(0, 4);
 		InfoWindow.Append(microphoneImg);
-		intputX += (Settings.widescreen ? microphoneImg->GetWidth() * Settings.WSFactor : microphoneImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? microphoneImg->GetWidth() * App.Settings.WSFactor : microphoneImg->GetWidth()) + 5;
 	}
 	if (zapper == 1)
 	{
 		zapperImg = new GuiImage(zapperImgData);
-		zapperImg->SetWidescreen(Settings.widescreen);
+		zapperImg->SetWidescreen(App.Settings.widescreen);
 		zapperImg->SetPosition(intputX, inputY);
 		zapperImg->SetAlignment(0, 4);
 		InfoWindow.Append(zapperImg);
-		intputX += (Settings.widescreen ? zapperImg->GetWidth() * Settings.WSFactor : zapperImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? zapperImg->GetWidth() * App.Settings.WSFactor : zapperImg->GetWidth()) + 5;
 	}
 	if (wiispeak == 1)
 	{
 		wiispeakImg = new GuiImage(wiispeakImgData);
-		wiispeakImg->SetWidescreen(Settings.widescreen);
+		wiispeakImg->SetWidescreen(App.Settings.widescreen);
 		wiispeakImg->SetPosition(intputX, inputY);
 		wiispeakImg->SetAlignment(0, 4);
 		InfoWindow.Append(wiispeakImg);
-		intputX += (Settings.widescreen ? wiispeakImg->GetWidth() * Settings.WSFactor : wiispeakImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? wiispeakImg->GetWidth() * App.Settings.WSFactor : wiispeakImg->GetWidth()) + 5;
 	}
 	if (nintendods == 1)
 	{
 		nintendodsImg = new GuiImage(nintendodsImgData);
-		nintendodsImg->SetWidescreen(Settings.widescreen);
+		nintendodsImg->SetWidescreen(App.Settings.widescreen);
 		nintendodsImg->SetPosition(intputX, inputY);
 		nintendodsImg->SetAlignment(0, 4);
 		InfoWindow.Append(nintendodsImg);
-		intputX += (Settings.widescreen ? nintendodsImg->GetWidth() * Settings.WSFactor : nintendodsImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? nintendodsImg->GetWidth() * App.Settings.WSFactor : nintendodsImg->GetWidth()) + 5;
 	}
 	if (dancepad == 1)
 	{
 		dancepadImg = new GuiImage(dancepadImgData);
-		dancepadImg->SetWidescreen(Settings.widescreen);
+		dancepadImg->SetWidescreen(App.Settings.widescreen);
 		dancepadImg->SetPosition(intputX, inputY);
 		dancepadImg->SetAlignment(0, 4);
 		InfoWindow.Append(dancepadImg);
-		intputX += (Settings.widescreen ? dancepadImg->GetWidth() * Settings.WSFactor : dancepadImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? dancepadImg->GetWidth() * App.Settings.WSFactor : dancepadImg->GetWidth()) + 5;
 	}
 	if (balanceboard == 1)
 	{
 		balanceboardImg = new GuiImage(balanceboardImgData);
-		balanceboardImg->SetWidescreen(Settings.widescreen);
+		balanceboardImg->SetWidescreen(App.Settings.widescreen);
 		balanceboardImg->SetPosition(intputX, inputY);
 		balanceboardImg->SetAlignment(0, 4);
 		InfoWindow.Append(balanceboardImg);
-		intputX += (Settings.widescreen ? balanceboardImg->GetWidth() * Settings.WSFactor : balanceboardImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? balanceboardImg->GetWidth() * App.Settings.WSFactor : balanceboardImg->GetWidth()) + 5;
 	}
 
 	// # online players
@@ -591,11 +591,11 @@ static int InternalShowGameInfo(struct discHdr *header)
 			wifiplayersImgData = Resources::GetImageData("wifi32.png");
 
 		wifiplayersImg = new GuiImage(wifiplayersImgData);
-		wifiplayersImg->SetWidescreen(Settings.widescreen);
+		wifiplayersImg->SetWidescreen(App.Settings.widescreen);
 		wifiplayersImg->SetPosition(intputX, inputY);
 		wifiplayersImg->SetAlignment(0, 4);
 		InfoWindow.Append(wifiplayersImg);
-		intputX += (Settings.widescreen ? wifiplayersImg->GetWidth() * Settings.WSFactor : wifiplayersImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? wifiplayersImg->GetWidth() * App.Settings.WSFactor : wifiplayersImg->GetWidth()) + 5;
 	}
 
 	// ratings
@@ -658,11 +658,11 @@ static int InternalShowGameInfo(struct discHdr *header)
 			ratingImgData = Resources::GetImageData("norating.png");
 		}
 		ratingImg = new GuiImage(ratingImgData);
-		ratingImg->SetWidescreen(Settings.widescreen);
+		ratingImg->SetWidescreen(App.Settings.widescreen);
 		ratingImg->SetPosition(-25, inputY);
 		ratingImg->SetAlignment(1, 4);
 		InfoWindow.Append(ratingImg);
-		intputX += (Settings.widescreen ? ratingImg->GetWidth() * Settings.WSFactor : ratingImg->GetWidth()) + 5;
+		intputX += (App.Settings.widescreen ? ratingImg->GetWidth() * App.Settings.WSFactor : ratingImg->GetWidth()) + 5;
 	}
 
 	// title
@@ -1121,14 +1121,14 @@ int showGameInfo(int gameSelected, struct discHdr *dvdheader)
 bool save_gamelist(bool bCSV) // save gamelist
 {
 	mainWindow->SetState(STATE_DISABLED);
-	CreateSubfolder(Settings.update_path);
+	CreateSubfolder(App.Settings.update_path);
 
 	// Save the game list.
 	char tmp[256];
 	if(bCSV)
-		snprintf(tmp, sizeof(tmp), "%sGameList.csv", Settings.update_path);
+		snprintf(tmp, sizeof(tmp), "%sGameList.csv", App.Settings.update_path);
 	else
-		snprintf(tmp, sizeof(tmp), "%sGameList.txt", Settings.update_path);
+		snprintf(tmp, sizeof(tmp), "%sGameList.txt", App.Settings.update_path);
 
 	FILE *f = fopen(tmp, "w");
 	if (!f)

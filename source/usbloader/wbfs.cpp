@@ -55,10 +55,10 @@ s32 WBFS_ReInit(u32 device)
 	DeviceHandler::Instance()->MountAllUSB();
 	s32 ret = -1;
 
-	if(Settings.MultiplePartitions)
+	if(App.Settings.MultiplePartitions)
 		ret = WBFS_OpenAll();
 	else
-		ret = WBFS_OpenPart(Settings.partition);
+		ret = WBFS_OpenPart(App.Settings.partition);
 
 	return ret;
 }
@@ -182,10 +182,10 @@ s32 WBFS_CheckGame(u8 *discid)
 
 s32 WBFS_AddGame(void)
 {
-	if(!VALID(Settings.partition))
+	if(!VALID(App.Settings.partition))
 		return -1;
 
-	return WbfsList[Settings.partition]->AddGame();
+	return WbfsList[App.Settings.partition]->AddGame();
 }
 
 s32 WBFS_RemoveGame(u8 *discid)
@@ -208,10 +208,10 @@ s32 WBFS_GameSize(u8 *discid, f32 *size)
 
 s32 WBFS_DiskSpace(f32 *used, f32 *free)
 {
-	if(!VALID(Settings.partition))
+	if(!VALID(App.Settings.partition))
 		return -1;
 
-	return WbfsList[Settings.partition]->DiskSpace(used, free);
+	return WbfsList[App.Settings.partition]->DiskSpace(used, free);
 }
 
 s32 WBFS_RenameGame(u8 *discid, const void *newname)
@@ -234,10 +234,10 @@ s32 WBFS_ReIDGame(u8 *discid, const void *newID)
 
 u64 WBFS_EstimeGameSize(void)
 {
-	if(!VALID(Settings.partition))
+	if(!VALID(App.Settings.partition))
 		return 0;
 
-	return WbfsList[Settings.partition]->EstimateGameSize();
+	return WbfsList[App.Settings.partition]->EstimateGameSize();
 }
 
 int WBFS_GetFragList(u8 *id)

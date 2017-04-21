@@ -15,7 +15,7 @@
 #include "gui_gamecarousel.h"
 #include "usbloader/GameList.h"
 #include "settings/GameTitles.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "GUI/LoadCoverImage.h"
 #include "themes/CTheme.h"
 #include "utils/tools.h"
@@ -75,7 +75,7 @@ GuiGameCarousel::GuiGameCarousel(int w, int h, const char *themePath, int offset
 	imgRight = Resources::GetImageData("startgame_arrow_right.png");
 
 	btnLeftImg = new GuiImage(imgLeft);
-	if (Settings.wsprompt == ON) btnLeftImg->SetWidescreen(Settings.widescreen);
+	if (App.Settings.wsprompt == ON) btnLeftImg->SetWidescreen(App.Settings.widescreen);
 	btnLeft = new GuiButton(imgLeft->GetWidth(), imgLeft->GetHeight());
 	btnLeft->SetAlignment(thAlign("left - carousel layout left arrow align hor"), thAlign("top - carousel layout left arrow align ver"));
 	btnLeft->SetPosition(thInt("20 - carousel layout left arrow pos x"), thInt("65 - carousel layout left arrow pos y"));
@@ -88,7 +88,7 @@ GuiGameCarousel::GuiGameCarousel(int w, int h, const char *themePath, int offset
 	btnLeft->SetEffectGrow();
 
 	btnRightImg = new GuiImage(imgRight);
-	if (Settings.wsprompt == ON) btnRightImg->SetWidescreen(Settings.widescreen);
+	if (App.Settings.wsprompt == ON) btnRightImg->SetWidescreen(App.Settings.widescreen);
 	btnRight = new GuiButton(imgRight->GetWidth(), imgRight->GetHeight());
 	btnRight->SetParent(this);
 	btnRight->SetAlignment(thAlign("right - carousel layout right arrow align hor"), thAlign("top - carousel layout right arrow align ver"));
@@ -182,7 +182,7 @@ void GuiGameCarousel::Refresh()
 		//------------------------
 		delete coverImg[i];
 		coverImg[i] = new (std::nothrow) GuiImageAsync(GameCarouselLoadCoverImage, gameList[gameIndex[i]], sizeof(struct discHdr), &noCover);
-		if (coverImg[i]) coverImg[i]->SetWidescreen(Settings.widescreen);
+		if (coverImg[i]) coverImg[i]->SetWidescreen(App.Settings.widescreen);
 
 		//------------------------
 		// GameButton
@@ -280,7 +280,7 @@ void GuiGameCarousel::Draw()
 	}
 
 	//!Draw tooltip after the Images to have it on top
-	if (Settings.tooltips == ON)
+	if (App.Settings.tooltips == ON)
 		for (int i = 0; i < pagesize; i++)
 			game[i]->DrawTooltip();
 
@@ -347,7 +347,7 @@ void GuiGameCarousel::Update(GuiTrigger * t)
 				return;
 			}
 
-			if (Settings.xflip == XFLIP_SYSMENU || Settings.xflip == XFLIP_YES || Settings.xflip == XFLIP_DISK3D)
+			if (App.Settings.xflip == XFLIP_SYSMENU || App.Settings.xflip == XFLIP_YES || App.Settings.xflip == XFLIP_DISK3D)
 				newspeed = SHIFT_SPEED;
 			else newspeed = -SHIFT_SPEED;
 		}
@@ -362,7 +362,7 @@ void GuiGameCarousel::Update(GuiTrigger * t)
 				btnRight->ResetState();
 				return;
 			}
-			if (Settings.xflip == XFLIP_SYSMENU || Settings.xflip == XFLIP_YES || Settings.xflip == XFLIP_DISK3D)
+			if (App.Settings.xflip == XFLIP_SYSMENU || App.Settings.xflip == XFLIP_YES || App.Settings.xflip == XFLIP_DISK3D)
 				newspeed = -SHIFT_SPEED;
 			else newspeed = SHIFT_SPEED;
 		}
@@ -402,7 +402,7 @@ void GuiGameCarousel::Update(GuiTrigger * t)
 			gameIndex[0] = listOffset;
 			coverImg[0] = new GuiImageAsync(GameCarouselLoadCoverImage, gameList[gameIndex[0]], sizeof(struct discHdr),
 					&noCover);
-			coverImg[0] ->SetWidescreen(Settings.widescreen);
+			coverImg[0] ->SetWidescreen(App.Settings.widescreen);
 
 			game[0] = tmpButton;
 			game[0] ->SetImage(coverImg[0]);
@@ -438,7 +438,7 @@ void GuiGameCarousel::Update(GuiTrigger * t)
 			gameIndex[ii] = OFFSETLIMIT(listOffset + ii, gameList.size());
 			coverImg[ii] = new GuiImageAsync(GameCarouselLoadCoverImage, gameList[gameIndex[ii]],
 					sizeof(struct discHdr), &noCover);
-			coverImg[ii] ->SetWidescreen(Settings.widescreen);
+			coverImg[ii] ->SetWidescreen(App.Settings.widescreen);
 
 			game[ii] = tmpButton;
 			game[ii] ->SetImage(coverImg[ii]);

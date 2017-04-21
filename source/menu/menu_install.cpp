@@ -67,12 +67,12 @@ int MenuGCInstall()
 	}
 
 	//! setup dumper settings
-	gcDumper.SetCompressed(Settings.GCInstallCompressed);
-	gcDumper.SetCompressed(Settings.GCInstallAligned);
+	gcDumper.SetCompressed(App.Settings.GCInstallCompressed);
+	gcDumper.SetCompressed(App.Settings.GCInstallAligned);
 
 	//! If a different main path than the SD path is selected ask where to install
 	int destination = 1;
-	if(strcmp(Settings.GameCubePath, Settings.GameCubeSDPath) != 0)
+	if(strcmp(App.Settings.GameCubePath, App.Settings.GameCubeSDPath) != 0)
 		destination = WindowPrompt(tr("Where should the game be installed to?"), 0, tr("Main Path"), tr("SD Path"), tr("Cancel"));
 	if(!destination)
 		return MENU_DISCLIST;
@@ -85,11 +85,11 @@ int MenuGCInstall()
 	}
 
 	// Load only available games from the selected device
-	int oldGameCubeSource = Settings.GameCubeSource;
-	Settings.GameCubeSource = destination-1;
+	int oldGameCubeSource = App.Settings.GameCubeSource;
+	App.Settings.GameCubeSource = destination-1;
 	GCGames::Instance()->LoadAllGames();
 
-	const char *InstallPath = destination == 1 ? Settings.GameCubePath : Settings.GameCubeSDPath;
+	const char *InstallPath = destination == 1 ? App.Settings.GameCubePath : App.Settings.GameCubeSDPath;
 
 	//! Start of install process, enable wii slot light
 	wiilight(1);
@@ -114,7 +114,7 @@ int MenuGCInstall()
 		}
 
 		// Check Disc2 installation format (DML 2.6+ auto-swap feature doesn't work with extracted game format)
-		if(Settings.GCInstallCompressed && gcDumper.GetDiscHeaders().at(installGames[i]).disc_no == 1)
+		if(App.Settings.GCInstallCompressed && gcDumper.GetDiscHeaders().at(installGames[i]).disc_no == 1)
 		{
 			int choice = WindowPrompt(tr(gcDumper.GetDiscHeaders().at(installGames[i]).title), tr("Disc2 needs to be installed in uncompressed format to work with DM(L) v2.6+, are you sure you want to install in compressed format?"), tr("Yes"), tr("Cancel"));
 			if(choice == 0)
@@ -174,7 +174,7 @@ int MenuGCInstall()
 	}
 
 	wiilight(0);
-	Settings.GameCubeSource = oldGameCubeSource;
+	App.Settings.GameCubeSource = oldGameCubeSource;
 	GCGames::Instance()->LoadAllGames();
 
 	//! no game was installed so don't show successfully installed prompt
@@ -183,8 +183,8 @@ int MenuGCInstall()
 
 	gameList.FilterList();
 	bgMusic->Pause();
-	GuiSound instsuccess(Resources::GetFile("success.ogg"), Resources::GetFileSize("success.ogg"), Settings.sfxvolume);
-	instsuccess.SetVolume(Settings.sfxvolume);
+	GuiSound instsuccess(Resources::GetFile("success.ogg"), Resources::GetFileSize("success.ogg"), App.Settings.sfxvolume);
+	instsuccess.SetVolume(App.Settings.sfxvolume);
 	instsuccess.SetLoop(0);
 	instsuccess.Play();
 	char gamesTxt[20];
@@ -290,8 +290,8 @@ int MenuInstall()
 				gameList.ReadGameList(); //get the entries again
 				gameList.FilterList();
 				bgMusic->Pause();
-				GuiSound instsuccess(Resources::GetFile("success.ogg"), Resources::GetFileSize("success.ogg"), Settings.sfxvolume);
-				instsuccess.SetVolume(Settings.sfxvolume);
+				GuiSound instsuccess(Resources::GetFile("success.ogg"), Resources::GetFileSize("success.ogg"), App.Settings.sfxvolume);
+				instsuccess.SetVolume(App.Settings.sfxvolume);
 				instsuccess.SetLoop(0);
 				instsuccess.Play();
 				WindowPrompt(tr( "Successfully installed:" ), headerdisc.title, tr( "OK" ));

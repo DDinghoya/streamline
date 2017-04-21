@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "CSettings.h"
+#include "App.h"
 #include "CGameSettings.h"
 #include "FileOperations/fileops.h"
 #include "Version.h"

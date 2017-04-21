@@ -9,7 +9,7 @@
  ***************************************************************************/
 
 #include "gui.h"
-#include "settings/CSettings.h"
+#include "App.h"
 
 static int scrollison = 0;
 
@@ -353,7 +353,7 @@ void GuiButton::DrawTooltip()
 		if(!bOldTooltipVisible) {
 			ToolTipDelay.reset();
 		}
-		else if(!toolTip->IsVisible() && (int) ToolTipDelay.elapsed_millisecs() > Settings.TooltipDelay)
+		else if(!toolTip->IsVisible() && (int) ToolTipDelay.elapsed_millisecs() > App.Settings.TooltipDelay)
 		{
 			toolTip->SetEffect(EFFECT_FADE, 20);
 			toolTip->SetVisible(true);

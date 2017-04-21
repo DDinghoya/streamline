@@ -5,12 +5,21 @@
  * demo.h
  ***************************************************************************/
 
-#ifndef _MAIN_H_
-#define _MAIN_H_
+#pragma once
 
-#include "FreeTypeGX.h"
+#include "Core/Application.h"
 
-void DefaultSettings();
-extern FreeTypeGX *fontSystem;
+class LoaderApp : public Application
+{
+public:
+    LoaderApp();
+    virtual ~LoaderApp();
+    
+protected:
 
-#endif
+private:
+
+};
+
+// Main loader application reference
+extern LoaderApp App;

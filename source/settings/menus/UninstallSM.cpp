@@ -26,7 +26,7 @@
 #include "FileOperations/fileops.h"
 #include "GameCube/GCGames.h"
 #include "Channels/channels.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/CGameSettings.h"
 #include "settings/CGameStatistics.h"
 #include "settings/GameTitles.h"
@@ -140,11 +140,11 @@ int UninstallSM::GetMenuInternal()
 		else if(DiscHeader->type == TYPE_GAME_EMUNANDCHAN && DiscHeader->tid != 0)
 		{
 			// Remove ticket
-			snprintf(filepath, sizeof(filepath), "%s/ticket/%08x/%08x.tik", Settings.NandEmuChanPath, (unsigned int) (DiscHeader->tid >> 32), (unsigned int) DiscHeader->tid);
+			snprintf(filepath, sizeof(filepath), "%s/ticket/%08x/%08x.tik", App.Settings.NandEmuChanPath, (unsigned int) (DiscHeader->tid >> 32), (unsigned int) DiscHeader->tid);
 			RemoveFile(filepath);
 
 			// Remove contents / data
-			snprintf(filepath, sizeof(filepath), "%s/title/%08x/%08x/", Settings.NandEmuChanPath, (unsigned int) (DiscHeader->tid >> 32), (unsigned int) DiscHeader->tid);
+			snprintf(filepath, sizeof(filepath), "%s/title/%08x/%08x/", App.Settings.NandEmuChanPath, (unsigned int) (DiscHeader->tid >> 32), (unsigned int) DiscHeader->tid);
 			RemoveDirectory(filepath);
 
 			Channels::Instance()->GetEmuChannelList();
@@ -152,23 +152,23 @@ int UninstallSM::GetMenuInternal()
 
 		if(choice == 2)
 		{
-			snprintf(filepath, sizeof(filepath), "%s%s.png", Settings.covers_path, GameID);
+			snprintf(filepath, sizeof(filepath), "%s%s.png", App.Settings.covers_path, GameID);
 			if (CheckFile(filepath)) remove(filepath);
-			snprintf(filepath, sizeof(filepath), "%s%s.png", Settings.covers2d_path, GameID);
+			snprintf(filepath, sizeof(filepath), "%s%s.png", App.Settings.covers2d_path, GameID);
 			if (CheckFile(filepath)) remove(filepath);
-			snprintf(filepath, sizeof(filepath), "%s%s.png", Settings.coversFull_path, GameID);
+			snprintf(filepath, sizeof(filepath), "%s%s.png", App.Settings.coversFull_path, GameID);
 			if (CheckFile(filepath)) remove(filepath);
-			snprintf(filepath, sizeof(filepath), "%s%s.png", Settings.disc_path, GameID);
+			snprintf(filepath, sizeof(filepath), "%s%s.png", App.Settings.disc_path, GameID);
 			if (CheckFile(filepath)) remove(filepath);
-			snprintf(filepath, sizeof(filepath), "%s%s.bnr", Settings.BNRCachePath, GameID);
+			snprintf(filepath, sizeof(filepath), "%s%s.bnr", App.Settings.BNRCachePath, GameID);
 			if (CheckFile(filepath)) remove(filepath);
-			snprintf(filepath, sizeof(filepath), "%s%.4s.bnr", Settings.BNRCachePath, GameID);
+			snprintf(filepath, sizeof(filepath), "%s%.4s.bnr", App.Settings.BNRCachePath, GameID);
 			if (CheckFile(filepath)) remove(filepath);
-			snprintf(filepath, sizeof(filepath), "%s%.3s.bnr", Settings.BNRCachePath, GameID);
+			snprintf(filepath, sizeof(filepath), "%s%.3s.bnr", App.Settings.BNRCachePath, GameID);
 			if (CheckFile(filepath)) remove(filepath);
-			snprintf(filepath, sizeof(filepath), "%s%s.txt", Settings.TxtCheatcodespath, GameID);
+			snprintf(filepath, sizeof(filepath), "%s%s.txt", App.Settings.TxtCheatcodespath, GameID);
 			if (CheckFile(filepath)) remove(filepath);
-			snprintf(filepath, sizeof(filepath), "%s%s.gct", Settings.Cheatcodespath, GameID);
+			snprintf(filepath, sizeof(filepath), "%s%s.gct", App.Settings.Cheatcodespath, GameID);
 			if (CheckFile(filepath)) remove(filepath);
 		}
 
@@ -201,11 +201,11 @@ int UninstallSM::GetMenuInternal()
 		char GameID[7];
 		snprintf(GameID, sizeof(GameID), "%s", (char *) DiscHeader->id);
 		char filepath[200];
-		snprintf(filepath, sizeof(filepath), "%s%s.png", Settings.covers_path, GameID);
+		snprintf(filepath, sizeof(filepath), "%s%s.png", App.Settings.covers_path, GameID);
 		if (CheckFile(filepath)) remove(filepath);
-		snprintf(filepath, sizeof(filepath), "%s%s.png", Settings.covers2d_path, GameID);
+		snprintf(filepath, sizeof(filepath), "%s%s.png", App.Settings.covers2d_path, GameID);
 		if (CheckFile(filepath)) remove(filepath);
-		snprintf(filepath, sizeof(filepath), "%s%s.png", Settings.coversFull_path, GameID);
+		snprintf(filepath, sizeof(filepath), "%s%s.png", App.Settings.coversFull_path, GameID);
 		if (CheckFile(filepath)) remove(filepath);
 	}
 
@@ -215,7 +215,7 @@ int UninstallSM::GetMenuInternal()
 		char GameID[7];
 		snprintf(GameID, sizeof(GameID), "%s", (char *) DiscHeader->id);
 		char filepath[200];
-		snprintf(filepath, sizeof(filepath), "%s%s.png", Settings.disc_path, GameID);
+		snprintf(filepath, sizeof(filepath), "%s%s.png", App.Settings.disc_path, GameID);
 
 		int choice = WindowPrompt(tr( "Delete" ), filepath, tr( "Yes" ), tr( "No" ));
 		if (choice == 1)
@@ -232,11 +232,11 @@ int UninstallSM::GetMenuInternal()
 		char GameID[7];
 		snprintf(GameID, sizeof(GameID), "%s", (char *) DiscHeader->id);
 		char filepath[200];
-		snprintf(filepath, sizeof(filepath), "%s%s.bnr", Settings.BNRCachePath, GameID);
+		snprintf(filepath, sizeof(filepath), "%s%s.bnr", App.Settings.BNRCachePath, GameID);
 		if (CheckFile(filepath)) remove(filepath);
-		snprintf(filepath, sizeof(filepath), "%s%.4s.bnr", Settings.BNRCachePath, GameID);
+		snprintf(filepath, sizeof(filepath), "%s%.4s.bnr", App.Settings.BNRCachePath, GameID);
 		if (CheckFile(filepath)) remove(filepath);
-		snprintf(filepath, sizeof(filepath), "%s%.3s.bnr", Settings.BNRCachePath, GameID);
+		snprintf(filepath, sizeof(filepath), "%s%.3s.bnr", App.Settings.BNRCachePath, GameID);
 		if (CheckFile(filepath)) remove(filepath);
 	}
 
@@ -246,7 +246,7 @@ int UninstallSM::GetMenuInternal()
 		char GameID[7];
 		snprintf(GameID, sizeof(GameID), "%s", (char *) DiscHeader->id);
 		char filepath[200];
-		snprintf(filepath, sizeof(filepath), "%s%s.txt", Settings.TxtCheatcodespath, GameID);
+		snprintf(filepath, sizeof(filepath), "%s%s.txt", App.Settings.TxtCheatcodespath, GameID);
 
 		int choice = WindowPrompt(tr( "Delete" ), filepath, tr( "Yes" ), tr( "No" ));
 		if (choice == 1)
@@ -259,7 +259,7 @@ int UninstallSM::GetMenuInternal()
 		char GameID[7];
 		snprintf(GameID, sizeof(GameID), "%s", (char *) DiscHeader->id);
 		char filepath[200];
-		snprintf(filepath, sizeof(filepath), "%s%s.gct", Settings.Cheatcodespath, GameID);
+		snprintf(filepath, sizeof(filepath), "%s%s.gct", App.Settings.Cheatcodespath, GameID);
 
 		int choice = WindowPrompt(tr( "Delete" ), filepath, tr( "Yes" ), tr( "No" ));
 		if (choice == 1)

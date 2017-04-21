@@ -108,19 +108,19 @@ int OnScreenNumpad(char * var, u32 maxlen)
 
 	GuiText okBtnTxt(tr( "OK" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage okBtnImg(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		okBtnTxt.SetWidescreen(Settings.widescreen);
-		okBtnImg.SetWidescreen(Settings.widescreen);
+		okBtnTxt.SetWidescreen(App.Settings.widescreen);
+		okBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton okBtn(&okBtnImg, &okBtnImg, 0, 4, 5, -15, &trigA, btnSoundOver, btnSoundClick2, 1);
 	okBtn.SetLabel(&okBtnTxt);
 	GuiText cancelBtnTxt(tr( "Cancel" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage cancelBtnImg(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		cancelBtnTxt.SetWidescreen(Settings.widescreen);
-		cancelBtnImg.SetWidescreen(Settings.widescreen);
+		cancelBtnTxt.SetWidescreen(App.Settings.widescreen);
+		cancelBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton cancelBtn(&cancelBtnImg, &cancelBtnImg, 1, 4, -5, -15, &trigA, btnSoundOver, btnSoundClick2, 1);
 	cancelBtn.SetLabel(&cancelBtnTxt);
@@ -174,9 +174,9 @@ int OnScreenKeyboard(char * var, u32 maxlen, int min, bool hide)
 {
 	int save = -1;
 
-	gprintf("\nOnScreenKeyboard(%s, %i, %i) \n\tkeyset = %i", var, maxlen, min, Settings.keyset);
+	gprintf("\nOnScreenKeyboard(%s, %i, %i) \n\tkeyset = %i", var, maxlen, min, App.Settings.keyset);
 
-	GuiKeyboard keyboard(var, maxlen, min, Settings.keyset);
+	GuiKeyboard keyboard(var, maxlen, min, App.Settings.keyset);
 	keyboard.SetVisibleText(!hide);
 
 	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
@@ -188,19 +188,19 @@ int OnScreenKeyboard(char * var, u32 maxlen, int min, bool hide)
 
 	GuiText okBtnTxt(tr( "OK" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage okBtnImg(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		okBtnTxt.SetWidescreen(Settings.widescreen);
-		okBtnImg.SetWidescreen(Settings.widescreen);
+		okBtnTxt.SetWidescreen(App.Settings.widescreen);
+		okBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton okBtn(&okBtnImg, &okBtnImg, 0, 4, 5, 15, &trigA, btnSoundOver, btnSoundClick2, 1);
 	okBtn.SetLabel(&okBtnTxt);
 	GuiText cancelBtnTxt(tr( "Cancel" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage cancelBtnImg(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		cancelBtnTxt.SetWidescreen(Settings.widescreen);
-		cancelBtnImg.SetWidescreen(Settings.widescreen);
+		cancelBtnTxt.SetWidescreen(App.Settings.widescreen);
+		cancelBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton cancelBtn(&cancelBtnImg, &cancelBtnImg, 1, 4, -5, 15, &trigA, btnSoundOver, btnSoundClick2, 1);
 	cancelBtn.SetLabel(&cancelBtnTxt);
@@ -266,8 +266,8 @@ void WindowCredits()
 	
 	u32 i = 0;
 	int y = 20;
-	float oldFontScale = Settings.FontScaleFactor;
-	Settings.FontScaleFactor = 1.0f;
+	float oldFontScale = App.Settings.FontScaleFactor;
+	App.Settings.FontScaleFactor = 1.0f;
 
 	GuiWindow creditsWindow(screenwidth, screenheight);
 	GuiWindow creditsWindowBox(580, 448);
@@ -280,7 +280,7 @@ void WindowCredits()
 
 	GuiImageData star(Resources::GetFile("little_star.png"), Resources::GetFileSize("little_star.png"));
 	GuiImage starImg(&star);
-	starImg.SetWidescreen(Settings.widescreen); //added
+	starImg.SetWidescreen(App.Settings.widescreen); //added
 	starImg.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	starImg.SetPosition(505, 350);
 
@@ -317,7 +317,7 @@ void WindowCredits()
 		
 	// Check if Devolution is available
 	char DEVO_loader_path[100];
-	snprintf(DEVO_loader_path, sizeof(DEVO_loader_path), "%sloader.bin", Settings.DEVOLoaderPath);
+	snprintf(DEVO_loader_path, sizeof(DEVO_loader_path), "%sloader.bin", App.Settings.DEVOLoaderPath);
 	FILE *f = fopen(DEVO_loader_path, "rb");
 	if(f)
 	{
@@ -334,7 +334,7 @@ void WindowCredits()
 	// Check if Nintendont is available
 	char GCInfo2[80] = "";
 	char NINVersion[7]= "";
-	nintendontVersion(Settings.NINLoaderPath, NINVersion, sizeof(NINVersion));
+	nintendontVersion(App.Settings.NINLoaderPath, NINVersion, sizeof(NINVersion));
 	if(strlen(NINVersion) > 0)
 	{
 		snprintf(GCInfo2, sizeof(GCInfo2), "Nintendont v%.6s",  NINVersion );
@@ -342,7 +342,7 @@ void WindowCredits()
 	else
 	{
 		char NINBuildDate[21] = "";
-		if(nintendontBuildDate(Settings.NINLoaderPath, NINBuildDate))
+		if(nintendontBuildDate(App.Settings.NINLoaderPath, NINBuildDate))
 			snprintf(GCInfo2, sizeof(GCInfo2), "Nintendont Built %.20s",  NINBuildDate );
 	}
 
@@ -574,7 +574,7 @@ void WindowCredits()
 		delete txt[i];
 		txt[i] = NULL;
 	}
-	Settings.FontScaleFactor = oldFontScale;
+	App.Settings.FontScaleFactor = oldFontScale;
 	ResumeGui();
 
 	bgMusic->Resume();
@@ -710,14 +710,14 @@ int WindowExitPrompt()
 	bgMusic->Pause();
 
 	GuiSound * homein = NULL;
-	homein = new GuiSound(Resources::GetFile("menuin.ogg"), Resources::GetFileSize("menuin.ogg"), Settings.sfxvolume);
-	homein->SetVolume(Settings.sfxvolume);
+	homein = new GuiSound(Resources::GetFile("menuin.ogg"), Resources::GetFileSize("menuin.ogg"), App.Settings.sfxvolume);
+	homein->SetVolume(App.Settings.sfxvolume);
 	homein->SetLoop(0);
 	homein->Play();
 
 	GuiSound * homeout = NULL;
-	homeout = new GuiSound(Resources::GetFile("menuout.ogg"), Resources::GetFileSize("menuout.ogg"), Settings.sfxvolume);
-	homeout->SetVolume(Settings.sfxvolume);
+	homeout = new GuiSound(Resources::GetFile("menuout.ogg"), Resources::GetFileSize("menuout.ogg"), App.Settings.sfxvolume);
+	homeout->SetVolume(App.Settings.sfxvolume);
 	homeout->SetLoop(0);
 
 	int choice = -1;
@@ -793,10 +793,10 @@ int WindowExitPrompt()
 	GuiText closeTxt(tr( "Close" ), 28, ( GXColor ) {0, 0, 0, 255});
 	closeTxt.SetPosition(10, 3);
 	GuiImage closeImg(&close);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		closeTxt.SetWidescreen(Settings.widescreen);
-		closeImg.SetWidescreen(Settings.widescreen);
+		closeTxt.SetWidescreen(App.Settings.widescreen);
+		closeImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton closeBtn(close.GetWidth(), close.GetHeight());
 	closeBtn.SetImage(&closeImg);
@@ -812,19 +812,19 @@ int WindowExitPrompt()
 	btn1.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
 
 	GuiText btn2Txt(tr( "Homebrew Channel" ), 26, ( GXColor ) {0, 0, 0, 255});
-	if (Settings.HomeMenu == HOME_MENU_SYSTEM)
+	if (App.Settings.HomeMenu == HOME_MENU_SYSTEM)
 	{
 		btn2Txt.SetText(tr( "Wii Menu" ));
 	}
-	else if (Settings.HomeMenu == HOME_MENU_FULL)
+	else if (App.Settings.HomeMenu == HOME_MENU_FULL)
 	{
 		btn2Txt.SetText(tr( "Exit" ));
 	}
 	GuiImage btn2Img(&button);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		btn2Txt.SetWidescreen(Settings.widescreen);
-		btn2Img.SetWidescreen(Settings.widescreen);
+		btn2Txt.SetWidescreen(App.Settings.widescreen);
+		btn2Img.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton btn2(&btn2Img, &btn2Img, 2, 5, -150, 0, &trigA, btnSoundOver, btnSoundClick2, 1);
 	btn2.SetLabel(&btn2Txt);
@@ -833,19 +833,19 @@ int WindowExitPrompt()
 	btn2.SetPosition(-150, 0);
 
 	GuiText btn3Txt(tr( "Wii Menu" ), 26, ( GXColor ) {0, 0, 0, 255});
-	if (Settings.HomeMenu == HOME_MENU_SYSTEM)
+	if (App.Settings.HomeMenu == HOME_MENU_SYSTEM)
 	{
 	   btn3Txt.SetText(tr( "Reset" ));
 	}
-	else if (Settings.HomeMenu == HOME_MENU_FULL)
+	else if (App.Settings.HomeMenu == HOME_MENU_FULL)
 	{
 		btn3Txt.SetText(tr( "Shutdown Wii" ));
 	}
 	GuiImage btn3Img(&button);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		btn3Txt.SetWidescreen(Settings.widescreen);
-		btn3Img.SetWidescreen(Settings.widescreen);
+		btn3Txt.SetWidescreen(App.Settings.widescreen);
+		btn3Img.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton btn3(&btn3Img, &btn3Img, 2, 5, 150, 0, &trigA, btnSoundOver, btnSoundClick2, 1);
 	btn3.SetLabel(&btn3Txt);
@@ -861,9 +861,9 @@ int WindowExitPrompt()
 	btn4.SetEffect(EFFECT_SLIDE_BOTTOM | EFFECT_SLIDE_IN, 50);
 
 	GuiImage wiimoteImg(&wiimote);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		wiimoteImg.SetWidescreen(Settings.widescreen);
+		wiimoteImg.SetWidescreen(App.Settings.widescreen);
 	}
 	wiimoteImg.SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	wiimoteImg.SetEffect(EFFECT_SLIDE_BOTTOM | EFFECT_SLIDE_IN, 50);
@@ -949,11 +949,11 @@ int WindowExitPrompt()
 		}
 		else if (btn2.GetState() == STATE_CLICKED)
 		{
-			if (Settings.HomeMenu == HOME_MENU_SYSTEM)
+			if (App.Settings.HomeMenu == HOME_MENU_SYSTEM)
 				Sys_LoadMenu();
-			else if (Settings.HomeMenu == HOME_MENU_DEFAULT)
+			else if (App.Settings.HomeMenu == HOME_MENU_DEFAULT)
 				Sys_LoadHBC();
-			else if (Settings.HomeMenu == HOME_MENU_FULL)
+			else if (App.Settings.HomeMenu == HOME_MENU_FULL)
 			{
 				ret = WindowPrompt(tr( "Exit to where?" ), 0, tr( "Homebrew Channel" ), tr( "Wii Menu" ), tr( "Reset" ), tr( "Cancel" ));
 				if (ret == 1)
@@ -971,11 +971,11 @@ int WindowExitPrompt()
 		}
 		else if (btn3.GetState() == STATE_CLICKED)
 		{
-			if (Settings.HomeMenu == HOME_MENU_SYSTEM)
+			if (App.Settings.HomeMenu == HOME_MENU_SYSTEM)
 				RebootApp();
-			else if (Settings.HomeMenu == HOME_MENU_DEFAULT)
+			else if (App.Settings.HomeMenu == HOME_MENU_DEFAULT)
 				Sys_LoadMenu();
-			else if (Settings.HomeMenu == HOME_MENU_FULL)
+			else if (App.Settings.HomeMenu == HOME_MENU_FULL)
 			{
 				if(isWiiU())
 					ret = WindowPrompt(tr( "How to Shutdown?" ), 0, tr( "Full shutdown" ), tr("Cancel"));
@@ -1062,9 +1062,9 @@ int DiscWait(const char *title, const char *msg, const char *btn1Label, const ch
 	trigB.SetButtonOnlyTrigger(-1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B);
 
 	GuiImage dialogBoxImg(&dialogBox);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		dialogBoxImg.SetWidescreen(Settings.widescreen);
+		dialogBoxImg.SetWidescreen(App.Settings.widescreen);
 	}
 
 	GuiText titleTxt(title, 26, thColor("r=0 g=0 b=0 a=255 - prompt windows text color"));
@@ -1077,10 +1077,10 @@ int DiscWait(const char *title, const char *msg, const char *btn1Label, const ch
 
 	GuiText btn1Txt(btn1Label, 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage btn1Img(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		btn1Txt.SetWidescreen(Settings.widescreen);
-		btn1Img.SetWidescreen(Settings.widescreen);
+		btn1Txt.SetWidescreen(App.Settings.widescreen);
+		btn1Img.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton btn1(&btn1Img, &btn1Img, 1, 5, 0, 0, &trigA, btnSoundOver, btnSoundClick2, 1);
 
@@ -1101,15 +1101,15 @@ int DiscWait(const char *title, const char *msg, const char *btn1Label, const ch
 
 	GuiText btn2Txt(btn2Label, 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage btn2Img(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		btn2Txt.SetWidescreen(Settings.widescreen);
-		btn2Img.SetWidescreen(Settings.widescreen);
+		btn2Txt.SetWidescreen(App.Settings.widescreen);
+		btn2Img.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton btn2(&btn2Img, &btn2Img, 1, 4, -20, -25, &trigA, btnSoundOver, btnSoundClick2, 1);
 	btn2.SetLabel(&btn2Txt);
 
-	if (Settings.wsprompt && Settings.widescreen) /////////////adjust buttons for widescreen
+	if (App.Settings.wsprompt && App.Settings.widescreen) /////////////adjust buttons for widescreen
 	{
 		msgTxt.SetMaxWidth(380);
 		if (btn2Label)
@@ -1211,9 +1211,9 @@ int FormatingPartition(const char *title, int part_num)
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 
 	GuiImage dialogBoxImg(&dialogBox);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		dialogBoxImg.SetWidescreen(Settings.widescreen);
+		dialogBoxImg.SetWidescreen(App.Settings.widescreen);
 	}
 
 	GuiText titleTxt(title, 26, thColor("r=0 g=0 b=0 a=255 - prompt windows text color"));
@@ -1283,9 +1283,9 @@ bool NetworkInitPrompt()
 
 	GuiImage dialogBoxImg(&dialogBox);
 
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		dialogBoxImg.SetWidescreen(Settings.widescreen);
+		dialogBoxImg.SetWidescreen(App.Settings.widescreen);
 	}
 
 	GuiText titleTxt(tr( "Initializing Network" ), 26, thColor("r=0 g=0 b=0 a=255 - prompt windows text color"));
@@ -1299,16 +1299,16 @@ bool NetworkInitPrompt()
 
 	GuiText btn1Txt(tr( "Cancel" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage btn1Img(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		btn1Txt.SetWidescreen(Settings.widescreen);
-		btn1Img.SetWidescreen(Settings.widescreen);
+		btn1Txt.SetWidescreen(App.Settings.widescreen);
+		btn1Img.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton btn1(&btn1Img, &btn1Img, 2, 4, 0, -45, &trigA, btnSoundOver, btnSoundClick2, 1);
 	btn1.SetLabel(&btn1Txt);
 	btn1.SetState(STATE_SELECTED);
 
-	if ((Settings.wsprompt) && (Settings.widescreen)) /////////////adjust buttons for widescreen
+	if ((App.Settings.wsprompt) && (App.Settings.widescreen)) /////////////adjust buttons for widescreen
 	{
 		btn1.SetAlignment(ALIGN_CENTER, ALIGN_BOTTOM);
 		btn1.SetPosition(0, -80);
@@ -1365,7 +1365,7 @@ bool NetworkInitPrompt()
 }
 int CodeDownload(const char *id)
 {
-	if (!CreateSubfolder(Settings.TxtCheatcodespath))
+	if (!CreateSubfolder(App.Settings.TxtCheatcodespath))
 	{
 		WindowPrompt(tr( "Error !" ), tr( "Can't create directory" ), tr( "OK" ));
 		return -1;
@@ -1383,9 +1383,9 @@ int CodeDownload(const char *id)
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 
 	GuiImage dialogBoxImg(&dialogBox);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		dialogBoxImg.SetWidescreen(Settings.widescreen);
+		dialogBoxImg.SetWidescreen(App.Settings.widescreen);
 	}
 
 	char title[50];
@@ -1405,10 +1405,10 @@ int CodeDownload(const char *id)
 
 	GuiText btn1Txt(tr( "Cancel" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage btn1Img(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		btn1Txt.SetWidescreen(Settings.widescreen);
-		btn1Img.SetWidescreen(Settings.widescreen);
+		btn1Txt.SetWidescreen(App.Settings.widescreen);
+		btn1Img.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton btn1(&btn1Img, &btn1Img, 2, 4, 0, -40, &trigA, btnSoundOver, btnSoundClick2, 1);
 	btn1.SetLabel(&btn1Txt);
@@ -1452,7 +1452,7 @@ int CodeDownload(const char *id)
 	if (IsNetworkInit())
 	{
 		char txtpath[250];
-		snprintf(txtpath, sizeof(txtpath), "%s%s.txt", Settings.TxtCheatcodespath, id);
+		snprintf(txtpath, sizeof(txtpath), "%s%s.txt", App.Settings.TxtCheatcodespath, id);
 
 		char codeurl[250];
 		snprintf(codeurl, sizeof(codeurl), "http://geckocodes.org/txt.php?txt=%s", id);

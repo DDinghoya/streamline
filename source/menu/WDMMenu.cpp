@@ -71,13 +71,13 @@ WDMMenu::WDMMenu(const struct discHdr * header)
 	SetEffect(EFFECT_FADE, 50);
 
 	char WDMPath[200];
-	snprintf(WDMPath, sizeof(WDMPath), "%s/%.3s.wdm", Settings.WDMpath, (char *) header->id);
+	snprintf(WDMPath, sizeof(WDMPath), "%s/%.3s.wdm", App.Settings.WDMpath, (char *) header->id);
 
 	if(!CheckFile(WDMPath))
 	{
-		snprintf(WDMPath, sizeof(WDMPath), "%s/%.6s.wdm", Settings.WDMpath, (char *) header->id);
+		snprintf(WDMPath, sizeof(WDMPath), "%s/%.6s.wdm", App.Settings.WDMpath, (char *) header->id);
 		if(!CheckFile(WDMPath))
-			snprintf(WDMPath, sizeof(WDMPath), "%s/%.4s.wdm", Settings.WDMpath, (char *) header->id);
+			snprintf(WDMPath, sizeof(WDMPath), "%s/%.4s.wdm", App.Settings.WDMpath, (char *) header->id);
 	}
 
 	wdmFile = new WDMFile(WDMPath);

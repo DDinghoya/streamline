@@ -24,7 +24,7 @@
 #include "memory/mem2.h"
 #include "Controls/DeviceHandler.hpp"
 #include "FileOperations/fileops.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "sys.h"
 #include "gecko.h"
 
@@ -251,7 +251,7 @@ bool neek2oSetBootSettings(NEEK_CFG* neek_config, u64 TitleID, u32 Magic, u64 re
 	if(returnto)
 	{
 		// check if NK2O is installed
-		snprintf(tmpPath, sizeof(tmpPath), "%s/title/00010001/4e4b324f/content/title.tmd", nandpath != NULL ? nandpath : Settings.NandEmuChanPath);
+		snprintf(tmpPath, sizeof(tmpPath), "%s/title/00010001/4e4b324f/content/title.tmd", nandpath != NULL ? nandpath : App.Settings.NandEmuChanPath);
 		if(CheckFile(tmpPath))
 		{
 			neek_config->returnto = TITLE_ID(0x00010001, 'NK2O');	// Currently forced to NK2O user channel

@@ -4,7 +4,7 @@
 
 #include "wpad.h"
 #include "App.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/GameTitles.h"
 #include "themes/CTheme.h"
 #include "usbloader/GameList.h"
@@ -67,14 +67,14 @@ GuiSearchBar::GuiSearchBar() :
 	}
 	height = 10 + 42 + y * 42 + 10;
 
-	charstr[0] = Settings.SearchMode == SEARCH_BEGINNING ? L'=' : L'*';
+	charstr[0] = App.Settings.SearchMode == SEARCH_BEGINNING ? L'=' : L'*';
 	searchModeBtn = new cSearchButton(charstr,  &keyImageData, &keyOverImageData, 10, 10, &trig, btnSoundOver, btnSoundClick);
 	this->Append(&searchModeBtn->button);
 
 	text.SetText(gameList.GetCurrentFilter());
 	text.SetPosition(55, 15);
 	text.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	text.SetWidescreen(Settings.widescreen);
+	text.SetWidescreen(App.Settings.widescreen);
 	text.SetMaxWidth(width - (55 + 2 * 42 + 10), SCROLL_HORIZONTAL);
 	this->Append(&text);
 
@@ -193,7 +193,7 @@ void GuiSearchBar::FilterList(std::vector<struct discHdr *> &List, wString &Game
 			continue;
 		}
 
-		if(Settings.SearchMode == SEARCH_BEGINNING)
+		if(App.Settings.SearchMode == SEARCH_BEGINNING)
 		{
 			if (GameFilter.size() > 0 && wcsncasecmp(gameName, GameFilter.c_str(), GameFilter.size()) != 0)
 			{
@@ -212,7 +212,7 @@ void GuiSearchBar::FilterList(std::vector<struct discHdr *> &List, wString &Game
 			else if (wcslen(gameName) == GameFilter.size())  // The end of the game name was reached
 				endOfGameName = true;
 		}
-		else if(Settings.SearchMode == SEARCH_CONTENT)
+		else if(App.Settings.SearchMode == SEARCH_CONTENT)
 		{
 			if(GameFilter.size() > 0)
 			{

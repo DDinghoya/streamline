@@ -22,23 +22,23 @@ distribution.
 */
 #include "homebrewboot/HomebrewXML.h"
 #include "FileOperations/fileops.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "Version.h"
 
 int updateMetaXML (void)
 {
 	HomebrewXML MetaXML;
 	char filepath[255];
-	snprintf(filepath, sizeof(filepath), "%s/meta.xml", Settings.update_path);
+	snprintf(filepath, sizeof(filepath), "%s/meta.xml", App.Settings.update_path);
 	if(!MetaXML.LoadHomebrewXMLData(filepath))
 		return 0;
 
 	char line[50];
-	snprintf(line, sizeof(line), "--ios=%d", Settings.LoaderIOS);
+	snprintf(line, sizeof(line), "--ios=%d", App.Settings.LoaderIOS);
 	MetaXML.SetArgument(line);
-	snprintf(line, sizeof(line), "--usbport=%d", Settings.USBPort);
+	snprintf(line, sizeof(line), "--usbport=%d", App.Settings.USBPort);
 	MetaXML.SetArgument(line);
-	snprintf(line, sizeof(line), "--mountusb=%d", Settings.USBAutoMount);
+	snprintf(line, sizeof(line), "--mountusb=%d", App.Settings.USBAutoMount);
 	MetaXML.SetArgument(line);
 	snprintf(line, sizeof(line), "%s", Version_GetName());
 	MetaXML.SetVersion(line);
@@ -52,8 +52,8 @@ int editMetaArguments (void)
 	char metapath[255] = "";
 	char metatmppath[255] = "";
 
-	snprintf(metapath, sizeof(metapath), "%s/meta.xml", Settings.update_path);
-	snprintf(metatmppath, sizeof(metatmppath), "%s/meta.tmp", Settings.update_path);
+	snprintf(metapath, sizeof(metapath), "%s/meta.xml", App.Settings.update_path);
+	snprintf(metatmppath, sizeof(metatmppath), "%s/meta.tmp", App.Settings.update_path);
 
 	FILE *source = fopen(metapath, "rb");
 	if(!source)
@@ -83,11 +83,11 @@ int editMetaArguments (void)
 		if(strstr(line, "<arguments>") != NULL)
 		{
 			fputs(line, destination);
-			snprintf(line, max_line_size, "				<arg>--ios=%d</arg>\n", Settings.LoaderIOS);
+			snprintf(line, max_line_size, "				<arg>--ios=%d</arg>\n", App.Settings.LoaderIOS);
 			fputs(line, destination);
-			snprintf(line, max_line_size, "				<arg>--usbport=%d</arg>\n", Settings.USBPort);
+			snprintf(line, max_line_size, "				<arg>--usbport=%d</arg>\n", App.Settings.USBPort);
 			fputs(line, destination);
-			snprintf(line, max_line_size, "				<arg>--mountusb=%d</arg>\n", Settings.USBAutoMount);
+			snprintf(line, max_line_size, "				<arg>--mountusb=%d</arg>\n", App.Settings.USBAutoMount);
 			fputs(line, destination);
 			
 			while(strstr(line, "</arguments>") == NULL)

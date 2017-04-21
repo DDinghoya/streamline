@@ -23,7 +23,7 @@
  ***************************************************************************/
 #include "BoxCover.hpp"
 #include "BoxMesh.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "themes/CTheme.h"
 #include "menu.h"
 
@@ -110,13 +110,13 @@ void BoxCover::WiiPADControl(GuiTrigger *t)
 			if(fabs(movX) < 10.0f) movX = 0;
 			if(fabs(movY) < 10.0f) movY = 0;
 			if(movX < -PADCAL)
-				PosX += (movX + PADCAL)  * Settings.PointerSpeed * fabs(PosZ)/3400.f;
+				PosX += (movX + PADCAL)  * App.Settings.PointerSpeed * fabs(PosZ)/3400.f;
 			if(movX > PADCAL)
-				PosX += (movX - PADCAL)  * Settings.PointerSpeed * fabs(PosZ)/3400.f;
+				PosX += (movX - PADCAL)  * App.Settings.PointerSpeed * fabs(PosZ)/3400.f;
 			if(movY < -PADCAL)
-				PosY += (movY + PADCAL)  * Settings.PointerSpeed * fabs(PosZ)/3400.f;
+				PosY += (movY + PADCAL)  * App.Settings.PointerSpeed * fabs(PosZ)/3400.f;
 			if(movY > PADCAL)
-				PosY += (movY - PADCAL)  * Settings.PointerSpeed * fabs(PosZ)/3400.f;
+				PosY += (movY - PADCAL)  * App.Settings.PointerSpeed * fabs(PosZ)/3400.f;
 			
 			if(moveChan >= 0 && moveChan < 4)
 			{
@@ -240,8 +240,8 @@ void BoxCover::Draw()
 	guMtxRotAxisDeg(modelView, &cubeAxis, RotZ-Animation);
 	guMtxConcat(modelView3, modelView2, modelView2);
 	guMtxConcat(modelView2, modelView, modelView);
-	if(Settings.widescreen)
-		guMtxScaleApply(modelView, modelView, Settings.WSFactor, 1.0f, 1.0f);
+	if(App.Settings.widescreen)
+		guMtxScaleApply(modelView, modelView, App.Settings.WSFactor, 1.0f, 1.0f);
 	guMtxTransApply(modelView, modelView, PosX+xoffsetDyn/680.0f+movePosX, PosY+yoffsetDyn/680.0f+movePosY, PosZ);
 	guMtxConcat(view,modelView,modelView);
 

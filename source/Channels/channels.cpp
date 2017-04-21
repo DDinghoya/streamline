@@ -28,7 +28,7 @@
 #include <sys/dirent.h>
 #include "FileOperations/fileops.h"
 #include "Controls/DeviceHandler.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/GameTitles.h"
 #include "patches/gamepatches.h"
 #include "wad/nandtitle.h"
@@ -57,13 +57,13 @@ void Channels::GetEmuChannelList()
 	char filepath[1024];
 	int language = CONF_GetLanguage();
 
-	snprintf(filepath, sizeof(filepath), "%s/title/00010001", Settings.NandEmuChanPath);
+	snprintf(filepath, sizeof(filepath), "%s/title/00010001", App.Settings.NandEmuChanPath);
 	ParseTitleDir(filepath, language);
 
-	snprintf(filepath, sizeof(filepath), "%s/title/00010004", Settings.NandEmuChanPath);
+	snprintf(filepath, sizeof(filepath), "%s/title/00010004", App.Settings.NandEmuChanPath);
 	ParseTitleDir(filepath, language);
 
-	snprintf(filepath, sizeof(filepath), "%s/title/00010002", Settings.NandEmuChanPath);
+	snprintf(filepath, sizeof(filepath), "%s/title/00010002", App.Settings.NandEmuChanPath);
 	ParseTitleDir(filepath, language);
 }
 
@@ -156,7 +156,7 @@ u8 * Channels::GetDol(const u64 &title, u8 *tmdBuffer)
 
 	_tmd * tmd_file = (_tmd *) SIGNATURE_PAYLOAD((u32 *)tmdBuffer);
 
-	if(!Settings.UseChanLauncher)
+	if(!App.Settings.UseChanLauncher)
 	{
 		for(u32 i = 0; i < tmd_file->num_contents; ++i)
 		{
@@ -187,7 +187,7 @@ u8 * Channels::GetDol(const u64 &title, u8 *tmdBuffer)
 	if(bootcontent == 0xDEADBEAF)
 	{
 		bootcontent = tmd_file->contents[tmd_file->boot_index].cid;
-		if(!Settings.UseChanLauncher) gprintf("Main dol not found -> ");
+		if(!App.Settings.UseChanLauncher) gprintf("Main dol not found -> ");
 		gprintf("Loading boot content index\n");
 	}
 

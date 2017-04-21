@@ -1,7 +1,7 @@
 #include "wbfs_wbfs.h"
 #include "Controls/DeviceHandler.hpp"
 #include "prompts/ProgressWindow.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "usbloader/wbfs.h"
 #include "usbloader/usbstorage2.h"
 #include "utils/tools.h"
@@ -148,7 +148,7 @@ s32 Wbfs_Wbfs::AddGame()
 	/* No device open */
 	if (!hdd) return -1;
 
-	partition_selector_t part_sel = (partition_selector_t) Settings.InstallPartitions;
+	partition_selector_t part_sel = (partition_selector_t) App.Settings.InstallPartitions;
 
 	/* Add game to device */
 	ret = wbfs_add_disc(hdd, __ReadDVD, NULL, ShowProgress, part_sel, 0);
@@ -218,7 +218,7 @@ s32 Wbfs_Wbfs::ReIDGame(u8 *discid, const void *newID)
 
 u64 Wbfs_Wbfs::EstimateGameSize()
 {
-	partition_selector_t part_sel = (partition_selector_t) Settings.InstallPartitions;
+	partition_selector_t part_sel = (partition_selector_t) App.Settings.InstallPartitions;
 	return wbfs_estimate_disc(hdd, __ReadDVD, NULL, part_sel);
 }
 

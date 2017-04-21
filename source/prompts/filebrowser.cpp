@@ -336,10 +336,10 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
 	GuiText ExitBtnTxt(tr( "Cancel" ), 24, ( GXColor ) {0, 0, 0, 255});
 	GuiImage ExitBtnImg(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		ExitBtnTxt.SetWidescreen(Settings.widescreen);
-		ExitBtnImg.SetWidescreen(Settings.widescreen);
+		ExitBtnTxt.SetWidescreen(App.Settings.widescreen);
+		ExitBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton ExitBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
 	ExitBtn.SetAlignment(ALIGN_RIGHT, ALIGN_BOTTOM);
@@ -352,10 +352,10 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 
 	GuiText usbBtnTxt(browsers[(curDevice + 1) % browsers.size()].rootdir, 24, ( GXColor ) {0, 0, 0, 255});
 	GuiImage usbBtnImg(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		usbBtnTxt.SetWidescreen(Settings.widescreen);
-		usbBtnImg.SetWidescreen(Settings.widescreen);
+		usbBtnTxt.SetWidescreen(App.Settings.widescreen);
+		usbBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton usbBtn(btnOutline.GetWidth(), btnOutline.GetHeight());
 	usbBtn.SetAlignment(ALIGN_CENTER, ALIGN_BOTTOM);
@@ -367,10 +367,10 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 
 	GuiText okBtnTxt(tr( "OK" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage okBtnImg(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		okBtnTxt.SetWidescreen(Settings.widescreen);
-		okBtnImg.SetWidescreen(Settings.widescreen);
+		okBtnTxt.SetWidescreen(App.Settings.widescreen);
+		okBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton okBtn(&okBtnImg, &okBtnImg, 0, 4, 40, -35, &trigA, btnSoundOver, btnSoundClick2, 1);
 	okBtn.SetLabel(&okBtnTxt);

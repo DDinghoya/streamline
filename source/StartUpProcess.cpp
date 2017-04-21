@@ -11,7 +11,7 @@
 #include "system/IosLoader.h"
 #include <runtimeiospatch.h>
 #include "utils/timer.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/CGameSettings.h"
 #include "settings/CGameStatistics.h"
 #include "settings/CGameCategories.hpp"
@@ -91,22 +91,22 @@ int StartUpProcess::ParseArguments(int argc, char *argv[])
 		if(ptr)
 		{
 			if(atoi(ptr+strlen("-ios=")) == 58)
-				Settings.LoaderIOS = 58;
+				App.Settings.LoaderIOS = 58;
 			else
-				Settings.LoaderIOS = LIMIT(atoi(ptr+strlen("-ios=")), 200, 255);
-			Settings.UseArgumentIOS = ON;
+				App.Settings.LoaderIOS = LIMIT(atoi(ptr+strlen("-ios=")), 200, 255);
+			App.Settings.UseArgumentIOS = ON;
 		}
 
 		ptr = strcasestr(argv[i], "-usbport=");
 		if(ptr)
 		{
-			Settings.USBPort = LIMIT(atoi(ptr+strlen("-usbport=")), 0, 2);
+			App.Settings.USBPort = LIMIT(atoi(ptr+strlen("-usbport=")), 0, 2);
 		}
 
 		ptr = strcasestr(argv[i], "-mountusb=");
 		if(ptr)
 		{
-			Settings.USBAutoMount = LIMIT(atoi(ptr+strlen("-mountusb=")), 0, 1);
+			App.Settings.USBAutoMount = LIMIT(atoi(ptr+strlen("-mountusb=")), 0, 1);
 		}
 
 		if(strlen(argv[i]) == 6 && strchr(argv[i], '=') == 0 && strchr(argv[i], '-') == 0)
@@ -167,9 +167,9 @@ bool StartUpProcess::USBSpinUp()
 
 	const DISC_INTERFACE * handle0 = NULL;
 	const DISC_INTERFACE * handle1 = NULL;
-	if(Settings.USBPort == 0 || Settings.USBPort == 2)
+	if(App.Settings.USBPort == 0 || App.Settings.USBPort == 2)
 		handle0 = DeviceHandler::GetUSB0Interface();
-	if(Settings.USBPort == 1 || Settings.USBPort == 2)
+	if(App.Settings.USBPort == 1 || App.Settings.USBPort == 2)
 		handle1 = DeviceHandler::GetUSB1Interface();
 		
 	// wait 20 sec for the USB to spin up...stupid slow ass HDD
@@ -221,10 +221,10 @@ int StartUpProcess::Run(int argc, char *argv[])
 
 int StartUpProcess::Execute()
 {
-	Settings.EntryIOS = IOS_GetVersion();
+	App.Settings.EntryIOS = IOS_GetVersion();
 
 	// Reload app cios if needed
-	SetTextf("Loading application cIOS %s\n", Settings.UseArgumentIOS ? "requested in meta.xml" : "");
+	SetTextf("Loading application cIOS %s\n", App.Settings.UseArgumentIOS ? "requested in meta.xml" : "");
 	if(IosLoader::LoadAppCios() < 0)
 	{
 		SetTextf("Failed loading any cIOS. Trying with IOS58 + AHB access...");
@@ -238,7 +238,7 @@ int StartUpProcess::Execute()
 		}
 		else
 		{
-			Settings.LoaderIOS = 58;
+			App.Settings.LoaderIOS = 58;
 			SetTextf("Running on IOS 58. Wii disc based games and some channels will not work.");
 			sleep(5);
 		}
@@ -258,7 +258,7 @@ int StartUpProcess::Execute()
 	SetTextf("Initialize sd card\n");
 	DeviceHandler::Instance()->MountSD();
 
-	if(Settings.USBAutoMount == ON)
+	if(App.Settings.USBAutoMount == ON)
 	{
 		SetTextf("Initialize usb device\n");
 		USBSpinUp();
@@ -267,20 +267,20 @@ int StartUpProcess::Execute()
 	
 	SetTextf("Loading config files\n");
 	
-	gprintf("\tLoading config...%s\n", Settings.Load() ? "done" : "failed");
-	gprintf("\tLoading language...%s\n", Settings.LoadLanguage(Settings.language_path, CONSOLE_DEFAULT) ? "done" : "failed");
-	gprintf("\tLoading game settings...%s\n", GameSettings.Load(Settings.ConfigPath) ? "done" : "failed");
-	gprintf("\tLoading game statistics...%s\n", GameStatistics.Load(Settings.ConfigPath) ? "done" : "failed");
-	gprintf("\tLoading game categories...%s\n", GameCategories.Load(Settings.ConfigPath) ? "done" : "failed");
-	if(Settings.CacheTitles)
-		gprintf("\tLoading cached titles...%s\n", GameTitles.ReadCachedTitles(Settings.titlestxt_path) ? "done" : "failed (using default)");
-	if(Settings.LoaderIOS != IOS_GetVersion())
+	gprintf("\tLoading config...%s\n", App.Settings.Load() ? "done" : "failed");
+	gprintf("\tLoading language...%s\n", App.Settings.LoadLanguage(App.Settings.language_path, CONSOLE_DEFAULT) ? "done" : "failed");
+	gprintf("\tLoading game settings...%s\n", GameSettings.Load(App.Settings.ConfigPath) ? "done" : "failed");
+	gprintf("\tLoading game statistics...%s\n", GameStatistics.Load(App.Settings.ConfigPath) ? "done" : "failed");
+	gprintf("\tLoading game categories...%s\n", GameCategories.Load(App.Settings.ConfigPath) ? "done" : "failed");
+	if(App.Settings.CacheTitles)
+		gprintf("\tLoading cached titles...%s\n", GameTitles.ReadCachedTitles(App.Settings.titlestxt_path) ? "done" : "failed (using default)");
+	if(App.Settings.LoaderIOS != IOS_GetVersion())
 	{
 		SetTextf("Reloading to config file's cIOS...\n");
 		
 		// Unmount devices
 		DeviceHandler::DestroyInstance();
-		if(Settings.USBAutoMount == ON)
+		if(App.Settings.USBAutoMount == ON)
 			USBStorage2_Deinit();
 
 		// Shut down pads
@@ -295,7 +295,7 @@ int StartUpProcess::Execute()
 		// Re-Mount devices
 		SetTextf("Reinitializing devices...\n");
 		DeviceHandler::Instance()->MountSD();
-		if(Settings.USBAutoMount == ON)
+		if(App.Settings.USBAutoMount == ON)
 		{
 			USBSpinUp();
 			DeviceHandler::Instance()->MountAllUSB(false);
@@ -307,20 +307,20 @@ int StartUpProcess::Execute()
 
 	if(!IosLoader::IsHermesIOS() && !IosLoader::IsD2X())
 	{
-		Settings.USBPort = 0;
+		App.Settings.USBPort = 0;
 	}
-	else if(Settings.USBPort == 1 && USBStorage2_GetPort() != Settings.USBPort)
+	else if(App.Settings.USBPort == 1 && USBStorage2_GetPort() != App.Settings.USBPort)
 	{
-		if(Settings.USBAutoMount == ON)
+		if(App.Settings.USBAutoMount == ON)
 		{
-			SetTextf("Changing USB Port to %i\n", Settings.USBPort);
+			SetTextf("Changing USB Port to %i\n", App.Settings.USBPort);
 			DeviceHandler::Instance()->UnMountAllUSB();
 			DeviceHandler::Instance()->MountAllUSB();
 		}
 	}
-	else if(Settings.USBPort == 2)
+	else if(App.Settings.USBPort == 2)
 	{
-		if(Settings.USBAutoMount == ON)
+		if(App.Settings.USBAutoMount == ON)
 		{
 			SetTextf("Mounting USB Port to 1\n");
 			DeviceHandler::Instance()->MountUSBPort1();
