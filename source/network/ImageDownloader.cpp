@@ -23,7 +23,7 @@
 #include "prompts/ProgressWindow.h"
 #include "prompts/CheckboxPrompt.hpp"
 #include "FileOperations/fileops.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/GameTitles.h"
 #include "language/gettext.h"
 #include "usbloader/GetMissingGameFiles.hpp"
@@ -38,7 +38,7 @@ static const char *serverURLFullHQ = "http://art.gametdb.com/wii/coverfullHQ/";
 static const char *serverURLFull = "http://art.gametdb.com/wii/coverfull/";
 static const char *serverURLOrigDiscs = "http://art.gametdb.com/wii/disc/";
 static const char *serverURLCustomDiscs = "http://art.gametdb.com/wii/disccustom/";
-static const char *serverURLCustomBannersGC = Settings.CustomBannersURL;
+static const char *serverURLCustomBannersGC = App.Settings.CustomBannersURL;
 
 void ImageDownloader::DownloadImages()
 {
@@ -49,7 +49,7 @@ void ImageDownloader::DownloadImages()
 		if(path)
 			ValidBannerURL = true;
 	}
-	bool showBanner = (ValidBannerURL && Settings.LoaderMode & MODE_GCGAMES);
+	bool showBanner = (ValidBannerURL && App.Settings.LoaderMode & MODE_GCGAMES);
 
 	int choice = CheckboxWindow(tr( "Cover Download" ), 0, tr( "3D Covers" ), tr( "Flat Covers" ), tr("Full Covers"), tr( "Discarts" ), showBanner ? tr( "Custom Banners" ) : 0, 0, showBanner ? 0x1F : 0xF); // ask for download choice
 	if (choice == 0 || choice == CheckedNone)
@@ -105,32 +105,32 @@ void ImageDownloader::Start()
 void ImageDownloader::FindMissingImages()
 {
 	if(choices & CheckedBox1)
-		FindMissing(Settings.covers_path, serverURL3D, NULL, tr("Downloading 3D Covers"), NULL, ".png");
+		FindMissing(App.Settings.covers_path, serverURL3D, NULL, tr("Downloading 3D Covers"), NULL, ".png");
 
 	if(choices & CheckedBox2)
-		FindMissing(Settings.covers2d_path, serverURL2D, NULL, tr("Downloading Flat Covers"), NULL, ".png");
+		FindMissing(App.Settings.covers2d_path, serverURL2D, NULL, tr("Downloading Flat Covers"), NULL, ".png");
 
 	if(choices & CheckedBox3)
 	{
-		const char * downloadURL = (Settings.coversfull == COVERSFULL_HQ || Settings.coversfull == COVERSFULL_HQ_LQ ) ? serverURLFullHQ : serverURLFull;
-		const char * progressTitle = (Settings.coversfull == COVERSFULL_HQ || Settings.coversfull == COVERSFULL_HQ_LQ ) ? tr("Downloading Full HQ Covers") : tr("Downloading Full LQ Covers");
-		const char * backupURL = (Settings.coversfull == COVERSFULL_HQ_LQ || Settings.coversfull == COVERSFULL_LQ_HQ) ? ((Settings.coversfull == COVERSFULL_HQ_LQ) ? serverURLFull : serverURLFullHQ) : NULL;
-		const char * backupProgressTitle = (Settings.coversfull == COVERSFULL_HQ_LQ || Settings.coversfull == COVERSFULL_LQ_HQ) ? ((Settings.coversfull == COVERSFULL_HQ_LQ) ? tr("Downloading Full LQ Covers") : tr("Downloading Full HQ Covers")) : NULL;
-		FindMissing(Settings.coversFull_path, downloadURL, backupURL, progressTitle, backupProgressTitle, ".png");
+		const char * downloadURL = (App.Settings.coversfull == COVERSFULL_HQ || App.Settings.coversfull == COVERSFULL_HQ_LQ ) ? serverURLFullHQ : serverURLFull;
+		const char * progressTitle = (App.Settings.coversfull == COVERSFULL_HQ || App.Settings.coversfull == COVERSFULL_HQ_LQ ) ? tr("Downloading Full HQ Covers") : tr("Downloading Full LQ Covers");
+		const char * backupURL = (App.Settings.coversfull == COVERSFULL_HQ_LQ || App.Settings.coversfull == COVERSFULL_LQ_HQ) ? ((App.Settings.coversfull == COVERSFULL_HQ_LQ) ? serverURLFull : serverURLFullHQ) : NULL;
+		const char * backupProgressTitle = (App.Settings.coversfull == COVERSFULL_HQ_LQ || App.Settings.coversfull == COVERSFULL_LQ_HQ) ? ((App.Settings.coversfull == COVERSFULL_HQ_LQ) ? tr("Downloading Full LQ Covers") : tr("Downloading Full HQ Covers")) : NULL;
+		FindMissing(App.Settings.coversFull_path, downloadURL, backupURL, progressTitle, backupProgressTitle, ".png");
 	}
 
 	if(choices & CheckedBox4)
 	{
-		const char * downloadURL = (Settings.discart == DISCARTS_ORIGINALS || Settings.discart == DISCARTS_ORIGINALS_CUSTOMS ) ? serverURLOrigDiscs : serverURLCustomDiscs;
-		const char * progressTitle = (Settings.discart == DISCARTS_ORIGINALS || Settings.discart == DISCARTS_ORIGINALS_CUSTOMS ) ? tr("Downloading original Discarts") : tr("Downloading custom Discarts");
-		const char * backupURL = (Settings.discart == DISCARTS_ORIGINALS_CUSTOMS || Settings.discart == DISCARTS_CUSTOMS_ORIGINALS) ? ((Settings.discart == DISCARTS_ORIGINALS_CUSTOMS) ? serverURLCustomDiscs : serverURLOrigDiscs) : NULL;
-		const char * backupProgressTitle = (Settings.discart == DISCARTS_ORIGINALS_CUSTOMS || Settings.discart == DISCARTS_CUSTOMS_ORIGINALS) ? ((Settings.discart == DISCARTS_ORIGINALS_CUSTOMS) ? tr("Downloading custom Discarts") : tr("Downloading original Discarts")) : NULL;
-		FindMissing(Settings.disc_path, downloadURL, backupURL, progressTitle, backupProgressTitle, ".png");
+		const char * downloadURL = (App.Settings.discart == DISCARTS_ORIGINALS || App.Settings.discart == DISCARTS_ORIGINALS_CUSTOMS ) ? serverURLOrigDiscs : serverURLCustomDiscs;
+		const char * progressTitle = (App.Settings.discart == DISCARTS_ORIGINALS || App.Settings.discart == DISCARTS_ORIGINALS_CUSTOMS ) ? tr("Downloading original Discarts") : tr("Downloading custom Discarts");
+		const char * backupURL = (App.Settings.discart == DISCARTS_ORIGINALS_CUSTOMS || App.Settings.discart == DISCARTS_CUSTOMS_ORIGINALS) ? ((App.Settings.discart == DISCARTS_ORIGINALS_CUSTOMS) ? serverURLCustomDiscs : serverURLOrigDiscs) : NULL;
+		const char * backupProgressTitle = (App.Settings.discart == DISCARTS_ORIGINALS_CUSTOMS || App.Settings.discart == DISCARTS_CUSTOMS_ORIGINALS) ? ((App.Settings.discart == DISCARTS_ORIGINALS_CUSTOMS) ? tr("Downloading custom Discarts") : tr("Downloading original Discarts")) : NULL;
+		FindMissing(App.Settings.disc_path, downloadURL, backupURL, progressTitle, backupProgressTitle, ".png");
 	}
 
 	if(choices & CheckedBox5)
 	{
-		FindMissing(Settings.BNRCachePath, serverURLCustomBannersGC, NULL, tr("Downloading Custom Banners"), NULL, ".bnr");
+		FindMissing(App.Settings.BNRCachePath, serverURLCustomBannersGC, NULL, tr("Downloading Custom Banners"), NULL, ".bnr");
 	}
 }
 
@@ -144,12 +144,12 @@ void ImageDownloader::FindMissing(const char *writepath, const char *downloadURL
 
 	std::vector<std::string> MissingFilesList;
 
-	if((Settings.LoaderMode & MODE_GCGAMES) && strcmp(fileExt, ".bnr") == 0)
+	if((App.Settings.LoaderMode & MODE_GCGAMES) && strcmp(fileExt, ".bnr") == 0)
 	{
-		short LoaderModeBackup = Settings.LoaderMode;
-		Settings.LoaderMode = MODE_GCGAMES;		// Limit banner download for GameCube Only.
+		short LoaderModeBackup = App.Settings.LoaderMode;
+		App.Settings.LoaderMode = MODE_GCGAMES;		// Limit banner download for GameCube Only.
 		GetMissingGameFiles(writepath, fileExt, MissingFilesList);
-		Settings.LoaderMode = LoaderModeBackup;
+		App.Settings.LoaderMode = LoaderModeBackup;
 	}
 	else
 	{
@@ -286,8 +286,8 @@ struct block ImageDownloader::DownloadImage(const char * url, const char * gameI
 		case 'X':
 		case 'Y':
 		case 'Z':
-			sprintf(downloadURL, "%s%s/%s.png", url, Settings.db_language, gameID);
-			sprintf(CheckedRegion, "%s", Settings.db_language);
+			sprintf(downloadURL, "%s%s/%s.png", url, App.Settings.db_language, gameID);
+			sprintf(CheckedRegion, "%s", App.Settings.db_language);
 			PAL = true;
 			break;
 		case 'E':
@@ -318,7 +318,7 @@ struct block ImageDownloader::DownloadImage(const char * url, const char * gameI
 	}
 	else if(strcmp(CheckedRegion, "") == 0)
 	{
-		const char * lang = Settings.db_language;
+		const char * lang = App.Settings.db_language;
 
 		if(strcmp(lang, "EN") == 0 && CONF_GetRegion() == CONF_REGION_US)
 			lang = "US";
@@ -382,7 +382,7 @@ struct block ImageDownloader::DownloadImage(const char * url, const char * gameI
 void ImageDownloader::CreateCSVLog()
 {
 	char path[200];
-	snprintf(path, sizeof(path), "%s/MissingImages.csv", Settings.update_path);
+	snprintf(path, sizeof(path), "%s/MissingImages.csv", App.Settings.update_path);
 
 	FILE *f = fopen(path, "wb");
 	if(!f) return;

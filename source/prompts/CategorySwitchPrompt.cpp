@@ -23,12 +23,12 @@
  ***************************************************************************/
 #include "CategorySwitchPrompt.hpp"
 #include "settings/CGameCategories.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "language/gettext.h"
 
 CategorySwitchPrompt::CategorySwitchPrompt()
-	: CategoryPrompt(tr("Show Categories")), oldSettingEnabled(Settings.EnabledCategories),
-	oldSettingRequired(Settings.RequiredCategories), oldSettingForbidden(Settings.ForbiddenCategories)
+	: CategoryPrompt(tr("Show Categories")), oldSettingEnabled(App.Settings.EnabledCategories),
+	oldSettingRequired(App.Settings.RequiredCategories), oldSettingForbidden(App.Settings.ForbiddenCategories)
 {
 	browser->checkBoxClicked.connect(this, &CategorySwitchPrompt::OnCheckboxClick);
 	browserRefresh.connect(this, &CategorySwitchPrompt::onBrowserRefresh);
@@ -39,10 +39,10 @@ CategorySwitchPrompt::CategorySwitchPrompt()
 
 void CategorySwitchPrompt::onResetChanges()
 {
-	Settings.EnabledCategories = oldSettingEnabled;
-	Settings.RequiredCategories = oldSettingRequired;
-	Settings.ForbiddenCategories = oldSettingForbidden;
-	GameCategories.Load(Settings.ConfigPath);
+	App.Settings.EnabledCategories = oldSettingEnabled;
+	App.Settings.RequiredCategories = oldSettingRequired;
+	App.Settings.ForbiddenCategories = oldSettingForbidden;
+	GameCategories.Load(App.Settings.ConfigPath);
 }
 
 void CategorySwitchPrompt::onBrowserRefresh()
@@ -55,9 +55,9 @@ void CategorySwitchPrompt::onBrowserRefresh()
 		int style = GuiCheckbox::CHECKSIGN;
 
 		// Verify the Enabled Categories [v]
-		for(u32 i = 0; i < Settings.EnabledCategories.size(); ++i)
+		for(u32 i = 0; i < App.Settings.EnabledCategories.size(); ++i)
 		{
-			if(Settings.EnabledCategories[i] == GameCategories.CategoryList.getCurrentID())
+			if(App.Settings.EnabledCategories[i] == GameCategories.CategoryList.getCurrentID())
 			{
 				checked = true;
 				break;
@@ -67,9 +67,9 @@ void CategorySwitchPrompt::onBrowserRefresh()
 		// Verify the Forbidden Categories [X]
 		if(!checked)
 		{
-			for(u32 i = 0; i < Settings.ForbiddenCategories.size(); ++i)
+			for(u32 i = 0; i < App.Settings.ForbiddenCategories.size(); ++i)
 			{
-				if(Settings.ForbiddenCategories[i] == GameCategories.CategoryList.getCurrentID())
+				if(App.Settings.ForbiddenCategories[i] == GameCategories.CategoryList.getCurrentID())
 				{
 					checked = true;
 					style = GuiCheckbox::CROSS;
@@ -81,9 +81,9 @@ void CategorySwitchPrompt::onBrowserRefresh()
 		// Verify the Required Categories [+]
 		if(!checked)
 		{
-			for(u32 i = 0; i < Settings.RequiredCategories.size(); ++i)
+			for(u32 i = 0; i < App.Settings.RequiredCategories.size(); ++i)
 			{
-				if(Settings.RequiredCategories[i] == GameCategories.CategoryList.getCurrentID())
+				if(App.Settings.RequiredCategories[i] == GameCategories.CategoryList.getCurrentID())
 				{
 					checked = true;
 					style = GuiCheckbox::PLUS;
@@ -110,11 +110,11 @@ void CategorySwitchPrompt::OnCheckboxClick(GuiCheckbox *checkBox, int index)
 	if(!checkBox->IsChecked())
 	{
 		// Remove from Required
-		for(i = 0; i < Settings.RequiredCategories.size(); ++i)
+		for(i = 0; i < App.Settings.RequiredCategories.size(); ++i)
 		{
-			if(Settings.RequiredCategories[i] == GameCategories.CategoryList.getCurrentID())
+			if(App.Settings.RequiredCategories[i] == GameCategories.CategoryList.getCurrentID())
 			{
-				Settings.RequiredCategories.erase(Settings.RequiredCategories.begin()+i);
+				App.Settings.RequiredCategories.erase(App.Settings.RequiredCategories.begin()+i);
 				markChanged();
 				break;
 			}
@@ -123,37 +123,37 @@ void CategorySwitchPrompt::OnCheckboxClick(GuiCheckbox *checkBox, int index)
 	else if(checkBox->GetStyle() == GuiCheckbox::CHECKSIGN)
 	{
 		// Add to Enabled
-		Settings.EnabledCategories.push_back(GameCategories.CategoryList.getCurrentID());
+		App.Settings.EnabledCategories.push_back(GameCategories.CategoryList.getCurrentID());
 		markChanged();
 	}
 	else if(checkBox->GetStyle() == GuiCheckbox::CROSS)
 	{
 		// Remove from Enabled
-		for(i = 0; i < Settings.EnabledCategories.size(); ++i)
+		for(i = 0; i < App.Settings.EnabledCategories.size(); ++i)
 		{
-			if(Settings.EnabledCategories[i] == GameCategories.CategoryList.getCurrentID())
+			if(App.Settings.EnabledCategories[i] == GameCategories.CategoryList.getCurrentID())
 			{
-				Settings.EnabledCategories.erase(Settings.EnabledCategories.begin()+i);
+				App.Settings.EnabledCategories.erase(App.Settings.EnabledCategories.begin()+i);
 				break;
 			}
 		}
 		// Add to Forbidden
-		Settings.ForbiddenCategories.push_back(GameCategories.CategoryList.getCurrentID());
+		App.Settings.ForbiddenCategories.push_back(GameCategories.CategoryList.getCurrentID());
 		markChanged();
 	}
 	else if(checkBox->GetStyle() == GuiCheckbox::PLUS && index > 0)
 	{
 		// Remove from Forbidden
-		for(i = 0; i < Settings.ForbiddenCategories.size(); ++i)
+		for(i = 0; i < App.Settings.ForbiddenCategories.size(); ++i)
 		{
-			if(Settings.ForbiddenCategories[i] == GameCategories.CategoryList.getCurrentID())
+			if(App.Settings.ForbiddenCategories[i] == GameCategories.CategoryList.getCurrentID())
 			{
-				Settings.ForbiddenCategories.erase(Settings.ForbiddenCategories.begin()+i);
+				App.Settings.ForbiddenCategories.erase(App.Settings.ForbiddenCategories.begin()+i);
 				break;
 			}
 		}
 		// Add to Required
-		Settings.RequiredCategories.push_back(GameCategories.CategoryList.getCurrentID());
+		App.Settings.RequiredCategories.push_back(GameCategories.CategoryList.getCurrentID());
 		markChanged();
 	}
 
@@ -162,11 +162,11 @@ void CategorySwitchPrompt::OnCheckboxClick(GuiCheckbox *checkBox, int index)
 	{
 		checkBox->SetStyle(GuiCheckbox::CHECKSIGN);
 		checkBox->SetChecked(false);
-		for(i = 0; i < Settings.ForbiddenCategories.size(); ++i)
+		for(i = 0; i < App.Settings.ForbiddenCategories.size(); ++i)
 		{
-			if(Settings.ForbiddenCategories[i] == GameCategories.CategoryList.getCurrentID())
+			if(App.Settings.ForbiddenCategories[i] == GameCategories.CategoryList.getCurrentID())
 			{
-				Settings.ForbiddenCategories.erase(Settings.ForbiddenCategories.begin()+i);
+				App.Settings.ForbiddenCategories.erase(App.Settings.ForbiddenCategories.begin()+i);
 				markChanged();
 				break;
 			}

@@ -28,7 +28,7 @@
 #include "GameCube/GCGames.h"
 #include "CustomPathsSM.hpp"
 #include "settings/SettingsPrompts.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/SettingsEnums.h"
 #include "settings/GameTitles.h"
 #include "prompts/PromptWindows.h"
@@ -74,70 +74,70 @@ void CustomPathsSM::SetOptionValues()
 	int Idx = 0;
 
 	//! Settings: 3D Cover Path
-	Options->SetValue(Idx++, Settings.covers_path);
+	Options->SetValue(Idx++, App.Settings.covers_path);
 
 	//! Settings: 2D Cover Path
-	Options->SetValue(Idx++, Settings.covers2d_path);
+	Options->SetValue(Idx++, App.Settings.covers2d_path);
 
 	//! Settings: Full Cover Path
-	Options->SetValue(Idx++, Settings.coversFull_path);
+	Options->SetValue(Idx++, App.Settings.coversFull_path);
 
 	//! Settings: Disc Artwork Path
-	Options->SetValue(Idx++, Settings.disc_path);
+	Options->SetValue(Idx++, App.Settings.disc_path);
 
 	//! Settings: Theme Path
-	Options->SetValue(Idx++, Settings.theme_path);
+	Options->SetValue(Idx++, App.Settings.theme_path);
 
 	//! Settings: Titles Path
-	Options->SetValue(Idx++, Settings.titlestxt_path);
+	Options->SetValue(Idx++, App.Settings.titlestxt_path);
 
 	//! Settings: Update Path
-	Options->SetValue(Idx++, Settings.update_path);
+	Options->SetValue(Idx++, App.Settings.update_path);
 
 	//! Settings: GCT Cheatcodes Path
-	Options->SetValue(Idx++, Settings.Cheatcodespath);
+	Options->SetValue(Idx++, App.Settings.Cheatcodespath);
 
 	//! Settings: TXT Cheatcodes Path
-	Options->SetValue(Idx++, Settings.TxtCheatcodespath);
+	Options->SetValue(Idx++, App.Settings.TxtCheatcodespath);
 
 	//! Settings: DOL Path
-	Options->SetValue(Idx++, Settings.dolpath);
+	Options->SetValue(Idx++, App.Settings.dolpath);
 
 	//! Settings: Homebrew Apps Path
-	Options->SetValue(Idx++, Settings.homebrewapps_path);
+	Options->SetValue(Idx++, App.Settings.homebrewapps_path);
 
 	//! Settings: BCA Codes Path
-	Options->SetValue(Idx++, Settings.BcaCodepath);
+	Options->SetValue(Idx++, App.Settings.BcaCodepath);
 
 	//! Settings: WIP Patches Path
-	Options->SetValue(Idx++, Settings.WipCodepath);
+	Options->SetValue(Idx++, App.Settings.WipCodepath);
 
 	//! Settings: Languagefiles Path
-	Options->SetValue(Idx++, Settings.languagefiles_path);
+	Options->SetValue(Idx++, App.Settings.languagefiles_path);
 
 	//! Settings: WDM Files Path
-	Options->SetValue(Idx++, Settings.WDMpath);
+	Options->SetValue(Idx++, App.Settings.WDMpath);
 
 	//! Settings: Nand Emu Path
-	Options->SetValue(Idx++, Settings.NandEmuPath);
+	Options->SetValue(Idx++, App.Settings.NandEmuPath);
 
 	//! Settings: Nand Emu Channel Path
-	Options->SetValue(Idx++, Settings.NandEmuChanPath);
+	Options->SetValue(Idx++, App.Settings.NandEmuChanPath);
 
 	//! Settings: GameCube Games Path
-	Options->SetValue(Idx++, Settings.GameCubePath);
+	Options->SetValue(Idx++, App.Settings.GameCubePath);
 
 	//! Settings: SD GameCube Games Path
-	Options->SetValue(Idx++, Settings.GameCubeSDPath);
+	Options->SetValue(Idx++, App.Settings.GameCubeSDPath);
 
 	//! Settings: GameCube Devolution loader.bin Path
-	Options->SetValue(Idx++, Settings.DEVOLoaderPath);
+	Options->SetValue(Idx++, App.Settings.DEVOLoaderPath);
 
 	//! Settings: GameCube Nintendont boot.dol Path
-	Options->SetValue(Idx++, Settings.NINLoaderPath);
+	Options->SetValue(Idx++, App.Settings.NINLoaderPath);
 
 	//! Settings: Cache BNR Files Path
-	Options->SetValue(Idx++, Settings.BNRCachePath);
+	Options->SetValue(Idx++, App.Settings.BNRCachePath);
 }
 
 int CustomPathsSM::GetMenuInternal()
@@ -153,54 +153,54 @@ int CustomPathsSM::GetMenuInternal()
 	if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "3D Cover Path" ));
-		ChangePath(Settings.covers_path, sizeof(Settings.covers_path));
+		ChangePath(App.Settings.covers_path, sizeof(App.Settings.covers_path));
 	}
 
 	//! Settings: 2D Cover Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "2D Cover Path" ));
-		ChangePath(Settings.covers2d_path, sizeof(Settings.covers2d_path));
+		ChangePath(App.Settings.covers2d_path, sizeof(App.Settings.covers2d_path));
 	}
 
 	//! Settings: Full Cover Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "Full Cover Path" ));
-		ChangePath(Settings.coversFull_path, sizeof(Settings.coversFull_path));
+		ChangePath(App.Settings.coversFull_path, sizeof(App.Settings.coversFull_path));
 	}
 
 	//! Settings: Disc Artwork Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "Disc Artwork Path" ));
-		ChangePath(Settings.disc_path, sizeof(Settings.disc_path));
+		ChangePath(App.Settings.disc_path, sizeof(App.Settings.disc_path));
 	}
 
 	//! Settings: Theme Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "Theme Path" ));
-		ChangePath(Settings.theme_path, sizeof(Settings.theme_path));
+		ChangePath(App.Settings.theme_path, sizeof(App.Settings.theme_path));
 	}
 
 	//! Settings: Titles Path
 	else if (ret == ++Idx)
 	{
 		char oldPath[100];
-		strncpy(oldPath, Settings.titlestxt_path, sizeof(Settings.titlestxt_path));
+		strncpy(oldPath, App.Settings.titlestxt_path, sizeof(App.Settings.titlestxt_path));
 
 		titleTxt->SetText(tr("Titles Path"));
-		if (ChangePath(Settings.titlestxt_path, sizeof(Settings.titlestxt_path)))
+		if (ChangePath(App.Settings.titlestxt_path, sizeof(App.Settings.titlestxt_path)))
 		{
-			if(strlen(oldPath) != strlen(Settings.titlestxt_path) || strcmp(oldPath, Settings.titlestxt_path) != 0)
+			if(strlen(oldPath) != strlen(App.Settings.titlestxt_path) || strcmp(oldPath, App.Settings.titlestxt_path) != 0)
 			{
 				if (WindowPrompt(tr("Move File"), tr("Do you want to move the file(s)? Any existing ones will be deleted!"), tr("Yes"), tr("Cancel")) == 1)
 				{
-					MoveDbFile(oldPath, Settings.titlestxt_path, "wiitdb.xml");
-					MoveDbFile(oldPath, Settings.titlestxt_path, "TitlesCache.bin");
-					MoveDbFile(oldPath, Settings.titlestxt_path, "wiitdb_offsets.bin");
-					MoveDbFile(oldPath, Settings.titlestxt_path, "GameTimestamps.txt");
+					MoveDbFile(oldPath, App.Settings.titlestxt_path, "wiitdb.xml");
+					MoveDbFile(oldPath, App.Settings.titlestxt_path, "TitlesCache.bin");
+					MoveDbFile(oldPath, App.Settings.titlestxt_path, "wiitdb_offsets.bin");
+					MoveDbFile(oldPath, App.Settings.titlestxt_path, "GameTimestamps.txt");
 				
 					WindowPrompt(tr("Process finished."), 0, tr("OK"));
 				}
@@ -212,76 +212,76 @@ int CustomPathsSM::GetMenuInternal()
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "Update Path" ));
-		ChangePath(Settings.update_path, sizeof(Settings.update_path));
+		ChangePath(App.Settings.update_path, sizeof(App.Settings.update_path));
 	}
 
 	//! Settings: GCT Cheatcodes Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "GCT Cheatcodes Path" ));
-		ChangePath(Settings.Cheatcodespath, sizeof(Settings.Cheatcodespath));
+		ChangePath(App.Settings.Cheatcodespath, sizeof(App.Settings.Cheatcodespath));
 	}
 
 	//! Settings: TXT Cheatcodes Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "TXT Cheatcodes Path" ));
-		ChangePath(Settings.TxtCheatcodespath, sizeof(Settings.TxtCheatcodespath));
+		ChangePath(App.Settings.TxtCheatcodespath, sizeof(App.Settings.TxtCheatcodespath));
 	}
 
 	//! Settings: DOL Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "DOL Path" ));
-		ChangePath(Settings.dolpath, sizeof(Settings.dolpath));
+		ChangePath(App.Settings.dolpath, sizeof(App.Settings.dolpath));
 	}
 
 	//! Settings: Homebrew Apps Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "Homebrew Apps Path" ));
-		ChangePath(Settings.homebrewapps_path, sizeof(Settings.homebrewapps_path));
+		ChangePath(App.Settings.homebrewapps_path, sizeof(App.Settings.homebrewapps_path));
 	}
 
 	//! Settings: BCA Codes Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "BCA Codes Path" ));
-		ChangePath(Settings.BcaCodepath, sizeof(Settings.BcaCodepath));
+		ChangePath(App.Settings.BcaCodepath, sizeof(App.Settings.BcaCodepath));
 	}
 
 	//! Settings: WIP Patches Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "WIP Patches Path" ));
-		ChangePath(Settings.WipCodepath, sizeof(Settings.WipCodepath));
+		ChangePath(App.Settings.WipCodepath, sizeof(App.Settings.WipCodepath));
 	}
 
 	//! Settings: Languagefiles Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "Languagefiles Path" ));
-		ChangePath(Settings.languagefiles_path, sizeof(Settings.languagefiles_path));
+		ChangePath(App.Settings.languagefiles_path, sizeof(App.Settings.languagefiles_path));
 	}
 
 	//! Settings: WDM Files Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "WDM Files Path" ));
-		ChangePath(Settings.WDMpath, sizeof(Settings.WDMpath));
+		ChangePath(App.Settings.WDMpath, sizeof(App.Settings.WDMpath));
 	}
 
 	//! Settings: Nand Emu Path
 	else if (ret == ++Idx)
 	{
-		char oldPath[sizeof(Settings.NandEmuPath)];
-		snprintf(oldPath, sizeof(oldPath), Settings.NandEmuPath);
+		char oldPath[sizeof(App.Settings.NandEmuPath)];
+		snprintf(oldPath, sizeof(oldPath), App.Settings.NandEmuPath);
 
 		titleTxt->SetText(tr( "Nand Emu Path" ));
-		ChangePath(Settings.NandEmuPath, sizeof(Settings.NandEmuPath));
-		if(strncasecmp(DeviceHandler::PathToFSName(Settings.NandEmuPath), "FAT", 3) != 0)
+		ChangePath(App.Settings.NandEmuPath, sizeof(App.Settings.NandEmuPath));
+		if(strncasecmp(DeviceHandler::PathToFSName(App.Settings.NandEmuPath), "FAT", 3) != 0)
 		{
-			snprintf(Settings.NandEmuPath, sizeof(Settings.NandEmuPath), oldPath);
+			snprintf(App.Settings.NandEmuPath, sizeof(App.Settings.NandEmuPath), oldPath);
 			WindowPrompt(tr("Error:"), tr("Nand Emulation only works on FAT/FAT32 partitions!"), tr("OK"));
 		}
 	}
@@ -289,20 +289,20 @@ int CustomPathsSM::GetMenuInternal()
 	//! Settings: Nand Emu Channel Path
 	else if (ret == ++Idx)
 	{
-		char oldPath[sizeof(Settings.NandEmuChanPath)];
-		snprintf(oldPath, sizeof(oldPath), Settings.NandEmuChanPath);
+		char oldPath[sizeof(App.Settings.NandEmuChanPath)];
+		snprintf(oldPath, sizeof(oldPath), App.Settings.NandEmuChanPath);
 
 		titleTxt->SetText(tr( "Nand Emu Channel Path" ));
-		int result = ChangePath(Settings.NandEmuChanPath, sizeof(Settings.NandEmuChanPath));
-		if(strncasecmp(DeviceHandler::PathToFSName(Settings.NandEmuChanPath), "FAT", 3) != 0)
+		int result = ChangePath(App.Settings.NandEmuChanPath, sizeof(App.Settings.NandEmuChanPath));
+		if(strncasecmp(DeviceHandler::PathToFSName(App.Settings.NandEmuChanPath), "FAT", 3) != 0)
 		{
-			snprintf(Settings.NandEmuChanPath, sizeof(Settings.NandEmuChanPath), oldPath);
+			snprintf(App.Settings.NandEmuChanPath, sizeof(App.Settings.NandEmuChanPath), oldPath);
 			WindowPrompt(tr("Error:"), tr("Nand Emulation only works on FAT/FAT32 partitions!"), tr("OK"));
 		}
 		else if(result == 1)
 		{
 			Channels::Instance()->GetEmuChannelList();
-			GameTitles.LoadTitlesFromGameTDB(Settings.titlestxt_path, false);
+			GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
 		}
 	}
 
@@ -310,7 +310,7 @@ int CustomPathsSM::GetMenuInternal()
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "Main GameCube Games Path" ));
-		if(ChangePath(Settings.GameCubePath, sizeof(Settings.GameCubePath)))
+		if(ChangePath(App.Settings.GameCubePath, sizeof(App.Settings.GameCubePath)))
 		{
 			GCGames::Instance()->LoadAllGames();
 		}
@@ -319,8 +319,8 @@ int CustomPathsSM::GetMenuInternal()
 	//! Settings: SD GameCube Games Path
 	else if (ret == ++Idx)
 	{
-		char tmp_path[sizeof(Settings.GameCubeSDPath)];
-		snprintf(tmp_path, sizeof(tmp_path), "%s", Settings.GameCubeSDPath);
+		char tmp_path[sizeof(App.Settings.GameCubeSDPath)];
+		snprintf(tmp_path, sizeof(tmp_path), "%s", App.Settings.GameCubeSDPath);
 
 		titleTxt->SetText(tr( "SD GameCube Games Path" ));
 		if(ChangePath(tmp_path, sizeof(tmp_path)))
@@ -331,7 +331,7 @@ int CustomPathsSM::GetMenuInternal()
 			}
 			else
 			{
-				snprintf(Settings.GameCubeSDPath, sizeof(Settings.GameCubeSDPath), "%s", tmp_path);
+				snprintf(App.Settings.GameCubeSDPath, sizeof(App.Settings.GameCubeSDPath), "%s", tmp_path);
 				GCGames::Instance()->LoadAllGames();
 			}
 		}
@@ -341,21 +341,21 @@ int CustomPathsSM::GetMenuInternal()
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "Devolution Loader Path" ));
-		ChangePath(Settings.DEVOLoaderPath, sizeof(Settings.DEVOLoaderPath));
+		ChangePath(App.Settings.DEVOLoaderPath, sizeof(App.Settings.DEVOLoaderPath));
 	}
 
 	//! Settings: GameCube Nintendont boot.dol path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "Nintendont Loader Path" ));
-		ChangePath(Settings.NINLoaderPath, sizeof(Settings.NINLoaderPath));
+		ChangePath(App.Settings.NINLoaderPath, sizeof(App.Settings.NINLoaderPath));
 	}
 
 	//! Settings: Cache BNR Files Path
 	else if (ret == ++Idx)
 	{
 		titleTxt->SetText(tr( "Cache BNR Files Path" ));
-		ChangePath(Settings.BNRCachePath, sizeof(Settings.BNRCachePath));
+		ChangePath(App.Settings.BNRCachePath, sizeof(App.Settings.BNRCachePath));
 	}
 
 	//! Global set back of the titleTxt after a change

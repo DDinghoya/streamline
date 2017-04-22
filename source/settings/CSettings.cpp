@@ -36,8 +36,6 @@
 #include "utils/encrypt.h"
 #include "Version.h"
 
-CSettings Settings;
-
 CSettings::CSettings()
 {
 	CONF_Init();
@@ -165,8 +163,8 @@ void CSettings::SetDefault()
 	BannerZoomDuration = 30; // frames
 	BannerProjectionOffsetX = (!widescreen || PAL50) ? 0.0f : 2.0f;
 	BannerProjectionOffsetY = PAL50 ? -1.0f : (NTSC ? 0.0f : -4.0f);
-	BannerProjectionWidth = (Settings.widescreen ? (Settings.PAL50 ? 616 : 620.0f) : 608.0f);
-	BannerProjectionHeight = (Settings.PAL50 ? 448.0f : (NTSC ? 470.0f : 464.0f));
+	BannerProjectionWidth = (widescreen ? (PAL50 ? 616 : 620.0f) : 608.0f);
+	BannerProjectionHeight = (PAL50 ? 448.0f : (NTSC ? 470.0f : 464.0f));
 	GCBannerScale = 1.5f;
 	GameCubeMode = GC_MODE_MIOS;
 	GameCubeSource = AUTO;
@@ -258,7 +256,7 @@ bool CSettings::Save()
 	char filedest[300];
 	snprintf(filedest, sizeof(filedest), "%sGXGlobal.cfg", ConfigPath);
 
-	if(!CreateSubfolder(ConfigPath))	return false;
+	if (!CreateSubfolder(ConfigPath))	return false;
 
 	FILE * file = fopen(filedest, "w");
 	if (!file) return false;
@@ -340,26 +338,26 @@ bool CSettings::Save()
 	fprintf(file, "FontScaleFactor = %0.3f\n", FontScaleFactor);
 	fprintf(file, "ClockFontScaleFactor = %0.3f\n", ClockFontScaleFactor);
 	fprintf(file, "EnabledCategories = ");
-	for(u32 i = 0; i < EnabledCategories.size(); ++i)
+	for (u32 i = 0; i < EnabledCategories.size(); ++i)
 	{
 		fprintf(file, "%lu", EnabledCategories[i]);
-		if(i+1 < EnabledCategories.size())
+		if (i + 1 < EnabledCategories.size())
 			fprintf(file, ",");
 	}
 	fprintf(file, "\n");
 	fprintf(file, "RequiredCategories = ");
-	for(u32 i = 0; i < RequiredCategories.size(); ++i)
+	for (u32 i = 0; i < RequiredCategories.size(); ++i)
 	{
 		fprintf(file, "%lu", RequiredCategories[i]);
-		if(i+1 < RequiredCategories.size())
+		if (i + 1 < RequiredCategories.size())
 			fprintf(file, ",");
 	}
 	fprintf(file, "\n");
 	fprintf(file, "ForbiddenCategories = ");
-	for(u32 i = 0; i < ForbiddenCategories.size(); ++i)
+	for (u32 i = 0; i < ForbiddenCategories.size(); ++i)
 	{
 		fprintf(file, "%lu", ForbiddenCategories[i]);
-		if(i+1 < ForbiddenCategories.size())
+		if (i + 1 < ForbiddenCategories.size())
 			fprintf(file, ",");
 	}
 	fprintf(file, "\n");
@@ -525,7 +523,7 @@ bool CSettings::SetSetting(char *name, char *value)
 		strlcpy(EncryptedTxt, value, sizeof(EncryptedTxt));
 		DecryptString(EncryptedTxt, unlockCode);
 
-		if(!RememberUnlock && strlen(unlockCode) > 0 && strcmp(unlockCode, "not set") != 0)
+		if (!RememberUnlock && strlen(unlockCode) > 0 && strcmp(unlockCode, "not set") != 0)
 			godmode = 0;
 		return true;
 	}
@@ -699,83 +697,83 @@ bool CSettings::SetSetting(char *name, char *value)
 		PlaylogUpdate = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "SelectedGame") == 0)
+	else if (strcmp(name, "SelectedGame") == 0)
 	{
 		SelectedGame = atoi(value);
 	}
-	else if(strcmp(name, "GameListOffset") == 0)
+	else if (strcmp(name, "GameListOffset") == 0)
 	{
 		GameListOffset = atoi(value);
 	}
-	else if(strcmp(name, "sneekVideoPatch") == 0)
+	else if (strcmp(name, "sneekVideoPatch") == 0)
 	{
 		sneekVideoPatch = atoi(value);
 	}
-	else if(strcmp(name, "UseSystemFont") == 0)
+	else if (strcmp(name, "UseSystemFont") == 0)
 	{
 		UseSystemFont = atoi(value);
 	}
-	else if(strcmp(name, "Hooktype") == 0)
+	else if (strcmp(name, "Hooktype") == 0)
 	{
 		Hooktype = atoi(value);
 	}
-	else if(strcmp(name, "WiirdDebugger") == 0)
+	else if (strcmp(name, "WiirdDebugger") == 0)
 	{
 		WiirdDebugger = atoi(value);
 	}
-	else if(strcmp(name, "WiirdDebuggerPause") == 0)
+	else if (strcmp(name, "WiirdDebuggerPause") == 0)
 	{
 		WiirdDebuggerPause = atoi(value);
 	}
-	else if(strcmp(name, "NandEmuMode") == 0)
+	else if (strcmp(name, "NandEmuMode") == 0)
 	{
 		NandEmuMode = atoi(value);
 	}
-	else if(strcmp(name, "NandEmuChanMode") == 0)
+	else if (strcmp(name, "NandEmuChanMode") == 0)
 	{
 		NandEmuChanMode = atoi(value);
 	}
-	else if(strcmp(name, "LoaderMode") == 0)
+	else if (strcmp(name, "LoaderMode") == 0)
 	{
 		LoaderMode = atoi(value);
 	}
-	else if(strcmp(name, "SearchMode") == 0)
+	else if (strcmp(name, "SearchMode") == 0)
 	{
 		SearchMode = atoi(value);
 	}
-	else if(strcmp(name, "GameAspectRatio") == 0)
+	else if (strcmp(name, "GameAspectRatio") == 0)
 	{
 		GameAspectRatio = atoi(value);
 	}
-	else if(strcmp(name, "UseChanLauncher") == 0)
+	else if (strcmp(name, "UseChanLauncher") == 0)
 	{
 		UseChanLauncher = atoi(value);
 	}
-	else if(strcmp(name, "AdjustOverscanX") == 0)
+	else if (strcmp(name, "AdjustOverscanX") == 0)
 	{
 		AdjustOverscanX = atoi(value);
 	}
-	else if(strcmp(name, "AdjustOverscanY") == 0)
+	else if (strcmp(name, "AdjustOverscanY") == 0)
 	{
 		AdjustOverscanY = atoi(value);
 	}
-	else if(strcmp(name, "TooltipDelay") == 0)
+	else if (strcmp(name, "TooltipDelay") == 0)
 	{
 		TooltipDelay = atoi(value);
 	}
-	else if(strcmp(name, "BannerZoomDuration") == 0)
+	else if (strcmp(name, "BannerZoomDuration") == 0)
 	{
 		BannerZoomDuration = atoi(value);
 	}
-	else if(strcmp(name, "GameWindowMode") == 0)
+	else if (strcmp(name, "GameWindowMode") == 0)
 	{
 		GameWindowMode = atoi(value);
 	}
-	else if(strcmp(name, "BannerAnimStart") == 0)
+	else if (strcmp(name, "BannerAnimStart") == 0)
 	{
 		BannerAnimStart = atoi(value);
 	}
-	else if(strcmp(name, "CacheBNRFiles") == 0)
+	else if (strcmp(name, "CacheBNRFiles") == 0)
 	{
 		CacheBNRFiles = atoi(value);
 	}
@@ -1181,7 +1179,7 @@ bool CSettings::SetSetting(char *name, char *value)
 	}
 	else if (strcmp(name, "CustomBannersURL") == 0)
 	{
-		if( strcmp(value, "http://dl.dropbox.com/u/101209384/") == 0 ||
+		if (strcmp(value, "http://dl.dropbox.com/u/101209384/") == 0 ||
 			strcmp(value, "http://dl.dropboxusercontent.com/u/101209384/") == 0 ||
 			strcmp(value, "http://copy.com/vRN3HgFVyk9u7YuB/Public/") == 0)
 			strlcpy(CustomBannersURL, "http://nintendont.gxarena.com/banners/", sizeof(CustomBannersURL)); // update banner URL
@@ -1189,7 +1187,7 @@ bool CSettings::SetSetting(char *name, char *value)
 			strlcpy(CustomBannersURL, value, sizeof(CustomBannersURL));
 		return true;
 	}
-	else if(strcmp(name, "PrivateServer") == 0)
+	else if (strcmp(name, "PrivateServer") == 0)
 	{
 		PrivateServer = atoi(value);
 	}
@@ -1199,16 +1197,16 @@ bool CSettings::SetSetting(char *name, char *value)
 		char * strTok = strtok(value, ",");
 		while (strTok != NULL)
 		{
-			u32 id  = atoi(strTok);
+			u32 id = atoi(strTok);
 			u32 i;
-			for(i = 0; i < EnabledCategories.size(); ++i)
+			for (i = 0; i < EnabledCategories.size(); ++i)
 			{
-				if(EnabledCategories[i] == id)
+				if (EnabledCategories[i] == id)
 					break;
 			}
-			if(i == EnabledCategories.size())
+			if (i == EnabledCategories.size())
 				EnabledCategories.push_back(id);
-			strTok = strtok(NULL,",");
+			strTok = strtok(NULL, ",");
 		}
 		return true;
 	}
@@ -1218,16 +1216,16 @@ bool CSettings::SetSetting(char *name, char *value)
 		char * strTok = strtok(value, ",");
 		while (strTok != NULL)
 		{
-			u32 id  = atoi(strTok);
+			u32 id = atoi(strTok);
 			u32 i;
-			for(i = 0; i < RequiredCategories.size(); ++i)
+			for (i = 0; i < RequiredCategories.size(); ++i)
 			{
-				if(RequiredCategories[i] == id)
+				if (RequiredCategories[i] == id)
 					break;
 			}
-			if(i == RequiredCategories.size())
+			if (i == RequiredCategories.size())
 				RequiredCategories.push_back(id);
-			strTok = strtok(NULL,",");
+			strTok = strtok(NULL, ",");
 		}
 		return true;
 	}
@@ -1237,16 +1235,16 @@ bool CSettings::SetSetting(char *name, char *value)
 		char * strTok = strtok(value, ",");
 		while (strTok != NULL)
 		{
-			u32 id  = atoi(strTok);
+			u32 id = atoi(strTok);
 			u32 i;
-			for(i = 0; i < ForbiddenCategories.size(); ++i)
+			for (i = 0; i < ForbiddenCategories.size(); ++i)
 			{
-				if(ForbiddenCategories[i] == id)
+				if (ForbiddenCategories[i] == id)
 					break;
 			}
-			if(i == ForbiddenCategories.size())
+			if (i == ForbiddenCategories.size())
 				ForbiddenCategories.push_back(id);
-			strTok = strtok(NULL,",");
+			strTok = strtok(NULL, ",");
 		}
 		return true;
 	}
@@ -1265,7 +1263,7 @@ bool CSettings::FindConfig()
 	{
 		snprintf(CheckDevice, sizeof(CheckDevice), "%s:", DeviceName[i]);
 
-		if(!found)
+		if (!found)
 		{
 			// Check for the config file in the apps directory.
 			strlcpy(BootDevice, CheckDevice, sizeof(BootDevice));
@@ -1273,7 +1271,7 @@ bool CSettings::FindConfig()
 			snprintf(CheckPath, sizeof(CheckPath), "%sGXGlobal.cfg", ConfigPath);
 			found = CheckFile(CheckPath);
 		}
-		if(!found)
+		if (!found)
 		{
 			// Check for the config file in the config directory.
 			strlcpy(BootDevice, CheckDevice, sizeof(BootDevice));
@@ -1297,7 +1295,7 @@ bool CSettings::FindConfig()
 			snprintf(CheckPath, sizeof(CheckPath), "%sGXGlobal.cfg", ConfigPath);
 			testFp = fopen(CheckPath, "wb");
 			found = (testFp != NULL);
-			if(testFp) fclose(testFp);
+			if (testFp) fclose(testFp);
 		}
 		if (!found)
 		{
@@ -1308,7 +1306,7 @@ bool CSettings::FindConfig()
 			snprintf(CheckPath, sizeof(CheckPath), "%sGXGlobal.cfg", ConfigPath);
 			testFp = fopen(CheckPath, "wb");
 			found = (testFp != NULL);
-			if(testFp) fclose(testFp);
+			if (testFp) fclose(testFp);
 		}
 	}
 
@@ -1350,31 +1348,31 @@ void CSettings::TrimLine(char *dest, char *src, int size)
 //! eg. german.lang = DE and default to EN
 static inline const char * GetLangCode(const char * langpath)
 {
-	if(strcasestr(langpath, "japanese"))
+	if (strcasestr(langpath, "japanese"))
 		return "JA";
 
-	else if(strcasestr(langpath, "german"))
+	else if (strcasestr(langpath, "german"))
 		return "DE";
 
-	else if(strcasestr(langpath, "french"))
+	else if (strcasestr(langpath, "french"))
 		return "FR";
 
-	else if(strcasestr(langpath, "spanish"))
+	else if (strcasestr(langpath, "spanish"))
 		return "ES";
 
-	else if(strcasestr(langpath, "italian"))
+	else if (strcasestr(langpath, "italian"))
 		return "IT";
 
-	else if(strcasestr(langpath, "dutch"))
+	else if (strcasestr(langpath, "dutch"))
 		return "NL";
 
-	else if(strcasestr(langpath, "schinese"))
+	else if (strcasestr(langpath, "schinese"))
 		return "ZHCN";
 
-	else if(strcasestr(langpath, "tchinese"))
+	else if (strcasestr(langpath, "tchinese"))
 		return "ZHTW";
 
-	else if(strcasestr(langpath, "korean"))
+	else if (strcasestr(langpath, "korean"))
 		return "KO";
 
 	return "EN";

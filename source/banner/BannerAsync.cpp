@@ -24,7 +24,7 @@ distribution.
 #include <stdio.h>
 #include <malloc.h>
 #include <gccore.h>
-#include "settings/CSettings.h"
+#include "App.h"
 #include "OpeningBNR.hpp"
 #include "BannerAsync.h"
 

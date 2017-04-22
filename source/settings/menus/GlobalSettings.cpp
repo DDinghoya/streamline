@@ -44,7 +44,7 @@ GlobalSettings::GlobalSettings()
 
 GlobalSettings::~GlobalSettings()
 {
-	Settings.Save();
+	App.Settings.Save();
 
 	delete creditsImgData;
 	delete creditsImgOverData;
@@ -94,7 +94,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 	//! GUI Settings
 	if(menuNr == Idx++)
 	{
-		if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_GUI_SETTINGS))
+		if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_GUI_SETTINGS))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -108,7 +108,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 	//! Loader Settings
 	else if(menuNr == Idx++)
 	{
-		if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_LOADER_SETTINGS))
+		if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_LOADER_SETTINGS))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -122,7 +122,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 	//! Hard Drive Settings
 	else if(menuNr == Idx++)
 	{
-		if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_HARD_DRIVE_SETTINGS))
+		if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_HARD_DRIVE_SETTINGS))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -136,7 +136,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 	//! Feature
 	else if(menuNr == Idx++)
 	{
-		if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_FEATURE_SETTINGS))
+		if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_FEATURE_SETTINGS))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -150,7 +150,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 	//! Banner Animation Settings
 	else if(menuNr == Idx++)
 	{
-		if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_BANNER_SETTINGS))
+		if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_BANNER_SETTINGS))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -164,7 +164,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 	//! Sound
 	else if(menuNr == Idx++)
 	{
-		if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_SOUND_SETTINGS))
+		if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_SOUND_SETTINGS))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -178,7 +178,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 	//! Parental Control
 	else if(menuNr == Idx++)
 	{
-		if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_PARENTAL_SETTINGS))
+		if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_PARENTAL_SETTINGS))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -192,7 +192,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 	//! Custom Paths
 	else if(menuNr == Idx++)
 	{
-		if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_CUSTOMPATH_SETTINGS))
+		if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_CUSTOMPATH_SETTINGS))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -206,7 +206,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 	//! Theme Menu
 	else if(menuNr == Idx++)
 	{
-		if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_THEME_MENU))
+		if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_THEME_MENU))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -217,7 +217,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 	//! Update
 	else if(menuNr == Idx++)
 	{
-		if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_UPDATES))
+		if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_UPDATES))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -235,7 +235,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 	//! Default Settings
 	else if(menuNr == Idx++)
 	{
-		if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_RESET_SETTINGS))
+		if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_RESET_SETTINGS))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -246,7 +246,7 @@ void GlobalSettings::CreateSettingsMenu(int menuNr)
 		{
 			HaltGui();
 			gettextCleanUp();
-			Settings.Reset();
+			App.Settings.Reset();
 			returnMenu = MENU_SETTINGS;
 			ResumeGui();
 		}

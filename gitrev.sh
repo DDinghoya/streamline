@@ -3,7 +3,7 @@
 ver_build_raw=$(git rev-list --count HEAD 2>/dev/null | tr '\n' ' ' | tr -d '\r')
 ver_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 ver_major=3
-ver_minor=0
+ver_minor=1
 ver_build=0
 a=$(echo $ver_build_raw | sed 's/\([0-9]*\).*/\1/')
 let "a+=0"
@@ -53,7 +53,7 @@ const char *Version_GetBranch()
 
 const char *Version_GetName()
 {
-	return SVN_MAJOR "." SVN_MINOR "." SVN_REV "(" SVN_BRANCH ")";
+	return SVN_MAJOR "." SVN_MINOR "." SVN_REV "-" SVN_BRANCH;
 }
 EOF
 
@@ -71,7 +71,7 @@ cat <<EOF > ./HBC/meta.xml
 	<app version="1">
 		<name>USB Loader GX</name>
 		<coder>USB Loader GX Team</coder>
-		<version>$ver_major.$ver_minor.$ver_build ($ver_branch)</version>
+		<version>$ver_major.$ver_minor.$ver_build-$ver_branch</version>
 		<release_date>$rev_date</release_date>
 		<!--   // remove this line to enable arguments
 		<arguments>

@@ -54,10 +54,10 @@ OpeningBNR::~OpeningBNR()
 bool OpeningBNR::LoadCachedBNR(const char *id)
 {
 	char path[255];
-	snprintf(path, sizeof(path), "%s%.6s.bnr", Settings.BNRCachePath, id);
+	snprintf(path, sizeof(path), "%s%.6s.bnr", App.Settings.BNRCachePath, id);
 	if((filesize = FileSize(path)) == 0)
 	{
-		snprintf(path, sizeof(path), "%s%.3s.bnr", Settings.BNRCachePath, id);
+		snprintf(path, sizeof(path), "%s%.3s.bnr", App.Settings.BNRCachePath, id);
 		if((filesize = FileSize(path)) == 0)
 			return false;
 	}
@@ -98,9 +98,9 @@ bool OpeningBNR::LoadCachedBNR(const char *id)
 void OpeningBNR::WriteCachedBNR(const char *id, const u8 *buffer, u32 size)
 {
 	char path[255];
-	snprintf(path, sizeof(path), "%s%.6s.bnr", Settings.BNRCachePath, id);
+	snprintf(path, sizeof(path), "%s%.6s.bnr", App.Settings.BNRCachePath, id);
 
-	CreateSubfolder(Settings.BNRCachePath);
+	CreateSubfolder(App.Settings.BNRCachePath);
 
 	FILE *f = fopen(path, "wb");
 	if(!f)
@@ -135,7 +135,7 @@ bool OpeningBNR::Load(const discHdr * header)
 	case TYPE_GAME_GC_IMG:
 	case TYPE_GAME_GC_DISC:
 	case TYPE_GAME_GC_EXTRACTED:
-		if(!Settings.CacheBNRFiles)
+		if(!App.Settings.CacheBNRFiles)
 			return false;
 		return LoadCachedBNR((char *)header->id);
 	default:
@@ -152,7 +152,7 @@ bool OpeningBNR::LoadWiiBanner(const discHdr * header)
 		return false;
 
 
-	if(Settings.CacheBNRFiles && LoadCachedBNR((const char *)header->id))
+	if(App.Settings.CacheBNRFiles && LoadCachedBNR((const char *)header->id))
 		return true;
 
 	if(header->type == TYPE_GAME_WII_DISC)
@@ -198,7 +198,7 @@ bool OpeningBNR::LoadWiiBanner(const discHdr * header)
 		return false;
 	}
 
-	if(Settings.CacheBNRFiles)
+	if(App.Settings.CacheBNRFiles)
 		WriteCachedBNR((const char *) header->id, (u8 *) imetHdr, filesize);
 
 	return true;
@@ -210,11 +210,11 @@ bool OpeningBNR::LoadChannelBanner(const discHdr *header)
 										 && (header->type != TYPE_GAME_EMUNANDCHAN)))
 		return false;
 
-	if(Settings.CacheBNRFiles && LoadCachedBNR((char *) header->id))
+	if(App.Settings.CacheBNRFiles && LoadCachedBNR((char *) header->id))
 		return true;
 
 	const u64 &tid = header->tid;
-	const char *pathPrefix = (header->type == TYPE_GAME_EMUNANDCHAN) ? Settings.NandEmuChanPath : "";
+	const char *pathPrefix = (header->type == TYPE_GAME_EMUNANDCHAN) ? App.Settings.NandEmuChanPath : "";
 
 	imetHdr = (IMETHeader*) Channels::GetOpeningBnr(tid, &filesize, pathPrefix);
 	if(!imetHdr)
@@ -227,7 +227,7 @@ bool OpeningBNR::LoadChannelBanner(const discHdr *header)
 		return false;
 	}
 
-	if(Settings.CacheBNRFiles)
+	if(App.Settings.CacheBNRFiles)
 		WriteCachedBNR((char *) header->id, (u8 *) imetHdr, filesize);
 
 	return true;
@@ -289,7 +289,7 @@ u8 *OpeningBNR::LoadGCBNR(const discHdr * header, u32 *len)
 			return NULL;
 		}
 
-		if(!strcmp(Settings.db_language, "JA")) {
+		if(!strcmp(App.Settings.db_language, "JA")) {
 			bool loaded = gc_extract_file(disc, "openingJA.bnr");
 			if(!loaded)
 				loaded = gc_extract_file(disc, "opening.bnr");
@@ -298,7 +298,7 @@ u8 *OpeningBNR::LoadGCBNR(const discHdr * header, u32 *len)
 			if(!loaded)
 				loaded = gc_extract_file(disc, "openingEU.bnr");
 		}
-		else if(!strcmp(Settings.db_language, "EN")) {
+		else if(!strcmp(App.Settings.db_language, "EN")) {
 			bool loaded = gc_extract_file(disc, "openingUS.bnr");
 			if(!loaded)
 				loaded = gc_extract_file(disc, "opening.bnr");
@@ -331,7 +331,7 @@ u8 *OpeningBNR::LoadGCBNR(const discHdr * header, u32 *len)
 		file = fopen((gamePath + "opening.bnr").c_str(), "rb");
 
 		// if not found try the region specific ones
-		if(!strcmp(Settings.db_language, "JA")) {
+		if(!strcmp(App.Settings.db_language, "JA")) {
 			if(!file)
 				file = fopen((gamePath + "openingJA.bnr").c_str(), "rb");
 			if(!file)
@@ -339,7 +339,7 @@ u8 *OpeningBNR::LoadGCBNR(const discHdr * header, u32 *len)
 			if(!file)
 				file = fopen((gamePath + "openingEU.bnr").c_str(), "rb");
 		}
-		else if(!strcmp(Settings.db_language, "EN")) {
+		else if(!strcmp(App.Settings.db_language, "EN")) {
 			if(!file)
 				file = fopen((gamePath + "openingUS.bnr").c_str(), "rb");
 			if(!file)
@@ -408,19 +408,19 @@ CustomBanner *OpeningBNR::CreateGCBanner(const discHdr * header)
 		// European opening bnr file
 		if(openingBnr->magic == 'BNR2')
 		{
-			if(!strcmp(Settings.db_language, "DE")) {
+			if(!strcmp(App.Settings.db_language, "DE")) {
 				language = 1;
 			}
-			else if(!strcmp(Settings.db_language, "FR")) {
+			else if(!strcmp(App.Settings.db_language, "FR")) {
 				language = 2;
 			}
-			else if(!strcmp(Settings.db_language, "ES")) {
+			else if(!strcmp(App.Settings.db_language, "ES")) {
 				language = 3;
 			}
-			else if(!strcmp(Settings.db_language, "IT")) {
+			else if(!strcmp(App.Settings.db_language, "IT")) {
 				language = 4;
 			}
-			else if(!strcmp(Settings.db_language, "NL")) {
+			else if(!strcmp(App.Settings.db_language, "NL")) {
 				language = 5;
 			}
 
@@ -461,7 +461,7 @@ CustomBanner *OpeningBNR::CreateGCBanner(const discHdr * header)
 	banner->SetBannerPaneVisible("T_release_date", false);
 	banner->SetBannerPaneVisible("T_versiontext", false);
 	banner->SetBannerPaneVisible("T_version", false);
-	banner->SetBannerTextureScale(Settings.GCBannerScale);
+	banner->SetBannerTextureScale(App.Settings.GCBannerScale);
 
 	return banner;
 }

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "CSettings.h"
+#include "App.h"
 #include "settings/CGameStatistics.h"
 #include "newtitles.h"
 
@@ -43,7 +43,7 @@ void NewTitles::Reload(void)
 
 	// Read the text file
 	char path[255];
-	snprintf(path, sizeof(path), "%s/%s", Settings.titlestxt_path, GAMETITLES);
+	snprintf(path, sizeof(path), "%s/%s", App.Settings.titlestxt_path, GAMETITLES);
 
 	char line[50];
 	FILE *fp = fopen(path, "rb");
@@ -183,7 +183,7 @@ void NewTitles::Save(void)
 	if (!isDirty) return;
 
 	char path[255];
-	snprintf(path, sizeof(path), "%s/%s", Settings.titlestxt_path, GAMETITLES);
+	snprintf(path, sizeof(path), "%s/%s", App.Settings.titlestxt_path, GAMETITLES);
 
 	FILE *fp = fopen(path, "wb");
 	if (fp == NULL)

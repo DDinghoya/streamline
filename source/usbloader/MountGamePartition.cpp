@@ -25,7 +25,7 @@ static int FindGamePartition()
 
 		if (WBFS_OpenPart(i) == 0)
 		{
-			Settings.partition = i;
+			App.Settings.partition = i;
 			return 0;
 		}
 	}
@@ -54,7 +54,7 @@ static int FindGamePartition()
 
 		if (count > 0)
 		{
-			Settings.partition = i;
+			App.Settings.partition = i;
 			return 0;
 		}
 
@@ -66,7 +66,7 @@ static int FindGamePartition()
 
 	if(firstValidPartition >= 0)
 	{
-		Settings.partition = firstValidPartition;
+		App.Settings.partition = firstValidPartition;
 		return 0;
 	}
 
@@ -80,7 +80,7 @@ static int PartitionChoice()
 	int choice = WindowPrompt(tr( "No WBFS or FAT/NTFS/EXT partition found" ), tr( "You can select or format a partition or use the channel loader mode." ), tr( "Select" ), tr( "Format" ), tr( "Channels" ));
 	if (choice == 0)
 	{
-		Settings.LoaderMode = MODE_NANDCHANNELS;
+		App.Settings.LoaderMode = MODE_NANDCHANNELS;
 		return 0;
 	}
 	else if(choice == 1)
@@ -98,8 +98,8 @@ static int PartitionChoice()
 
 			ret = WBFS_OpenPart(part_num);
 
-			Settings.partition = part_num;
-			Settings.Save();
+			App.Settings.partition = part_num;
+			App.Settings.Save();
 		}
 	}
 	else if(choice == 2)
@@ -125,22 +125,22 @@ int MountGamePartition(bool ShowGUI)
 
 	s32 wbfsinit = WBFS_Init(WBFS_DEVICE_USB);
 
-	if(Settings.LoaderMode & MODE_WIIGAMES)
+	if(App.Settings.LoaderMode & MODE_WIIGAMES)
 	{
 		if (wbfsinit < 0)
 		{
 			if(ShowGUI)
 				ShowError("%s %s", tr( "USB Device not initialized." ), tr("Switching to channel list mode."));
 
-			Settings.LoaderMode &= ~MODE_WIIGAMES;
-			Settings.LoaderMode |= MODE_NANDCHANNELS;
+			App.Settings.LoaderMode &= ~MODE_WIIGAMES;
+			App.Settings.LoaderMode |= MODE_NANDCHANNELS;
 		}
 		else
 		{
-			if(Settings.MultiplePartitions)
+			if(App.Settings.MultiplePartitions)
 				ret = WBFS_OpenAll();
-			else if(!Settings.FirstTimeRun)
-				ret = WBFS_OpenPart(Settings.partition);
+			else if(!App.Settings.FirstTimeRun)
+				ret = WBFS_OpenPart(App.Settings.partition);
 
 			if(ret < 0)
 				ret = FindGamePartition();
@@ -150,7 +150,7 @@ int MountGamePartition(bool ShowGUI)
 				if(ShowGUI)
 					PartitionChoice();
 				else
-					Settings.LoaderMode = MODE_NANDCHANNELS;
+					App.Settings.LoaderMode = MODE_NANDCHANNELS;
 			}
 		}
 	}
@@ -167,8 +167,8 @@ int MountGamePartition(bool ShowGUI)
 	gprintf("LoadTitlesFromGameTDB\n");
 	//! gameList is loaded in GameTitles.LoadTitlesFromGameTDB after cache file load
 	//! for speed up purpose. If titles override active, load game list here.
-	if(Settings.titlesOverride)
-		GameTitles.LoadTitlesFromGameTDB(Settings.titlestxt_path);
+	if(App.Settings.titlesOverride)
+		GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 	else
 		gameList.LoadUnfiltered();
 

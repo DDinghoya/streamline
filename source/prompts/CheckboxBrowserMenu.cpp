@@ -17,7 +17,7 @@
 #include <unistd.h>
 #include "CheckboxBrowserMenu.h"
 #include "GameCube/GCGames.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/GameTitles.h"
 #include "language/gettext.h"
 #include "themes/gettheme.h"

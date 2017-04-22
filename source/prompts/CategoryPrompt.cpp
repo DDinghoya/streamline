@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include "CategoryPrompt.hpp"
 #include "settings/CGameCategories.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "language/gettext.h"
 #include "themes/gettheme.h"
 #include "themes/Resources.h"
@@ -221,7 +221,7 @@ int CategoryPrompt::Show()
 
 		else if(addButton->GetState() == STATE_CLICKED)
 		{
-			if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_CATEGORIES_MOD))
+			if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_CATEGORIES_MOD))
 			{
 				WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked to be able to use this." ), tr( "OK" ));
 				mainWindow->SetState(STATE_DISABLED);
@@ -247,7 +247,7 @@ int CategoryPrompt::Show()
 
 		else if(deleteButton->GetState() == STATE_CLICKED)
 		{
-			if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_CATEGORIES_MOD))
+			if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_CATEGORIES_MOD))
 			{
 				WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked to be able to use this." ), tr( "OK" ));
 				mainWindow->SetState(STATE_DISABLED);
@@ -286,7 +286,7 @@ int CategoryPrompt::Show()
 
 		else if(editButton->GetState() == STATE_CLICKED)
 		{
-			if(!Settings.godmode && (Settings.ParentalBlocks & BLOCK_CATEGORIES_MOD))
+			if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_CATEGORIES_MOD))
 			{
 				WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked to be able to use this." ), tr( "OK" ));
 				mainWindow->SetState(STATE_DISABLED);

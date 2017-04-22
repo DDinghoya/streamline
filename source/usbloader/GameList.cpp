@@ -28,7 +28,7 @@
 #include "usbloader/wbfs.h"
 #include "GameCube/GCGames.h"
 #include "settings/newtitles.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/CGameSettings.h"
 #include "settings/CGameStatistics.h"
 #include "settings/GameTitles.h"
@@ -167,9 +167,9 @@ int GameList::ReadGameList()
 
 	int cnt = 0;
 
-	if(!Settings.MultiplePartitions)
+	if(!App.Settings.MultiplePartitions)
 	{
-		cnt = InternalReadList(Settings.partition);
+		cnt = InternalReadList(App.Settings.partition);
 	}
 	else
 	{
@@ -195,10 +195,10 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 		NewTitles::Instance()->CheckGame(header->id);
 
 		/* Filters */
-		if (Settings.GameSort & SORT_FAVORITE)
+		if (App.Settings.GameSort & SORT_FAVORITE)
 		{
 			GameStatus * GameStats = GameStatistics.GetGameStatus(header->id);
-			if (Settings.marknewtitles)
+			if (App.Settings.marknewtitles)
 			{
 				bool isNew = NewTitles::Instance()->IsNew(header->id);
 				if (!isNew && (!GameStats || GameStats->FavoriteRank == 0)) continue;
@@ -216,36 +216,36 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 		GameCFG * GameConfig = GameSettings.GetGameCFG(header);
 
 		/* Rating based parental control method */
-		if (Settings.parentalcontrol != PARENTAL_LVL_ADULT && !Settings.godmode)
+		if (App.Settings.parentalcontrol != PARENTAL_LVL_ADULT && !App.Settings.godmode)
 		{
-			if (GameConfig && GameConfig->parentalcontrol > Settings.parentalcontrol)
+			if (GameConfig && GameConfig->parentalcontrol > App.Settings.parentalcontrol)
 				continue;
 
 			// Check game rating in GameTDB, since the default Wii parental control setting is enabled
 			int rating = GameTitles.GetParentalRating((char *) header->id);
-			if (rating > Settings.parentalcontrol)
+			if (rating > App.Settings.parentalcontrol)
 				continue;
 		}
 
 		//! Per game lock method
-		if(!Settings.godmode && GameConfig && GameConfig->Locked)
+		if(!App.Settings.godmode && GameConfig && GameConfig->Locked)
 			continue;
 
 		//! Category filter
 		u32 n;
 		int allType = DISABLED;
 		// verify the display mode for category "All"
-		for(n = 0; n < Settings.EnabledCategories.size(); ++n)
+		for(n = 0; n < App.Settings.EnabledCategories.size(); ++n)
 		{
-			if(Settings.EnabledCategories[n] == 0)
+			if(App.Settings.EnabledCategories[n] == 0)
 			{
 				allType = ENABLED; // All = Enabled
 				break;
 			}
 		}
-		for(n = 0; n < Settings.ForbiddenCategories.size(); ++n)
+		for(n = 0; n < App.Settings.ForbiddenCategories.size(); ++n)
 		{
-			if(Settings.ForbiddenCategories[n] == 0)
+			if(App.Settings.ForbiddenCategories[n] == 0)
 			{
 				allType = HIDEFORBIDDEN; // All = Enabled but hide Forbidden categories
 				break;
@@ -255,32 +255,32 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 		if(allType == DISABLED)
 		{
 			// Remove TitleID if it contains a forbidden categories
-			for(n = 0; n < Settings.ForbiddenCategories.size(); ++n)
+			for(n = 0; n < App.Settings.ForbiddenCategories.size(); ++n)
 			{
-				if(GameCategories.isInCategory((char *) header->id, Settings.ForbiddenCategories[n]))
+				if(GameCategories.isInCategory((char *) header->id, App.Settings.ForbiddenCategories[n]))
 					break;
 			}
-			if(n < Settings.ForbiddenCategories.size())
+			if(n < App.Settings.ForbiddenCategories.size())
 				continue;
 			
 			// Remove TitleID is it doesn't contain a required categories
-			for(n = 0; n < Settings.RequiredCategories.size(); ++n)
+			for(n = 0; n < App.Settings.RequiredCategories.size(); ++n)
 			{
-				if(!GameCategories.isInCategory((char *) header->id, Settings.RequiredCategories[n]))
+				if(!GameCategories.isInCategory((char *) header->id, App.Settings.RequiredCategories[n]))
 					break;
 			}
-			if(n < Settings.RequiredCategories.size())
+			if(n < App.Settings.RequiredCategories.size())
 				continue;
 			
 			// If there's no required categories, verify if the TitleID should be kept or removed
-			if(Settings.RequiredCategories.size() == 0)
+			if(App.Settings.RequiredCategories.size() == 0)
 			{
-				for(n = 0; n < Settings.EnabledCategories.size(); ++n)
+				for(n = 0; n < App.Settings.EnabledCategories.size(); ++n)
 				{
-					if(GameCategories.isInCategory((char *) header->id, Settings.EnabledCategories[n]))
+					if(GameCategories.isInCategory((char *) header->id, App.Settings.EnabledCategories[n]))
 						break;
 				}
-				if(n == Settings.EnabledCategories.size())
+				if(n == App.Settings.EnabledCategories.size())
 					continue;
 			}
 		}
@@ -288,13 +288,13 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 		if(allType == HIDEFORBIDDEN)
 		{
 			// Remove TitleID if it contains a forbidden categories
-			for(n = 0; n < Settings.ForbiddenCategories.size(); ++n)
+			for(n = 0; n < App.Settings.ForbiddenCategories.size(); ++n)
 			{
-				if(GameCategories.isInCategory((char *) header->id, Settings.ForbiddenCategories[n]))
-					if(Settings.ForbiddenCategories[n] >0)
+				if(GameCategories.isInCategory((char *) header->id, App.Settings.ForbiddenCategories[n]))
+					if(App.Settings.ForbiddenCategories[n] >0)
 						break;
 			}
-			if(n < Settings.ForbiddenCategories.size())
+			if(n < App.Settings.ForbiddenCategories.size())
 				continue;
 		}	
 		
@@ -304,7 +304,7 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 
 int GameList::FilterList(const wchar_t * gameFilter)
 {
-	if((Settings.LoaderMode & MODE_WIIGAMES) && (FullGameList.size() == 0))
+	if((App.Settings.LoaderMode & MODE_WIIGAMES) && (FullGameList.size() == 0))
 		ReadGameList();
 
 	if (gameFilter)
@@ -313,19 +313,19 @@ int GameList::FilterList(const wchar_t * gameFilter)
 	FilteredList.clear();
 
 	// Filter current game list if selected
-	if(Settings.LoaderMode & MODE_WIIGAMES)
+	if(App.Settings.LoaderMode & MODE_WIIGAMES)
 		InternalFilterList(FullGameList);
 
 	// Filter gc game list if selected
-	if(Settings.LoaderMode & MODE_GCGAMES)
+	if(App.Settings.LoaderMode & MODE_GCGAMES)
 		InternalFilterList(GCGames::Instance()->GetHeaders());
 
 	// Filter nand channel list if selected
-	if(Settings.LoaderMode & MODE_NANDCHANNELS)
+	if(App.Settings.LoaderMode & MODE_NANDCHANNELS)
 		InternalFilterList(Channels::Instance()->GetNandHeaders());
 
 	// Filter emu nand channel list if selected
-	if(Settings.LoaderMode & MODE_EMUCHANNELS)
+	if(App.Settings.LoaderMode & MODE_EMUCHANNELS)
 		InternalFilterList(Channels::Instance()->GetEmuHeaders());
 
 	NewTitles::Instance()->Save();
@@ -356,29 +356,29 @@ int GameList::LoadUnfiltered()
 	ShowProgress(0, 5);
 
 	ShowProgress(tr("Wii"), 1, 5);
-	if((Settings.LoaderMode & MODE_WIIGAMES) && (FullGameList.size() == 0))
+	if((App.Settings.LoaderMode & MODE_WIIGAMES) && (FullGameList.size() == 0))
 		ReadGameList();
 
 	GameFilter.clear();
 	FilteredList.clear();
 
 	// Filter current game list if selected
-	if (Settings.LoaderMode & MODE_WIIGAMES)
+	if (App.Settings.LoaderMode & MODE_WIIGAMES)
 		InternalLoadUnfiltered(FullGameList);
 
 	// Filter gc game list if selected
 	ShowProgress(tr("Gamecube"), 2, 5);
-	if(Settings.LoaderMode & MODE_GCGAMES)
+	if(App.Settings.LoaderMode & MODE_GCGAMES)
 		InternalLoadUnfiltered(GCGames::Instance()->GetHeaders());
 
 	// Filter nand channel list if selected
 	ShowProgress(tr("NAND"), 3, 5);
-	if(Settings.LoaderMode & MODE_NANDCHANNELS)
+	if(App.Settings.LoaderMode & MODE_NANDCHANNELS)
 		InternalLoadUnfiltered(Channels::Instance()->GetNandHeaders());
 
 	// Filter emu nand channel list if selected
 	ShowProgress(tr("EmuNAND"), 4, 5);
-	if(Settings.LoaderMode & MODE_EMUCHANNELS)
+	if(App.Settings.LoaderMode & MODE_EMUCHANNELS)
 		InternalLoadUnfiltered(Channels::Instance()->GetEmuHeaders());
 
 	ShowProgress(tr("Applying sorting and filtering"), 5, 5);
@@ -395,15 +395,15 @@ void GameList::SortList()
 {
 	if (FilteredList.size() < 2) return;
 
-	if (Settings.GameSort & SORT_PLAYCOUNT)
+	if (App.Settings.GameSort & SORT_PLAYCOUNT)
 	{
 		std::sort(FilteredList.begin(), FilteredList.end(), PlaycountSortCallback);
 	}
-	else if(Settings.GameSort & SORT_RANKING)
+	else if(App.Settings.GameSort & SORT_RANKING)
 	{
 		std::sort(FilteredList.begin(), FilteredList.end(), RankingSortCallback);
 	}
-	else if(Settings.GameSort & SORT_PLAYERS)
+	else if(App.Settings.GameSort & SORT_PLAYERS)
 	{
 		std::sort(FilteredList.begin(), FilteredList.end(), PlayersSortCallback);
 	}

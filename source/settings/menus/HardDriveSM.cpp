@@ -25,7 +25,7 @@
 #include <sys/statvfs.h>
 #include "HardDriveSM.hpp"
 #include "Controls/DeviceHandler.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/meta.h"
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
@@ -84,10 +84,10 @@ HardDriveSM::HardDriveSM()
 	Options->SetName(Idx++, "%s", tr( "GC Install 32K Aligned" ));
 	Options->SetName(Idx++, "%s", tr( "Sync FAT32 FS Info" ));
 
-	OldSettingsPartition = Settings.partition;
-	OldSettingsMultiplePartitions = Settings.MultiplePartitions;
-	NewSettingsUSBPort = Settings.USBPort;
-	oldSettingsUSBAutoMount = Settings.USBAutoMount;
+	OldSettingsPartition = App.Settings.partition;
+	OldSettingsMultiplePartitions = App.Settings.MultiplePartitions;
+	NewSettingsUSBPort = App.Settings.USBPort;
+	oldSettingsUSBAutoMount = App.Settings.USBAutoMount;
 
 	SetOptionValues();
 }
@@ -95,38 +95,38 @@ HardDriveSM::HardDriveSM()
 HardDriveSM::~HardDriveSM()
 {
 	//! if partition has changed, Reinitialize it
-	if (Settings.partition != OldSettingsPartition ||
-		Settings.MultiplePartitions != OldSettingsMultiplePartitions ||
-		Settings.USBPort != NewSettingsUSBPort || 
-		Settings.USBAutoMount != oldSettingsUSBAutoMount)
+	if (App.Settings.partition != OldSettingsPartition ||
+		App.Settings.MultiplePartitions != OldSettingsMultiplePartitions ||
+		App.Settings.USBPort != NewSettingsUSBPort || 
+		App.Settings.USBAutoMount != oldSettingsUSBAutoMount)
 	{
 		WBFS_CloseAll();
 
-		if(Settings.USBPort != NewSettingsUSBPort)
+		if(App.Settings.USBPort != NewSettingsUSBPort)
 		{
 			DeviceHandler::Instance()->UnMountAllUSB();
-			Settings.USBPort = NewSettingsUSBPort;
+			App.Settings.USBPort = NewSettingsUSBPort;
 			DeviceHandler::Instance()->MountAllUSB();
 
-			if(Settings.partition >= DeviceHandler::GetUSBPartitionCount())
-				Settings.partition = 0;
+			if(App.Settings.partition >= DeviceHandler::GetUSBPartitionCount())
+				App.Settings.partition = 0;
 
 			// set -1 to edit meta.xml arguments
 			NewSettingsUSBPort = -1;
 		}
 
 		WBFS_Init(WBFS_DEVICE_USB);
-		if(Settings.MultiplePartitions)
+		if(App.Settings.MultiplePartitions)
 			WBFS_OpenAll();
 		else
-			WBFS_OpenPart(Settings.partition);
+			WBFS_OpenPart(App.Settings.partition);
 
 		//! Reload the new game titles
 		gameList.ReadGameList();
 		gameList.LoadUnfiltered();
-		GameTitles.LoadTitlesFromGameTDB(Settings.titlestxt_path, false);
+		GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
 		
-		if(oldSettingsUSBAutoMount != Settings.USBAutoMount || NewSettingsUSBPort == -1)
+		if(oldSettingsUSBAutoMount != App.Settings.USBAutoMount || NewSettingsUSBPort == -1)
 		{
 			// edit meta.xml arguments
 			editMetaArguments();
@@ -139,8 +139,8 @@ void HardDriveSM::SetOptionValues()
 	int Idx = 0;
 
 	//! Settings: Game/Install Partition
-	PartitionHandle * usbHandle = DeviceHandler::Instance()->GetUSBHandleFromPartition(Settings.partition);
-	int checkPart = DeviceHandler::PartitionToPortPartition(Settings.partition);
+	PartitionHandle * usbHandle = DeviceHandler::Instance()->GetUSBHandleFromPartition(App.Settings.partition);
+	int checkPart = DeviceHandler::PartitionToPortPartition(App.Settings.partition);
 
 	//! Get the partition name and it's size in GB's
 	if(usbHandle)
@@ -149,7 +149,7 @@ void HardDriveSM::SetOptionValues()
 		Options->SetValue(Idx++, tr("Not Initialized"));
 
 	//! Settings: Multiple Partitions
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.MultiplePartitions] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.MultiplePartitions] ));
 
 	//! Settings: USB Port
 	if(NewSettingsUSBPort == 2)
@@ -158,27 +158,27 @@ void HardDriveSM::SetOptionValues()
 		Options->SetValue(Idx++, "%i", NewSettingsUSBPort);
 
 	//! Settings: Auto Mount USB at launch
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.USBAutoMount] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.USBAutoMount] ));
 
 	//! Settings: Install directories
-	Options->SetValue(Idx++, "%s", tr( InstallToText[Settings.InstallToDir] ));
+	Options->SetValue(Idx++, "%s", tr( InstallToText[App.Settings.InstallToDir] ));
 
 	//! Settings: Game Split Size
-	Options->SetValue(Idx++, "%s", tr( SplitSizeText[Settings.GameSplit] ));
+	Options->SetValue(Idx++, "%s", tr( SplitSizeText[App.Settings.GameSplit] ));
 
 	//! Settings: Install partitions
-	if(Settings.InstallPartitions == ONLY_GAME_PARTITION)
+	if(App.Settings.InstallPartitions == ONLY_GAME_PARTITION)
 		Options->SetValue(Idx++, "%s", tr("Only Game Partition"));
-	else if(Settings.InstallPartitions == ALL_PARTITIONS)
+	else if(App.Settings.InstallPartitions == ALL_PARTITIONS)
 		Options->SetValue(Idx++, "%s", tr("All Partitions"));
-	else if(Settings.InstallPartitions == REMOVE_UPDATE_PARTITION)
+	else if(App.Settings.InstallPartitions == REMOVE_UPDATE_PARTITION)
 		Options->SetValue(Idx++, "%s", tr("Remove update"));
 
 	//! Settings: GC Install Compressed
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.GCInstallCompressed] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.GCInstallCompressed] ));
 
 	//! Settings: GC Install 32K Aligned
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.GCInstallAligned] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.GCInstallAligned] ));
 
 	//! Settings: Sync FAT32 FS Info
 	Options->SetValue(Idx++, " ");
@@ -197,7 +197,7 @@ int HardDriveSM::GetMenuInternal()
 	if (ret == ++Idx)
 	{
 		// Init the USB device if mounted after launch.
-		PartitionHandle * usbHandle = DeviceHandler::Instance()->GetUSBHandleFromPartition(Settings.partition);
+		PartitionHandle * usbHandle = DeviceHandler::Instance()->GetUSBHandleFromPartition(App.Settings.partition);
 		if(usbHandle == NULL)
 			DeviceHandler::Instance()->MountAllUSB(true);
 
@@ -207,19 +207,19 @@ int HardDriveSM::GetMenuInternal()
 		int retries = 20;
 		do
 		{
-			Settings.partition = (Settings.partition + 1) % DeviceHandler::GetUSBPartitionCount();
-			fs_type = DeviceHandler::GetFilesystemType(USB1+Settings.partition);
+			App.Settings.partition = (App.Settings.partition + 1) % DeviceHandler::GetUSBPartitionCount();
+			fs_type = DeviceHandler::GetFilesystemType(USB1+App.Settings.partition);
 		}
 		while (!IsValidPartition(fs_type, ios) && --retries > 0);
 
-		if(fs_type == PART_FS_FAT && Settings.GameSplit == GAMESPLIT_NONE)
-			Settings.GameSplit = GAMESPLIT_4GB;
+		if(fs_type == PART_FS_FAT && App.Settings.GameSplit == GAMESPLIT_NONE)
+			App.Settings.GameSplit = GAMESPLIT_4GB;
 	}
 
 	//! Settings: Multiple Partitions
 	else if (ret == ++Idx)
 	{
-		if (++Settings.MultiplePartitions >= MAX_ON_OFF) Settings.MultiplePartitions = 0;
+		if (++App.Settings.MultiplePartitions >= MAX_ON_OFF) App.Settings.MultiplePartitions = 0;
 	}
 
 	//! Settings: USB Port
@@ -229,7 +229,7 @@ int HardDriveSM::GetMenuInternal()
 		{
 			WindowPrompt(tr("ERROR:"), tr("USB Port changing is only supported on Hermes cIOS."), tr("OK"));
 			NewSettingsUSBPort = 0;
-			Settings.USBPort = 0;
+			App.Settings.USBPort = 0;
 		}
 
 		else if (++NewSettingsUSBPort >= 3) // 2 = both ports
@@ -239,41 +239,41 @@ int HardDriveSM::GetMenuInternal()
 	//! Settings: Auto mount USB at launch
 	else if (ret == ++Idx)
 	{
-		if (++Settings.USBAutoMount >= MAX_ON_OFF) Settings.USBAutoMount = 0;
+		if (++App.Settings.USBAutoMount >= MAX_ON_OFF) App.Settings.USBAutoMount = 0;
 	}
 
 	//! Settings: Install directories
 	else if (ret == ++Idx)
 	{
-		if (++Settings.InstallToDir >= INSTALL_TO_MAX) Settings.InstallToDir = 0;
+		if (++App.Settings.InstallToDir >= INSTALL_TO_MAX) App.Settings.InstallToDir = 0;
 	}
 
 	//! Settings: Game Split Size
 	else if (ret == ++Idx)
 	{
-		if (++Settings.GameSplit >= GAMESPLIT_MAX)
+		if (++App.Settings.GameSplit >= GAMESPLIT_MAX)
 		{
-			if(DeviceHandler::GetFilesystemType(USB1+Settings.partition) == PART_FS_FAT)
-				Settings.GameSplit = GAMESPLIT_2GB;
+			if(DeviceHandler::GetFilesystemType(USB1+App.Settings.partition) == PART_FS_FAT)
+				App.Settings.GameSplit = GAMESPLIT_2GB;
 			else
-				Settings.GameSplit = GAMESPLIT_NONE;
+				App.Settings.GameSplit = GAMESPLIT_NONE;
 		}
 	}
 
 	//! Settings: Install partitions
 	else if (ret == ++Idx)
 	{
-		switch(Settings.InstallPartitions)
+		switch(App.Settings.InstallPartitions)
 		{
 			case ONLY_GAME_PARTITION:
-				Settings.InstallPartitions = ALL_PARTITIONS;
+				App.Settings.InstallPartitions = ALL_PARTITIONS;
 				break;
 			case ALL_PARTITIONS:
-				Settings.InstallPartitions = REMOVE_UPDATE_PARTITION;
+				App.Settings.InstallPartitions = REMOVE_UPDATE_PARTITION;
 				break;
 			default:
 			case REMOVE_UPDATE_PARTITION:
-				Settings.InstallPartitions = ONLY_GAME_PARTITION;
+				App.Settings.InstallPartitions = ONLY_GAME_PARTITION;
 				break;
 		}
 	}
@@ -281,13 +281,13 @@ int HardDriveSM::GetMenuInternal()
 	//! Settings: GC Install Compressed
 	else if (ret == ++Idx)
 	{
-		if (++Settings.GCInstallCompressed >= MAX_ON_OFF) Settings.GCInstallCompressed = 0;
+		if (++App.Settings.GCInstallCompressed >= MAX_ON_OFF) App.Settings.GCInstallCompressed = 0;
 	}
 
 	//! Settings: GC Install 32K Aligned
 	else if (ret == ++Idx)
 	{
-		if (++Settings.GCInstallAligned >= MAX_ON_OFF) Settings.GCInstallAligned = 0;
+		if (++App.Settings.GCInstallAligned >= MAX_ON_OFF) App.Settings.GCInstallAligned = 0;
 	}
 
 	//! Settings: Sync FAT32 FS Info

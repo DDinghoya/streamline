@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "WiiPointer.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "themes/Resources.h"
 #include "utils/tools.h"
 #include "video.h"
@@ -31,8 +31,8 @@ WiiPointer::WiiPointer(const char *pntrImg)
 	pointerImg = Resources::GetImageData(pntrImg);
 
 	//! create projection matrix
-	guOrtho(projection, Settings.AdjustOverscanY, screenheight - 1 - Settings.AdjustOverscanY,
-						Settings.AdjustOverscanX, screenwidth  - 1 - Settings.AdjustOverscanX, 0, 10000);
+	guOrtho(projection, App.Settings.AdjustOverscanY, screenheight - 1 - App.Settings.AdjustOverscanY,
+						App.Settings.AdjustOverscanX, screenwidth  - 1 - App.Settings.AdjustOverscanX, 0, 10000);
 }
 
 WiiPointer::~WiiPointer()
@@ -70,46 +70,46 @@ void WiiPointer::Draw(GuiTrigger *t)
 			// x-axis
 			if(t->pad.stickX < -PADCAL)
 			{
-				posX += (t->pad.stickX + PADCAL) * Settings.PointerSpeed;
+				posX += (t->pad.stickX + PADCAL) * App.Settings.PointerSpeed;
 				lastActivity = 0;
 			}
 			else if(t->pad.stickX > PADCAL)
 			{
-				posX += (t->pad.stickX - PADCAL) * Settings.PointerSpeed;
+				posX += (t->pad.stickX - PADCAL) * App.Settings.PointerSpeed;
 				lastActivity = 0;
 			}
 			// y-axis
 			if(t->pad.stickY < -PADCAL)
 			{
-				posY -= (t->pad.stickY + PADCAL) * Settings.PointerSpeed;
+				posY -= (t->pad.stickY + PADCAL) * App.Settings.PointerSpeed;
 				lastActivity = 0;
 			}
 			else if(t->pad.stickY > PADCAL)
 			{
-				posY -= (t->pad.stickY - PADCAL) * Settings.PointerSpeed;
+				posY -= (t->pad.stickY - PADCAL) * App.Settings.PointerSpeed;
 				lastActivity = 0;
 			}
 
 			//Wii u pro x-axis
 			if(t->wupcdata.stickX < -WUPCCAL)
 			{
-				posX += (t->wupcdata.stickX + WUPCCAL) * Settings.PointerSpeed/8;
+				posX += (t->wupcdata.stickX + WUPCCAL) * App.Settings.PointerSpeed/8;
 				lastActivity = 0;
 			}
 			else if(t->wupcdata.stickX > WUPCCAL)
 			{
-				posX += (t->wupcdata.stickX - WUPCCAL) * Settings.PointerSpeed/8;
+				posX += (t->wupcdata.stickX - WUPCCAL) * App.Settings.PointerSpeed/8;
 				lastActivity = 0;
 			}
 			//Wii u pro y-axis
 			if(t->wupcdata.stickY < -WUPCCAL)
 			{
-				posY -= (t->wupcdata.stickY + WUPCCAL) * Settings.PointerSpeed/8;
+				posY -= (t->wupcdata.stickY + WUPCCAL) * App.Settings.PointerSpeed/8;
 				lastActivity = 0;
 			}
 			else if(t->wupcdata.stickY > WUPCCAL)
 			{
-				posY -= (t->wupcdata.stickY - WUPCCAL) * Settings.PointerSpeed/8;
+				posY -= (t->wupcdata.stickY - WUPCCAL) * App.Settings.PointerSpeed/8;
 				lastActivity = 0;
 			}
 
@@ -120,23 +120,23 @@ void WiiPointer::Draw(GuiTrigger *t)
 			// x-axis
 			if(wpadX < -PADCAL)
 			{
-				posX += (wpadX + PADCAL) * Settings.PointerSpeed;
+				posX += (wpadX + PADCAL) * App.Settings.PointerSpeed;
 				lastActivity = 0;
 			}
 			else if(wpadX > PADCAL)
 			{
-				posX += (wpadX - PADCAL) * Settings.PointerSpeed;
+				posX += (wpadX - PADCAL) * App.Settings.PointerSpeed;
 				lastActivity = 0;
 			}
 			// y-axis
 			if(wpadY < -PADCAL)
 			{
-				posY -= (wpadY + PADCAL) * Settings.PointerSpeed;
+				posY -= (wpadY + PADCAL) * App.Settings.PointerSpeed;
 				lastActivity = 0;
 			}
 			else if(wpadY > PADCAL)
 			{
-				posY -= (wpadY - PADCAL) * Settings.PointerSpeed;
+				posY -= (wpadY - PADCAL) * App.Settings.PointerSpeed;
 				lastActivity = 0;
 			}
 

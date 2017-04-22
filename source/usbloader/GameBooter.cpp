@@ -71,7 +71,7 @@ int GameBooter::BootGCMode(struct discHdr *gameHdr)
 {
 	// check the settings
 	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHdr->id);
-	u8 GCMode = game_cfg->GameCubeMode == INHERIT ? Settings.GameCubeMode : game_cfg->GameCubeMode;
+	u8 GCMode = game_cfg->GameCubeMode == INHERIT ? App.Settings.GameCubeMode : game_cfg->GameCubeMode;
 
 	// Devolution
 	if(GCMode == GC_MODE_DEVOLUTION)
@@ -227,7 +227,7 @@ void GameBooter::ShutDownDevices(int gameUSBPort)
 	//! Shadow mload - Only needed on some games with Hermes v5.1 (Check is inside the function)
 	shadow_mload();
 
-	if(Settings.USBPort == 2)
+	if(App.Settings.USBPort == 2)
 		//! Reset USB port because device handler changes it for cache flushing
 		USBStorage2_SetPort(gameUSBPort);
 	USBStorage2_Deinit();
@@ -249,30 +249,30 @@ int GameBooter::BootGame(struct discHdr *gameHdr)
 
 	//! Setup game configuration from game settings. If no game settings exist use global/default.
 	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHeader.id);
-	u8 videoChoice = game_cfg->video == INHERIT ? Settings.videomode : game_cfg->video;
-	u8 videoPatchDolChoice = game_cfg->videoPatchDol == INHERIT ? Settings.videoPatchDol : game_cfg->videoPatchDol;
-	u8 aspectChoice = game_cfg->aspectratio == INHERIT ? Settings.GameAspectRatio : game_cfg->aspectratio;
-	u8 languageChoice = game_cfg->language == INHERIT ? Settings.language : game_cfg->language;
-	u8 ocarinaChoice = game_cfg->ocarina == INHERIT ? Settings.ocarina : game_cfg->ocarina;
-	u8 PrivServChoice = game_cfg->PrivateServer == INHERIT ? Settings.PrivateServer : game_cfg->PrivateServer;
-	u8 viChoice = game_cfg->vipatch == INHERIT ? Settings.videopatch : game_cfg->vipatch;
-	u8 sneekChoice = game_cfg->sneekVideoPatch == INHERIT ? Settings.sneekVideoPatch : game_cfg->sneekVideoPatch;
-	u8 iosChoice = game_cfg->ios == INHERIT ? Settings.cios : game_cfg->ios;
-	u8 countrystrings = game_cfg->patchcountrystrings == INHERIT ? Settings.patchcountrystrings : game_cfg->patchcountrystrings;
+	u8 videoChoice = game_cfg->video == INHERIT ? App.Settings.videomode : game_cfg->video;
+	u8 videoPatchDolChoice = game_cfg->videoPatchDol == INHERIT ? App.Settings.videoPatchDol : game_cfg->videoPatchDol;
+	u8 aspectChoice = game_cfg->aspectratio == INHERIT ? App.Settings.GameAspectRatio : game_cfg->aspectratio;
+	u8 languageChoice = game_cfg->language == INHERIT ? App.Settings.language : game_cfg->language;
+	u8 ocarinaChoice = game_cfg->ocarina == INHERIT ? App.Settings.ocarina : game_cfg->ocarina;
+	u8 PrivServChoice = game_cfg->PrivateServer == INHERIT ? App.Settings.PrivateServer : game_cfg->PrivateServer;
+	u8 viChoice = game_cfg->vipatch == INHERIT ? App.Settings.videopatch : game_cfg->vipatch;
+	u8 sneekChoice = game_cfg->sneekVideoPatch == INHERIT ? App.Settings.sneekVideoPatch : game_cfg->sneekVideoPatch;
+	u8 iosChoice = game_cfg->ios == INHERIT ? App.Settings.cios : game_cfg->ios;
+	u8 countrystrings = game_cfg->patchcountrystrings == INHERIT ? App.Settings.patchcountrystrings : game_cfg->patchcountrystrings;
 	u8 alternatedol = game_cfg->loadalternatedol;
 	u32 alternatedoloffset = game_cfg->alternatedolstart;
-	u8 reloadblock = game_cfg->iosreloadblock == INHERIT ? Settings.BlockIOSReload : game_cfg->iosreloadblock;
-	u8 Hooktype = game_cfg->Hooktype == INHERIT ? Settings.Hooktype : game_cfg->Hooktype;
-	u8 WiirdDebugger = game_cfg->WiirdDebugger == INHERIT ? Settings.WiirdDebugger : game_cfg->WiirdDebugger;
-	u64 returnToChoice = strlen(Settings.returnTo) > 0 ? (game_cfg->returnTo ? NandTitles.FindU32(Settings.returnTo) : 0) : 0;
+	u8 reloadblock = game_cfg->iosreloadblock == INHERIT ? App.Settings.BlockIOSReload : game_cfg->iosreloadblock;
+	u8 Hooktype = game_cfg->Hooktype == INHERIT ? App.Settings.Hooktype : game_cfg->Hooktype;
+	u8 WiirdDebugger = game_cfg->WiirdDebugger == INHERIT ? App.Settings.WiirdDebugger : game_cfg->WiirdDebugger;
+	u64 returnToChoice = strlen(App.Settings.returnTo) > 0 ? (game_cfg->returnTo ? NandTitles.FindU32(App.Settings.returnTo) : 0) : 0;
 	u8 NandEmuMode = OFF;
-	const char *NandEmuPath = game_cfg->NandEmuPath.size() == 0 ? Settings.NandEmuPath : game_cfg->NandEmuPath.c_str();
+	const char *NandEmuPath = game_cfg->NandEmuPath.size() == 0 ? App.Settings.NandEmuPath : game_cfg->NandEmuPath.c_str();
 	if(gameHeader.type == TYPE_GAME_WII_IMG)
-		NandEmuMode = game_cfg->NandEmuMode == INHERIT ? Settings.NandEmuMode : game_cfg->NandEmuMode;
+		NandEmuMode = game_cfg->NandEmuMode == INHERIT ? App.Settings.NandEmuMode : game_cfg->NandEmuMode;
 	if(gameHeader.type == TYPE_GAME_EMUNANDCHAN)
 	{
-		NandEmuMode = game_cfg->NandEmuMode == INHERIT ? Settings.NandEmuChanMode : game_cfg->NandEmuMode;
-		NandEmuPath = game_cfg->NandEmuPath.size() == 0 ? Settings.NandEmuChanPath : game_cfg->NandEmuPath.c_str();
+		NandEmuMode = game_cfg->NandEmuMode == INHERIT ? App.Settings.NandEmuChanMode : game_cfg->NandEmuMode;
+		NandEmuPath = game_cfg->NandEmuPath.size() == 0 ? App.Settings.NandEmuChanPath : game_cfg->NandEmuPath.c_str();
 	}
 	
 	// boot neek for Wii games and EmuNAND channels only
@@ -281,7 +281,7 @@ int GameBooter::BootGame(struct discHdr *gameHdr)
 
 	AppCleanUp();
 
-	gprintf("\tSettings.partition: %d\n", Settings.partition);
+	gprintf("\tSettings.partition: %d\n", App.Settings.partition);
 
 	s32 ret = -1;
 
@@ -302,7 +302,7 @@ int GameBooter::BootGame(struct discHdr *gameHdr)
 	}
 
 	//! Modify Wii Message Board to display the game starting here (before Nand Emu)
-	if(Settings.PlaylogUpdate)
+	if(App.Settings.PlaylogUpdate)
 	{
 		// enable isfs permission if using IOS+AHB or Hermes v4
 		if(IOS_GetVersion() < 200 || (IosLoader::IsHermesIOS() && IOS_GetRevision() == 4))
@@ -325,11 +325,11 @@ int GameBooter::BootGame(struct discHdr *gameHdr)
 
 	//! Load Ocarina codes
 	if (ocarinaChoice)
-		ocarina_load_code(Settings.Cheatcodespath, gameHeader.id);
+		ocarina_load_code(App.Settings.Cheatcodespath, gameHeader.id);
 	
 	//! Load gameconfig.txt even if ocarina disabled
 	if(Hooktype)
-		LoadGameConfig(Settings.Cheatcodespath);
+		LoadGameConfig(App.Settings.Cheatcodespath);
 
 	//! Setup NAND emulation
 	SetupNandEmu(NandEmuMode, NandEmuPath, gameHeader);
@@ -344,7 +344,7 @@ int GameBooter::BootGame(struct discHdr *gameHdr)
 
 		//! Load BCA data for the game
 		gprintf("Loading BCA data...");
-		ret = do_bca_code(Settings.BcaCodepath, gameHeader.id);
+		ret = do_bca_code(App.Settings.BcaCodepath, gameHeader.id);
 		gprintf("%d\n", ret);
 	}
 
@@ -386,7 +386,7 @@ int GameBooter::BootGame(struct discHdr *gameHdr)
 	if(gameHeader.tid == 0)
 	{
 		gprintf("\tGame Boot\n");
-		AppEntrypoint = BootPartition(Settings.dolpath, videoChoice, alternatedol, alternatedoloffset);
+		AppEntrypoint = BootPartition(App.Settings.dolpath, videoChoice, alternatedol, alternatedoloffset);
 		// Reading of game is done we can close devices now
 		ShutDownDevices(usbport);
 	}
@@ -414,7 +414,7 @@ int GameBooter::BootGame(struct discHdr *gameHdr)
 	gamepatches(videoChoice, videoPatchDolChoice, aspectChoice, languageChoice, countrystrings, viChoice, sneekChoice, Hooktype, returnToChoice, PrivServChoice);
 
 	//! Load Code handler if needed
-	load_handler(Hooktype, WiirdDebugger, Settings.WiirdDebuggerPause);
+	load_handler(Hooktype, WiirdDebugger, App.Settings.WiirdDebuggerPause);
 
 	//! Jump to the entrypoint of the game - the last function of the USB Loader
 	gprintf("Jumping to game entrypoint: 0x%08X.\n", AppEntrypoint);
@@ -426,19 +426,19 @@ int GameBooter::BootDIOSMIOS(struct discHdr *gameHdr)
 	const char *RealPath = GCGames::Instance()->GetPath((const char *) gameHdr->id);
 
 	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHdr->id);
-	s8 languageChoice = game_cfg->language == INHERIT ? Settings.language - 1 : game_cfg->language;
-	u8 ocarinaChoice = game_cfg->ocarina == INHERIT ? Settings.ocarina : game_cfg->ocarina;
-	u8 multiDiscChoice = Settings.MultiDiscPrompt;
-	u8 dmlVideoChoice = game_cfg->DMLVideo == INHERIT ? Settings.DMLVideo : game_cfg->DMLVideo;
-	u8 dmlProgressivePatch = game_cfg->DMLProgPatch == INHERIT ? Settings.DMLProgPatch : game_cfg->DMLProgPatch;
-	u8 dmlNMMChoice = game_cfg->DMLNMM == INHERIT ? Settings.DMLNMM : game_cfg->DMLNMM;
-	u8 dmlActivityLEDChoice = game_cfg->DMLActivityLED == INHERIT ? Settings.DMLActivityLED : game_cfg->DMLActivityLED;
-	u8 dmlPADHookChoice = game_cfg->DMLPADHOOK == INHERIT ? Settings.DMLPADHOOK : game_cfg->DMLPADHOOK;
-	u8 dmlNoDisc2Choice = game_cfg->DMLNoDisc2 == INHERIT ? Settings.DMLNoDisc2 : game_cfg->DMLNoDisc2;
-	u8 dmlWidescreenChoice = game_cfg->DMLWidescreen == INHERIT ? Settings.DMLWidescreen : game_cfg->DMLWidescreen;
-	u8 dmlScreenshotChoice = game_cfg->DMLScreenshot == INHERIT ? Settings.DMLScreenshot : game_cfg->DMLScreenshot;
-	u8 dmlJPNPatchChoice = game_cfg->DMLJPNPatch == INHERIT ? Settings.DMLJPNPatch : game_cfg->DMLJPNPatch;
-	u8 dmlDebugChoice = game_cfg->DMLDebug == INHERIT ? Settings.DMLDebug : game_cfg->DMLDebug;
+	s8 languageChoice = game_cfg->language == INHERIT ? App.Settings.language - 1 : game_cfg->language;
+	u8 ocarinaChoice = game_cfg->ocarina == INHERIT ? App.Settings.ocarina : game_cfg->ocarina;
+	u8 multiDiscChoice = App.Settings.MultiDiscPrompt;
+	u8 dmlVideoChoice = game_cfg->DMLVideo == INHERIT ? App.Settings.DMLVideo : game_cfg->DMLVideo;
+	u8 dmlProgressivePatch = game_cfg->DMLProgPatch == INHERIT ? App.Settings.DMLProgPatch : game_cfg->DMLProgPatch;
+	u8 dmlNMMChoice = game_cfg->DMLNMM == INHERIT ? App.Settings.DMLNMM : game_cfg->DMLNMM;
+	u8 dmlActivityLEDChoice = game_cfg->DMLActivityLED == INHERIT ? App.Settings.DMLActivityLED : game_cfg->DMLActivityLED;
+	u8 dmlPADHookChoice = game_cfg->DMLPADHOOK == INHERIT ? App.Settings.DMLPADHOOK : game_cfg->DMLPADHOOK;
+	u8 dmlNoDisc2Choice = game_cfg->DMLNoDisc2 == INHERIT ? App.Settings.DMLNoDisc2 : game_cfg->DMLNoDisc2;
+	u8 dmlWidescreenChoice = game_cfg->DMLWidescreen == INHERIT ? App.Settings.DMLWidescreen : game_cfg->DMLWidescreen;
+	u8 dmlScreenshotChoice = game_cfg->DMLScreenshot == INHERIT ? App.Settings.DMLScreenshot : game_cfg->DMLScreenshot;
+	u8 dmlJPNPatchChoice = game_cfg->DMLJPNPatch == INHERIT ? App.Settings.DMLJPNPatch : game_cfg->DMLJPNPatch;
+	u8 dmlDebugChoice = game_cfg->DMLDebug == INHERIT ? App.Settings.DMLDebug : game_cfg->DMLDebug;
 	
 	int currentMIOS = IosLoader::GetMIOSInfo();
 	char LoaderName[15];
@@ -455,7 +455,7 @@ int GameBooter::BootDIOSMIOS(struct discHdr *gameHdr)
 	if(currentMIOS == DIOS_MIOS || currentMIOS == QUADFORCE_USB)
 	{
 		// Check Main GameCube Path location
-		if(strncmp(Settings.GameCubePath, "sd", 2) == 0 || strncmp(DeviceHandler::PathToFSName(Settings.GameCubePath), "FAT", 3) != 0)
+		if(strncmp(App.Settings.GameCubePath, "sd", 2) == 0 || strncmp(DeviceHandler::PathToFSName(App.Settings.GameCubePath), "FAT", 3) != 0)
 		{
 			WindowPrompt(tr("Error:"), fmt(tr("To run GameCube games with %s you need to set your 'Main GameCube Path' to an USB FAT32 partition."),LoaderName), tr("OK"));
 			return -1;
@@ -471,7 +471,7 @@ int GameBooter::BootDIOSMIOS(struct discHdr *gameHdr)
 
 		// Check if the partition is the first primary partition on the drive
 		bool found = false;
-		int USB_partNum = DeviceHandler::PathToDriveType(Settings.GameCubePath)-USB1;
+		int USB_partNum = DeviceHandler::PathToDriveType(App.Settings.GameCubePath)-USB1;
 		int USBport_partNum = DeviceHandler::PartitionToPortPartition(USB_partNum);
 		int usbport = DeviceHandler::PartitionToUSBPort(USB_partNum);
 		PartitionHandle * usbHandle = DeviceHandler::Instance()->GetUSBHandleFromPartition(USB_partNum);
@@ -529,24 +529,24 @@ int GameBooter::BootDIOSMIOS(struct discHdr *gameHdr)
 		}
 		if(dmlWidescreenChoice && IosLoader::GetDMLVersion() < DML_VERSION_DM_2_1) // DML Force Widescreen setting : added in DM v2.1+, config v1.
 		{
-			if(Settings.DMLWidescreen) // Display the warning only if set as Global setting. Individual game setting is not displayed.
+			if(App.Settings.DMLWidescreen) // Display the warning only if set as Global setting. Individual game setting is not displayed.
 				WindowPrompt(tr("Warning:"), tr("The Force Widescreen setting requires DIOS MIOS v2.1 or more. This setting will be ignored."), tr("OK"));
 			dmlWidescreenChoice = OFF;
 		}
 		if(dmlNoDisc2Choice && (IosLoader::GetDMLVersion() < DML_VERSION_DM_2_2_2 || IosLoader::GetDMLVersion() > DML_VERSION_DML_2_2_1)) // DML NoDisc+ setting : Added in DM 2.2 upate 2, config v2, removed in DM(L) v2.3
 		{
-			if(Settings.DMLNoDisc2) // Display the warning only if set as Global setting. Individual game setting is not displayed.
+			if(App.Settings.DMLNoDisc2) // Display the warning only if set as Global setting. Individual game setting is not displayed.
 				WindowPrompt(tr("Warning:"), tr("The No Disc+ setting requires DIOS MIOS 2.2 update2. This setting will be ignored."), tr("OK"));
 			dmlNoDisc2Choice = false;
 		}
 	}
 	
 	// Check Ocarina and cheat file location. the .gct file need to be located on the same partition than the game.
-	if(gameHdr->type != TYPE_GAME_GC_DISC && ocarinaChoice && strcmp(DeviceHandler::GetDevicePrefix(RealPath), DeviceHandler::GetDevicePrefix(Settings.Cheatcodespath)) != 0)
+	if(gameHdr->type != TYPE_GAME_GC_DISC && ocarinaChoice && strcmp(DeviceHandler::GetDevicePrefix(RealPath), DeviceHandler::GetDevicePrefix(App.Settings.Cheatcodespath)) != 0)
 	{
 		char path[255], destPath[255];
 		int res = -1;
-		snprintf(path, sizeof(path), "%s%.6s.gct", Settings.Cheatcodespath, (char *)gameHdr->id);
+		snprintf(path, sizeof(path), "%s%.6s.gct", App.Settings.Cheatcodespath, (char *)gameHdr->id);
 		snprintf(destPath, sizeof(destPath), "%s:/DMLTemp.gct", DeviceHandler::GetDevicePrefix(RealPath));
 		
 		gprintf("DML: Copying %s to %s \n", path, destPath);
@@ -626,9 +626,9 @@ int GameBooter::BootDIOSMIOS(struct discHdr *gameHdr)
 	if(ocarinaChoice)
 	{
 		// Check if the .gct folder is on the same partition than the game, if not load the temporary .gct file.
-		if(strcmp(DeviceHandler::GetDevicePrefix(RealPath), DeviceHandler::GetDevicePrefix(Settings.Cheatcodespath)) == 0)
+		if(strcmp(DeviceHandler::GetDevicePrefix(RealPath), DeviceHandler::GetDevicePrefix(App.Settings.Cheatcodespath)) == 0)
 		{
-			const char *CheatPath = strchr(Settings.Cheatcodespath, '/');
+			const char *CheatPath = strchr(App.Settings.Cheatcodespath, '/');
 			if(!CheatPath) CheatPath = "";
 			snprintf(dml_config->CheatPath, sizeof(dml_config->CheatPath), "%s%.6s.gct", CheatPath, (char *)gameHdr->id);
 		}
@@ -714,15 +714,15 @@ int GameBooter::BootDevolution(struct discHdr *gameHdr)
 	const char *LoaderName = "Devolution";
 
 	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHdr->id);
-	s8 languageChoice = game_cfg->language == INHERIT ? Settings.language -1 : game_cfg->language;
-	u8 devoMCEmulation = game_cfg->DEVOMCEmulation == INHERIT ? Settings.DEVOMCEmulation : game_cfg->DEVOMCEmulation;
-	u8 devoActivityLEDChoice = game_cfg->DEVOActivityLED == INHERIT ? Settings.DEVOActivityLED : game_cfg->DEVOActivityLED;
-	u8 devoWidescreenChoice = game_cfg->DEVOWidescreen == INHERIT ? Settings.DEVOWidescreen : game_cfg->DEVOWidescreen;
-	u8 devoFZeroAXChoice = game_cfg->DEVOFZeroAX == INHERIT ? Settings.DEVOFZeroAX : game_cfg->DEVOFZeroAX;
-	u8 devoTimerFixChoice = game_cfg->DEVOTimerFix == INHERIT ? Settings.DEVOTimerFix : game_cfg->DEVOTimerFix;
-	u8 devoDButtonsChoice = game_cfg->DEVODButtons == INHERIT ? Settings.DEVODButtons : game_cfg->DEVODButtons;
-	u8 devoCropOverscanChoice = game_cfg->DEVOCropOverscan == INHERIT ? Settings.DEVOCropOverscan : game_cfg->DEVOCropOverscan;
-	u8 devoDiscDelayChoice = game_cfg->DEVODiscDelay == INHERIT ? Settings.DEVODiscDelay : game_cfg->DEVODiscDelay;
+	s8 languageChoice = game_cfg->language == INHERIT ? App.Settings.language -1 : game_cfg->language;
+	u8 devoMCEmulation = game_cfg->DEVOMCEmulation == INHERIT ? App.Settings.DEVOMCEmulation : game_cfg->DEVOMCEmulation;
+	u8 devoActivityLEDChoice = game_cfg->DEVOActivityLED == INHERIT ? App.Settings.DEVOActivityLED : game_cfg->DEVOActivityLED;
+	u8 devoWidescreenChoice = game_cfg->DEVOWidescreen == INHERIT ? App.Settings.DEVOWidescreen : game_cfg->DEVOWidescreen;
+	u8 devoFZeroAXChoice = game_cfg->DEVOFZeroAX == INHERIT ? App.Settings.DEVOFZeroAX : game_cfg->DEVOFZeroAX;
+	u8 devoTimerFixChoice = game_cfg->DEVOTimerFix == INHERIT ? App.Settings.DEVOTimerFix : game_cfg->DEVOTimerFix;
+	u8 devoDButtonsChoice = game_cfg->DEVODButtons == INHERIT ? App.Settings.DEVODButtons : game_cfg->DEVODButtons;
+	u8 devoCropOverscanChoice = game_cfg->DEVOCropOverscan == INHERIT ? App.Settings.DEVOCropOverscan : game_cfg->DEVOCropOverscan;
+	u8 devoDiscDelayChoice = game_cfg->DEVODiscDelay == INHERIT ? App.Settings.DEVODiscDelay : game_cfg->DEVODiscDelay;
 
 	if(gameHdr->type == TYPE_GAME_GC_DISC)
 	{
@@ -752,7 +752,7 @@ int GameBooter::BootDevolution(struct discHdr *gameHdr)
 	u8 *loader_bin = NULL;
 	int DEVO_version = 0;
 	char DEVO_loader_path[100];
-	snprintf(DEVO_loader_path, sizeof(DEVO_loader_path), "%sloader.bin", Settings.DEVOLoaderPath);
+	snprintf(DEVO_loader_path, sizeof(DEVO_loader_path), "%sloader.bin", App.Settings.DEVOLoaderPath);
 	FILE *f = fopen(DEVO_loader_path, "rb");
 	if(f)
 	{
@@ -947,34 +947,34 @@ int GameBooter::BootNintendont(struct discHdr *gameHdr)
 	const char *LoaderName = "Nintendont";
 
 	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHdr->id);
-	s8 languageChoice = game_cfg->language == INHERIT ? Settings.language -1 : game_cfg->language;
-	u8 ocarinaChoice = game_cfg->ocarina == INHERIT ? Settings.ocarina : game_cfg->ocarina;
-	u8 multiDiscChoice = Settings.MultiDiscPrompt;
-	u8 ninVideoChoice = game_cfg->DMLVideo == INHERIT ? Settings.DMLVideo : game_cfg->DMLVideo;
-	u8 ninProgressivePatch = game_cfg->DMLProgPatch == INHERIT ? Settings.DMLProgPatch : game_cfg->DMLProgPatch;
-	u8 ninDeflickerChoice = game_cfg->NINDeflicker == INHERIT ? Settings.NINDeflicker : game_cfg->NINDeflicker;
-	u8 ninWidescreenChoice = game_cfg->DMLWidescreen == INHERIT ? Settings.DMLWidescreen : game_cfg->DMLWidescreen;
-	u8 ninMCEmulationChoice = game_cfg->NINMCEmulation == INHERIT ? Settings.NINMCEmulation : game_cfg->NINMCEmulation;
-	u8 ninMCSizeChoice = game_cfg->NINMCSize == INHERIT ? Settings.NINMCSize : game_cfg->NINMCSize;
-	u8 ninAutobootChoice = Settings.NINAutoboot;
-	u8 ninSettingsChoice = Settings.NINSettings;
-	u8 ninUSBHIDChoice = game_cfg->NINUSBHID == INHERIT ? Settings.NINUSBHID : game_cfg->NINUSBHID;
-	u8 ninMaxPadsChoice = game_cfg->NINMaxPads == INHERIT ? Settings.NINMaxPads : game_cfg->NINMaxPads;
-	u8 ninNativeSIChoice = game_cfg->NINNativeSI == INHERIT ? Settings.NINNativeSI : game_cfg->NINNativeSI;
-	u8 ninWiiUWideChoice = game_cfg->NINWiiUWide == INHERIT ? Settings.NINWiiUWide : game_cfg->NINWiiUWide;
-	u8 ninLEDChoice = game_cfg->NINLED == INHERIT ? Settings.NINLED : game_cfg->NINLED;
-	u8 ninDebugChoice = game_cfg->DMLDebug == INHERIT ? Settings.DMLDebug : game_cfg->DMLDebug;
-	u8 ninOSReportChoice = game_cfg->NINOSReport == INHERIT ? Settings.NINOSReport : game_cfg->NINOSReport;
-	u8 ninLogChoice = game_cfg->NINLog == INHERIT ? Settings.NINLog : game_cfg->NINLog;
-	u8 ninVideoScale = game_cfg->NINVideoScale == INHERIT ? Settings.NINVideoScale : game_cfg->NINVideoScale;
-	u8 ninVideoOffset = game_cfg->NINVideoOffset == INHERIT - 20 ? Settings.NINVideoOffset : game_cfg->NINVideoOffset;
-	u8 ninPal50PatchChoice = game_cfg->NINPal50Patch == INHERIT ? Settings.NINPal50Patch : game_cfg->NINPal50Patch;
-	u8 ninRemlimitChoice = game_cfg->NINRemlimit == INHERIT ? Settings.NINRemlimit : game_cfg->NINRemlimit;
-	u8 ninArcadeModeChoice = game_cfg->NINArcadeMode == INHERIT ? Settings.NINArcadeMode : game_cfg->NINArcadeMode;
-	u8 ninCCRumbleChoice = game_cfg->NINCCRumble == INHERIT ? Settings.NINCCRumble : game_cfg->NINCCRumble;
-	u8 ninSkipIPLChoice = game_cfg->NINSkipIPL == INHERIT ? Settings.NINSkipIPL : game_cfg->NINSkipIPL;
+	s8 languageChoice = game_cfg->language == INHERIT ? App.Settings.language -1 : game_cfg->language;
+	u8 ocarinaChoice = game_cfg->ocarina == INHERIT ? App.Settings.ocarina : game_cfg->ocarina;
+	u8 multiDiscChoice = App.Settings.MultiDiscPrompt;
+	u8 ninVideoChoice = game_cfg->DMLVideo == INHERIT ? App.Settings.DMLVideo : game_cfg->DMLVideo;
+	u8 ninProgressivePatch = game_cfg->DMLProgPatch == INHERIT ? App.Settings.DMLProgPatch : game_cfg->DMLProgPatch;
+	u8 ninDeflickerChoice = game_cfg->NINDeflicker == INHERIT ? App.Settings.NINDeflicker : game_cfg->NINDeflicker;
+	u8 ninWidescreenChoice = game_cfg->DMLWidescreen == INHERIT ? App.Settings.DMLWidescreen : game_cfg->DMLWidescreen;
+	u8 ninMCEmulationChoice = game_cfg->NINMCEmulation == INHERIT ? App.Settings.NINMCEmulation : game_cfg->NINMCEmulation;
+	u8 ninMCSizeChoice = game_cfg->NINMCSize == INHERIT ? App.Settings.NINMCSize : game_cfg->NINMCSize;
+	u8 ninAutobootChoice = App.Settings.NINAutoboot;
+	u8 ninSettingsChoice = App.Settings.NINSettings;
+	u8 ninUSBHIDChoice = game_cfg->NINUSBHID == INHERIT ? App.Settings.NINUSBHID : game_cfg->NINUSBHID;
+	u8 ninMaxPadsChoice = game_cfg->NINMaxPads == INHERIT ? App.Settings.NINMaxPads : game_cfg->NINMaxPads;
+	u8 ninNativeSIChoice = game_cfg->NINNativeSI == INHERIT ? App.Settings.NINNativeSI : game_cfg->NINNativeSI;
+	u8 ninWiiUWideChoice = game_cfg->NINWiiUWide == INHERIT ? App.Settings.NINWiiUWide : game_cfg->NINWiiUWide;
+	u8 ninLEDChoice = game_cfg->NINLED == INHERIT ? App.Settings.NINLED : game_cfg->NINLED;
+	u8 ninDebugChoice = game_cfg->DMLDebug == INHERIT ? App.Settings.DMLDebug : game_cfg->DMLDebug;
+	u8 ninOSReportChoice = game_cfg->NINOSReport == INHERIT ? App.Settings.NINOSReport : game_cfg->NINOSReport;
+	u8 ninLogChoice = game_cfg->NINLog == INHERIT ? App.Settings.NINLog : game_cfg->NINLog;
+	u8 ninVideoScale = game_cfg->NINVideoScale == INHERIT ? App.Settings.NINVideoScale : game_cfg->NINVideoScale;
+	u8 ninVideoOffset = game_cfg->NINVideoOffset == INHERIT - 20 ? App.Settings.NINVideoOffset : game_cfg->NINVideoOffset;
+	u8 ninPal50PatchChoice = game_cfg->NINPal50Patch == INHERIT ? App.Settings.NINPal50Patch : game_cfg->NINPal50Patch;
+	u8 ninRemlimitChoice = game_cfg->NINRemlimit == INHERIT ? App.Settings.NINRemlimit : game_cfg->NINRemlimit;
+	u8 ninArcadeModeChoice = game_cfg->NINArcadeMode == INHERIT ? App.Settings.NINArcadeMode : game_cfg->NINArcadeMode;
+	u8 ninCCRumbleChoice = game_cfg->NINCCRumble == INHERIT ? App.Settings.NINCCRumble : game_cfg->NINCCRumble;
+	u8 ninSkipIPLChoice = game_cfg->NINSkipIPL == INHERIT ? App.Settings.NINSkipIPL : game_cfg->NINSkipIPL;
 	
-	const char *ninLoaderPath = game_cfg->NINLoaderPath.size() == 0 ? Settings.NINLoaderPath : game_cfg->NINLoaderPath.c_str();
+	const char *ninLoaderPath = game_cfg->NINLoaderPath.size() == 0 ? App.Settings.NINLoaderPath : game_cfg->NINLoaderPath.c_str();
 
 
 	if(!CheckAHBPROT())
@@ -1012,7 +1012,7 @@ int GameBooter::BootNintendont(struct discHdr *gameHdr)
 	char NINVersion[7]= "";
 	u32 NINRev = 0;
 	bool NINArgsboot = false;
-	NINRev = nintendontVersion(Settings.NINLoaderPath, NINVersion, sizeof(NINVersion));
+	NINRev = nintendontVersion(App.Settings.NINLoaderPath, NINVersion, sizeof(NINVersion));
 	if(NINRev > 0) // Version available since 3.324
 	{
 		gprintf("NIN: Nintendont revision = %d \n", NINRev);
@@ -1022,7 +1022,7 @@ int GameBooter::BootNintendont(struct discHdr *gameHdr)
 	else
 	{
 		char NINBuildDate[21] = "";
-		if(nintendontBuildDate(Settings.NINLoaderPath, NINBuildDate))
+		if(nintendontBuildDate(App.Settings.NINLoaderPath, NINBuildDate))
 		{
 			//Current build date
 			struct tm time;
@@ -1132,14 +1132,14 @@ int GameBooter::BootNintendont(struct discHdr *gameHdr)
 	if(gameHdr->type != TYPE_GAME_GC_DISC && strncmp(RealPath, "usb", 3) == 0)
 	{
 		// Check Main GameCube Path location
-		if(strncmp(DeviceHandler::PathToFSName(Settings.GameCubePath), "FAT", 3) != 0)
+		if(strncmp(DeviceHandler::PathToFSName(App.Settings.GameCubePath), "FAT", 3) != 0)
 		{
 			WindowPrompt(tr("Error:"), fmt(tr("To run GameCube games with %s you need to set your 'Main GameCube Path' to an USB FAT32 partition."),LoaderName), tr("OK"));
 			return -1;
 		}
 
 		// Check the partition type
-		int USB_partNum = DeviceHandler::PathToDriveType(Settings.GameCubePath)-USB1; 	// Get partition number across all mounted device
+		int USB_partNum = DeviceHandler::PathToDriveType(App.Settings.GameCubePath)-USB1; 	// Get partition number across all mounted device
 		int USBport_partNum = DeviceHandler::PartitionToPortPartition(USB_partNum);		// Get partition position from corresponding USB port
 		PartitionHandle * usbHandle = DeviceHandler::Instance()->GetUSBHandleFromPartition(USB_partNum);	// Open a handle on used USB port
 		
@@ -1180,28 +1180,28 @@ int GameBooter::BootNintendont(struct discHdr *gameHdr)
 	// Set used device when launching game from disc
 	if(gameHdr->type == TYPE_GAME_GC_DISC)
 	{
-		if(Settings.GameCubeSource >= GC_SOURCE_AUTO && strncmp(Settings.GameCubePath, "usb", 3) == 0)
+		if(App.Settings.GameCubeSource >= GC_SOURCE_AUTO && strncmp(App.Settings.GameCubePath, "usb", 3) == 0)
 		{
 			if(WindowPrompt("", tr("Which device do you want to use for Nintendont files?"), tr("SD"), tr("USB")) == 1)
-				snprintf(RealPath, sizeof(RealPath), "%s:/", DeviceHandler::GetDevicePrefix(Settings.GameCubeSDPath));
+				snprintf(RealPath, sizeof(RealPath), "%s:/", DeviceHandler::GetDevicePrefix(App.Settings.GameCubeSDPath));
 			else
-				snprintf(RealPath, sizeof(RealPath), "%s:/", DeviceHandler::GetDevicePrefix(Settings.GameCubePath));
+				snprintf(RealPath, sizeof(RealPath), "%s:/", DeviceHandler::GetDevicePrefix(App.Settings.GameCubePath));
 		}
-		else if(Settings.GameCubeSource == GC_SOURCE_MAIN)
+		else if(App.Settings.GameCubeSource == GC_SOURCE_MAIN)
 		{
-			snprintf(RealPath, sizeof(RealPath), "%s:/", DeviceHandler::GetDevicePrefix(Settings.GameCubePath));
+			snprintf(RealPath, sizeof(RealPath), "%s:/", DeviceHandler::GetDevicePrefix(App.Settings.GameCubePath));
 		}
 		else
-			snprintf(RealPath, sizeof(RealPath), "%s:/", DeviceHandler::GetDevicePrefix(Settings.GameCubeSDPath));
+			snprintf(RealPath, sizeof(RealPath), "%s:/", DeviceHandler::GetDevicePrefix(App.Settings.GameCubeSDPath));
 	}
 	
 	
 	// Check Ocarina and cheat file location. the .gct file need to be located on the same partition than the game.
-	if(ocarinaChoice && strcmp(DeviceHandler::GetDevicePrefix(RealPath), DeviceHandler::GetDevicePrefix(Settings.Cheatcodespath)) != 0)
+	if(ocarinaChoice && strcmp(DeviceHandler::GetDevicePrefix(RealPath), DeviceHandler::GetDevicePrefix(App.Settings.Cheatcodespath)) != 0)
 	{
 		char path[255], destPath[255];
 		int res = -1;
-		snprintf(path, sizeof(path), "%s%.6s.gct", Settings.Cheatcodespath, (char *)gameHdr->id);
+		snprintf(path, sizeof(path), "%s%.6s.gct", App.Settings.Cheatcodespath, (char *)gameHdr->id);
 		snprintf(destPath, sizeof(destPath), "%s:/NINTemp.gct", DeviceHandler::GetDevicePrefix(RealPath));
 		
 		gprintf("NIN: Copying %s to %s \n", path, destPath);
@@ -1222,11 +1222,11 @@ int GameBooter::BootNintendont(struct discHdr *gameHdr)
 		if(!CheckFile(kenobiwii_path))
 		{
 			// try to copy kenobiwii from the other device
-			if(strcmp(Settings.GameCubePath, Settings.GameCubeSDPath) != 0)
+			if(strcmp(App.Settings.GameCubePath, App.Settings.GameCubeSDPath) != 0)
 			{
 				char kenobiwii_srcpath[30]; 
 				
-				snprintf(kenobiwii_srcpath, sizeof(kenobiwii_srcpath), "%s:/sneek/kenobiwii.bin", strncmp(RealPath, "usb", 3) == 0 ? "sd" : DeviceHandler::GetDevicePrefix(Settings.GameCubePath));
+				snprintf(kenobiwii_srcpath, sizeof(kenobiwii_srcpath), "%s:/sneek/kenobiwii.bin", strncmp(RealPath, "usb", 3) == 0 ? "sd" : DeviceHandler::GetDevicePrefix(App.Settings.GameCubePath));
 				gprintf("kenobiwii source path = %s \n", kenobiwii_srcpath);
 				if(CheckFile(kenobiwii_srcpath))
 				{
@@ -1260,11 +1260,11 @@ int GameBooter::BootNintendont(struct discHdr *gameHdr)
 		// Check controller.ini file in priority, then controllers folder, for compatibility with older nintendont versions.
 		char controllerini_path[30]; 
 		snprintf(controllerini_path, sizeof(controllerini_path), "%s:/controller.ini", DeviceHandler::GetDevicePrefix(RealPath));
-		if(!CheckFile(controllerini_path) && strcmp(Settings.GameCubePath, Settings.GameCubeSDPath) != 0)
+		if(!CheckFile(controllerini_path) && strcmp(App.Settings.GameCubePath, App.Settings.GameCubeSDPath) != 0)
 		{
 			// try to copy controller.ini from the other device
 			char controllerini_srcpath[30]; 
-			snprintf(controllerini_srcpath, sizeof(controllerini_srcpath), "%s:/controller.ini", strncmp(RealPath, "usb", 3) == 0 ? "sd" : DeviceHandler::GetDevicePrefix(Settings.GameCubePath));
+			snprintf(controllerini_srcpath, sizeof(controllerini_srcpath), "%s:/controller.ini", strncmp(RealPath, "usb", 3) == 0 ? "sd" : DeviceHandler::GetDevicePrefix(App.Settings.GameCubePath));
 			gprintf("Controller.ini source path = %s \n", controllerini_srcpath);
 			if(CheckFile(controllerini_srcpath))
 			{
@@ -1284,11 +1284,11 @@ int GameBooter::BootNintendont(struct discHdr *gameHdr)
 			
 				// Check gamepath:/controllers/ folder
 				snprintf(controllerini_path, sizeof(controllerini_path), "%s:/controllers/", DeviceHandler::GetDevicePrefix(RealPath));
-				if(!CheckFile(controllerini_path) && strcmp(Settings.GameCubePath, Settings.GameCubeSDPath) != 0)
+				if(!CheckFile(controllerini_path) && strcmp(App.Settings.GameCubePath, App.Settings.GameCubeSDPath) != 0)
 				{
 					// try to copy controllers folder from the other device
 					char controllerini_srcpath[30]; 
-					snprintf(controllerini_srcpath, sizeof(controllerini_srcpath), "%s:/controllers/", strncmp(RealPath, "usb", 3) == 0 ? "sd" : DeviceHandler::GetDevicePrefix(Settings.GameCubePath));
+					snprintf(controllerini_srcpath, sizeof(controllerini_srcpath), "%s:/controllers/", strncmp(RealPath, "usb", 3) == 0 ? "sd" : DeviceHandler::GetDevicePrefix(App.Settings.GameCubePath));
 					gprintf("Controllers folder source path = %s \n", controllerini_srcpath);
 					if(CheckFile(controllerini_srcpath))
 					{
@@ -1371,9 +1371,9 @@ int GameBooter::BootNintendont(struct discHdr *gameHdr)
 	if(ocarinaChoice)
 	{
 		// Check if the .gct folder is on the same partition than the game, if not load the temporary .gct file.
-		if(strcmp(DeviceHandler::GetDevicePrefix(RealPath), DeviceHandler::GetDevicePrefix(Settings.Cheatcodespath)) == 0)
+		if(strcmp(DeviceHandler::GetDevicePrefix(RealPath), DeviceHandler::GetDevicePrefix(App.Settings.Cheatcodespath)) == 0)
 		{
-			const char *CheatPath = strchr(Settings.Cheatcodespath, '/');
+			const char *CheatPath = strchr(App.Settings.Cheatcodespath, '/');
 			if(!CheatPath) CheatPath = "";
 			snprintf(nin_config->CheatPath, sizeof(nin_config->CheatPath), "%s%.6s.gct", CheatPath, (char *)gameHdr->id);
 		}
@@ -1586,9 +1586,9 @@ int GameBooter::BootNeek(struct discHdr *gameHdr)
 	memcpy(&gameHeader, gameHdr, sizeof(struct discHdr));
 	
 	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHdr->id);
-	u8 ocarinaChoice = game_cfg->ocarina == INHERIT ? Settings.ocarina : game_cfg->ocarina;
+	u8 ocarinaChoice = game_cfg->ocarina == INHERIT ? App.Settings.ocarina : game_cfg->ocarina;
 	u64 returnToChoice = game_cfg->returnTo;
-	const char *NandEmuPath = game_cfg->NandEmuPath.size() == 0 ? Settings.NandEmuChanPath : game_cfg->NandEmuPath.c_str();
+	const char *NandEmuPath = game_cfg->NandEmuPath.size() == 0 ? App.Settings.NandEmuChanPath : game_cfg->NandEmuPath.c_str();
 	bool autoboot = true;
 	bool NK2O_isInstalled = false;
 	char tempPath[100] = "";

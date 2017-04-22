@@ -28,7 +28,7 @@
 #include "Channels/channels.h"
 #include "settings/CGameCategories.hpp"
 #include "settings/GameTitles.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/SettingsPrompts.h"
 #include "network/networkops.h"
 #include "FileOperations/fileops.h"
@@ -78,26 +78,26 @@ FeatureSettingsMenu::FeatureSettingsMenu()
 	Options->SetName(Idx++, "%s", tr( "WiiU Widescreen" ));
 	Options->SetName(Idx++, "%s", tr( "Boot Neek System Menu" ));
 
-	OldTitlesOverride = Settings.titlesOverride;
-	OldCacheTitles = Settings.CacheTitles;
-	OldForceDiscTitles = Settings.ForceDiscTitles;
+	OldTitlesOverride = App.Settings.titlesOverride;
+	OldCacheTitles = App.Settings.CacheTitles;
+	OldForceDiscTitles = App.Settings.ForceDiscTitles;
 
 	SetOptionValues();
 }
 
 FeatureSettingsMenu::~FeatureSettingsMenu()
 {
-	if (   Settings.titlesOverride != OldTitlesOverride
-		|| Settings.CacheTitles != OldCacheTitles
-		|| Settings.ForceDiscTitles != OldForceDiscTitles)
+	if (   App.Settings.titlesOverride != OldTitlesOverride
+		|| App.Settings.CacheTitles != OldCacheTitles
+		|| App.Settings.ForceDiscTitles != OldForceDiscTitles)
 	{
-		if(Settings.ForceDiscTitles)
-			Settings.titlesOverride = OFF;
+		if(App.Settings.ForceDiscTitles)
+			App.Settings.titlesOverride = OFF;
 
 		//! Remove cached titles and reload new titles
 		GameTitles.SetDefault();
-		if(Settings.titlesOverride) {
-			GameTitles.LoadTitlesFromGameTDB(Settings.titlestxt_path);
+		if(App.Settings.titlesOverride) {
+			GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 		}
 		else
 		{
@@ -113,25 +113,25 @@ void FeatureSettingsMenu::SetOptionValues()
 	int Idx = 0;
 
 	//! Settings: Titles from GameTDB
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.titlesOverride] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.titlesOverride] ));
 
 	//! Settings: Cache Titles
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.CacheTitles] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.CacheTitles] ));
 
 	//! Settings: Force Titles from Disc
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.ForceDiscTitles] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.ForceDiscTitles] ));
 
 	//! Settings: Wiilight
-	Options->SetValue(Idx++, "%s", tr( WiilightText[Settings.wiilight] ));
+	Options->SetValue(Idx++, "%s", tr( WiilightText[App.Settings.wiilight] ));
 
 	//! Settings: Rumble
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.rumble] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.rumble] ));
 
 	//! Settings: AutoInit Network
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.autonetwork] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.autonetwork] ));
 
 	//! Settings: Messageboard Update
-	Options->SetValue(Idx++, "%s", tr( OnOffText[Settings.PlaylogUpdate] ));
+	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.PlaylogUpdate] ));
 
 	//! Settings: Import categories from GameTDB
 	Options->SetValue(Idx++, " ");
@@ -175,43 +175,43 @@ int FeatureSettingsMenu::GetMenuInternal()
 	//! Settings: Titles from GameTDB
 	if (ret == ++Idx)
 	{
-		if (++Settings.titlesOverride >= MAX_ON_OFF) Settings.titlesOverride = 0;
+		if (++App.Settings.titlesOverride >= MAX_ON_OFF) App.Settings.titlesOverride = 0;
 	}
 
 	//! Settings: Cache Titles
 	else if (ret == ++Idx)
 	{
-		if (++Settings.CacheTitles >= MAX_ON_OFF) Settings.CacheTitles = 0;
+		if (++App.Settings.CacheTitles >= MAX_ON_OFF) App.Settings.CacheTitles = 0;
 	}
 
 	//! Settings: Force Titles from Disc
 	else if (ret == ++Idx)
 	{
-		if (++Settings.ForceDiscTitles >= MAX_ON_OFF) Settings.ForceDiscTitles = 0;
+		if (++App.Settings.ForceDiscTitles >= MAX_ON_OFF) App.Settings.ForceDiscTitles = 0;
 	}
 
 	//! Settings: Wiilight
 	else if (ret == ++Idx)
 	{
-		if (++Settings.wiilight >= WIILIGHT_MAX) Settings.wiilight = 0;
+		if (++App.Settings.wiilight >= WIILIGHT_MAX) App.Settings.wiilight = 0;
 	}
 
 	//! Settings: Rumble
 	else if (ret == ++Idx)
 	{
-		if (++Settings.rumble >= MAX_ON_OFF) Settings.rumble = 0; //RUMBLE
+		if (++App.Settings.rumble >= MAX_ON_OFF) App.Settings.rumble = 0; //RUMBLE
 	}
 
 	//! Settings: AutoInit Network
 	else if (ret == ++Idx)
 	{
-		if (++Settings.autonetwork >= MAX_ON_OFF) Settings.autonetwork = 0;
+		if (++App.Settings.autonetwork >= MAX_ON_OFF) App.Settings.autonetwork = 0;
 	}
 
 	//! Settings: Messageboard Update
 	else if (ret == ++Idx )
 	{
-		if (++Settings.PlaylogUpdate >= MAX_ON_OFF) Settings.PlaylogUpdate = 0;
+		if (++App.Settings.PlaylogUpdate >= MAX_ON_OFF) App.Settings.PlaylogUpdate = 0;
 	}
 
 	//! Settings: Import categories from GameTDB
@@ -221,7 +221,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 		if(choice)
 		{
 			char xmlpath[300];
-			snprintf(xmlpath, sizeof(xmlpath), "%swiitdb.xml", Settings.titlestxt_path);
+			snprintf(xmlpath, sizeof(xmlpath), "%swiitdb.xml", App.Settings.titlestxt_path);
 			if(!GameCategories.ImportFromGameTDB(xmlpath))
 			{
 				WindowPrompt(tr("Error"), tr("Could not open the WiiTDB.xml file."), tr("OK"));
@@ -252,10 +252,10 @@ int FeatureSettingsMenu::GetMenuInternal()
 
 			//! extract the Mii file
 			snprintf(nandPath, sizeof(nandPath), "/shared2/menu/FaceLib/RFL_DB.dat");
-			snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuChanPath, nandPath);
+			snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuChanPath, nandPath);
 			if(!CheckFile(filePath))
 				NandTitle::ExtractDir(nandPath, filePath);
-			snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuPath, nandPath);
+			snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuPath, nandPath);
 			if(!CheckFile(filePath))
 				NandTitle::ExtractDir(nandPath, filePath);
 
@@ -268,12 +268,12 @@ int FeatureSettingsMenu::GetMenuInternal()
 				if(gameList[i]->tid != 0) //! Channels
 				{
 					snprintf(nandPath, sizeof(nandPath), "/title/%08x/%08x/data", (unsigned int) (gameList[i]->tid  >> 32), (unsigned int) gameList[i]->tid );
-					snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuChanPath, nandPath);
+					snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuChanPath, nandPath);
 				}
 				else //! Wii games
 				{
 					snprintf(nandPath, sizeof(nandPath), "/title/00010000/%02x%02x%02x%02x", gameList[i]->id[0], gameList[i]->id[1], gameList[i]->id[2], gameList[i]->id[3]);
-					snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuPath, nandPath);
+					snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuPath, nandPath);
 				}
 
 				ShowProgress(tr("Extracting files:"), GameTitles.GetTitle(gameList[i]), 0, 0, -1, true, false);
@@ -286,7 +286,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 				else if(ret < 0) //! Games with installable channels: Mario Kart, Wii Fit, etc.
 				{
 					snprintf(nandPath, sizeof(nandPath), "/title/00010004/%02x%02x%02x%02x", gameList[i]->id[0], gameList[i]->id[1], gameList[i]->id[2], gameList[i]->id[3]);
-					snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuPath, nandPath);
+					snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuPath, nandPath);
 					ret = NandTitle::ExtractDir(nandPath, filePath);
 				}
 				if(ret < 0 && !skipErrors)
@@ -332,10 +332,10 @@ int FeatureSettingsMenu::GetMenuInternal()
 
 			//! extract the Mii file
 			snprintf(nandPath, sizeof(nandPath), "/shared2/menu/FaceLib/RFL_DB.dat");
-			snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuChanPath, nandPath);
+			snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuChanPath, nandPath);
 			if(NandTitle::ExtractFile(nandPath, filePath) < 0)
 			   Error = true;
-			snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuPath, nandPath);
+			snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuPath, nandPath);
 			if(NandTitle::ExtractFile(nandPath, filePath) < 0)
 				Error = true;
 
@@ -363,10 +363,10 @@ int FeatureSettingsMenu::GetMenuInternal()
 
 			//! extract the Mii file
 			snprintf(nandPath, sizeof(nandPath), "/shared2/sys/SYSCONF");
-			snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuChanPath, nandPath);
+			snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuChanPath, nandPath);
 			if(NandTitle::ExtractFile(nandPath, filePath) < 0)
 			   Error = true;
-			snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuPath, nandPath);
+			snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuPath, nandPath);
 			if(NandTitle::ExtractFile(nandPath, filePath) < 0)
 				Error = true;
 
@@ -405,11 +405,11 @@ int FeatureSettingsMenu::GetMenuInternal()
 			}
 
 			char extractPath[255];
-			snprintf(extractPath, sizeof(extractPath), "%s", Settings.NandEmuPath);
-			if( strlen(Settings.NandEmuPath) != strlen(Settings.NandEmuChanPath) || strcmp(Settings.NandEmuPath, Settings.NandEmuChanPath) != 0 )
+			snprintf(extractPath, sizeof(extractPath), "%s", App.Settings.NandEmuPath);
+			if( strlen(App.Settings.NandEmuPath) != strlen(App.Settings.NandEmuChanPath) || strcmp(App.Settings.NandEmuPath, App.Settings.NandEmuChanPath) != 0 )
 			{
 				if(WindowPrompt(tr( "Where to dump NAND?" ), tr("Select the NAND Emu Path to use."), tr( "Nand Emu Path" ), tr("Nand Emu Channel Path")) == 0)
-					snprintf(extractPath, sizeof(extractPath), "%s", Settings.NandEmuChanPath);
+					snprintf(extractPath, sizeof(extractPath), "%s", App.Settings.NandEmuChanPath);
 			}
 			snprintf(filePath, sizeof(filePath), "%s%s", extractPath, nandPath);
 
@@ -450,7 +450,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 		this->Remove(optionBrowser);
 
 		char wadpath[150];
-		snprintf(wadpath, sizeof(wadpath), "%s/wad/", Settings.BootDevice);
+		snprintf(wadpath, sizeof(wadpath), "%s/wad/", App.Settings.BootDevice);
 		
 		int choice = WindowPrompt(tr("EmuNAND Wad Manager"), tr("Which mode do you want to use?"), tr("File"), tr("Folder"), tr("Cancel"));
 		if(choice == 1) 			// File mode
@@ -462,23 +462,23 @@ int FeatureSettingsMenu::GetMenuInternal()
 				if(choice == 1) 	// File install
 				{
 					Wad wadFile(wadpath);
-					if(!wadFile.Install(Settings.NandEmuChanPath))
+					if(!wadFile.Install(App.Settings.NandEmuChanPath))
 					{
 						// install error - Try to cleanup any partially installed wad data
 						WindowPrompt(tr("EmuNAND Wad Manager"), tr("Install error - Cleaning incomplete data."), tr( "OK" ));
 						//gprintf("Error   : %s\n", wadpath);
-						wadFile.UnInstall(Settings.NandEmuChanPath);
+						wadFile.UnInstall(App.Settings.NandEmuChanPath);
 					}
 				}
 				else if(choice == 2) // File uninstall
 				{
 					Wad wadFile(wadpath);
-					wadFile.UnInstall(Settings.NandEmuChanPath);
+					wadFile.UnInstall(App.Settings.NandEmuChanPath);
 				}
 				
 				// Refresh new EmuNAND content
 				Channels::Instance()->GetEmuChannelList();
-				GameTitles.LoadTitlesFromGameTDB(Settings.titlestxt_path);
+				GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 			}
 		}
 		else if(choice == 2)		// Folder mode
@@ -497,7 +497,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 						for(int i = 0; i < wadList->GetFilecount(); i++)
 						{
 							Wad wadFile(wadList->GetFilepath(i), false);
-							if(wadFile.Install(Settings.NandEmuChanPath))
+							if(wadFile.Install(App.Settings.NandEmuChanPath))
 							{
 								//gprintf("Success : %s\n", wadList->GetFilepath(i));
 								wadList->RemoveEntrie(i);
@@ -506,7 +506,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 							else 	// install error - Try to cleanup any partially installed wad data
 							{
 								//gprintf("Error   : %s\n", wadList->GetFilepath(i));
-								wadFile.UnInstall(Settings.NandEmuChanPath);
+								wadFile.UnInstall(App.Settings.NandEmuChanPath);
 							}
 						}
 					}
@@ -517,7 +517,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 							for(int i = 0; i < wadList->GetFilecount(); i++)
 							{
 								Wad wadFile(wadList->GetFilepath(i), false);
-								if(wadFile.UnInstall(Settings.NandEmuChanPath))
+								if(wadFile.UnInstall(App.Settings.NandEmuChanPath))
 								{
 									//gprintf("uninst. : %s\n", wadList->GetFilepath(i));
 									wadList->RemoveEntrie(i);
@@ -539,7 +539,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 							if(WindowPrompt(tr( "EmuNAND Wad Manager" ), fmt(tr("%i wad file(s) not processed!"), wadList->GetFilecount()), tr("Save List"), tr( "OK" )))
 							{
 								char path[200];
-								snprintf(path, sizeof(path), "%s/WadManager_errors.txt", Settings.update_path);
+								snprintf(path, sizeof(path), "%s/WadManager_errors.txt", App.Settings.update_path);
 
 								FILE *f = fopen(path, "a");
 								if(f)
@@ -549,7 +549,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 									theTime[0] = 0;
 									strftime(theTime, sizeof(theTime), "%Y-%m-%d", localtime(&rawtime));
 									fprintf(f, "\r\n\r\nEmuNAND Wad Manager - %10s\r\n--------------------------------\r\n", theTime);
-									fprintf(f, "%s %s\r\n", choice == 1 ? "Error installing to" : "Error uninstalling from", Settings.NandEmuChanPath);
+									fprintf(f, "%s %s\r\n", choice == 1 ? "Error installing to" : "Error uninstalling from", App.Settings.NandEmuChanPath);
 									fprintf(f, "%s\r\n", choice == 1 ? "List of user canceled installation or bad wad files." : "Titles not on EmuNAND or weren't correctly installed.");
 									
 									for(int i = 0; i < wadList->GetFilecount(); i++)
@@ -568,7 +568,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 						
 					// Refresh new EmuNAND content
 					Channels::Instance()->GetEmuChannelList();
-					GameTitles.LoadTitlesFromGameTDB(Settings.titlestxt_path);
+					GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 				}
 				else
 				{
@@ -653,12 +653,12 @@ int FeatureSettingsMenu::GetMenuInternal()
 			if( read32(0xd8006a0) == 0x30000004)
 			{
 				write32(0xd8006a0, 0x30000002), mask32(0xd8006a8, 0, 2); // Set 4:3
-				Settings.widescreen = OFF;
+				App.Settings.widescreen = OFF;
 			}
 			else
 			{
 				write32(0xd8006a0, 0x30000004), mask32(0xd8006a8, 0, 2); // Set 16:9
-				Settings.widescreen = ON;
+				App.Settings.widescreen = ON;
 			}
 		}
 	}
@@ -666,13 +666,13 @@ int FeatureSettingsMenu::GetMenuInternal()
 	// Neek: Boot neek system menu with current EmuNAND channel path
 	else if (ret == ++Idx)
 	{
-		if(neek2oSetNAND(Settings.NandEmuChanPath) < 0) // set current path as default
+		if(neek2oSetNAND(App.Settings.NandEmuChanPath) < 0) // set current path as default
 		{
 			WindowPrompt(tr("Error:"), tr("Neek NAND path selection failed."), tr("OK"));
 		}
 		else
 		{
-			if(neekLoadKernel(Settings.NandEmuChanPath) == false)
+			if(neekLoadKernel(App.Settings.NandEmuChanPath) == false)
 			{
 				WindowPrompt(tr("Error:"), tr("Neek kernel loading failed."), tr("OK"));
 			}
@@ -680,7 +680,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 			{
 				ExitApp();
 				NEEK_CFG *neek_config = (NEEK_CFG *) NEEK_CONFIG_ADDRESS;
-				neek2oSetBootSettings(neek_config, 0 /* TitleID */ , 0 /* Magic */, 0 /* Returnto TitleID */, Settings.NandEmuChanPath /* Full EmuNAND path */);
+				neek2oSetBootSettings(neek_config, 0 /* TitleID */ , 0 /* Magic */, 0 /* Returnto TitleID */, App.Settings.NandEmuChanPath /* Full EmuNAND path */);
 				
 				if(neekBoot() == -1)
 					Sys_BackToLoader();

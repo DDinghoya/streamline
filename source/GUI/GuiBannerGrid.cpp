@@ -16,7 +16,7 @@
  ****************************************************************************/
 #include "GuiBannerGrid.h"
 #include "themes/CTheme.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/GameTitles.h"
 #include "settings/newtitles.h"
 #include "SystemMenu/SystemMenuResources.h"
@@ -57,7 +57,7 @@ GuiBannerGrid::GuiBannerGrid(int listOffset)
 	: XOffset(thInt("0 - game bannergrid layout pos x"))
 	, YOffset(thInt("-50 - game bannergrid layout pos y"))
 	, fAnimation(0.f)
-	, fAnimStep(Settings.BannerGridSpeed)
+	, fAnimStep(App.Settings.BannerGridSpeed)
 	, AnimationRunning(false)
 	, gridFrameColor(thColor("r=237 g=237 b=237 a=255 - banner icon frame color"))
 	, highliteColor(thColor("r=52 g=190 b=237 a=255 - banner icon highlite color"))
@@ -81,14 +81,14 @@ GuiBannerGrid::GuiBannerGrid(int listOffset)
 	imgNewData = Resources::GetImageData("new.png");
 
 	btnLeftImg = new GuiImage(imgLeft);
-	if (Settings.wsprompt) btnLeftImg->SetWidescreen(Settings.widescreen);
+	if (App.Settings.wsprompt) btnLeftImg->SetWidescreen(App.Settings.widescreen);
 	btnLeft = new GuiButton(btnLeftImg, btnLeftImg, ALIGN_LEFT, ALIGN_MIDDLE, 20, YOffset, &trigA, btnSoundOver, btnSoundClick2, 1);
 	btnLeft->SetTrigger(&trigL);
 	btnLeft->SetTrigger(&trigMinus);
 	btnLeft->SetParent(this);
 
 	btnRightImg = new GuiImage(imgRight);
-	if (Settings.wsprompt) btnRightImg->SetWidescreen(Settings.widescreen);
+	if (App.Settings.wsprompt) btnRightImg->SetWidescreen(App.Settings.widescreen);
 	btnRight = new GuiButton(btnRightImg, btnRightImg, ALIGN_RIGHT, ALIGN_MIDDLE, -20, YOffset, &trigA, btnSoundOver, btnSoundClick2, 1);
 	btnRight->SetTrigger(&trigR);
 	btnRight->SetTrigger(&trigPlus);
@@ -331,7 +331,7 @@ void GuiBannerGrid::Draw()
 
 	AnimationRunning = (fAnimation != 0.0f);
 
-	bool bSkipFrame = Settings.PAL50 && ((frameCount % 6) == 0);
+	bool bSkipFrame = App.Settings.PAL50 && ((frameCount % 6) == 0);
 
 	Mtx modelview;
 	guMtxTransApply(gridview, modelview, fAnimation, 0.f, 0.f);
@@ -398,9 +398,9 @@ void GuiBannerGrid::Draw()
 		GX_Project(0.0f, 0.0f, 0.0f, mv2, projectionv, viewportv, &vecBR.x, &vecBR.y, &vecBR.z);
 
 		//! Round scissor box offset up and the box size down
-		u32 scissorX = (u32)(0.5f + std::max(vecTL.x, (f32)std::max(-Settings.AdjustOverscanX, 0)));
-		u32 scissorY = (u32)(0.5f + std::max(vecTL.y, (f32)std::max(-Settings.AdjustOverscanY, 0)));
-		u32 scissorW = (u32)std::max(std::min(vecBR.x, ScreenProps.x-1+Settings.AdjustOverscanX) - scissorX, 0.0f);
+		u32 scissorX = (u32)(0.5f + std::max(vecTL.x, (f32)std::max(-App.Settings.AdjustOverscanX, 0)));
+		u32 scissorY = (u32)(0.5f + std::max(vecTL.y, (f32)std::max(-App.Settings.AdjustOverscanY, 0)));
+		u32 scissorW = (u32)std::max(std::min(vecBR.x, ScreenProps.x-1+App.Settings.AdjustOverscanX) - scissorX, 0.0f);
 		u32 scissorH = (u32)std::max(vecBR.y - scissorY, 0.0f);
 
 		GX_SetScissor(scissorX, scissorY, scissorW, scissorH );
@@ -414,12 +414,12 @@ void GuiBannerGrid::Draw()
 		if(chIdx >= (int) bannerList.size() || !bannerList[chIdx]->getIcon())
 		{
 			//! If out of range or the icon is not loaded yet render the static frame
-			staticFrame.Render(iconview, ScreenProps, Settings.widescreen);
+			staticFrame.Render(iconview, ScreenProps, App.Settings.widescreen);
 		}
 		else
 		{
 			Menu_DrawRectangle(0, 0, screenwidth, screenheight, (GXColor) { 0, 0, 0, 255}, 1);
-			bannerList[chIdx]->getIcon()->Render(iconview, ScreenProps, Settings.widescreen);
+			bannerList[chIdx]->getIcon()->Render(iconview, ScreenProps, App.Settings.widescreen);
 			bannerList[chIdx]->getIcon()->AdvanceFrame();
 			if(bSkipFrame)
 				bannerList[chIdx]->getIcon()->AdvanceFrame();
@@ -433,10 +433,10 @@ void GuiBannerGrid::Draw()
 
 	//! scissor box for the grid
 	//! don't draw grid outside of overscan render range and cut off the stuff before first and after last element
-	u32 scissorX = (u32)std::max(-Settings.AdjustOverscanX, GridCutLeft);
-	u32 scissorY = (u32)std::max(-Settings.AdjustOverscanY, 0);
-	u32 scissorW = (u32)LIMIT(ScreenProps.x-1 + Settings.AdjustOverscanX * 2.f, 0.f, GridCutRight - scissorX);
-	u32 scissorH = (u32)std::max(ScreenProps.x-1 + Settings.AdjustOverscanY * 2.f, 0.f);
+	u32 scissorX = (u32)std::max(-App.Settings.AdjustOverscanX, GridCutLeft);
+	u32 scissorY = (u32)std::max(-App.Settings.AdjustOverscanY, 0);
+	u32 scissorW = (u32)LIMIT(ScreenProps.x-1 + App.Settings.AdjustOverscanX * 2.f, 0.f, GridCutRight - scissorX);
+	u32 scissorH = (u32)std::max(ScreenProps.x-1 + App.Settings.AdjustOverscanY * 2.f, 0.f);
 	GX_SetScissor(scissorX, scissorY, scissorW, scissorH);
 
 	//! Reset GX after icons
@@ -552,7 +552,7 @@ void GuiBannerGrid::Draw()
 		if(AnimationRunning)
 			gridBtn[i]->ResetState();
 
-		if (!AnimationRunning && Settings.marknewtitles && (pageNo * 12 + i) < gameList.size()
+		if (!AnimationRunning && App.Settings.marknewtitles && (pageNo * 12 + i) < gameList.size()
 			&& NewTitles::Instance()->IsNew(gameList[pageNo * 12 + i]->id))
 				gridBtn[i]->Draw();
 

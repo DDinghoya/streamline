@@ -9,7 +9,7 @@
  ***************************************************************************/
 
 #include "gui.h"
-#include "settings/CSettings.h"
+#include "App.h"
 /**
  * Constructor for the GuiImage class.
  */
@@ -454,14 +454,14 @@ void GuiImage::Draw()
 	{
 		for (int i = 0; i < tileHorizontal; i++)
 			Menu_DrawImg(currLeft + width * i, this->GetTop(), zoffset, width, height, image, imageangle,
-					widescreen ? currScale * Settings.WSFactor : currScale, currScale, this->GetAlpha(), xx1,
+					widescreen ? currScale * App.Settings.WSFactor : currScale, currScale, this->GetAlpha(), xx1,
 					yy1, xx2, yy2, xx3, yy3, xx4, yy4);
 	}
 	else if(tileVertical > 0)
 	{
 		for (int i = 0; i < tileVertical; i++)
 			Menu_DrawImg(currLeft, this->GetTop() + height * i, zoffset, width, height, image, imageangle,
-					widescreen ? currScale * Settings.WSFactor : currScale, currScale, this->GetAlpha(), xx1,
+					widescreen ? currScale * App.Settings.WSFactor : currScale, currScale, this->GetAlpha(), xx1,
 					yy1, xx2, yy2, xx3, yy3, xx4, yy4);
 	}
 	else
@@ -469,7 +469,7 @@ void GuiImage::Draw()
 		// temporary (maybe), used to correct offset for scaled images
 		if (scale != 1) currLeft = currLeft - width / 2 + (width * scale) / 2;
 
-		Menu_DrawImg(currLeft, this->GetTop(), zoffset, width, height, image, imageangle, widescreen ? currScale * Settings.WSFactor
+		Menu_DrawImg(currLeft, this->GetTop(), zoffset, width, height, image, imageangle, widescreen ? currScale * App.Settings.WSFactor
 				: currScale, currScale, this->GetAlpha(), xx1, yy1, xx2, yy2, xx3, yy3, xx4, yy4);
 	}
 

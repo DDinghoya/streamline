@@ -106,7 +106,7 @@ static void * UpdateGUI(void *arg)
 		UpdatePads();
 
 		mainWindow->Draw();
-		if (Settings.tooltips && Theme::ShowTooltips && mainWindow->GetState() != STATE_DISABLED)
+		if (App.Settings.tooltips && Theme::ShowTooltips && mainWindow->GetState() != STATE_DISABLED)
 			mainWindow->DrawTooltip();
 
 		// Pointer modifies wpad data struct for easy implementation of "virtual pointer" with PAD-Sticks
@@ -166,21 +166,21 @@ static void MenuStartup()
 	// Do not allow banner grid mode without AHBPROT
 	// this function does nothing if it was already initiated before
 	if (!SystemMenuResources::Instance()->IsLoaded() && !SystemMenuResources::Instance()->Init()
-		&& Settings.gameDisplay == BANNERGRID_MODE)
+		&& App.Settings.gameDisplay == BANNERGRID_MODE)
 	{
-		Settings.gameDisplay = LIST_MODE;
-		Settings.GameWindowMode = GAMEWINDOW_DISC;
+		App.Settings.gameDisplay = LIST_MODE;
+		App.Settings.GameWindowMode = GAMEWINDOW_DISC;
 	}
 
-	gprintf("\tLoading font...%s\n", Theme::LoadFont(Settings.ConfigPath) ? "done" : "failed (using default)");
-	gprintf("\tLoading theme...%s\n", Theme::Load(Settings.theme) ? "done" : "failed (using default)");
+	gprintf("\tLoading font...%s\n", Theme::LoadFont(App.Settings.ConfigPath) ? "done" : "failed (using default)");
+	gprintf("\tLoading theme...%s\n", Theme::Load(App.Settings.theme) ? "done" : "failed (using default)");
 
 	//! Init the rest of the System
 	Sys_Init();
 	InitAudio();
 	setlocale(LC_CTYPE, "C-UTF-8");
 	setlocale(LC_MESSAGES, "C-UTF-8");
-	AdjustOverscan(Settings.AdjustOverscanX, Settings.AdjustOverscanY);
+	AdjustOverscan(App.Settings.AdjustOverscanX, App.Settings.AdjustOverscanY);
 }
 
 /****************************************************************************
@@ -197,14 +197,14 @@ int MainMenu(int menu)
 	InitProgressThread();
 	InitNetworkThread();
 
-	if (Settings.autonetwork)
+	if (App.Settings.autonetwork)
 		ResumeNetworkThread();
 
-	btnSoundClick = new GuiSound(NULL, 0, Settings.sfxvolume);
+	btnSoundClick = new GuiSound(NULL, 0, App.Settings.sfxvolume);
 	btnSoundClick->LoadSoundEffect(Resources::GetFile("button_click.wav"), Resources::GetFileSize("button_click.wav"));
-	btnSoundClick2 = new GuiSound(NULL, 0, Settings.sfxvolume);
+	btnSoundClick2 = new GuiSound(NULL, 0, App.Settings.sfxvolume);
 	btnSoundClick2->LoadSoundEffect(Resources::GetFile("button_click2.wav"), Resources::GetFileSize("button_click2.wav"));
-	btnSoundOver = new GuiSound(NULL, 0, Settings.sfxvolume);
+	btnSoundOver = new GuiSound(NULL, 0, App.Settings.sfxvolume);
 	btnSoundOver->LoadSoundEffect(Resources::GetFile("button_over.wav"), Resources::GetFileSize("button_over.wav"));
 
 	pointer[0] = new WiiPointer("player1_point.png");
@@ -214,23 +214,23 @@ int MainMenu(int menu)
 
 	mainWindow = new GuiWindow(screenwidth, screenheight);
 
-	background = Resources::GetImageData(Settings.widescreen ? "wbackground.png" : "background.png");
+	background = Resources::GetImageData(App.Settings.widescreen ? "wbackground.png" : "background.png");
 
 	bgImg = new GuiImage(background);
 	mainWindow->Append(bgImg);
 
 	ResumeGui();
 
-	bgMusic = new GuiBGM(Resources::GetFile("bg_music.ogg"), Resources::GetFileSize("bg_music.ogg"), Settings.volume);
-	bgMusic->SetLoop(Settings.musicloopmode); //loop music
-	bgMusic->Load(Settings.ogg_path);
+	bgMusic = new GuiBGM(Resources::GetFile("bg_music.ogg"), Resources::GetFileSize("bg_music.ogg"), App.Settings.volume);
+	bgMusic->SetLoop(App.Settings.musicloopmode); //loop music
+	bgMusic->Load(App.Settings.ogg_path);
 	bgMusic->Play();
 
 	MountGamePartition();
 
 	while (currentMenu != MENU_EXIT)
 	{
-		bgMusic->SetVolume(Settings.volume);
+		bgMusic->SetVolume(App.Settings.volume);
 
 		switch (currentMenu)
 		{

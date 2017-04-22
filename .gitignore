@@ -1,11 +1,5 @@
-/build
-/boot.elf
-/boot.dol
-/.vscode
-/*.sln
-/*.VC.db
-/*.vcxproj*
-/obj
+/boot.*
+
+/source/Version.c
 /.vs
-/*.user
-/*.opendb
+/build

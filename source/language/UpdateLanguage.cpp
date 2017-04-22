@@ -26,9 +26,9 @@ static const char * LanguageFilesURL = "http://svn.code.sf.net/p/usbloadergx/cod
 
 int DownloadAllLanguageFiles(int revision)
 {
-	if(!CreateSubfolder(Settings.languagefiles_path))
+	if(!CreateSubfolder(App.Settings.languagefiles_path))
 	{
-		ShowError(tr("Could not create path: %s"), Settings.languagefiles_path);
+		ShowError(tr("Could not create path: %s"), App.Settings.languagefiles_path);
 		return -1;
 	}
 
@@ -73,7 +73,7 @@ int DownloadAllLanguageFiles(int revision)
 		if (file.data)
 		{
 			char filepath[300];
-			snprintf(filepath, sizeof(filepath), "%s/%s", Settings.languagefiles_path, filename);
+			snprintf(filepath, sizeof(filepath), "%s/%s", App.Settings.languagefiles_path, filename);
 			FILE * pfile = fopen(filepath, "wb");
 			if(pfile)
 			{
@@ -88,19 +88,19 @@ int DownloadAllLanguageFiles(int revision)
 	ProgressStop();
 
 	// reload current language file
-	if(Settings.language_path[0] != 0)
-		Settings.LoadLanguage(Settings.language_path, CONSOLE_DEFAULT);
+	if(App.Settings.language_path[0] != 0)
+		App.Settings.LoadLanguage(App.Settings.language_path, CONSOLE_DEFAULT);
 	else
-		Settings.LoadLanguage(NULL, CONSOLE_DEFAULT);
+		App.Settings.LoadLanguage(NULL, CONSOLE_DEFAULT);
 
 	return files_downloaded;
 }
 
 int UpdateLanguageFiles()
 {
-	if(!CreateSubfolder(Settings.languagefiles_path))
+	if(!CreateSubfolder(App.Settings.languagefiles_path))
 	{
-		ShowError(tr("Could not create path: %s"), Settings.languagefiles_path);
+		ShowError(tr("Could not create path: %s"), App.Settings.languagefiles_path);
 		return -1;
 	}
 
@@ -110,7 +110,7 @@ int UpdateLanguageFiles()
 		return -2;
 	}
 
-	DirList Dir(Settings.languagefiles_path, ".lang");
+	DirList Dir(App.Settings.languagefiles_path, ".lang");
 
 	//give up now if we didn't find any
 	if (Dir.GetFilecount() == 0)
@@ -132,7 +132,7 @@ int UpdateLanguageFiles()
 	for(int i = 0; i < Dir.GetFilecount(); ++i)
 	{
 		snprintf(codeurl, sizeof(codeurl), "%s%s?p=%s", LanguageFilesURL, Dir.GetFilename(i), Version_GetPatch());
-		snprintf(savepath, sizeof(savepath), "%s/%s", Settings.languagefiles_path, Dir.GetFilename(i));
+		snprintf(savepath, sizeof(savepath), "%s/%s", App.Settings.languagefiles_path, Dir.GetFilename(i));
 
 		struct block file = downloadfile(codeurl);
 
@@ -155,10 +155,10 @@ int UpdateLanguageFiles()
 	ProgressStop();
 
 	// reload current language file
-	if(Settings.language_path[0] != 0)
-		Settings.LoadLanguage(Settings.language_path, CONSOLE_DEFAULT);
+	if(App.Settings.language_path[0] != 0)
+		App.Settings.LoadLanguage(App.Settings.language_path, CONSOLE_DEFAULT);
 	else
-		Settings.LoadLanguage(NULL, CONSOLE_DEFAULT);
+		App.Settings.LoadLanguage(NULL, CONSOLE_DEFAULT);
 
 	// return the number of files we updated
 	return done;

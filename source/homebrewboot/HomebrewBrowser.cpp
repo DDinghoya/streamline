@@ -44,7 +44,7 @@ extern int connection;
 HomebrewBrowser::HomebrewBrowser()
 	: FlyingButtonsMenu(tr( "Homebrew Launcher" ))
 {
-	HomebrewList = new DirList(Settings.homebrewapps_path, ".dol,.elf", DirList::Files | DirList::Dirs | DirList::CheckSubfolders);
+	HomebrewList = new DirList(App.Settings.homebrewapps_path, ".dol,.elf", DirList::Files | DirList::Dirs | DirList::CheckSubfolders);
 
 	if (IsNetworkInit())
 		ResumeNetworkWait();
@@ -65,7 +65,7 @@ HomebrewBrowser::HomebrewBrowser()
 
 	channelImgData = Resources::GetImageData("channel_btn.png");
 	channelBtnImg = new GuiImage(channelImgData);
-	channelBtnImg->SetWidescreen(Settings.widescreen);
+	channelBtnImg->SetWidescreen(App.Settings.widescreen);
 	channelBtn = new GuiButton(channelBtnImg->GetWidth(), channelBtnImg->GetHeight());
 	channelBtn->SetPosition(240, 400);
 	channelBtn->SetImage(channelBtnImg);
@@ -73,7 +73,7 @@ HomebrewBrowser::HomebrewBrowser()
 	channelBtn->SetSoundClick(btnSoundClick2);
 	channelBtn->SetEffectGrow();
 	channelBtn->SetTrigger(trigA);
-	if (Settings.godmode || !(Settings.ParentalBlocks & BLOCK_TITLE_LAUNCHER_MENU))
+	if (App.Settings.godmode || !(App.Settings.ParentalBlocks & BLOCK_TITLE_LAUNCHER_MENU))
 		Append(channelBtn);
 
 	MainButtonDesc.resize(HomebrewList->GetFilecount());
@@ -396,7 +396,7 @@ int HomebrewBrowser::ReceiveFile()
 			// It's a zip file, unzip to the apps directory
 			// Zip archive, ask for permission to install the zip
 			char zippath[255];
-			snprintf(zippath, sizeof(zippath), "%s%s", Settings.homebrewapps_path, filename);
+			snprintf(zippath, sizeof(zippath), "%s%s", App.Settings.homebrewapps_path, filename);
 
 			FILE *fp = fopen(zippath, "wb");
 			if (!fp)
@@ -419,7 +419,7 @@ int HomebrewBrowser::ReceiveFile()
 				return MENU_NONE;
 			}
 
-			extractZip(uf, 0, 1, 0, Settings.homebrewapps_path);
+			extractZip(uf, 0, 1, 0, App.Settings.homebrewapps_path);
 			unzCloseCurrentFile(uf);
 
 			remove(zippath);

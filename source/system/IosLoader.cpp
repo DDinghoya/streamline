@@ -10,7 +10,7 @@
 #include "usbloader/wdvd.h"
 #include "wad/nandtitle.h"
 #include "mload/mload_modules.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "wad/nandtitle.h"
 #include "mload/mload.h"
 #include "mload/modules/ehcmodule_5.h"
@@ -80,10 +80,10 @@ s32 IosLoader::LoadAppCios()
 	s32 ret = -1;
 
 	// We have what we need
-	if((int) activeCios == Settings.LoaderIOS)
+	if((int) activeCios == App.Settings.LoaderIOS)
 		return 0;
 
-	u8 ciosLoadPriority[] = { Settings.LoaderIOS, 249, 250, 222, 223, 245, 246, 247, 248 }; // Ascending.
+	u8 ciosLoadPriority[] = { App.Settings.LoaderIOS, 249, 250, 222, 223, 245, 246, 247, 248 }; // Ascending.
 
 
 	for (u32 i = 0; i < (sizeof(ciosLoadPriority)/sizeof(ciosLoadPriority[0])); ++i)
@@ -99,7 +99,7 @@ s32 IosLoader::LoadAppCios()
 		if ((ret = ReloadIosSafe(cios)) > -1)
 		{
 			// Remember working cios.
-			Settings.LoaderIOS = cios;
+			App.Settings.LoaderIOS = cios;
 			break;
 		}
 	}

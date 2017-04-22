@@ -10,7 +10,7 @@
 
 #include "gui.h"
 #include "wstring.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "utils/tools.h"
 
 #define MAX_LINES_TO_DRAW   9
@@ -32,7 +32,7 @@ static GXColor presetColor = (GXColor) {255, 255, 255, 255};
 GuiText::GuiText(const char * t, int s, GXColor c)
 {
 	text = NULL;
-	size = (int) (s * Settings.FontScaleFactor);
+	size = (int) (s * App.Settings.FontScaleFactor);
 	currentSize = size;
 	color = c;
 	alpha = c.a;
@@ -61,7 +61,7 @@ GuiText::GuiText(const char * t, int s, GXColor c)
 GuiText::GuiText(const wchar_t * t, int s, GXColor c)
 {
 	text = NULL;
-	size = (int) (s * Settings.FontScaleFactor);
+	size = (int) (s * App.Settings.FontScaleFactor);
 	currentSize = size;
 	color = c;
 	alpha = c.a;
@@ -95,7 +95,7 @@ GuiText::GuiText(const wchar_t * t, int s, GXColor c)
 GuiText::GuiText(const char * t)
 {
 	text = NULL;
-	size = (int) (presetSize * Settings.FontScaleFactor);
+	size = (int) (presetSize * App.Settings.FontScaleFactor);
 	currentSize = size;
 	color = presetColor;
 	alpha = presetColor.a;

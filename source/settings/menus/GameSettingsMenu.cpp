@@ -118,7 +118,7 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 	//! Categories
 	else if(menuNr == Idx++)
 	{
-		if (!Settings.godmode && (Settings.ParentalBlocks & BLOCK_CATEGORIES_MENU))
+		if (!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_CATEGORIES_MENU))
 		{
 			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
 			return;
@@ -162,12 +162,12 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 			if(DiscHeader->tid != 0) //! Channels
 			{
 				snprintf(nandPath, sizeof(nandPath), "/title/%08x/%08x/data", (unsigned int) (DiscHeader->tid >> 32), (unsigned int) DiscHeader->tid);
-				snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuChanPath, nandPath);
+				snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuChanPath, nandPath);
 			}
 			else //! Wii games
 			{
 				snprintf(nandPath, sizeof(nandPath), "/title/00010000/%02x%02x%02x%02x", DiscHeader->id[0], DiscHeader->id[1], DiscHeader->id[2], DiscHeader->id[3]);
-				snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuPath, nandPath);
+				snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuPath, nandPath);
 			}
 
 			ProgressCancelEnable(true);
@@ -177,13 +177,13 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 			if(ret < 0) //! Games with installable channels: Mario Kart, Wii Fit, etc.
 			{
 				snprintf(nandPath, sizeof(nandPath), "/title/00010004/%02x%02x%02x%02x", DiscHeader->id[0], DiscHeader->id[1], DiscHeader->id[2], DiscHeader->id[3]);
-				snprintf(filePath, sizeof(filePath), "%s%s", Settings.NandEmuPath, nandPath);
+				snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuPath, nandPath);
 				ret = NandTitle::ExtractDir(nandPath, filePath);
 			}
 
 			//! extract the Mii file if not yet done
 			snprintf(nandPath, sizeof(nandPath), "/shared2/menu/FaceLib/RFL_DB.dat");
-			snprintf(filePath, sizeof(filePath), "%s%s", (DiscHeader->tid != 0) ? Settings.NandEmuChanPath : Settings.NandEmuPath, nandPath);
+			snprintf(filePath, sizeof(filePath), "%s%s", (DiscHeader->tid != 0) ? App.Settings.NandEmuChanPath : App.Settings.NandEmuPath, nandPath);
 			if(!CheckFile(filePath))
 				NandTitle::ExtractDir(nandPath, filePath);
 

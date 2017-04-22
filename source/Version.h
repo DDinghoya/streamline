@@ -1,11 +1,10 @@
-#ifndef SVNREV_H
-#define SVNREV_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-	
+
 	const char *Version_GetName();
 	const char *Version_GetVersion();
 	const char *Version_GetMajor();
@@ -16,5 +15,3 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* SVNREV_H */

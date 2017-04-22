@@ -26,7 +26,7 @@
 #include <string.h>
 #include "CGameCategories.hpp"
 #include "GameTitles.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "usbloader/GameList.h"
 #include "language/gettext.h"
 #include "FileOperations/fileops.h"
@@ -351,7 +351,7 @@ bool CGameCategories::ImportFromGameTDB(const string &xmlpath)
 
 	StartProgress(tr("Importing categories"), tr("Please wait..."), 0, false, true);
 
-	XML_DB.SetLanguageCode(Settings.db_language);
+	XML_DB.SetLanguageCode(App.Settings.db_language);
 	wString filter(gameList.GetCurrentFilter());
 	gameList.LoadUnfiltered();
 

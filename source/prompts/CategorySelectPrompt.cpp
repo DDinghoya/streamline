@@ -23,7 +23,7 @@
  ***************************************************************************/
 #include "CategorySelectPrompt.hpp"
 #include "settings/CGameCategories.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "language/gettext.h"
 #include "utils/StringTools.h"
 #include "gecko.h"
@@ -41,7 +41,7 @@ CategorySelectPrompt::CategorySelectPrompt(struct discHdr * header)
 
 void CategorySelectPrompt::onResetChanges()
 {
-	GameCategories.Load(Settings.ConfigPath);
+	GameCategories.Load(App.Settings.ConfigPath);
 }
 
 void CategorySelectPrompt::onBrowserRefresh()

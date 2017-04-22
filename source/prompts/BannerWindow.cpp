@@ -20,7 +20,7 @@
 #include "banner/BannerAsync.h"
 #include "banner/CustomBanner.h"
 #include "banner/OpeningBNR.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/CGameStatistics.h"
 #include "settings/menus/GameSettingsMenu.hpp"
 #include "SystemMenu/SystemMenuResources.h"
@@ -36,13 +36,13 @@ BannerFrame BannerWindow::bannerFrame;
 BannerWindow::BannerWindow(GameBrowseMenu *m, struct discHdr *header)
 	: GuiWindow(screenwidth, screenheight)
 	, browserMenu(m)
-	, MaxAnimSteps(Settings.BannerZoomDuration)
+	, MaxAnimSteps(App.Settings.BannerZoomDuration)
 {
 	ScreenProps.x = screenwidth;
 	ScreenProps.y = screenheight;
 
-	f32 xOffset = Settings.BannerProjectionOffsetX;
-	f32 yOffset = Settings.BannerProjectionOffsetY;
+	f32 xOffset = App.Settings.BannerProjectionOffsetX;
+	f32 yOffset = App.Settings.BannerProjectionOffsetY;
 
 	guMtxIdentity(modelview);
 	guMtxTransApply (modelview, modelview, xOffset, yOffset, 0.0F);
@@ -108,7 +108,7 @@ BannerWindow::BannerWindow(GameBrowseMenu *m, struct discHdr *header)
 	playcntTxt = new GuiText((char*) NULL, 18, thColor("r=0 g=0 b=0 a=255 - banner window playcount text color"));
 	playcntTxt->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	playcntTxt->SetPosition(thInt("0 - banner window play count pos x"),
-							thInt("215 - banner window play count pos y") - Settings.AdjustOverscanY / 2);
+							thInt("215 - banner window play count pos y") - App.Settings.AdjustOverscanY / 2);
 
 	settingsBtn = new GuiButton(215, 75);
 	settingsBtn->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
@@ -134,14 +134,14 @@ BannerWindow::BannerWindow(GameBrowseMenu *m, struct discHdr *header)
 
 	// Set favorite button position
 	int xPos = -198-(3*27)-14;
-	if(Settings.bannerFavIcon == BANNER_FAVICON_SINGLE_LINEA) // push more to the screen border
+	if(App.Settings.bannerFavIcon == BANNER_FAVICON_SINGLE_LINEA) // push more to the screen border
 		xPos += -14;
 	int yPos = 175-27;
 	float angle = 3*M_PI/2;	
 	for(int i = 0; i < FAVORITE_STARS; ++i)
 	{
 		
-		if(Settings.bannerFavIcon == BANNER_FAVICON_CIRC)
+		if(App.Settings.bannerFavIcon == BANNER_FAVICON_CIRC)
 		{
 			/*
 			Arrangement:
@@ -173,7 +173,7 @@ BannerWindow::BannerWindow(GameBrowseMenu *m, struct discHdr *header)
 			}
 			*/
 		}
-		else if(Settings.bannerFavIcon == BANNER_FAVICON_SIN)
+		else if(App.Settings.bannerFavIcon == BANNER_FAVICON_SIN)
 		{
 			/*
 			Arrangement:
@@ -192,7 +192,7 @@ BannerWindow::BannerWindow(GameBrowseMenu *m, struct discHdr *header)
 				yPos -= 27;
 			}
 		}
-		else if(Settings.bannerFavIcon == BANNER_FAVICON_MULTI_LINE)
+		else if(App.Settings.bannerFavIcon == BANNER_FAVICON_MULTI_LINE)
 		{
 			/*
 			Sequential arrangement, 3 on top, 2 at bottom:
@@ -207,13 +207,13 @@ BannerWindow::BannerWindow(GameBrowseMenu *m, struct discHdr *header)
 			}
 		
 		}
-		else if(Settings.bannerFavIcon == BANNER_FAVICON_SINGLE_LINEA)
+		else if(App.Settings.bannerFavIcon == BANNER_FAVICON_SINGLE_LINEA)
 		{
 			/* Arrangement : inline above the settings */
 			xPos += 27;
 			yPos = 95;
 		}
-		else if(Settings.bannerFavIcon == BANNER_FAVICON_SINGLE_LINEB)
+		else if(App.Settings.bannerFavIcon == BANNER_FAVICON_SINGLE_LINEB)
 		{
 			/* Arrangement : inline below the settings */
 			xPos += 27;
@@ -221,7 +221,7 @@ BannerWindow::BannerWindow(GameBrowseMenu *m, struct discHdr *header)
 		}
 		
 		FavoriteBtnImg[i] = new GuiImage;
-		FavoriteBtnImg[i]->SetWidescreen(Settings.widescreen);
+		FavoriteBtnImg[i]->SetWidescreen(App.Settings.widescreen);
 		FavoriteBtn[i] = new GuiButton(imgFavorite->GetWidth(), imgFavorite->GetHeight());
 		FavoriteBtn[i]->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 		FavoriteBtn[i]->SetPosition(xPos, yPos);
@@ -233,18 +233,18 @@ BannerWindow::BannerWindow(GameBrowseMenu *m, struct discHdr *header)
 	}
 
 	btnLeftImg = new GuiImage(imgLeft);
-	if (Settings.wsprompt) btnLeftImg->SetWidescreen(Settings.widescreen);
+	if (App.Settings.wsprompt) btnLeftImg->SetWidescreen(App.Settings.widescreen);
 	btnLeft = new GuiButton(btnLeftImg, btnLeftImg, ALIGN_LEFT, ALIGN_MIDDLE, 20, -50, trigA, btnSoundOver, btnSoundClick2, 1);
 	btnLeft->SetTrigger(trigL);
 	btnLeft->SetTrigger(trigMinus);
 
 	btnRightImg = new GuiImage(imgRight);
-	if (Settings.wsprompt) btnRightImg->SetWidescreen(Settings.widescreen);
+	if (App.Settings.wsprompt) btnRightImg->SetWidescreen(App.Settings.widescreen);
 	btnRight = new GuiButton(btnRightImg, btnRightImg, ALIGN_RIGHT, ALIGN_MIDDLE, -20, -50, trigA, btnSoundOver, btnSoundClick2, 1);
 	btnRight->SetTrigger(trigR);
 	btnRight->SetTrigger(trigPlus);
 
-	if (Settings.ShowPlayCount)
+	if (App.Settings.ShowPlayCount)
 		Append(playcntTxt);
 	Append(backBtn);
 
@@ -257,11 +257,11 @@ BannerWindow::BannerWindow(GameBrowseMenu *m, struct discHdr *header)
 	bannerFrame.SetButtonBText(tr("Start"));
 
 	//check if unlocked
-	if (Settings.godmode || !(Settings.ParentalBlocks & BLOCK_GAME_SETTINGS))
+	if (App.Settings.godmode || !(App.Settings.ParentalBlocks & BLOCK_GAME_SETTINGS))
 	{
 		bannerFrame.SetButtonAText(tr("Settings"));
 		Append(settingsBtn);
-		if(Settings.bannerFavIcon != BANNER_FAVICON_OFF)
+		if(App.Settings.bannerFavIcon != BANNER_FAVICON_OFF)
 			for(int i = 0; i < FAVORITE_STARS; ++i)
 				Append(FavoriteBtn[i]);
 	}
@@ -314,7 +314,7 @@ BannerWindow::~BannerWindow()
 
 	if(gameSound) gameSound->Stop();
 	delete gameSound;
-	bgMusic->SetVolume(Settings.volume);
+	bgMusic->SetVolume(App.Settings.volume);
 
 	delete gameBanner;
 
@@ -365,23 +365,23 @@ void BannerWindow::ChangeGame(bool playsound)
 	if(BNRInstance::Instance()->Get() != NULL)
 		gameBanner->LoadBanner(BNRInstance::Instance()->Get(), BNRInstance::Instance()->GetSize());
 
-	if (Settings.gamesoundvolume != 0)
+	if (App.Settings.gamesoundvolume != 0)
 	{
 		if(   (BNRInstance::Instance()->Get() != NULL)
 		   &&  gameBanner->LoadSound(BNRInstance::Instance()->Get(), BNRInstance::Instance()->GetSize())
 		   &&  gameBanner->getSound())
 		{
-			gameSound = new GuiSound(gameBanner->getSound(), gameBanner->getSoundSize(), Settings.gamesoundvolume);
+			gameSound = new GuiSound(gameBanner->getSound(), gameBanner->getSoundSize(), App.Settings.gamesoundvolume);
 		}
 		else if((header->type == TYPE_GAME_GC_IMG) || (header->type == TYPE_GAME_GC_DISC) || (header->type == TYPE_GAME_GC_EXTRACTED))
 		{
 			//! on game cube load the default sound
-			gameSound = new GuiSound(Resources::GetFile("gc_banner.ogg"), Resources::GetFileSize("gc_banner.ogg"), Settings.gamesoundvolume);
+			gameSound = new GuiSound(Resources::GetFile("gc_banner.ogg"), Resources::GetFileSize("gc_banner.ogg"), App.Settings.gamesoundvolume);
 		}
 		if(gameSound)
 		{
 			bgMusic->SetVolume(0);
-			if (Settings.gamesound == 2)
+			if (App.Settings.gamesound == 2)
 				gameSound->SetLoop(1);
 			// If the game is changed within window play sound here directly
 			if(playsound)
@@ -472,17 +472,17 @@ int BannerWindow::MainLoop()
 
 	else if (btnRight->GetState() == STATE_CLICKED) //next game
 	{
-		if(Settings.xflip == XFLIP_YES)
+		if(App.Settings.xflip == XFLIP_YES)
 		{
 			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
 			ChangeGame(true);
 		}
-		else if(Settings.xflip == XFLIP_SYSMENU)
+		else if(App.Settings.xflip == XFLIP_SYSMENU)
 		{
 			gameSelected = (gameSelected + 1) % gameList.size();
 			ChangeGame(true);
 		}
-		else if(Settings.xflip == XFLIP_WTF)
+		else if(App.Settings.xflip == XFLIP_WTF)
 		{
 			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
 			ChangeGame(true);
@@ -498,17 +498,17 @@ int BannerWindow::MainLoop()
 
 	else if (btnLeft->GetState() == STATE_CLICKED) //previous game
 	{
-		if(Settings.xflip == XFLIP_YES)
+		if(App.Settings.xflip == XFLIP_YES)
 		{
 			gameSelected = (gameSelected + 1) % gameList.size();
 			ChangeGame(true);
 		}
-		else if(Settings.xflip == XFLIP_SYSMENU)
+		else if(App.Settings.xflip == XFLIP_SYSMENU)
 		{
 			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
 			ChangeGame(true);
 		}
-		else if(Settings.xflip == XFLIP_WTF)
+		else if(App.Settings.xflip == XFLIP_WTF)
 		{
 			gameSelected = (gameSelected + 1) % gameList.size();
 			ChangeGame(true);
@@ -526,15 +526,15 @@ int BannerWindow::MainLoop()
 	{
 		if (gameSound)
 		{
-			if (Settings.gamesound == 1 && !gameSound->IsPlaying())
+			if (App.Settings.gamesound == 1 && !gameSound->IsPlaying())
 			{
-				bgMusic->SetVolume(Settings.volume);
+				bgMusic->SetVolume(App.Settings.volume);
 				reducedVol = false;
 			}
 		}
 		else
 		{
-			bgMusic->SetVolume(Settings.volume);
+			bgMusic->SetVolume(App.Settings.volume);
 			reducedVol = false;
 		}
 	}
@@ -586,10 +586,10 @@ void BannerWindow::Animate(void)
 
 		float curAnimStep = AnimZoomIn ? ((float)(MaxAnimSteps - AnimStep)/(float)MaxAnimSteps) : ((float)AnimStep/(float)MaxAnimSteps);
 
-		float stepx1 = Settings.AdjustOverscanX - AnimPosX;
-		float stepy1 = Settings.AdjustOverscanY - AnimPosY;
-		float stepx2 = (screenwidth - 1 - Settings.AdjustOverscanX) - (AnimPosX + fIconWidth);
-		float stepy2 = (screenheight - 1 - Settings.AdjustOverscanY) - (AnimPosY + fIconHeight);
+		float stepx1 = App.Settings.AdjustOverscanX - AnimPosX;
+		float stepy1 = App.Settings.AdjustOverscanY - AnimPosY;
+		float stepx2 = (screenwidth - 1 - App.Settings.AdjustOverscanX) - (AnimPosX + fIconWidth);
+		float stepy2 = (screenheight - 1 - App.Settings.AdjustOverscanY) - (AnimPosY + fIconHeight);
 
 		float top = AnimPosY + stepy1 * curAnimStep;
 		float bottom = AnimPosY + fIconHeight + stepy2 * curAnimStep;
@@ -600,8 +600,8 @@ void BannerWindow::Animate(void)
 		if(dynamic_cast<GuiBannerGrid *>(browserMenu->GetGameBrowser()) != NULL)
 			guOrtho(FSProjection2D, top, bottom, left, right, 0, 10000);
 
-		float xDiff = 0.5f * Settings.BannerProjectionWidth;
-		float yDiff = 0.5f * Settings.BannerProjectionHeight;
+		float xDiff = 0.5f * App.Settings.BannerProjectionWidth;
+		float yDiff = 0.5f * App.Settings.BannerProjectionHeight;
 
 		// this just looks better for banner/icon ratio
 		float iconWidth = fIconWidth - 20;
@@ -641,8 +641,8 @@ void BannerWindow::Draw(void)
 
 	//! Start playing banner sound after last animation frame if animation after zoom is enabled
 	//! or on first frame if during zoom is enable
-	if( AnimZoomIn && gameSound && (((Settings.BannerAnimStart == BANNER_START_ON_ZOOM) && AnimStep == 0)
-	   || ((Settings.BannerAnimStart == BANNER_START_AFTER_ZOOM) && ((AnimStep + 1) == MaxAnimSteps))))
+	if( AnimZoomIn && gameSound && (((App.Settings.BannerAnimStart == BANNER_START_ON_ZOOM) && AnimStep == 0)
+	   || ((App.Settings.BannerAnimStart == BANNER_START_AFTER_ZOOM) && ((AnimStep + 1) == MaxAnimSteps))))
 	{
 		reducedVol = true;
 		gameSound->Play();
@@ -693,22 +693,22 @@ void BannerWindow::Draw(void)
 
 	if(gameBanner->getBanner())
 	{
-		gameBanner->getBanner()->Render(modelview, ScreenProps, Settings.widescreen, BannerAlpha);
+		gameBanner->getBanner()->Render(modelview, ScreenProps, App.Settings.widescreen, BannerAlpha);
 
 		// advance only when animation isnt running on certain options
-		if(Settings.BannerAnimStart != BANNER_START_AFTER_ZOOM || !AnimationRunning)
+		if(App.Settings.BannerAnimStart != BANNER_START_AFTER_ZOOM || !AnimationRunning)
 		{
 			gameBanner->getBanner()->AdvanceFrame();
 
 			// skip every 6th frame on PAL50 since all banners are 60 Hz
-			if(Settings.PAL50 && (frameCount % 6 == 0)) {
+			if(App.Settings.PAL50 && (frameCount % 6 == 0)) {
 				gameBanner->getBanner()->AdvanceFrame();
 			}
 		}
 	}
 
 	// render big frame and animate button over effects
-	bannerFrame.Render(modelview, ScreenProps, Settings.widescreen, BannerAlpha);
+	bannerFrame.Render(modelview, ScreenProps, App.Settings.widescreen, BannerAlpha);
 	bannerFrame.AdvanceFrame();
 
 	// Setup GX

@@ -18,7 +18,7 @@
 #include "GUI/gui.h"
 #include "ImageOperations/TextureConverter.h"
 #include "ImageOperations/ImageWrite.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "input.h"
 #include "sys.h"
 #include "gecko.h"
@@ -116,16 +116,16 @@ void InitVideo()
 	VIDEO_Init();
 	
 	// If WiiU - Force 16:9 aspect ratio based on WiiU settings
-	if(isWiiU() && Settings.widescreen)
+	if(isWiiU() && App.Settings.widescreen)
 	{
 		write32(0xd8006a0, 0x30000004), mask32(0xd8006a8, 0, 2);		
 	}
 	
 	vmode = VIDEO_GetPreferredMode(NULL); // get default video mode
 
-	vmode->viWidth = Settings.widescreen ? 708 : 694;
+	vmode->viWidth = App.Settings.widescreen ? 708 : 694;
 
-	if (Settings.PAL50)
+	if (App.Settings.PAL50)
 	{
 		vmode->viXOrigin = (VI_MAX_WIDTH_PAL - vmode->viWidth) / 2;
 	}
@@ -469,7 +469,7 @@ s32 TakeScreenshot(const char *path)
 	if(gdImg == 0)
 		return -1;
 
-	if(Settings.widescreen)
+	if(App.Settings.widescreen)
 	{
 		gdImagePtr dst = gdImageCreateTrueColor(768, screenheight);
 		if(dst == 0)

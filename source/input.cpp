@@ -68,7 +68,7 @@ void UpdatePads()
 			WUPC_Disconnect(i);
 		
 		
-		if (Settings.rumble == ON) DoRumble(i);
+		if (App.Settings.rumble == ON) DoRumble(i);
 
 		if(userInput[i].wpad.exp.type == WPAD_EXP_NUNCHUK)
 		{
@@ -113,7 +113,7 @@ static inline u32 ScreensaverTime(int setting)
  ***************************************************************************/
 void SetWPADTimeout()
 {
-	WPAD_SetIdleTimeout(ScreensaverTime(Settings.screensaver));
+	WPAD_SetIdleTimeout(ScreensaverTime(App.Settings.screensaver));
 }
 
 /****************************************************************************
@@ -127,7 +127,7 @@ bool ControlActivityTimeout(void)
 			minTime = pointer[i]->getLastActivCounter();
 
 	// not very accurate but it's not required here
-	return (minTime/(Settings.PAL50 ? 50 : 60) > ScreensaverTime(Settings.screensaver));
+	return (minTime/(App.Settings.PAL50 ? 50 : 60) > ScreensaverTime(App.Settings.screensaver));
 }
 /****************************************************************************
  * SetupPads

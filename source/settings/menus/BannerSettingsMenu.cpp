@@ -16,7 +16,7 @@
  ****************************************************************************/
 #include <unistd.h>
 #include "BannerSettingsMenu.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/SettingsPrompts.h"
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
@@ -55,31 +55,31 @@ void BannerSettingsMenu::SetOptionValues()
 	int Idx = 0;
 
 	//! Settings: Cache BNR Files
-	Options->SetValue(Idx++, "%s", tr(OnOffText[Settings.CacheBNRFiles]));
+	Options->SetValue(Idx++, "%s", tr(OnOffText[App.Settings.CacheBNRFiles]));
 
 	//! Settings: Animation Start
-	Options->SetValue(Idx++, "%s", tr(AnimStartText[Settings.BannerAnimStart]));
+	Options->SetValue(Idx++, "%s", tr(AnimStartText[App.Settings.BannerAnimStart]));
 
 	//! Settings: Zoom Duration (Speed)
-	Options->SetValue(Idx++, "%i %s", Settings.BannerZoomDuration, tr("Frames"));
+	Options->SetValue(Idx++, "%i %s", App.Settings.BannerZoomDuration, tr("Frames"));
 
 	//! Settings: Grid Scroll Speed
-	Options->SetValue(Idx++, "%g %s/%s", Settings.BannerGridSpeed, tr("Pixels"), tr("Frame"));
+	Options->SetValue(Idx++, "%g %s/%s", App.Settings.BannerGridSpeed, tr("Pixels"), tr("Frame"));
 
 	//! Settings: Frame Projection X-Offset
-	Options->SetValue(Idx++, "%g %s", Settings.BannerProjectionOffsetX, tr("Pixels"));
+	Options->SetValue(Idx++, "%g %s", App.Settings.BannerProjectionOffsetX, tr("Pixels"));
 
 	//! Settings: Frame Projection Y-Offset
-	Options->SetValue(Idx++, "%g %s", Settings.BannerProjectionOffsetY, tr("Pixels"));
+	Options->SetValue(Idx++, "%g %s", App.Settings.BannerProjectionOffsetY, tr("Pixels"));
 
 	//! Settings: Frame Projection Width
-	Options->SetValue(Idx++, "%g %s", Settings.BannerProjectionWidth, tr("Pixels"));
+	Options->SetValue(Idx++, "%g %s", App.Settings.BannerProjectionWidth, tr("Pixels"));
 
 	//! Settings: Frame Projection Height
-	Options->SetValue(Idx++, "%g %s", Settings.BannerProjectionHeight, tr("Pixels"));
+	Options->SetValue(Idx++, "%g %s", App.Settings.BannerProjectionHeight, tr("Pixels"));
 
 	//! Settings: GC Banner Scale
-	Options->SetValue(Idx++, "%g", Settings.GCBannerScale);
+	Options->SetValue(Idx++, "%g", App.Settings.GCBannerScale);
 }
 
 int BannerSettingsMenu::GetMenuInternal()
@@ -94,83 +94,83 @@ int BannerSettingsMenu::GetMenuInternal()
 	//! Settings: Cache BNR Files
 	if (ret == ++Idx)
 	{
-		if (++Settings.CacheBNRFiles >= MAX_ON_OFF) Settings.CacheBNRFiles = 0;
+		if (++App.Settings.CacheBNRFiles >= MAX_ON_OFF) App.Settings.CacheBNRFiles = 0;
 	}
 
 	//! Settings: Animation Start
 	else if (ret == ++Idx)
 	{
-		if (++Settings.BannerAnimStart > 1) Settings.BannerAnimStart = 0;
+		if (++App.Settings.BannerAnimStart > 1) App.Settings.BannerAnimStart = 0;
 	}
 
 	//! Settings: Zoom Duration (Speed)
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%i", Settings.BannerZoomDuration);
+		snprintf(entrie, sizeof(entrie), "%i", App.Settings.BannerZoomDuration);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.BannerZoomDuration = atoi(entrie);
+			App.Settings.BannerZoomDuration = atoi(entrie);
 	}
 
 	//! Settings: Grid Scroll Speed
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%g", Settings.BannerGridSpeed);
+		snprintf(entrie, sizeof(entrie), "%g", App.Settings.BannerGridSpeed);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.BannerGridSpeed = atof(entrie);
+			App.Settings.BannerGridSpeed = atof(entrie);
 	}
 
 	//! Settings: Frame Projection X-Offset
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%g", Settings.BannerProjectionOffsetX);
+		snprintf(entrie, sizeof(entrie), "%g", App.Settings.BannerProjectionOffsetX);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.BannerProjectionOffsetX = atof(entrie);
+			App.Settings.BannerProjectionOffsetX = atof(entrie);
 	}
 
 	//! Settings: Frame Projection Y-Offset
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%g", Settings.BannerProjectionOffsetY);
+		snprintf(entrie, sizeof(entrie), "%g", App.Settings.BannerProjectionOffsetY);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.BannerProjectionOffsetY = atof(entrie);
+			App.Settings.BannerProjectionOffsetY = atof(entrie);
 	}
 
 	//! Settings: Frame Projection Width
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%g", Settings.BannerProjectionWidth);
+		snprintf(entrie, sizeof(entrie), "%g", App.Settings.BannerProjectionWidth);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.BannerProjectionWidth = atof(entrie);
+			App.Settings.BannerProjectionWidth = atof(entrie);
 	}
 
 	//! Settings: Frame Projection Height
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%g", Settings.BannerProjectionHeight);
+		snprintf(entrie, sizeof(entrie), "%g", App.Settings.BannerProjectionHeight);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.BannerProjectionHeight = atof(entrie);
+			App.Settings.BannerProjectionHeight = atof(entrie);
 	}
 
 	//! Settings: GC Banner Scale
 	else if (ret == ++Idx)
 	{
 		char entrie[20];
-		snprintf(entrie, sizeof(entrie), "%g", Settings.GCBannerScale);
+		snprintf(entrie, sizeof(entrie), "%g", App.Settings.GCBannerScale);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
 		if(ret)
-			Settings.GCBannerScale = atof(entrie);
+			App.Settings.GCBannerScale = atof(entrie);
 	}
 
 	SetOptionValues();

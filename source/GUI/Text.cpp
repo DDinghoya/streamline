@@ -1,4 +1,4 @@
-#include "settings/CSettings.h"
+#include "App.h"
 #include "utils/tools.h"
 #include "Text.hpp"
 

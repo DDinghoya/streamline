@@ -57,15 +57,15 @@ int SelectPartitionMenu()
 
 	GuiImage poweroffBtnImg(&btnpwroff);
 	GuiImage poweroffBtnImgOver(&btnpwroffOver);
-	poweroffBtnImg.SetWidescreen(Settings.widescreen);
-	poweroffBtnImgOver.SetWidescreen(Settings.widescreen);
+	poweroffBtnImg.SetWidescreen(App.Settings.widescreen);
+	poweroffBtnImgOver.SetWidescreen(App.Settings.widescreen);
 	GuiButton poweroffBtn(&poweroffBtnImg, &poweroffBtnImgOver, 0, 3,
 							thInt("576 - power off btn pos x"), thInt("355 - power off btn pos y"),
 							&trigA, btnSoundOver, btnSoundClick2, 1);
 	GuiImage exitBtnImg(&btnhome);
 	GuiImage exitBtnImgOver(&btnhomeOver);
-	exitBtnImg.SetWidescreen(Settings.widescreen);
-	exitBtnImgOver.SetWidescreen(Settings.widescreen);
+	exitBtnImg.SetWidescreen(App.Settings.widescreen);
+	exitBtnImgOver.SetWidescreen(App.Settings.widescreen);
 	GuiButton exitBtn(&exitBtnImg, &exitBtnImgOver, 0, 3,
 						thInt("489 - home menu btn pos x"), thInt("371 - home menu btn pos y"),
 						&trigA, btnSoundOver, btnSoundClick2, 1);

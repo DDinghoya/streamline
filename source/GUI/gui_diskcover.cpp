@@ -1,5 +1,5 @@
 #include "gui_diskcover.h"
-#include "settings/CSettings.h"
+#include "App.h"
 
 GuiDiskCover::GuiDiskCover()
 {
@@ -71,9 +71,9 @@ void GuiDiskCover::Draw()
 	float currScale = this->GetScale();
 
 	Menu_DrawDiskCover(this->GetLeft(), this->GetTop(), PosZ, width, height, Distance, image, imageangle, deg_beta,
-			widescreen ? currScale * Settings.WSFactor : currScale, currScale, 64, true);
+			widescreen ? currScale * App.Settings.WSFactor : currScale, currScale, 64, true);
 	Menu_DrawDiskCover(this->GetLeft(), this->GetTop(), PosZ, width, height, Distance, image, imageangle, deg_beta,
-			widescreen ? currScale * Settings.WSFactor : currScale, currScale, this->GetAlpha(), false);
+			widescreen ? currScale * App.Settings.WSFactor : currScale, currScale, this->GetAlpha(), false);
 
 	if (eff_step)
 	{

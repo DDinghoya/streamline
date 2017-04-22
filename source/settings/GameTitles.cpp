@@ -1,6 +1,6 @@
 #include <string.h>
 #include "GameTitles.h"
-#include "CSettings.h"
+#include "App.h"
 #include "usbloader/GameList.h"
 #include "Channels/channels.h"
 #include "xml/GameTDB.hpp"
@@ -143,7 +143,7 @@ u32 CGameTitles::ReadCachedTitles(const char * path)
 	fread(LangCode, 1, 10, f);
 
 	//! Check if cache has correct language code
-	if(strcmp(LangCode, Settings.db_language) != 0)
+	if(strcmp(LangCode, App.Settings.db_language) != 0)
 	{
 		fclose(f);
 		return 0;
@@ -185,7 +185,7 @@ void CGameTitles::WriteCachedTitles(const char * path)
 	u32 count = TitleList.size();
 	u32 revision = atoi(Version_GetPatch());
 	fwrite(&revision, 1, 4, f);
-	fwrite(Settings.db_language, 1, 10, f);
+	fwrite(App.Settings.db_language, 1, 10, f);
 	fwrite(&count, 1, 4, f);
 
 	for(u32 i = 0; i < count; ++i)
@@ -247,7 +247,7 @@ void CGameTitles::GetMissingTitles(std::vector<std::string> &MissingTitles, bool
 
 void CGameTitles::LoadTitlesFromGameTDB(const char * path, bool removeUnused)
 {
-	if(!path || !Settings.titlesOverride)
+	if(!path || !App.Settings.titlesOverride)
 		return;
 
 	std::string Filepath = path;
@@ -269,7 +269,7 @@ void CGameTitles::LoadTitlesFromGameTDB(const char * path, bool removeUnused)
 	std::string Title;
 
 	GameTDB XML_DB(Filepath.c_str());
-	XML_DB.SetLanguageCode(Settings.db_language);
+	XML_DB.SetLanguageCode(App.Settings.db_language);
 	int Rating;
 	std::string RatValTxt;
 

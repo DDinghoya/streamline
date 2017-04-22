@@ -30,7 +30,7 @@
 #include <ogc/system.h>
 #include <sdcard/wiisd_io.h>
 #include <sdcard/gcsd.h>
-#include "settings/CSettings.h"
+#include "App.h"
 #include "usbloader/usbstorage2.h"
 #include "DeviceHandler.hpp"
 #include "usbloader/wbfs.h"
@@ -151,9 +151,9 @@ static inline bool USBSpinUp()
 
 	const DISC_INTERFACE * handle0 = NULL;
 	const DISC_INTERFACE * handle1 = NULL;
-	if(Settings.USBPort == 0 || Settings.USBPort == 2)
+	if(App.Settings.USBPort == 0 || App.Settings.USBPort == 2)
 		handle0 = DeviceHandler::GetUSB0Interface();
-	if(Settings.USBPort == 1 || Settings.USBPort == 2)
+	if(App.Settings.USBPort == 1 || App.Settings.USBPort == 2)
 		handle1 = DeviceHandler::GetUSB1Interface();
 
 	// wait 20 sec for the USB to spin up...stupid slow ass HDD
@@ -199,9 +199,9 @@ bool DeviceHandler::MountAllUSB(bool spinup)
 	if(spinup && !USBSpinUp())
 		return false;
 
-	if(!usb0 && (Settings.USBPort == 0 || Settings.USBPort == 2))
+	if(!usb0 && (App.Settings.USBPort == 0 || App.Settings.USBPort == 2))
 		usb0 = new PartitionHandle(GetUSB0Interface());
-	if(!usb1 && (Settings.USBPort == 1 || Settings.USBPort == 2) && IOS_GetVersion() >= 200)
+	if(!usb1 && (App.Settings.USBPort == 1 || App.Settings.USBPort == 2) && IOS_GetVersion() >= 200)
 		usb1 = new PartitionHandle(GetUSB1Interface());
 
 	if(usb0 && usb0->GetPartitionCount() < 1)
@@ -232,7 +232,7 @@ bool DeviceHandler::MountUSBPort1(bool spinup)
 	if(spinup && !USBSpinUp())
 		return false;
 
-	if(!usb1 && (Settings.USBPort == 1 || Settings.USBPort == 2) && IOS_GetVersion() >= 200)
+	if(!usb1 && (App.Settings.USBPort == 1 || App.Settings.USBPort == 2) && IOS_GetVersion() >= 200)
 		usb1 = new PartitionHandle(GetUSB1Interface());
 
 	if(usb1 && usb1->GetPartitionCount() < 1)

@@ -70,11 +70,11 @@ bool TitleSelector(char output[])
 	OptionList options4;
 	//write the titles on the option browser
 
-	std::string Filepath = Settings.titlestxt_path;
+	std::string Filepath = App.Settings.titlestxt_path;
 	Filepath += "wiitdb.xml";
 
 	GameTDB *XML_DB = new GameTDB(Filepath.c_str());
-	XML_DB->SetLanguageCode(Settings.db_language);
+	XML_DB->SetLanguageCode(App.Settings.db_language);
 
 	s32 i = 0;
 	NandTitles.SetType(0x10001);
@@ -133,10 +133,10 @@ bool TitleSelector(char output[])
 	GuiText cancelBtnTxt(tr( "Back" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	cancelBtnTxt.SetMaxWidth(btnOutline.GetWidth() - 30);
 	GuiImage cancelBtnImg(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		cancelBtnTxt.SetWidescreen(Settings.widescreen);
-		cancelBtnImg.SetWidescreen(Settings.widescreen);
+		cancelBtnTxt.SetWidescreen(App.Settings.widescreen);
+		cancelBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton cancelBtn(&cancelBtnImg, &cancelBtnImg, 2, 3, 180, 400, &trigA, btnSoundOver, btnSoundClick2, 1);
 	cancelBtn.SetLabel(&cancelBtnTxt);
@@ -252,11 +252,11 @@ int TitleBrowser()
 	OptionList options3;
 	//write the titles on the option browser
 
-	std::string Filepath = Settings.titlestxt_path;
+	std::string Filepath = App.Settings.titlestxt_path;
 	Filepath += "wiitdb.xml";
 
 	GameTDB *XML_DB = new GameTDB(Filepath.c_str());
-	XML_DB->SetLanguageCode(Settings.db_language);
+	XML_DB->SetLanguageCode(App.Settings.db_language);
 
 	u32 i = 0;
 	NandTitles.SetType(0x10001);
@@ -364,10 +364,10 @@ int TitleBrowser()
 	GuiText cancelBtnTxt(tr( "Back" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	cancelBtnTxt.SetMaxWidth(btnOutline.GetWidth() - 30);
 	GuiImage cancelBtnImg(&btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		cancelBtnTxt.SetWidescreen(Settings.widescreen);
-		cancelBtnImg.SetWidescreen(Settings.widescreen);
+		cancelBtnTxt.SetWidescreen(App.Settings.widescreen);
+		cancelBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton cancelBtn(&cancelBtnImg, &cancelBtnImg, 2, 3, 180, 400, &trigA, btnSoundOver, btnSoundClick2, 1);
 	cancelBtn.SetScale(0.9);
@@ -380,9 +380,9 @@ int TitleBrowser()
 
 	GuiImageData wifiImgData(Resources::GetFile("wifi_btn.png"), Resources::GetFileSize("wifi_btn.png"));
 	GuiImage wifiImg(&wifiImgData);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		wifiImg.SetWidescreen(Settings.widescreen);
+		wifiImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton wifiBtn(wifiImg.GetWidth(), wifiImg.GetHeight());
 	wifiBtn.SetImage(&wifiImg);

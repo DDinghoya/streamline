@@ -14,7 +14,7 @@
 
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "utils/timer.h"
 #include "networkops.h"
 #include "App.h"

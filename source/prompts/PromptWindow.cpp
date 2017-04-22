@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include "PromptWindow.hpp"
 #include "menu/menus.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "themes/CTheme.h"
 
 PromptWindow::PromptWindow(const char *title, const char *msg)
@@ -45,14 +45,14 @@ PromptWindow::PromptWindow(const char *title, const char *msg)
 	trigB->SetButtonOnlyTrigger(-1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B);
 
 	dialogBoxImg = new GuiImage(dialogBox);
-	if(Settings.wsprompt)
-		dialogBoxImg->SetWidescreen(Settings.widescreen);
+	if(App.Settings.wsprompt)
+		dialogBoxImg->SetWidescreen(App.Settings.widescreen);
 	Append(dialogBoxImg);
 
 	titleTxt = new GuiText(title, 26, thColor("r=0 g=0 b=0 a=255 - prompt windows text color"));
 	titleTxt->SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	titleTxt->SetPosition(0, 55);
-	if(Settings.wsprompt && Settings.widescreen)
+	if(App.Settings.wsprompt && App.Settings.widescreen)
 		titleTxt->SetMaxWidth(width-140, DOTTED);
 	else
 		titleTxt->SetMaxWidth(width-40, DOTTED);
@@ -61,7 +61,7 @@ PromptWindow::PromptWindow(const char *title, const char *msg)
 	msgTxt = new GuiText(msg, 22, thColor("r=0 g=0 b=0 a=255 - prompt windows text color"));
 	msgTxt->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	msgTxt->SetPosition(0, -40);
-	if(Settings.wsprompt && Settings.widescreen)
+	if(App.Settings.wsprompt && App.Settings.widescreen)
 		msgTxt->SetMaxWidth(width-140, WRAP);
 	else
 		msgTxt->SetMaxWidth(width-40, WRAP);
@@ -107,7 +107,7 @@ PromptWindow::~PromptWindow()
 
 void PromptWindow::PositionButtons()
 {
-	if (Settings.wsprompt && Settings.widescreen)
+	if (App.Settings.wsprompt && App.Settings.widescreen)
 	{
 		switch(Button.size())
 		{
@@ -193,10 +193,10 @@ void PromptWindow::AddButton(const char *text)
 
 	ButtonTxt[size] = new GuiText(text, 20, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	ButtonImg[size] = new GuiImage(btnOutline);
-	if (Settings.wsprompt)
+	if (App.Settings.wsprompt)
 	{
-		ButtonTxt[size]->SetWidescreen(Settings.widescreen);
-		ButtonImg[size]->SetWidescreen(Settings.widescreen);
+		ButtonTxt[size]->SetWidescreen(App.Settings.widescreen);
+		ButtonImg[size]->SetWidescreen(App.Settings.widescreen);
 	}
 
 	Button[size] = new GuiButton(ButtonImg[size], ButtonImg[size], 0, 3, 0, 0, trigA, btnSoundOver, btnSoundClick2, 1);

@@ -119,10 +119,10 @@ int DiscBrowse(const char * GameID, char * alternatedname, int alternatedname_si
 	GuiText cancelBtnTxt(tr( "Back" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	cancelBtnTxt.SetMaxWidth(btnOutline.GetWidth() - 30);
 	GuiImage cancelBtnImg(&btnOutline);
-	if (Settings.wsprompt == ON)
+	if (App.Settings.wsprompt == ON)
 	{
-		cancelBtnTxt.SetWidescreen(Settings.widescreen);
-		cancelBtnImg.SetWidescreen(Settings.widescreen);
+		cancelBtnTxt.SetWidescreen(App.Settings.widescreen);
+		cancelBtnImg.SetWidescreen(App.Settings.widescreen);
 	}
 	GuiButton cancelBtn(&cancelBtnImg, &cancelBtnImg, 2, 3, 180, 400, &trigA, btnSoundOver, btnSoundClick2, 1);
 	cancelBtn.SetScale(0.9);

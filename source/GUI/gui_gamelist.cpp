@@ -11,7 +11,7 @@
 
 #include <unistd.h>
 #include "gui_gamelist.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "App.h"
 #include "settings/newtitles.h"
 #include "settings/GameTitles.h"
@@ -225,7 +225,7 @@ void GuiGameList::UpdateListEntries()
 			gameTxtOver[i]->SetText(GameTitles.GetTitle(gameList[next]));
 			gameTxtOver[i]->SetPosition(24, 0);
 
-			if (Settings.marknewtitles)
+			if (App.Settings.marknewtitles)
 			{
 				bool isNew = NewTitles::Instance()->IsNew(gameList[next]->id);
 				if (isNew)

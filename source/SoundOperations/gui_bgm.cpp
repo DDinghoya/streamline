@@ -55,7 +55,7 @@ bool GuiBGM::LoadStandard()
 		currentPath = NULL;
 	}
 
-	strcpy(Settings.ogg_path, "");
+	strcpy(App.Settings.ogg_path, "");
 
 	bool ret = GuiSound::Load(Resources::GetFile("bg_music.ogg"), Resources::GetFileSize("bg_music.ogg"));
 
@@ -119,7 +119,7 @@ bool GuiBGM::ParsePath(const char * folderpath)
 
 	closedir(dir);
 
-	snprintf(Settings.ogg_path, sizeof(Settings.ogg_path), "%s", folderpath);
+	snprintf(App.Settings.ogg_path, sizeof(App.Settings.ogg_path), "%s", folderpath);
 
 	return true;
 }
@@ -155,9 +155,9 @@ bool GuiBGM::PlayNext()
 	currentPlaying++;
 	if (currentPlaying >= (int) PlayList.size()) currentPlaying = 0;
 
-	snprintf(Settings.ogg_path, sizeof(Settings.ogg_path), "%s%s", currentPath, PlayList.at(currentPlaying));
+	snprintf(App.Settings.ogg_path, sizeof(App.Settings.ogg_path), "%s%s", currentPath, PlayList.at(currentPlaying));
 
-	if (!GuiSound::Load(Settings.ogg_path)) return false;
+	if (!GuiSound::Load(App.Settings.ogg_path)) return false;
 
 	Play();
 
@@ -171,9 +171,9 @@ bool GuiBGM::PlayPrevious()
 	currentPlaying--;
 	if (currentPlaying < 0) currentPlaying = PlayList.size() - 1;
 
-	snprintf(Settings.ogg_path, sizeof(Settings.ogg_path), "%s%s", currentPath, PlayList.at(currentPlaying));
+	snprintf(App.Settings.ogg_path, sizeof(App.Settings.ogg_path), "%s%s", currentPath, PlayList.at(currentPlaying));
 
-	if (!GuiSound::Load(Settings.ogg_path)) return false;
+	if (!GuiSound::Load(App.Settings.ogg_path)) return false;
 
 	Play();
 
@@ -193,9 +193,9 @@ bool GuiBGM::PlayRandom()
 		currentPlaying = PlayList.size() - 1;
 	else if (currentPlaying >= (int) PlayList.size()) currentPlaying = 0;
 
-	snprintf(Settings.ogg_path, sizeof(Settings.ogg_path), "%s%s", currentPath, PlayList.at(currentPlaying));
+	snprintf(App.Settings.ogg_path, sizeof(App.Settings.ogg_path), "%s%s", currentPath, PlayList.at(currentPlaying));
 
-	if (!GuiSound::Load(Settings.ogg_path)) return false;
+	if (!GuiSound::Load(App.Settings.ogg_path)) return false;
 
 	Play();
 

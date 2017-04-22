@@ -49,7 +49,7 @@ int CheatMenu(const char * gameID)
 	createBtn.SetLabel(&createBtnTxt);
 
 	char txtfilename[55];
-	snprintf(txtfilename, sizeof(txtfilename), "%s%s.txt", Settings.TxtCheatcodespath, gameID);
+	snprintf(txtfilename, sizeof(txtfilename), "%s%s.txt", App.Settings.TxtCheatcodespath, gameID);
 
 	GCTCheats gctCheats;
 	int check = gctCheats.openTxtfile(txtfilename);
@@ -64,7 +64,7 @@ int CheatMenu(const char * gameID)
 			if(blankchoice)
 			{
 				char gctPath[200];
-				snprintf(gctPath, sizeof(gctPath), "%s%.6s.TXT", Settings.TxtCheatcodespath, gameID);
+				snprintf(gctPath, sizeof(gctPath), "%s%.6s.TXT", App.Settings.TxtCheatcodespath, gameID);
 				RemoveFile(gctPath);
 			}
 			break;
@@ -92,7 +92,7 @@ int CheatMenu(const char * gameID)
 			titleTxt.SetPosition(12, 40);
 
 			char gctPath[200];
-			snprintf(gctPath, sizeof(gctPath), "%s%.6s.gct", Settings.Cheatcodespath, gameID);
+			snprintf(gctPath, sizeof(gctPath), "%s%.6s.gct", App.Settings.Cheatcodespath, gameID);
 			u8 *gctBuf = NULL;
 			u32 gctSize = 0;
 			LoadFileToMem(gctPath, &gctBuf, &gctSize);
@@ -161,7 +161,7 @@ int CheatMenu(const char * gameID)
 						}
 						else
 						{
-							CreateSubfolder(Settings.Cheatcodespath);
+							CreateSubfolder(App.Settings.Cheatcodespath);
 							gctCheats.createGCT(vActiveCheats, gctPath);
 							WindowPrompt(tr( "GCT File created" ), NULL, tr( "OK" ));
 						}

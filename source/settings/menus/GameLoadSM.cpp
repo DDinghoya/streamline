@@ -23,7 +23,7 @@
  ***************************************************************************/
 #include <unistd.h>
 #include <gccore.h>
-#include "settings/CSettings.h"
+#include "App.h"
 #include "settings/CGameStatistics.h"
 #include "themes/CTheme.h"
 #include "prompts/PromptWindows.h"
@@ -144,10 +144,10 @@ GameLoadSM::GameLoadSM(struct discHdr *hdr)
 	saveBtnTxt = new GuiText(tr( "Save" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	saveBtnTxt->SetMaxWidth(btnOutline->GetWidth() - 30);
 	saveBtnImg = new GuiImage (btnOutline);
-	if (Settings.wsprompt == ON)
+	if (App.Settings.wsprompt == ON)
 	{
-		saveBtnTxt->SetWidescreen(Settings.widescreen);
-		saveBtnImg->SetWidescreen(Settings.widescreen);
+		saveBtnTxt->SetWidescreen(App.Settings.widescreen);
+		saveBtnImg->SetWidescreen(App.Settings.widescreen);
 	}
 	saveBtn = new GuiButton(saveBtnImg, saveBtnImg, 2, 3, 180, 400, trigA, btnSoundOver, btnSoundClick2, 1);
 	saveBtn->SetLabel(saveBtnTxt);
@@ -301,18 +301,18 @@ void GameLoadSM::SetOptionValues()
 		Options->SetValue(Idx++, "%i", GameConfig.ios);
 
 	//! Settings: Return To
-	if(Header->type == TYPE_GAME_EMUNANDCHAN && EMUNAND_NEEK == (GameConfig.NandEmuMode == INHERIT ? Settings.NandEmuChanMode : GameConfig.NandEmuMode))
+	if(Header->type == TYPE_GAME_EMUNANDCHAN && EMUNAND_NEEK == (GameConfig.NandEmuMode == INHERIT ? App.Settings.NandEmuChanMode : GameConfig.NandEmuMode))
 	{
 		Options->SetValue(Idx++, "%s", tr( OnOffText[GameConfig.returnTo] ));
 	}
 	else if(GameConfig.returnTo)
 	{
 		const char* TitleName = NULL;
-		u64 tid = NandTitles.FindU32(Settings.returnTo);
+		u64 tid = NandTitles.FindU32(App.Settings.returnTo);
 		if (tid > 0)
 			TitleName = NandTitles.NameOf(tid);
-		Options->SetValue(Idx++, "%s", TitleName ? TitleName : strlen(Settings.returnTo) > 0 ?
-										Settings.returnTo : tr( OnOffText[0] ));
+		Options->SetValue(Idx++, "%s", TitleName ? TitleName : strlen(App.Settings.returnTo) > 0 ?
+										App.Settings.returnTo : tr( OnOffText[0] ));
 	}
 	else
 	{
@@ -537,10 +537,10 @@ int GameLoadSM::GetMenuInternal()
 			bool NandEmu_compatible = false;
 			if(Header->type == TYPE_GAME_EMUNANDCHAN)
 			{
-				NandEmu_compatible = IosLoader::is_NandEmu_compatible(NULL, GameConfig.ios == INHERIT ? Settings.cios : GameConfig.ios);
+				NandEmu_compatible = IosLoader::is_NandEmu_compatible(NULL, GameConfig.ios == INHERIT ? App.Settings.cios : GameConfig.ios);
 			}
 
-			if(!IosLoader::IsD2X(GameConfig.ios == INHERIT ? Settings.cios : GameConfig.ios) && !NandEmu_compatible)
+			if(!IosLoader::IsD2X(GameConfig.ios == INHERIT ? App.Settings.cios : GameConfig.ios) && !NandEmu_compatible)
 				WindowPrompt(tr("Error:"), tr("Nand Emulation is only available on D2X cIOS!"), tr("OK"));
 			else
 			{

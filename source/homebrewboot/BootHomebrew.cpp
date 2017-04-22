@@ -9,7 +9,7 @@
 #include <vector>
 #include <string>
 #include "Controls/DeviceHandler.hpp"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "system/IosLoader.h"
 #include "lstub.h"
 #include "sys.h"
@@ -110,8 +110,8 @@ static int RunAppbooter()
 
 	// Reload IOS 58 if available, else reload Entry IOS
 	s32 ret = IosLoader::ReloadIosSafe(58);
-	if(ret < 0 && Settings.EntryIOS != IOS_GetVersion())
-		IosLoader::ReloadIosKeepingRights(Settings.EntryIOS);
+	if(ret < 0 && App.Settings.EntryIOS != IOS_GetVersion())
+		IosLoader::ReloadIosKeepingRights(App.Settings.EntryIOS);
 	gprintf("Reloaded to IOS%d\n", IOS_GetVersion());
 
 	struct __argv args;

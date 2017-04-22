@@ -20,7 +20,7 @@
 #include "GCGames.h"
 #include "FileOperations/fileops.h"
 #include "settings/GameTitles.h"
-#include "settings/CSettings.h"
+#include "App.h"
 #include "prompts/GCDeleteMenu.h"
 #include "prompts/PromptWindows.h"
 #include "prompts/ProgressWindow.h"
@@ -172,7 +172,7 @@ void GCGames::LoadGameList(const string &path, vector<struct discHdr> &headerLis
 		const char *title = GameTitles.GetTitle(id);
 
 		// if no titles.txt get title from dir or file name
-		if (strlen(title) == 0 && !Settings.ForceDiscTitles && strlen(fname_title) > 0)
+		if (strlen(title) == 0 && !App.Settings.ForceDiscTitles && strlen(fname_title) > 0)
 			title = fname_title;
 
 		if (*id != 0 && strlen(title) > 0)
@@ -222,16 +222,16 @@ u32 GCGames::LoadAllGames(void)
 	sdGCList.clear();
 	sdGCPathList.clear();
 
-	if(strcmp(Settings.GameCubePath, Settings.GameCubeSDPath) == 0 || Settings.GameCubeSource != GC_SOURCE_SD)
-		LoadGameList(Settings.GameCubePath, HeaderList, PathList);
+	if(strcmp(App.Settings.GameCubePath, App.Settings.GameCubeSDPath) == 0 || App.Settings.GameCubeSource != GC_SOURCE_SD)
+		LoadGameList(App.Settings.GameCubePath, HeaderList, PathList);
 
-	if(strcmp(Settings.GameCubePath, Settings.GameCubeSDPath) != 0 && (Settings.GameCubeSource != GC_SOURCE_MAIN))
+	if(strcmp(App.Settings.GameCubePath, App.Settings.GameCubeSDPath) != 0 && (App.Settings.GameCubeSource != GC_SOURCE_MAIN))
 	{
-		LoadGameList(Settings.GameCubeSDPath, sdGCList, sdGCPathList);
+		LoadGameList(App.Settings.GameCubeSDPath, sdGCList, sdGCPathList);
 
 		for(u32 i = 0; i < sdGCList.size(); ++i)
 		{
-			if(Settings.GameCubeSource != GC_SOURCE_SD)
+			if(App.Settings.GameCubeSource != GC_SOURCE_SD)
 			{
 				u32 n;
 				for(n = 0; n < HeaderList.size(); ++n)
@@ -239,8 +239,8 @@ u32 GCGames::LoadAllGames(void)
 					//! Display only one game if it is present on both SD and USB.
 					if(memcmp(HeaderList[n].id, sdGCList[i].id, 6) == 0)
 					{
-						if((Settings.GameCubeSource == GC_SOURCE_MAIN_SD) ||
-						   (Settings.GameCubeSource == GC_SOURCE_AUTO && (IosLoader::GetMIOSInfo() == DIOS_MIOS || IosLoader::GetMIOSInfo() == QUADFORCE_USB))) // DIOS MIOS - Show the game on USB in priority
+						if((App.Settings.GameCubeSource == GC_SOURCE_MAIN_SD) ||
+						   (App.Settings.GameCubeSource == GC_SOURCE_AUTO && (IosLoader::GetMIOSInfo() == DIOS_MIOS || IosLoader::GetMIOSInfo() == QUADFORCE_USB))) // DIOS MIOS - Show the game on USB in priority
 						{
 							break;
 						}
@@ -278,7 +278,7 @@ bool GCGames::RemoveGame(const char *gameID)
 
 	RemoveSDGame(gameID);
 
-	if(strcmp(Settings.GameCubePath, Settings.GameCubeSDPath) == 0)
+	if(strcmp(App.Settings.GameCubePath, App.Settings.GameCubeSDPath) == 0)
 		return true;
 
 	struct discHdr *header = NULL;
@@ -298,12 +298,12 @@ bool GCGames::RemoveGame(const char *gameID)
 
 	// the main path is the SD path as it is prefered, now delete USB
 	char cIsoPath[256];
-	snprintf(cIsoPath, sizeof(cIsoPath), "%s", path + strlen(Settings.GameCubeSDPath));
+	snprintf(cIsoPath, sizeof(cIsoPath), "%s", path + strlen(App.Settings.GameCubeSDPath));
 
 	if(header->type == TYPE_GAME_GC_IMG)
 	{
 		// Remove game iso
-		snprintf(filepath, sizeof(filepath), "%s%s", Settings.GameCubePath, cIsoPath);
+		snprintf(filepath, sizeof(filepath), "%s%s", App.Settings.GameCubePath, cIsoPath);
 		if(!RemoveFile(filepath))
 			result = -1;
 
@@ -316,7 +316,7 @@ bool GCGames::RemoveGame(const char *gameID)
 	else if(header->type == TYPE_GAME_GC_EXTRACTED)
 	{
 		//! remove extracted gamecube game
-		snprintf(filepath, sizeof(filepath), "%s%s", Settings.GameCubePath, cIsoPath);
+		snprintf(filepath, sizeof(filepath), "%s%s", App.Settings.GameCubePath, cIsoPath);
 		if(!RemoveDirectory(path))
 			result = -1;
 	}
@@ -392,7 +392,7 @@ bool GCGames::IsInstalled(const char *gameID, u8 disc_number) const
 	{
 		if(memcmp(HeaderList[n].id, gameID, 6) == 0)
 		{
-			if(HeaderList[n].type == TYPE_GAME_GC_EXTRACTED || Settings.GCInstallCompressed)
+			if(HeaderList[n].type == TYPE_GAME_GC_EXTRACTED || App.Settings.GCInstallCompressed)
 				return true; // Multi-disc games in extracted form are currently unsupported by DML, no need to check further.
 			
 			if(HeaderList[n].disc_no == disc_number) // Disc number already in headerList. If Disc2 is loaded in headerList, then Disc1 is not installed yet
@@ -418,7 +418,7 @@ bool GCGames::IsInstalled(const char *gameID, u8 disc_number) const
 bool GCGames::CopyUSB2SD(const struct discHdr *header)
 {
 	const char *path = GetPath((char*)header->id);
-	int oldGameCubeSource = Settings.GameCubeSource;
+	int oldGameCubeSource = App.Settings.GameCubeSource;
 	if(*path == 0)
 		return false;
 
@@ -431,7 +431,7 @@ bool GCGames::CopyUSB2SD(const struct discHdr *header)
 	if(choice == 2)
 	{
 		// Load Games from SD card only
-		Settings.GameCubeSource = GC_SOURCE_SD;
+		App.Settings.GameCubeSource = GC_SOURCE_SD;
 		GCGames::Instance()->LoadAllGames();
 
 		GCDeleteMenu gcDeleteMenu;
@@ -449,7 +449,7 @@ bool GCGames::CopyUSB2SD(const struct discHdr *header)
 		mainWindow->SetState(STATE_DEFAULT);
 
 		// Reload user's gameCubeSource setting
-		Settings.GameCubeSource = oldGameCubeSource;
+		App.Settings.GameCubeSource = oldGameCubeSource;
 		GCGames::Instance()->LoadAllGames();
 
 		if(!WindowPrompt(tr("Do you want to copy now?"), cpTitle, tr("Yes"), tr("Cancel")))
@@ -457,7 +457,7 @@ bool GCGames::CopyUSB2SD(const struct discHdr *header)
 	}
 
 	struct statvfs sd_vfs;
-	if(statvfs(Settings.GameCubeSDPath, &sd_vfs) != 0)
+	if(statvfs(App.Settings.GameCubeSDPath, &sd_vfs) != 0)
 	{
 		WindowPrompt(tr("Error:"), tr("SD Card could not be accessed."), tr("OK"));
 		return false;
@@ -495,12 +495,12 @@ bool GCGames::CopyUSB2SD(const struct discHdr *header)
 		mainWindow->Remove(&gcDeleteMenu);
 		mainWindow->SetState(STATE_DEFAULT);
 
-		statvfs(Settings.GameCubeSDPath, &sd_vfs);
+		statvfs(App.Settings.GameCubeSDPath, &sd_vfs);
 	}
 
-	const char *cIsoPath = path + strlen(Settings.GameCubePath);
+	const char *cIsoPath = path + strlen(App.Settings.GameCubePath);
 	char destPath[512];
-	snprintf(destPath, sizeof(destPath), "%s%s", Settings.GameCubeSDPath, cIsoPath);
+	snprintf(destPath, sizeof(destPath), "%s%s", App.Settings.GameCubeSDPath, cIsoPath);
 
 	int res = -1;
 
@@ -514,7 +514,7 @@ bool GCGames::CopyUSB2SD(const struct discHdr *header)
 
 		CreateSubfolder(destPath);
 
-		snprintf(destPath, sizeof(destPath), "%s%s", Settings.GameCubeSDPath, cIsoPath);
+		snprintf(destPath, sizeof(destPath), "%s%s", App.Settings.GameCubeSDPath, cIsoPath);
 
 		res = CopyFile(path, destPath);
 	}
