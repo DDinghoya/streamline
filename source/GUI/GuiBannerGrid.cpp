@@ -17,7 +17,6 @@
 #include "GuiBannerGrid.h"
 #include "themes/CTheme.h"
 #include "App.h"
-#include "settings/GameTitles.h"
 #include "settings/newtitles.h"
 #include "SystemMenu/SystemMenuResources.h"
 #include "usbloader/GameList.h"
@@ -217,7 +216,7 @@ void GuiBannerGrid::UpdateTooltips(void)
 		{
 			if(gridBtn[i]->GetState() == STATE_DISABLED)
 				gridBtn[i]->SetState(STATE_DEFAULT);
-			gridTT[i]->SetText(GameTitles.GetTitle(gameList[chIdx]));
+			gridTT[i]->SetText(App.Library.GameTitles.GetTitle(gameList[chIdx]));
 			gridBtn[i]->SetToolTip(gridTT[i], 0, 30, ALIGN_CENTER, ALIGN_BOTTOM);
 
 			if(gridTT[i]->GetLeft() < 20)

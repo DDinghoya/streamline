@@ -9,8 +9,7 @@
 #include "wpad.h"
 #include "usbloader/wbfs.h"
 #include "usbloader/GameList.h"
-#include "settings/GameTitles.h"
-#include "xml/GameTDB.hpp"
+#include "Data/GameTDB.hpp"
 #include "utils/ShowError.h"
 
 static int FindGamePartition()
@@ -168,7 +167,7 @@ int MountGamePartition(bool ShowGUI)
 	//! gameList is loaded in GameTitles.LoadTitlesFromGameTDB after cache file load
 	//! for speed up purpose. If titles override active, load game list here.
 	if(App.Settings.titlesOverride)
-		GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+		App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 	else
 		gameList.LoadUnfiltered();
 

@@ -130,8 +130,8 @@ int OnScreenNumpad(char * var, u32 maxlen)
 	numpad.Append(&cancelBtn);
 
 	HaltGui();
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&numpad);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&numpad);
 	ResumeGui();
 
 	while (save == -1)
@@ -157,8 +157,8 @@ int OnScreenNumpad(char * var, u32 maxlen)
 	}
 
 	HaltGui();
-	mainWindow->Remove(&numpad);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&numpad);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	ResumeGui();
 	gprintf("\t%s", (save == 1 ? "saved" : "discarded"));
 	return save;
@@ -210,8 +210,8 @@ int OnScreenKeyboard(char * var, u32 maxlen, int min, bool hide)
 	keyboard.Append(&cancelBtn);
 
 	HaltGui();
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&keyboard);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&keyboard);
 	ResumeGui();
 
 	while (save == -1)
@@ -230,8 +230,8 @@ int OnScreenKeyboard(char * var, u32 maxlen, int min, bool hide)
 	}
 
 	HaltGui();
-	mainWindow->Remove(&keyboard);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&keyboard);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	ResumeGui();
 	gprintf("\t%s", (save ? "saved" : "discarded"));
 	return save;
@@ -540,8 +540,8 @@ void WindowCredits()
 	creditsWindow.SetEffect(EFFECT_FADE, 30);
 
 	HaltGui();
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&creditsWindow);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&creditsWindow);
 	ResumeGui();
 
 	while(backBtn.GetState() != STATE_CLICKED)
@@ -567,8 +567,8 @@ void WindowCredits()
 	while (creditsWindow.GetEffect() > 0)
 		usleep(100);
 	HaltGui();
-	mainWindow->Remove(&creditsWindow);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&creditsWindow);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	for (i = 0; i < txt.size(); i++)
 	{
 		delete txt[i];
@@ -607,8 +607,8 @@ int WindowScreensaver()
 	screensaverWindow.Append(&GXlogoImg);
 
 	HaltGui();
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&screensaverWindow);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&screensaverWindow);
 	ResumeGui();
 
 	while (!exit)
@@ -628,8 +628,8 @@ int WindowScreensaver()
 	}
 
 	HaltGui();
-	mainWindow->Remove(&screensaverWindow);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&screensaverWindow);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	ResumeGui();
 	return 1;
 }
@@ -663,8 +663,8 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	if(btn4Label)
 		Window->AddButton(btn4Label);
 
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(Window);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(Window);
 	ResumeGui();
 
 	while (choice == -1)
@@ -687,7 +687,7 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 
 	delete Window;
 
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	gprintf(" %i\n", choice);
 
 	return choice;
@@ -883,8 +883,8 @@ int WindowExitPrompt()
 	promptWindow.Append(batteryBtn[3]);
 
 	HaltGui();
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&promptWindow);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&promptWindow);
 	ResumeGui();
 
 	while (choice == -1)
@@ -964,7 +964,7 @@ int WindowExitPrompt()
 					RebootApp();
 			}
 			HaltGui();
-			mainWindow->SetState(STATE_DISABLED);
+			App.MainWindow->SetState(STATE_DISABLED);
 			promptWindow.SetState(STATE_DEFAULT);
 			ResumeGui();
 			btn2.ResetState();
@@ -988,7 +988,7 @@ int WindowExitPrompt()
 					Sys_ShutdownToIdle();
 			}
 			HaltGui();
-			mainWindow->SetState(STATE_DISABLED);
+			App.MainWindow->SetState(STATE_DISABLED);
 			promptWindow.SetState(STATE_DEFAULT);
 			ResumeGui();
 			btn3.ResetState();
@@ -1021,8 +1021,8 @@ int WindowExitPrompt()
 	HaltGui();
 	homein->Stop();
 	delete homein;
-	mainWindow->Remove(&promptWindow);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&promptWindow);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	while (homeout->IsPlaying() > 0)
 		usleep(100);
 	homeout->Stop();
@@ -1139,8 +1139,8 @@ int DiscWait(const char *title, const char *msg, const char *btn1Label, const ch
 
 	promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
 	HaltGui();
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&promptWindow);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&promptWindow);
 	ResumeGui();
 
 	if (IsDeviceWait)
@@ -1179,8 +1179,8 @@ int DiscWait(const char *title, const char *msg, const char *btn1Label, const ch
 	while (promptWindow.GetEffect() > 0)
 		usleep(100);
 	HaltGui();
-	mainWindow->Remove(&promptWindow);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&promptWindow);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	ResumeGui();
 	return ret;
 }
@@ -1225,8 +1225,8 @@ int FormatingPartition(const char *title, int part_num)
 
 	promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
 	HaltGui();
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&promptWindow);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&promptWindow);
 	ResumeGui();
 
 	VIDEO_WaitVSync();
@@ -1256,8 +1256,8 @@ int FormatingPartition(const char *title, int part_num)
 	while (promptWindow.GetEffect() > 0)
 		usleep(100);
 	HaltGui();
-	mainWindow->Remove(&promptWindow);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&promptWindow);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	ResumeGui();
 	return ret;
 }
@@ -1321,8 +1321,8 @@ bool NetworkInitPrompt()
 
 	promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
 	HaltGui();
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&promptWindow);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&promptWindow);
 	ResumeGui();
 
 	int iTimeout = 100 * 200;   // 20s
@@ -1354,8 +1354,8 @@ bool NetworkInitPrompt()
 		usleep(1000);
 
 	HaltGui();
-	mainWindow->Remove(&promptWindow);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&promptWindow);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	ResumeGui();
 
 	if (IsNetworkInit())
@@ -1423,8 +1423,8 @@ int CodeDownload(const char *id)
 	promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
 
 	HaltGui();
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&promptWindow);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&promptWindow);
 	ResumeGui();
 
 	while (!IsNetworkInit())
@@ -1529,8 +1529,8 @@ int CodeDownload(const char *id)
 		usleep(100);
 
 	HaltGui();
-	mainWindow->Remove(&promptWindow);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&promptWindow);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	ResumeGui();
 
 	return ret;

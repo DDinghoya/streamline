@@ -29,10 +29,6 @@
 #include "GameCube/GCGames.h"
 #include "settings/newtitles.h"
 #include "App.h"
-#include "settings/CGameSettings.h"
-#include "settings/CGameStatistics.h"
-#include "settings/GameTitles.h"
-#include "settings/CGameCategories.hpp"
 #include "FreeTypeGX.h"
 #include "GameList.h"
 #include "memory/memory.h"
@@ -197,7 +193,7 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 		/* Filters */
 		if (App.Settings.GameSort & SORT_FAVORITE)
 		{
-			GameStatus * GameStats = GameStatistics.GetGameStatus(header->id);
+			GameStatus * GameStats = App.Library.GameStatistics.GetGameStatus(header->id);
 			if (App.Settings.marknewtitles)
 			{
 				bool isNew = NewTitles::Instance()->IsNew(header->id);
@@ -213,7 +209,7 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 		if (strncasecmp((char*) header->id, "__CFG_", 6) == 0)
 			continue;
 
-		GameCFG * GameConfig = GameSettings.GetGameCFG(header);
+		GameCFG * GameConfig = App.Library.GameSettings.GetGameCFG(header);
 
 		/* Rating based parental control method */
 		if (App.Settings.parentalcontrol != PARENTAL_LVL_ADULT && !App.Settings.godmode)
@@ -222,7 +218,7 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 				continue;
 
 			// Check game rating in GameTDB, since the default Wii parental control setting is enabled
-			int rating = GameTitles.GetParentalRating((char *) header->id);
+			int rating = App.Library.GameTitles.GetParentalRating((char *) header->id);
 			if (rating > App.Settings.parentalcontrol)
 				continue;
 		}
@@ -257,7 +253,7 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 			// Remove TitleID if it contains a forbidden categories
 			for(n = 0; n < App.Settings.ForbiddenCategories.size(); ++n)
 			{
-				if(GameCategories.isInCategory((char *) header->id, App.Settings.ForbiddenCategories[n]))
+				if(App.Library.GameCategories.isInCategory((char *) header->id, App.Settings.ForbiddenCategories[n]))
 					break;
 			}
 			if(n < App.Settings.ForbiddenCategories.size())
@@ -266,7 +262,7 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 			// Remove TitleID is it doesn't contain a required categories
 			for(n = 0; n < App.Settings.RequiredCategories.size(); ++n)
 			{
-				if(!GameCategories.isInCategory((char *) header->id, App.Settings.RequiredCategories[n]))
+				if(!App.Library.GameCategories.isInCategory((char *) header->id, App.Settings.RequiredCategories[n]))
 					break;
 			}
 			if(n < App.Settings.RequiredCategories.size())
@@ -277,7 +273,7 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 			{
 				for(n = 0; n < App.Settings.EnabledCategories.size(); ++n)
 				{
-					if(GameCategories.isInCategory((char *) header->id, App.Settings.EnabledCategories[n]))
+					if(App.Library.GameCategories.isInCategory((char *) header->id, App.Settings.EnabledCategories[n]))
 						break;
 				}
 				if(n == App.Settings.EnabledCategories.size())
@@ -290,7 +286,7 @@ void GameList::InternalFilterList(std::vector<struct discHdr> &FullList)
 			// Remove TitleID if it contains a forbidden categories
 			for(n = 0; n < App.Settings.ForbiddenCategories.size(); ++n)
 			{
-				if(GameCategories.isInCategory((char *) header->id, App.Settings.ForbiddenCategories[n]))
+				if(App.Library.GameCategories.isInCategory((char *) header->id, App.Settings.ForbiddenCategories[n]))
 					if(App.Settings.ForbiddenCategories[n] >0)
 						break;
 			}
@@ -415,13 +411,13 @@ void GameList::SortList()
 
 bool GameList::NameSortCallback(const struct discHdr *a, const struct discHdr *b)
 {
-	return (strcasecmp(GameTitles.GetTitle((struct discHdr *) a), GameTitles.GetTitle((struct discHdr *) b)) < 0);
+	return (strcasecmp(App.Library.GameTitles.GetTitle((struct discHdr *) a), App.Library.GameTitles.GetTitle((struct discHdr *) b)) < 0);
 }
 
 bool GameList::PlaycountSortCallback(const struct discHdr *a, const struct discHdr *b)
 {
-	int count1 = GameStatistics.GetPlayCount(a->id);
-	int count2 = GameStatistics.GetPlayCount(b->id);
+	int count1 = App.Library.GameStatistics.GetPlayCount(a->id);
+	int count2 = App.Library.GameStatistics.GetPlayCount(b->id);
 
 	if (count1 == count2) return NameSortCallback(a, b);
 
@@ -430,8 +426,8 @@ bool GameList::PlaycountSortCallback(const struct discHdr *a, const struct discH
 
 bool GameList::RankingSortCallback(const struct discHdr *a, const struct discHdr *b)
 {
-	int fav1 = GameStatistics.GetFavoriteRank(a->id);
-	int fav2 = GameStatistics.GetFavoriteRank(b->id);
+	int fav1 = App.Library.GameStatistics.GetFavoriteRank(a->id);
+	int fav2 = App.Library.GameStatistics.GetFavoriteRank(b->id);
 
 	if (fav1 == fav2) return NameSortCallback(a, b);
 
@@ -440,8 +436,8 @@ bool GameList::RankingSortCallback(const struct discHdr *a, const struct discHdr
 
 bool GameList::PlayersSortCallback(const struct discHdr *a, const struct discHdr *b)
 {
-	int count1 = GameTitles.GetPlayersCount((const char *) a->id);
-	int count2 = GameTitles.GetPlayersCount((const char *) b->id);
+	int count1 = App.Library.GameTitles.GetPlayersCount((const char *) a->id);
+	int count2 = App.Library.GameTitles.GetPlayersCount((const char *) b->id);
 
 	if (count1 == count2) return NameSortCallback(a, b);
 

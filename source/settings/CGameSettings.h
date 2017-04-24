@@ -1,5 +1,4 @@
-#ifndef _GAME_SETTINGS_H_
-#define _GAME_SETTINGS_H_
+#pragma once
 
 #include <string>
 #include <stdio.h>
@@ -135,47 +134,43 @@ typedef struct _GameCFG
 
 class CGameSettings
 {
-	public:
-		//!Constructor
-		CGameSettings();
-		//!Destructor
-		~CGameSettings();
-		//!Load
-		bool Load(const char * path);
-		//!Save
-		bool Save();
-		//!AddGame
-		bool AddGame(const GameCFG & NewGame);
-		//!Reset
-		bool RemoveAll();
-		//!Overload Reset for one Game
-		bool Remove(const char * id);
-		bool Remove(const u8 * id) { return Remove((const char *) id); }
-		bool Remove(const struct discHdr * game) { if(!game) return false; else return Remove(game->id); }
-		//!Get GameCFG
-		GameCFG * GetGameCFG(const char * id);
-		//!Overload
-		GameCFG * GetGameCFG(const u8 * id) { return GetGameCFG((const char *) id); }
-		//!Overload
-		GameCFG * GetGameCFG(const struct discHdr * game) { if(!game) return NULL; else return GetGameCFG(game->id); }
-		//!Quick settings to PEGI conversion
-		static int GetPartenalPEGI(int parentalsetting);
-		//!Set the default configuration block
-		void SetDefault(GameCFG &game);
-	protected:
-		bool ReadGameID(const char * src, char * GameID, int size);
-		bool SetSetting(GameCFG & game, const char *name, const char *value);
-		
-		//!Find the config file in the default paths
-		bool FindConfig();
+public:
+	//!Constructor
+	CGameSettings();
+	//!Destructor
+	~CGameSettings();
+	//!Load
+	bool Load(const char * path);
+	//!Save
+	bool Save();
+	//!AddGame
+	bool AddGame(const GameCFG & NewGame);
+	//!Reset
+	bool RemoveAll();
+	//!Overload Reset for one Game
+	bool Remove(const char * id);
+	bool Remove(const u8 * id) { return Remove((const char *)id); }
+	bool Remove(const struct discHdr * game) { if (!game) return false; else return Remove(game->id); }
+	//!Get GameCFG
+	GameCFG * GetGameCFG(const char * id);
+	//!Overload
+	GameCFG * GetGameCFG(const u8 * id) { return GetGameCFG((const char *)id); }
+	//!Overload
+	GameCFG * GetGameCFG(const struct discHdr * game) { if (!game) return NULL; else return GetGameCFG(game->id); }
+	//!Quick settings to PEGI conversion
+	static int GetPartenalPEGI(int parentalsetting);
+	//!Set the default configuration block
+	void SetDefault(GameCFG &game);
+protected:
+	bool ReadGameID(const char * src, char * GameID, int size);
+	bool SetSetting(GameCFG & game, const char *name, const char *value);
 
-		void ParseLine(char *line);
-		void TrimLine(std::string &dest, const char *src, char stopChar);
-		std::string ConfigPath;
-		std::vector<GameCFG> GameList;
-		GameCFG DefaultConfig;
+	//!Find the config file in the default paths
+	bool FindConfig();
+
+	void ParseLine(char *line);
+	void TrimLine(std::string &dest, const char *src, char stopChar);
+	std::string ConfigPath;
+	std::vector<GameCFG> GameList;
+	GameCFG DefaultConfig;
 };
-
-extern CGameSettings GameSettings;
-
-#endif

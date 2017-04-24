@@ -53,7 +53,7 @@ GlobalSettings::~GlobalSettings()
 int GlobalSettings::Execute()
 {
 	GlobalSettings * Menu = new GlobalSettings();
-	mainWindow->Append(Menu);
+	App.MainWindow->Append(Menu);
 
 	Menu->ShowMenu();
 

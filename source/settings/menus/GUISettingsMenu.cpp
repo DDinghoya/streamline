@@ -28,8 +28,6 @@
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
 #include "settings/SettingsPrompts.h"
-#include "settings/GameTitles.h"
-#include "settings/CGameCategories.hpp"
 #include "SystemMenu/SystemMenuResources.h"
 #include "system/IosLoader.h"
 #include "usbloader/wbfs.h"
@@ -280,8 +278,8 @@ int GuiSettingsMenu::GetMenuInternal()
 		if (returnhere == 2)
 		{
 			//! Language changed. Reload game titles with new lang code.
-			GameTitles.SetDefault();
-			GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+			App.Library.GameTitles.SetDefault();
+			App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 			return MENU_SETTINGS;
 		}
 

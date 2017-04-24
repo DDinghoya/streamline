@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
+
 #include <unistd.h>
 #include "BannerWindow.hpp"
 #include "GUI/GuiBannerGrid.h"
@@ -21,7 +22,6 @@
 #include "banner/CustomBanner.h"
 #include "banner/OpeningBNR.hpp"
 #include "App.h"
-#include "settings/CGameStatistics.h"
 #include "settings/menus/GameSettingsMenu.hpp"
 #include "SystemMenu/SystemMenuResources.h"
 #include "prompts/GameWindow.hpp"
@@ -30,7 +30,7 @@
 #include "menu/menus.h"
 #include "utils/tools.h"
 
-// Load only once
+ // Load only once
 BannerFrame BannerWindow::bannerFrame;
 
 BannerWindow::BannerWindow(GameBrowseMenu *m, struct discHdr *header)
@@ -353,7 +353,7 @@ void BannerWindow::ChangeGame(bool playsound)
 		gameSound = NULL;
 	}
 
-	playcntTxt->SetTextf("%s: %i", tr( "Play Count" ), GameStatistics.GetPlayCount(header));
+	playcntTxt->SetTextf("%s: %i", tr( "Play Count" ), App.Library.GameStatistics.GetPlayCount(header));
 
 	HaltGui();
 
@@ -389,7 +389,7 @@ void BannerWindow::ChangeGame(bool playsound)
 		}
 	}
 
-	int favoritevar = GameStatistics.GetFavoriteRank(header->id);
+	int favoritevar = App.Library.GameStatistics.GetFavoriteRank(header->id);
 	for(int i = 0; i < FAVORITE_STARS; ++i)
 		FavoriteBtnImg[i]->SetImage(favoritevar >= i+1 ? imgFavorite : imgNotFavorite);
 
@@ -451,7 +451,7 @@ int BannerWindow::MainLoop()
 		while(AnimStep < MaxAnimSteps)
 			usleep(1000);
 
-		mainWindow->SetState(STATE_DEFAULT);
+		App.MainWindow->SetState(STATE_DEFAULT);
 		returnVal = 0;
 	}
 
@@ -545,10 +545,10 @@ int BannerWindow::MainLoop()
 		{
 			// This button can only be clicked when this is not a dvd header
 			struct discHdr * header = gameList[gameSelected];
-			int FavoriteRank = (i+1 == GameStatistics.GetFavoriteRank(header->id)) ? 0 : i+1; // Press the current rank to reset the rank
+			int FavoriteRank = (i+1 == App.Library.GameStatistics.GetFavoriteRank(header->id)) ? 0 : i+1; // Press the current rank to reset the rank
 
-			GameStatistics.SetFavoriteRank(header->id, FavoriteRank);
-			GameStatistics.Save();
+			App.Library.GameStatistics.SetFavoriteRank(header->id, FavoriteRank);
+			App.Library.GameStatistics.Save();
 			for(int j = 0; j < FAVORITE_STARS; ++j)
 				FavoriteBtnImg[j]->SetImage(FavoriteRank >= j+1 ? imgFavorite : imgNotFavorite);
 

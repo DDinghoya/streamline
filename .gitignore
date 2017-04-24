@@ -1,5 +1,4 @@
 /boot.*
-
-/source/Version.c
 /.vs
 /build
+/CppProperties.json

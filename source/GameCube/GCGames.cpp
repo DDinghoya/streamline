@@ -19,7 +19,6 @@
 #include <sys/stat.h>
 #include "GCGames.h"
 #include "FileOperations/fileops.h"
-#include "settings/GameTitles.h"
 #include "App.h"
 #include "prompts/GCDeleteMenu.h"
 #include "prompts/PromptWindows.h"
@@ -169,7 +168,7 @@ void GCGames::LoadGameList(const string &path, vector<struct discHdr> &headerLis
 		}
 
 		// if we have titles.txt entry use that
-		const char *title = GameTitles.GetTitle(id);
+		const char *title = App.Library.GameTitles.GetTitle(id);
 
 		// if no titles.txt get title from dir or file name
 		if (strlen(title) == 0 && !App.Settings.ForceDiscTitles && strlen(fname_title) > 0)
@@ -207,7 +206,7 @@ void GCGames::LoadGameList(const string &path, vector<struct discHdr> &headerLis
 				pathList.push_back(gamePath);
 
 				// Save title for next start
-				GameTitles.SetGameTitle(tmpHdr.id, tmpHdr.title);
+				App.Library.GameTitles.SetGameTitle(tmpHdr.id, tmpHdr.title);
 			}
 		}
 	}
@@ -426,7 +425,7 @@ bool GCGames::CopyUSB2SD(const struct discHdr *header)
 	if(choice == 0)
 		return false;
 
-	const char *cpTitle = GameTitles.GetTitle(header);
+	const char *cpTitle = App.Library.GameTitles.GetTitle(header);
 	
 	if(choice == 2)
 	{
@@ -437,16 +436,16 @@ bool GCGames::CopyUSB2SD(const struct discHdr *header)
 		GCDeleteMenu gcDeleteMenu;
 		gcDeleteMenu.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 		gcDeleteMenu.SetEffect(EFFECT_FADE, 20);
-		mainWindow->SetState(STATE_DISABLED);
-		mainWindow->Append(&gcDeleteMenu);
+		App.MainWindow->SetState(STATE_DISABLED);
+		App.MainWindow->Append(&gcDeleteMenu);
 
 		gcDeleteMenu.Show();
 
 		gcDeleteMenu.SetEffect(EFFECT_FADE, -20);
 		while(gcDeleteMenu.GetEffect() > 0) usleep(1000);
 
-		mainWindow->Remove(&gcDeleteMenu);
-		mainWindow->SetState(STATE_DEFAULT);
+		App.MainWindow->Remove(&gcDeleteMenu);
+		App.MainWindow->SetState(STATE_DEFAULT);
 
 		// Reload user's gameCubeSource setting
 		App.Settings.GameCubeSource = oldGameCubeSource;
@@ -484,16 +483,16 @@ bool GCGames::CopyUSB2SD(const struct discHdr *header)
 		GCDeleteMenu gcDeleteMenu;
 		gcDeleteMenu.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 		gcDeleteMenu.SetEffect(EFFECT_FADE, 20);
-		mainWindow->SetState(STATE_DISABLED);
-		mainWindow->Append(&gcDeleteMenu);
+		App.MainWindow->SetState(STATE_DISABLED);
+		App.MainWindow->Append(&gcDeleteMenu);
 
 		gcDeleteMenu.Show();
 
 		gcDeleteMenu.SetEffect(EFFECT_FADE, -20);
 		while(gcDeleteMenu.GetEffect() > 0) usleep(1000);
 
-		mainWindow->Remove(&gcDeleteMenu);
-		mainWindow->SetState(STATE_DEFAULT);
+		App.MainWindow->Remove(&gcDeleteMenu);
+		App.MainWindow->SetState(STATE_DEFAULT);
 
 		statvfs(App.Settings.GameCubeSDPath, &sd_vfs);
 	}

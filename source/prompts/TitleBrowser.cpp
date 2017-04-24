@@ -20,7 +20,7 @@
 #include "sys.h"
 #include "menu.h"
 #include "audio.h"
-#include "xml/GameTDB.hpp"
+#include "Data/GameTDB.hpp"
 #include "wad/nandtitle.h"
 #include "gecko.h"
 
@@ -151,8 +151,8 @@ bool TitleSelector(char output[])
 	w.Append(&settingsbackgroundbtn);
 	w.Append(&cancelBtn);
 	w.Append(&optionBrowser4);
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&w);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&w);
 
 	ResumeGui();
 
@@ -185,8 +185,8 @@ bool TitleSelector(char output[])
 	}
 
 	HaltGui();
-	mainWindow->SetState(STATE_DEFAULT);
-	mainWindow->Remove(&w);
+	App.MainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&w);
 	free(titleList);
 	ResumeGui();
 
@@ -398,7 +398,7 @@ int TitleBrowser()
 	w.Append(&cancelBtn);
 	w.Append(&wifiBtn);
 	w.Append(&optionBrowser3);
-	mainWindow->Append(&w);
+	App.MainWindow->Append(&w);
 
 	ResumeGui();
 
@@ -472,7 +472,7 @@ int TitleBrowser()
 	if (IsNetworkInit()) HaltNetworkThread();
 
 	HaltGui();
-	mainWindow->Remove(&w);
+	App.MainWindow->Remove(&w);
 	free(titleList);
 	ResumeGui();
 

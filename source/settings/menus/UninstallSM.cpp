@@ -27,9 +27,6 @@
 #include "GameCube/GCGames.h"
 #include "Channels/channels.h"
 #include "App.h"
-#include "settings/CGameSettings.h"
-#include "settings/CGameStatistics.h"
-#include "settings/GameTitles.h"
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
 #include "usbloader/wbfs.h"
@@ -105,18 +102,18 @@ int UninstallSM::GetMenuInternal()
 	   ||  DiscHeader->type == TYPE_GAME_EMUNANDCHAN)
 	   && ret == ++Idx)
 	{
-		int choice = WindowPrompt(GameTitles.GetTitle(DiscHeader), tr( "What should be deleted for this game title:" ), tr( "Game Only" ), tr("Uninstall all"), tr( "Cancel" ));
+		int choice = WindowPrompt(App.Library.GameTitles.GetTitle(DiscHeader), tr( "What should be deleted for this game title:" ), tr( "Game Only" ), tr("Uninstall all"), tr( "Cancel" ));
 		if (choice == 0)
 			return MENU_NONE;
 
 		char GameID[7];
 		snprintf(GameID, sizeof(GameID), "%s", (char *) DiscHeader->id);
 
-		std::string Title = GameTitles.GetTitle(DiscHeader);
-		GameSettings.Remove(DiscHeader->id);
-		GameSettings.Save();
-		GameStatistics.Remove(DiscHeader->id);
-		GameStatistics.Save();
+		std::string Title = App.Library.GameTitles.GetTitle(DiscHeader);
+		App.Library.GameSettings.Remove(DiscHeader->id);
+		App.Library.GameSettings.Save();
+		App.Library.GameStatistics.Remove(DiscHeader->id);
+		App.Library.GameStatistics.Save();
 
 		int ret = 0;
 		char filepath[512];
@@ -186,8 +183,8 @@ int UninstallSM::GetMenuInternal()
 		int result = WindowPrompt(tr( "Are you sure?" ), 0, tr( "Yes" ), tr( "Cancel" ));
 		if (result == 1)
 		{
-			GameStatistics.SetPlayCount(DiscHeader->id, 0);
-			GameStatistics.Save();
+			App.Library.GameStatistics.SetPlayCount(DiscHeader->id, 0);
+			App.Library.GameStatistics.Save();
 		}
 	}
 

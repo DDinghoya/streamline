@@ -24,7 +24,6 @@
 #include <unistd.h>
 #include <gccore.h>
 #include "App.h"
-#include "settings/CGameStatistics.h"
 #include "themes/CTheme.h"
 #include "prompts/PromptWindows.h"
 #include "prompts/DiscBrowser.h"
@@ -133,7 +132,7 @@ GameLoadSM::GameLoadSM(struct discHdr *hdr)
 	: SettingsMenu(tr("Game Load"), &GuiOptions, MENU_NONE),
 	  Header(hdr)
 {
-	GameConfig = *GameSettings.GetGameCFG((const char *) Header->id);
+	GameConfig = *App.Library.GameSettings.GetGameCFG((const char *) Header->id);
 
 	if(!btnOutline)
 		btnOutline = Resources::GetImageData("button_dialogue_box.png");
@@ -172,7 +171,7 @@ void GameLoadSM::SetDefaultConfig()
 {
 	char id[7];
 	snprintf(id, sizeof(id), GameConfig.id);
-	GameSettings.SetDefault(GameConfig);
+	App.Library.GameSettings.SetDefault(GameConfig);
 	snprintf(GameConfig.id, sizeof(GameConfig.id), id);
 }
 
@@ -223,7 +222,7 @@ void GameLoadSM::SetOptionValues()
 	Options->SetValue(Idx++, "%s", tr( OnOffText[GameConfig.Locked] ));
 
 	//! Settings: Favorite Level
-	Options->SetValue(Idx++, "%i", GameStatistics.GetFavoriteRank(Header->id));
+	Options->SetValue(Idx++, "%i", App.Library.GameStatistics.GetFavoriteRank(Header->id));
 
 	//! Settings: Video Mode
 	if(GameConfig.video == INHERIT)
@@ -366,7 +365,7 @@ int GameLoadSM::GetMenuInternal()
 {
 	if (saveBtn->GetState() == STATE_CLICKED)
 	{
-		if (GameSettings.AddGame(GameConfig) && GameSettings.Save())
+		if (App.Library.GameSettings.AddGame(GameConfig) && App.Library.GameSettings.Save())
 		{
 			WindowPrompt(tr( "Successfully Saved" ), 0, tr( "OK" ));
 		}
@@ -392,11 +391,11 @@ int GameLoadSM::GetMenuInternal()
 	//! Settings: Favorite Level
 	else if (ret == ++Idx)
 	{
-		int Level = GameStatistics.GetFavoriteRank(Header->id);
+		int Level = App.Library.GameStatistics.GetFavoriteRank(Header->id);
 		if (++Level > 5) Level = 0;
 
-		GameStatistics.SetFavoriteRank(Header->id, Level);
-		GameStatistics.Save();
+		App.Library.GameStatistics.SetFavoriteRank(Header->id, Level);
+		App.Library.GameStatistics.Save();
 	}
 
 	//! Settings: Video Mode

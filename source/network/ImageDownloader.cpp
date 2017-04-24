@@ -24,7 +24,6 @@
 #include "prompts/CheckboxPrompt.hpp"
 #include "FileOperations/fileops.h"
 #include "App.h"
-#include "settings/GameTitles.h"
 #include "language/gettext.h"
 #include "usbloader/GetMissingGameFiles.hpp"
 #include "utils/StringTools.h"
@@ -422,8 +421,8 @@ void ImageDownloader::CreateCSVLog()
 			ImageType = "Custom Banner";
 		}
 
-		fprintf(f, "\"%s\",\"%s\",\"%s\"\n", MissingImages[i].gameID.c_str(), GameTitles.GetTitle(MissingImages[i].gameID.c_str()), ImageType);
-		gprintf("\"%s\",\"%s\",\"%s\"\n", MissingImages[i].gameID.c_str(), GameTitles.GetTitle(MissingImages[i].gameID.c_str()), ImageType);
+		fprintf(f, "\"%s\",\"%s\",\"%s\"\n", MissingImages[i].gameID.c_str(), App.Library.GameTitles.GetTitle(MissingImages[i].gameID.c_str()), ImageType);
+		gprintf("\"%s\",\"%s\",\"%s\"\n", MissingImages[i].gameID.c_str(), App.Library.GameTitles.GetTitle(MissingImages[i].gameID.c_str()), ImageType);
 	}
 
 	fclose(f);

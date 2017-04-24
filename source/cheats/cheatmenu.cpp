@@ -7,9 +7,10 @@
 #include "language/gettext.h"
 #include "themes/CTheme.h"
 #include "FileOperations/fileops.h"
-#include "menu.h"
+#include "App.h"
 #include "sys.h"
 #include "gct.h"
+#include "menu.h"
 
 /****************************************************************************
  * CheatMenu
@@ -115,8 +116,8 @@ int CheatMenu(const char * gameID)
 			w.Append(&updateBtn);
 			w.Append(&createBtn);
 			w.Append(&chtBrowser);
-			mainWindow->SetState(STATE_DISABLED);
-			mainWindow->Append(&w);
+			App.MainWindow->SetState(STATE_DISABLED);
+			App.MainWindow->Append(&w);
 			ResumeGui();
 
 			while (!exit)
@@ -169,7 +170,7 @@ int CheatMenu(const char * gameID)
 					else
 						WindowPrompt(tr( "Error" ), tr( "Could not create GCT file" ), tr( "OK" ));
 
-					mainWindow->SetState(STATE_DISABLED);
+					App.MainWindow->SetState(STATE_DISABLED);
 					w.SetState(STATE_DEFAULT);
 					createBtn.ResetState();
 				}
@@ -206,8 +207,8 @@ int CheatMenu(const char * gameID)
 			if(gctBuf)
 				free(gctBuf);
 			HaltGui();
-			mainWindow->SetState(STATE_DEFAULT);
-			mainWindow->Remove(&w);
+			App.MainWindow->SetState(STATE_DEFAULT);
+			App.MainWindow->Remove(&w);
 			ResumeGui();
 			break;
 	}

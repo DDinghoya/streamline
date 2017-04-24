@@ -9,7 +9,6 @@
 #include "homebrewboot/BootHomebrew.h"
 #include "homebrewboot/HomebrewXML.h"
 #include "App.h"
-#include "settings/GameTitles.h"
 #include "settings/newtitles.h"
 #include "settings/meta.h"
 #include "language/gettext.h"
@@ -79,7 +78,7 @@ void AppCleanUp(void)
 	BannerAsync::ThreadExit();
 
 	if(App.Settings.CacheTitles)
-		GameTitles.WriteCachedTitles(App.Settings.titlestxt_path);
+		App.Library.GameTitles.WriteCachedTitles(App.Settings.titlestxt_path);
 	App.Settings.Save();
 
 	ExitGUIThreads();
@@ -92,7 +91,7 @@ void AppCleanUp(void)
 	delete bgMusic;
 	delete background;
 	delete bgImg;
-	delete mainWindow;
+	delete App.MainWindow;
 	for (int i = 0; i < 4; i++)
 		delete pointer[i];
 
@@ -103,7 +102,7 @@ void AppCleanUp(void)
 	SoundHandler::DestroyInstance();
 	GCGames::DestroyInstance();
 	DeinitNetwork();
-	GameTitles.SetDefault();
+	App.Library.GameTitles.SetDefault();
 
 	ShutdownAudio();
 

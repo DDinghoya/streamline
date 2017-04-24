@@ -38,7 +38,6 @@
 #include "HTML_Stream.h"
 #include "FileDownloader.h"
 #include "App.h"
-#include "settings/GameTitles.h"
 #include "language/gettext.h"
 #include "language/UpdateLanguage.h"
 #include "homebrewboot/BootHomebrew.h"
@@ -46,7 +45,7 @@
 #include "utils/ShowError.h"
 #include "prompts/PromptWindows.h"
 #include "FileOperations/fileops.h"
-#include "xml/GameTDB.hpp"
+#include "Data/GameTDB.hpp"
 #include "wad/nandtitle.h"
 #include "wad/wad.h"
 #include "sys.h"
@@ -161,8 +160,8 @@ int UpdateGameTDB()
 	remove(ZipPath.c_str());
 
 	//! Reload all titles and reload cached titles because the file changed now.
-	GameTitles.SetDefault();
-	GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+	App.Library.GameTitles.SetDefault();
+	App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 
 	return (result ? filesize : -1);
 }

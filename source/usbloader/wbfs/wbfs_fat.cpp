@@ -15,7 +15,6 @@
 #include "Controls/DeviceHandler.hpp"
 #include "FileOperations/fileops.h"
 #include "App.h"
-#include "settings/GameTitles.h"
 #include "usbloader/disc.h"
 #include "usbloader/usbstorage2.h"
 #include "language/gettext.h"
@@ -380,7 +379,7 @@ void Wbfs_Fat::AddHeader(struct discHdr *discHeader)
 
 	fat_hdr_list = tmpList;
 	memcpy(&fat_hdr_list[fat_hdr_count], discHeader, sizeof(struct discHdr));
-	GameTitles.SetGameTitle(discHeader->id, discHeader->title);
+	App.Library.GameTitles.SetGameTitle(discHeader->id, discHeader->title);
 	fat_hdr_count++;
 }
 
@@ -493,7 +492,7 @@ s32 Wbfs_Fat::GetHeadersCount()
 		}
 
 		// if we have titles.txt entry use that
-		title = GameTitles.GetTitle(id);
+		title = App.Library.GameTitles.GetTitle(id);
 		// if no titles.txt get title from dir or file name
 		if (strlen(title) == 0 && !App.Settings.ForceDiscTitles && strlen(fname_title) > 0)
 			title = fname_title;

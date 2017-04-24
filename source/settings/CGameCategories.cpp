@@ -31,13 +31,11 @@
 #include "language/gettext.h"
 #include "FileOperations/fileops.h"
 #include "prompts/ProgressWindow.h"
-#include "xml/GameTDB.hpp"
+#include "Data/GameTDB.hpp"
 #include "utils/StringTools.h"
 #include "Version.h"
 
 using namespace tinyxml2;
-
-CGameCategories GameCategories;
 
 CGameCategories::CGameCategories()
 	: defaultCategory(1, 0)
@@ -46,11 +44,11 @@ CGameCategories::CGameCategories()
 
 const vector<unsigned int> &CGameCategories::operator[](const char *id) const
 {
-	if(!id) return defaultCategory;
+	if (!id) return defaultCategory;
 
-	for(map<string, vector<unsigned int> >::const_iterator itr = List.begin(); itr != List.end(); itr++)
+	for (map<string, vector<unsigned int> >::const_iterator itr = List.begin(); itr != List.end(); itr++)
 	{
-		if(strncasecmp(itr->first.c_str(), id, 6) == 0)
+		if (strncasecmp(itr->first.c_str(), id, 6) == 0)
 			return itr->second;
 	}
 
@@ -59,10 +57,10 @@ const vector<unsigned int> &CGameCategories::operator[](const char *id) const
 
 bool CGameCategories::Load(string filepath)
 {
-	if(filepath.size() == 0)
+	if (filepath.size() == 0)
 		return false;
 
-	if(filepath[filepath.size()-1] != '/')
+	if (filepath[filepath.size() - 1] != '/')
 		filepath += '/';
 
 	filepath += "GXGameCategories.xml";
@@ -71,42 +69,42 @@ bool CGameCategories::Load(string filepath)
 	clear();
 
 	XMLDocument xmlDoc;
-	if(xmlDoc.LoadFile(filepath.c_str()) != 0)
+	if (xmlDoc.LoadFile(filepath.c_str()) != 0)
 		return false;
 
-	XMLElement * node =  xmlDoc.FirstChildElement("Categories");
-	if(!node)
+	XMLElement * node = xmlDoc.FirstChildElement("Categories");
+	if (!node)
 		return false;
 
 	node = node->FirstChildElement("Category");
 
-	while(node != NULL)
+	while (node != NULL)
 	{
 		const char * ID = node->Attribute("ID");
 		const char * Name = node->Attribute("Name");
 
-		if(ID && Name)
+		if (ID && Name)
 			CategoryList.SetCategory(atoi(ID), Name);
 
 		node = node->NextSiblingElement();
 	}
 
-	node =  xmlDoc.FirstChildElement("GameCategories");
-	if(!node)
+	node = xmlDoc.FirstChildElement("GameCategories");
+	if (!node)
 		return false;
 
 	node = node->FirstChildElement("Game");
 
-	while(node != NULL)
+	while (node != NULL)
 	{
 		const char * gameID = node->Attribute("ID");
 
 		XMLElement * category = node->FirstChildElement("Category");
 
-		while(category != NULL)
+		while (category != NULL)
 		{
 			const char * categoryID = category->Attribute("ID");
-			if(gameID && categoryID)
+			if (gameID && categoryID)
 				SetCategory(gameID, atoi(categoryID));
 
 			category = category->NextSiblingElement();
@@ -126,7 +124,7 @@ bool CGameCategories::Save()
 	snprintf(filepath, sizeof(filepath), configPath.c_str());
 
 	char * ptr = strrchr(filepath, '/');
-	if(ptr)
+	if (ptr)
 		ptr[0] = 0;
 
 	CreateSubfolder(filepath);
@@ -162,8 +160,7 @@ bool CGameCategories::Save()
 			Categories->LinkEndChild(Category);
 
 			++progress;
-		}
-		while(CategoryList.goToNext());
+		} while (CategoryList.goToNext());
 
 		xmlDoc.LinkEndChild(Categories);
 	}
@@ -174,18 +171,18 @@ bool CGameCategories::Save()
 		//! This is more memory efficient than making another copy of the elements.
 		XMLElement *GameCategories = xmlDoc.NewElement("GameCategories");
 
-		for(map<string, vector<unsigned int> >::iterator itr = List.begin(); itr != List.end(); itr++)
+		for (map<string, vector<unsigned int> >::iterator itr = List.begin(); itr != List.end(); itr++)
 		{
 			ShowProgress(progress, progressSize);
 
 			XMLElement *Game = xmlDoc.NewElement("Game");
 			Game->SetAttribute("ID", itr->first.c_str());
-			Game->SetAttribute("Title", GameTitles.GetTitle(itr->first.c_str()));
+			Game->SetAttribute("Title", App.Library.GameTitles.GetTitle(itr->first.c_str()));
 
-			for(u32 i = 0; i < itr->second.size(); ++i)
+			for (u32 i = 0; i < itr->second.size(); ++i)
 			{
 				const char *CatName = CategoryList[itr->second[i]];
-				if(!CatName)
+				if (!CatName)
 					CatName = "";
 
 				XMLElement *Category = xmlDoc.NewElement("Category");
@@ -212,7 +209,7 @@ bool CGameCategories::Save()
 
 bool CGameCategories::SetCategory(const char *gameID, unsigned int id)
 {
-	if(!gameID) return false;
+	if (!gameID) return false;
 
 	char gameID6[7];
 	snprintf(gameID6, sizeof(gameID6), gameID);
@@ -224,14 +221,14 @@ bool CGameCategories::SetCategory(const char *gameID, unsigned int id)
 
 bool CGameCategories::SetCategory(const string &gameID, unsigned int id)
 {
-	if(List[gameID].empty())
+	if (List[gameID].empty())
 		List[gameID] = defaultCategory;
 
 	vector<unsigned int> tmpVect(List[gameID]);
 
-	for(u32 i = 0; i < tmpVect.size(); ++i)
+	for (u32 i = 0; i < tmpVect.size(); ++i)
 	{
-		if(tmpVect[i] == id)
+		if (tmpVect[i] == id)
 			return false;
 	}
 
@@ -241,7 +238,7 @@ bool CGameCategories::SetCategory(const string &gameID, unsigned int id)
 
 bool CGameCategories::ReplaceCategory(const char *gameID, unsigned int id)
 {
-	if(!gameID) return false;
+	if (!gameID) return false;
 
 	char gameID6[7];
 	snprintf(gameID6, sizeof(gameID6), gameID);
@@ -261,13 +258,13 @@ bool CGameCategories::ReplaceCategory(const string &gameID, unsigned int id)
 
 void CGameCategories::RemoveCategory(unsigned int id)
 {
-	for(map<string, vector<unsigned int> >::iterator itr = List.begin(); itr != List.end(); itr++)
+	for (map<string, vector<unsigned int> >::iterator itr = List.begin(); itr != List.end(); itr++)
 	{
-		for(u32 i = 0; i < itr->second.size(); ++i)
+		for (u32 i = 0; i < itr->second.size(); ++i)
 		{
-			if(itr->second[i] == id)
+			if (itr->second[i] == id)
 			{
-				itr->second.erase(itr->second.begin()+ i);
+				itr->second.erase(itr->second.begin() + i);
 				--i;
 			}
 		}
@@ -278,7 +275,7 @@ void CGameCategories::RemoveGameCategories(const string &gameID)
 {
 	for (map<string, vector<unsigned int> >::iterator itr = List.begin(); itr != List.end(); itr++)
 	{
-		if(gameID == itr->first)
+		if (gameID == itr->first)
 		{
 			List.erase(itr);
 		}
@@ -287,10 +284,10 @@ void CGameCategories::RemoveGameCategories(const string &gameID)
 
 void CGameCategories::RemoveCategory(const char *gameID, unsigned int id)
 {
-	if(!gameID) return;
+	if (!gameID) return;
 
 	string gameID6;
-	for(int i = 0; i < 6 && gameID[i] != 0; ++i)
+	for (int i = 0; i < 6 && gameID[i] != 0; ++i)
 		gameID6.push_back(gameID[i]);
 
 	RemoveCategory(gameID6, id);
@@ -300,13 +297,13 @@ void CGameCategories::RemoveCategory(const string &gameID, unsigned int id)
 {
 	for (map<string, vector<unsigned int> >::iterator itr = List.begin(); itr != List.end(); itr++)
 	{
-		if(gameID == itr->first)
+		if (gameID == itr->first)
 		{
-			for(u32 i = 0; i < itr->second.size(); ++i)
+			for (u32 i = 0; i < itr->second.size(); ++i)
 			{
-				if(itr->second[i] == id)
+				if (itr->second[i] == id)
 				{
-					itr->second.erase(itr->second.begin()+ i);
+					itr->second.erase(itr->second.begin() + i);
 					break;
 				}
 			}
@@ -317,22 +314,22 @@ void CGameCategories::RemoveCategory(const string &gameID, unsigned int id)
 
 bool CGameCategories::isInCategory(const char *gameID, unsigned int id)
 {
-	if(id == 0) //! ID = 0 means category 'All' so it is always true
+	if (id == 0) //! ID = 0 means category 'All' so it is always true
 		return true;
 
-	if(!gameID) return false;
+	if (!gameID) return false;
 
 	string gameID6;
-	for(int i = 0; i < 6 && gameID[i] != 0; ++i)
+	for (int i = 0; i < 6 && gameID[i] != 0; ++i)
 		gameID6.push_back(gameID[i]);
 
-	for (map<string, vector<unsigned int> >::iterator itr = GameCategories.List.begin(); itr != GameCategories.List.end(); itr++)
+	for (map<string, vector<unsigned int> >::iterator itr = App.Library.GameCategories.List.begin(); itr != App.Library.GameCategories.List.end(); itr++)
 	{
-		if(itr->first == gameID6)
+		if (itr->first == gameID6)
 		{
-			for(u32 i = 0; i < itr->second.size(); ++i)
+			for (u32 i = 0; i < itr->second.size(); ++i)
 			{
-				if(itr->second[i] == id)
+				if (itr->second[i] == id)
 					return true;
 			}
 			break;
@@ -346,7 +343,7 @@ bool CGameCategories::ImportFromGameTDB(const string &xmlpath)
 {
 	GameTDB XML_DB;
 
-	if(!XML_DB.OpenFile(xmlpath.c_str()))
+	if (!XML_DB.OpenFile(xmlpath.c_str()))
 		return false;
 
 	StartProgress(tr("Importing categories"), tr("Please wait..."), 0, false, true);
@@ -355,27 +352,27 @@ bool CGameCategories::ImportFromGameTDB(const string &xmlpath)
 	wString filter(gameList.GetCurrentFilter());
 	gameList.LoadUnfiltered();
 
-	for(int i = 0; i < gameList.size(); ++i)
+	for (int i = 0; i < gameList.size(); ++i)
 	{
 		ShowProgress(i, gameList.size());
 
 		vector<string> genreList;
 		string GameType;
 
-		if(XML_DB.GetGameType((const char *) gameList[i]->id, GameType))
+		if (XML_DB.GetGameType((const char *)gameList[i]->id, GameType))
 		{
-			if(!CategoryList.findCategory(GameType))
+			if (!CategoryList.findCategory(GameType))
 				CategoryList.AddCategory(GameType);
 
 			this->SetCategory(gameList[i]->id, CategoryList.getCurrentID());
 		}
 
-		if(!XML_DB.GetGenreList((const char *) gameList[i]->id, genreList))
+		if (!XML_DB.GetGenreList((const char *)gameList[i]->id, genreList))
 			continue;
 
-		for(u32 n = 0; n < genreList.size(); ++n)
+		for (u32 n = 0; n < genreList.size(); ++n)
 		{
-			if(!CategoryList.findCategory(genreList[n]))
+			if (!CategoryList.findCategory(genreList[n]))
 				CategoryList.AddCategory(genreList[n]);
 
 			this->SetCategory(gameList[i]->id, CategoryList.getCurrentID());

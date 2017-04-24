@@ -25,7 +25,6 @@
 #include "LoaderSettings.hpp"
 #include "usbloader/usbstorage2.h"
 #include "App.h"
-#include "settings/GameTitles.h"
 #include "settings/meta.h"
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
@@ -274,7 +273,7 @@ LoaderSettings::~LoaderSettings()
 		}
 
 		gameList.LoadUnfiltered();
-		GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
+		App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
 	}
 	
 	if(oldGameCubeSource != App.Settings.GameCubeSource)

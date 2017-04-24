@@ -30,7 +30,6 @@
 #include "settings/SettingsPrompts.h"
 #include "App.h"
 #include "settings/SettingsEnums.h"
-#include "settings/GameTitles.h"
 #include "prompts/PromptWindows.h"
 #include "prompts/ProgressWindow.h"
 #include "language/gettext.h"
@@ -302,7 +301,7 @@ int CustomPathsSM::GetMenuInternal()
 		else if(result == 1)
 		{
 			Channels::Instance()->GetEmuChannelList();
-			GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
+			App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
 		}
 	}
 

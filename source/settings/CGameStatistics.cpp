@@ -7,9 +7,6 @@
 #include "FileOperations/fileops.h"
 #include "Version.h"
 
-CGameStatistics GameStatistics;
-
-
 CGameStatistics::CGameStatistics()
 {
 }
@@ -20,14 +17,14 @@ CGameStatistics::~CGameStatistics()
 
 GameStatus * CGameStatistics::GetGameStatus(const char * id) const
 {
-	if(!id)
+	if (!id)
 		return NULL;
 
-	for(u32 i = 0; i < GameList.size(); ++i)
+	for (u32 i = 0; i < GameList.size(); ++i)
 	{
-		if(strncasecmp(id, GameList[i].id, 6) == 0)
+		if (strncasecmp(id, GameList[i].id, 6) == 0)
 		{
-			return (GameStatus *) &GameList[i];
+			return (GameStatus *)&GameList[i];
 		}
 	}
 
@@ -36,9 +33,9 @@ GameStatus * CGameStatistics::GetGameStatus(const char * id) const
 
 bool CGameStatistics::AddGame(const GameStatus & NewGame)
 {
-	for(u32 i = 0; i < GameList.size(); ++i)
+	for (u32 i = 0; i < GameList.size(); ++i)
 	{
-		if(strncasecmp(NewGame.id, GameList[i].id, 6) == 0)
+		if (strncasecmp(NewGame.id, GameList[i].id, 6) == 0)
 		{
 			memcpy(&GameList[i], &NewGame, sizeof(GameStatus));
 			return true;
@@ -60,14 +57,14 @@ bool CGameStatistics::RemoveAll()
 
 bool CGameStatistics::Remove(const char * id)
 {
-	if(!id)
+	if (!id)
 		return false;
 
-	for(u32 i = 0; i < GameList.size(); ++i)
+	for (u32 i = 0; i < GameList.size(); ++i)
 	{
-		if(strncasecmp(id, GameList[i].id, 6) == 0)
+		if (strncasecmp(id, GameList[i].id, 6) == 0)
 		{
-			GameList.erase(GameList.begin()+i);
+			GameList.erase(GameList.begin() + i);
 			break;
 		}
 	}
@@ -104,10 +101,10 @@ bool CGameStatistics::Save()
 	strcpy(filepath, ConfigPath.c_str());
 
 	char * ptr = strrchr(filepath, '/');
-	if(ptr)
+	if (ptr)
 		ptr[0] = 0;
 
-	if(!CreateSubfolder(filepath))
+	if (!CreateSubfolder(filepath))
 		return false;
 
 	FILE * f = fopen(ConfigPath.c_str(), "w");
@@ -132,7 +129,7 @@ bool CGameStatistics::SetSetting(GameStatus & game, char *name, char *value)
 {
 	int i = 0;
 
-	if(strcmp(name, "FavoriteRank") == 0)
+	if (strcmp(name, "FavoriteRank") == 0)
 	{
 		if (sscanf(value, "%d", &i) == 1)
 		{
@@ -140,7 +137,7 @@ bool CGameStatistics::SetSetting(GameStatus & game, char *name, char *value)
 		}
 		return true;
 	}
-	else if(strcmp(name, "PlayCount") == 0)
+	else if (strcmp(name, "PlayCount") == 0)
 	{
 		if (sscanf(value, "%d", &i) == 1)
 		{
@@ -154,20 +151,20 @@ bool CGameStatistics::SetSetting(GameStatus & game, char *name, char *value)
 
 bool CGameStatistics::ReadGameID(const char * src, char * GameID, int size)
 {
-	if(strncasecmp(src, "game:", 5) != 0)
+	if (strncasecmp(src, "game:", 5) != 0)
 		return false;
 
 	char * ptr = strchr(src, ':');
-	if(!ptr)
+	if (!ptr)
 		return false;
 
 	ptr++;
 
 	int i = 0;
 
-	for(i = 0; i < size; i++, ptr++)
+	for (i = 0; i < size; i++, ptr++)
 	{
-		if(*ptr == ' ' || *ptr == '\0')
+		if (*ptr == ' ' || *ptr == '\0')
 			break;
 
 		GameID[i] = *ptr;
@@ -183,10 +180,10 @@ void CGameStatistics::ParseLine(char *line)
 	char name[1024], value[1024];
 	char GameID[8];
 
-	if(!ReadGameID(line, GameID, 6))
+	if (!ReadGameID(line, GameID, 6))
 		return;
 
-	if(strlen(GameID) != 6 && strlen(GameID) != 4)
+	if (strlen(GameID) != 6 && strlen(GameID) != 4)
 		return;
 
 	GameStatus NewGame;
@@ -196,7 +193,7 @@ void CGameStatistics::ParseLine(char *line)
 
 	char * LinePtr = strchr(line, '=');
 
-	while(LinePtr != NULL)
+	while (LinePtr != NULL)
 	{
 		LinePtr++;
 
@@ -222,10 +219,10 @@ void CGameStatistics::TrimLine(char *dest, const char *src, int size)
 
 	int i = 0;
 
-	for(i = 0; i < size; i++, src++)
+	for (i = 0; i < size; i++, src++)
 	{
-		if(*src == ';' || *src == ':' || *src == '\n' ||
-		   *src == '\r' || *src == '\0')
+		if (*src == ';' || *src == ':' || *src == '\n' ||
+			*src == '\r' || *src == '\0')
 			break;
 
 		dest[i] = *src;
@@ -236,7 +233,7 @@ void CGameStatistics::TrimLine(char *dest, const char *src, int size)
 
 void CGameStatistics::SetPlayCount(const char * id, int count)
 {
-	if(!id)
+	if (!id)
 		return;
 
 	GameStatus NewStatus;
@@ -245,7 +242,7 @@ void CGameStatistics::SetPlayCount(const char * id, int count)
 	NewStatus.PlayCount = count;
 
 	GameStatus * game = GetGameStatus(id);
-	if(game)
+	if (game)
 	{
 		NewStatus.FavoriteRank = game->FavoriteRank;
 	}
@@ -255,7 +252,7 @@ void CGameStatistics::SetPlayCount(const char * id, int count)
 
 void CGameStatistics::SetFavoriteRank(const char * id, int rank)
 {
-	if(!id)
+	if (!id)
 		return;
 
 	GameStatus NewStatus;
@@ -264,7 +261,7 @@ void CGameStatistics::SetFavoriteRank(const char * id, int rank)
 	NewStatus.PlayCount = 0;
 
 	GameStatus * game = GetGameStatus(id);
-	if(game)
+	if (game)
 	{
 		NewStatus.PlayCount = game->PlayCount;
 	}
@@ -274,11 +271,11 @@ void CGameStatistics::SetFavoriteRank(const char * id, int rank)
 
 int CGameStatistics::GetPlayCount(const char * id) const
 {
-	if(!id)
+	if (!id)
 		return 0;
 
 	GameStatus * game = GetGameStatus(id);
-	if(game)
+	if (game)
 		return game->PlayCount;
 
 	return 0;
@@ -286,11 +283,11 @@ int CGameStatistics::GetPlayCount(const char * id) const
 
 int CGameStatistics::GetFavoriteRank(const char * id) const
 {
-	if(!id)
+	if (!id)
 		return 0;
 
 	GameStatus * game = GetGameStatus(id);
-	if(game)
+	if (game)
 		return game->FavoriteRank;
 
 	return 0;

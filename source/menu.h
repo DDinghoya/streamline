@@ -13,7 +13,6 @@
 #include "GUI/gui.h"
 #include "Controls/WiiPointer.h"
 #include "App.h"
-#include "App.h"
 
 void InitGUIThreads(void);
 void ExitGUIThreads(void);
@@ -38,7 +37,6 @@ void HaltGui();
 extern WiiPointer *pointer[4];
 extern GuiImageData *background;
 extern GuiImage *bgImg;
-extern GuiWindow *mainWindow;
 extern GuiText *GameRegionTxt;
 extern GuiText *GameIDTxt;
 extern GuiImageData *cover;

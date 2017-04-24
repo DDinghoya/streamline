@@ -28,7 +28,6 @@
 #include "usbloader/usbstorage2.h"
 #include "usbloader/wdvd.h"
 #include "usbloader/GameList.h"
-#include "settings/CGameSettings.h"
 #include "settings/SettingsEnums.h"
 #include "usbloader/frag.h"
 #include "usbloader/wbfs.h"
@@ -70,7 +69,7 @@ extern "C"
 int GameBooter::BootGCMode(struct discHdr *gameHdr)
 {
 	// check the settings
-	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHdr->id);
+	GameCFG * game_cfg = App.Library.GameSettings.GetGameCFG(gameHdr->id);
 	u8 GCMode = game_cfg->GameCubeMode == INHERIT ? App.Settings.GameCubeMode : game_cfg->GameCubeMode;
 
 	// Devolution
@@ -248,7 +247,7 @@ int GameBooter::BootGame(struct discHdr *gameHdr)
 		return BootGCMode(&gameHeader);
 
 	//! Setup game configuration from game settings. If no game settings exist use global/default.
-	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHeader.id);
+	GameCFG * game_cfg = App.Library.GameSettings.GetGameCFG(gameHeader.id);
 	u8 videoChoice = game_cfg->video == INHERIT ? App.Settings.videomode : game_cfg->video;
 	u8 videoPatchDolChoice = game_cfg->videoPatchDol == INHERIT ? App.Settings.videoPatchDol : game_cfg->videoPatchDol;
 	u8 aspectChoice = game_cfg->aspectratio == INHERIT ? App.Settings.GameAspectRatio : game_cfg->aspectratio;
@@ -425,7 +424,7 @@ int GameBooter::BootDIOSMIOS(struct discHdr *gameHdr)
 {
 	const char *RealPath = GCGames::Instance()->GetPath((const char *) gameHdr->id);
 
-	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHdr->id);
+	GameCFG * game_cfg = App.Library.GameSettings.GetGameCFG(gameHdr->id);
 	s8 languageChoice = game_cfg->language == INHERIT ? App.Settings.language - 1 : game_cfg->language;
 	u8 ocarinaChoice = game_cfg->ocarina == INHERIT ? App.Settings.ocarina : game_cfg->ocarina;
 	u8 multiDiscChoice = App.Settings.MultiDiscPrompt;
@@ -713,7 +712,7 @@ int GameBooter::BootDevolution(struct discHdr *gameHdr)
 	const char *RealPath = GCGames::Instance()->GetPath((const char *) gameHdr->id);
 	const char *LoaderName = "Devolution";
 
-	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHdr->id);
+	GameCFG * game_cfg = App.Library.GameSettings.GetGameCFG(gameHdr->id);
 	s8 languageChoice = game_cfg->language == INHERIT ? App.Settings.language -1 : game_cfg->language;
 	u8 devoMCEmulation = game_cfg->DEVOMCEmulation == INHERIT ? App.Settings.DEVOMCEmulation : game_cfg->DEVOMCEmulation;
 	u8 devoActivityLEDChoice = game_cfg->DEVOActivityLED == INHERIT ? App.Settings.DEVOActivityLED : game_cfg->DEVOActivityLED;
@@ -946,7 +945,7 @@ int GameBooter::BootNintendont(struct discHdr *gameHdr)
 	
 	const char *LoaderName = "Nintendont";
 
-	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHdr->id);
+	GameCFG * game_cfg = App.Library.GameSettings.GetGameCFG(gameHdr->id);
 	s8 languageChoice = game_cfg->language == INHERIT ? App.Settings.language -1 : game_cfg->language;
 	u8 ocarinaChoice = game_cfg->ocarina == INHERIT ? App.Settings.ocarina : game_cfg->ocarina;
 	u8 multiDiscChoice = App.Settings.MultiDiscPrompt;
@@ -1585,7 +1584,7 @@ int GameBooter::BootNeek(struct discHdr *gameHdr)
 	struct discHdr gameHeader;
 	memcpy(&gameHeader, gameHdr, sizeof(struct discHdr));
 	
-	GameCFG * game_cfg = GameSettings.GetGameCFG(gameHdr->id);
+	GameCFG * game_cfg = App.Library.GameSettings.GetGameCFG(gameHdr->id);
 	u8 ocarinaChoice = game_cfg->ocarina == INHERIT ? App.Settings.ocarina : game_cfg->ocarina;
 	u64 returnToChoice = game_cfg->returnTo;
 	const char *NandEmuPath = game_cfg->NandEmuPath.size() == 0 ? App.Settings.NandEmuChanPath : game_cfg->NandEmuPath.c_str();

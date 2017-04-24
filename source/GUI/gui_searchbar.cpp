@@ -4,30 +4,28 @@
 
 #include "wpad.h"
 #include "App.h"
-#include "App.h"
-#include "settings/GameTitles.h"
 #include "themes/CTheme.h"
 #include "usbloader/GameList.h"
 
-extern GuiWindow * mainWindow;
-
 class cSearchButton
 {
-	public:
-		cSearchButton(wchar_t *Char, GuiImageData *keyImageData, GuiImageData *keyOverImageData, int x, int y,
-				GuiTrigger* trig, GuiSound* sndOver, GuiSound* sndClick) :
-			wchar(*Char), image(keyImageData), imageOver(keyOverImageData), text((char *) NULL, 20, ( GXColor )
-			{   0, 0, 0, 0xff}), button(&image, &imageOver, ALIGN_LEFT, ALIGN_TOP, x, y, trig, sndOver, sndClick, 1)
-		{
-			text.SetText(Char);
-			button.SetLabel(&text);
-		}
+public:
+	cSearchButton(wchar_t *Char, GuiImageData *keyImageData, GuiImageData *keyOverImageData, int x, int y,
+		GuiTrigger* trig, GuiSound* sndOver, GuiSound* sndClick) :
+		wchar(*Char), image(keyImageData), imageOver(keyOverImageData), text((char *)NULL, 20, (GXColor)
+	{
+		0, 0, 0, 0xff
+	}), button(&image, &imageOver, ALIGN_LEFT, ALIGN_TOP, x, y, trig, sndOver, sndClick, 1)
+	{
+		text.SetText(Char);
+		button.SetLabel(&text);
+	}
 		wchar_t wchar;
 		GuiImage image;
 		GuiImage imageOver;
 		GuiText text;
 		GuiButton button;
-	private:
+private:
 
 };
 
@@ -35,7 +33,7 @@ static wchar_t lastSearchChar = 0;
 std::set<wchar_t> GuiSearchBar::SearchChars;
 
 GuiSearchBar::GuiSearchBar() :
-	inSide(0), text((char *) NULL, 22, ( GXColor ) {0, 0, 0, 255}), buttons(0),
+	inSide(0), text((char *)NULL, 22, (GXColor) { 0, 0, 0, 255 }), buttons(0),
 	keyImageData(Resources::GetFile("keyboard_key.png"), Resources::GetFileSize("keyboard_key.png")),
 	keyOverImageData(Resources::GetFile("keyboard_key_over.png"), Resources::GetFileSize("keyboard_key_over.png"))
 {
@@ -56,19 +54,19 @@ GuiSearchBar::GuiSearchBar() :
 		x_start += (320 - width) >> 1;
 		width = 320;
 	}
-	for (std::set<wchar_t>::iterator it=SearchChars.begin() ; it != SearchChars.end(); it++, i++, x++)
+	for (std::set<wchar_t>::iterator it = SearchChars.begin(); it != SearchChars.end(); it++, i++, x++)
 	{
 		if (x >= buttonsPerLine) x = 0;
 		if (x == 0) y++;
 		charstr[0] = *it;
 		buttons[i] = new cSearchButton(charstr, &keyImageData, &keyOverImageData, x_start + x * 42, y_start - 42 + y
-				* 42, &trig, btnSoundOver, btnSoundClick);
+			* 42, &trig, btnSoundOver, btnSoundClick);
 		this->Append(&(buttons[i]->button));
 	}
 	height = 10 + 42 + y * 42 + 10;
 
 	charstr[0] = App.Settings.SearchMode == SEARCH_BEGINNING ? L'=' : L'*';
-	searchModeBtn = new cSearchButton(charstr,  &keyImageData, &keyOverImageData, 10, 10, &trig, btnSoundOver, btnSoundClick);
+	searchModeBtn = new cSearchButton(charstr, &keyImageData, &keyOverImageData, 10, 10, &trig, btnSoundOver, btnSoundClick);
 	this->Append(&searchModeBtn->button);
 
 	text.SetText(gameList.GetCurrentFilter());
@@ -119,17 +117,19 @@ GuiSearchBar::~GuiSearchBar()
 	delete BacspaceBtnImg;
 	delete BacspaceBtnImg_Over;
 	delete imgBacspaceBtn;
-	if (inSide) mainWindow->SetState(STATE_DEFAULT);
+	if (inSide) App.MainWindow->SetState(STATE_DEFAULT);
 }
+
 void GuiSearchBar::Draw()
 {
-	Menu_DrawRectangle(this->GetLeft(), this->GetTop(), width, height, ( GXColor ) {0, 0, 0, 0xa0}, 1);
-	Menu_DrawRectangle(this->GetLeft() + 55, this->GetTop() + 15, width - (55 + 2 * 42 + 10), 22, ( GXColor ) {255, 255, 255, 255}, 1);
+	Menu_DrawRectangle(this->GetLeft(), this->GetTop(), width, height, (GXColor) { 0, 0, 0, 0xa0 }, 1);
+	Menu_DrawRectangle(this->GetLeft() + 55, this->GetTop() + 15, width - (55 + 2 * 42 + 10), 22, (GXColor) { 255, 255, 255, 255 }, 1);
 	GuiWindow::Draw();
 }
+
 void GuiSearchBar::Update(GuiTrigger * t)
 {
-	LOCK( this );
+	LOCK(this);
 	if (_elements.size() == 0 || (state == STATE_DISABLED && parentElement)) return;
 	// cursor
 	if (t->wpad.ir.valid && state != STATE_DISABLED)
@@ -138,7 +138,7 @@ void GuiSearchBar::Update(GuiTrigger * t)
 		{
 			if (inSide == 0)
 			{
-				mainWindow->SetState(STATE_DISABLED);
+				App.MainWindow->SetState(STATE_DISABLED);
 				this->SetState(STATE_DEFAULT);
 			}
 			inSide |= 1 << t->chan;
@@ -146,7 +146,7 @@ void GuiSearchBar::Update(GuiTrigger * t)
 		else if (inSide)
 		{
 			inSide &= ~(1 << t->chan);
-			if (inSide == 0) mainWindow->SetState(STATE_DEFAULT);
+			if (inSide == 0) App.MainWindow->SetState(STATE_DEFAULT);
 		}
 	}
 	GuiWindow::Update(t);
@@ -185,25 +185,25 @@ void GuiSearchBar::FilterList(std::vector<struct discHdr *> &List, wString &Game
 	{
 		struct discHdr *header = List.at(i);
 
-		wchar_t *gameName = charToWideChar(GameTitles.GetTitle(header));
+		wchar_t *gameName = charToWideChar(App.Library.GameTitles.GetTitle(header));
 		if (!gameName)
 		{
-			List.erase(List.begin()+i);
+			List.erase(List.begin() + i);
 			i--;
 			continue;
 		}
 
-		if(App.Settings.SearchMode == SEARCH_BEGINNING)
+		if (App.Settings.SearchMode == SEARCH_BEGINNING)
 		{
 			if (GameFilter.size() > 0 && wcsncasecmp(gameName, GameFilter.c_str(), GameFilter.size()) != 0)
 			{
-				delete [] gameName;
-				List.erase(List.begin()+i);
+				delete[] gameName;
+				List.erase(List.begin() + i);
 				i--;
 				continue;
 			}
 
-			if (   wcslen(gameName) > GameFilter.size()
+			if (wcslen(gameName) > GameFilter.size()
 				&& SearchChars.find(towupper(gameName[GameFilter.size()])) == SearchChars.end()
 				&& SearchChars.find(towlower(gameName[GameFilter.size()])) == SearchChars.end())
 			{
@@ -212,24 +212,24 @@ void GuiSearchBar::FilterList(std::vector<struct discHdr *> &List, wString &Game
 			else if (wcslen(gameName) == GameFilter.size())  // The end of the game name was reached
 				endOfGameName = true;
 		}
-		else if(App.Settings.SearchMode == SEARCH_CONTENT)
+		else if (App.Settings.SearchMode == SEARCH_CONTENT)
 		{
-			if(GameFilter.size() > 0)
+			if (GameFilter.size() > 0)
 			{
 				if (wcscasestr(gameName, GameFilter.c_str()) == 0)
 				{
-					delete [] gameName;
-					List.erase(List.begin()+i);
+					delete[] gameName;
+					List.erase(List.begin() + i);
 					i--;
 					continue;
 				}
 
 				const wchar_t *found = gameName;
-				while((found = wcscasestr(found, GameFilter.c_str())) != 0)
+				while ((found = wcscasestr(found, GameFilter.c_str())) != 0)
 				{
 					found += GameFilter.size();
 					wchar_t ch = towupper(*found);
-					if(ch)
+					if (ch)
 						SearchChars.insert(ch);
 					else      // The end of the game name was reached
 						endOfGameName = true;
@@ -237,23 +237,23 @@ void GuiSearchBar::FilterList(std::vector<struct discHdr *> &List, wString &Game
 			}
 			else
 			{
-				for(const wchar_t *wPtr = gameName; *wPtr != 0; wPtr++)
+				for (const wchar_t *wPtr = gameName; *wPtr != 0; wPtr++)
 				{
 					wchar_t ch = towupper(*wPtr);
-					if(ch > L'@')
+					if (ch > L'@')
 						SearchChars.insert(ch);
 				}
 			}
 		}
 
-		delete [] gameName;
+		delete[] gameName;
 	}
 
-	if(List.size() < 2)
+	if (List.size() < 2)
 		SearchChars.clear();
 
 	// If the last character was not backslash try autocomplete
-	if(SearchChars.size() == 1 && GameFilter.size() > 0 && lastSearchChar != 8 && !endOfGameName)
+	if (SearchChars.size() == 1 && GameFilter.size() > 0 && lastSearchChar != 8 && !endOfGameName)
 	{
 		GameFilter += *SearchChars.begin();
 		FilterList(List, GameFilter);

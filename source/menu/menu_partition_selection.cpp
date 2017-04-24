@@ -80,8 +80,8 @@ int SelectPartitionMenu()
 	w.Append(&poweroffBtn);
 	w.Append(&exitBtn);
 
-	mainWindow->Append(&w);
-	mainWindow->Append(&optionBrowser);
+	App.MainWindow->Append(&w);
+	App.MainWindow->Append(&optionBrowser);
 
 	ResumeGui();
 
@@ -122,8 +122,8 @@ int SelectPartitionMenu()
 
 	HaltGui();
 
-	mainWindow->Remove(&optionBrowser);
-	mainWindow->Remove(&w);
+	App.MainWindow->Remove(&optionBrowser);
+	App.MainWindow->Remove(&w);
 	ResumeGui();
 
 	return choice;

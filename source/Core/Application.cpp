@@ -1,6 +1,8 @@
+#include <gctypes.h>
 #include "Application.h"
 
-Application::Application()
+Application::Application() 
+	: MainWindow(NULL)
 {
 
 }

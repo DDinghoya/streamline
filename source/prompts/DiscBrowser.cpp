@@ -19,7 +19,6 @@
 #include "libwbfs/wiidisc.h"
 #include "App.h"
 #include "sys.h"
-#include "settings/GameTitles.h"
 #include "themes/CTheme.h"
 #include "memory/memory.h"
 #include "gecko.h"
@@ -105,7 +104,7 @@ int DiscBrowse(const char * GameID, char * alternatedname, int alternatedname_si
 	GuiTrigger trigB;
 	trigB.SetButtonOnlyTrigger(-1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B);
 
-	GuiText titleTxt(GameTitles.GetTitle(GameID), 28, ( GXColor ) {0, 0, 0, 255});
+	GuiText titleTxt(App.Library.GameTitles.GetTitle(GameID), 28, ( GXColor ) {0, 0, 0, 255});
 	titleTxt.SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	titleTxt.SetPosition(12, 40);
 	titleTxt.SetMaxWidth(356, SCROLL_HORIZONTAL);
@@ -140,7 +139,7 @@ int DiscBrowse(const char * GameID, char * alternatedname, int alternatedname_si
 	w.Append(&cancelBtn);
 	w.Append(&optionBrowser3);
 
-	mainWindow->Append(&w);
+	App.MainWindow->Append(&w);
 
 	ResumeGui();
 	while (!exit)
@@ -176,7 +175,7 @@ int DiscBrowse(const char * GameID, char * alternatedname, int alternatedname_si
 	}
 
 	HaltGui();
-	mainWindow->Remove(&w);
+	App.MainWindow->Remove(&w);
 	ResumeGui();
 
 	return ret;

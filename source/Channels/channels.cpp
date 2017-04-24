@@ -29,7 +29,6 @@
 #include "FileOperations/fileops.h"
 #include "Controls/DeviceHandler.hpp"
 #include "App.h"
-#include "settings/GameTitles.h"
 #include "patches/gamepatches.h"
 #include "wad/nandtitle.h"
 #include "memory/memory.h"
@@ -103,7 +102,7 @@ void Channels::InternalGetNandChannelList(u32 type)
 		if(tid == 0x000100014c554c5aLL || tid == 0x00010001AF1BF516LL || tid == 0x0001000148415858LL)
 			strcpy(id, "JODI");
 
-		const char *name = GameTitles.GetTitle(id);
+		const char *name = App.Library.GameTitles.GetTitle(id);
 		std::string TitleName;
 
 		if(!name || *name == '\0')
@@ -111,7 +110,7 @@ void Channels::InternalGetNandChannelList(u32 type)
 			name = NandTitles.NameOf(tid);
 			// Set title for caching
 			if(name)
-				GameTitles.SetGameTitle(id, name);
+				App.Library.GameTitles.SetGameTitle(id, name);
 		}
 
 		int s = NandChannels.size();
@@ -545,14 +544,14 @@ bool Channels::ParseTitleDir(char *path, int language)
 
 		std::string TitleName;
 
-		const char *title = GameTitles.GetTitle(id);
+		const char *title = App.Library.GameTitles.GetTitle(id);
 		if(title && *title != '\0')
 		{
 			TitleName = title;
 		}
 		else if(GetEmuChanTitle(path, language, TitleName))
 		{
-			GameTitles.SetGameTitle(id, TitleName.c_str());
+			App.Library.GameTitles.SetGameTitle(id, TitleName.c_str());
 		}
 		else
 		{

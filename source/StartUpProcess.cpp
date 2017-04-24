@@ -13,9 +13,7 @@
 #include "utils/timer.h"
 #include "App.h"
 #include "settings/CGameSettings.h"
-#include "settings/CGameStatistics.h"
 #include "settings/CGameCategories.hpp"
-#include "settings/GameTitles.h"
 #include "usbloader/usbstorage2.h"
 #include "usbloader/MountGamePartition.h"
 #include "usbloader/GameBooter.hpp"
@@ -29,30 +27,30 @@ StartUpProcess::StartUpProcess()
 	//! Load default font for the next text outputs
 	Theme::LoadFont("");
 
-	background = new GuiImage(screenwidth, screenheight, (GXColor) {0, 0, 0, 255});
+	background = new GuiImage(screenwidth, screenheight, (GXColor) { 0, 0, 0, 255 });
 
 	GXImageData = Resources::GetImageData("gxlogo.png");
 	GXImage = new GuiImage(GXImageData);
 	GXImage->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
-	GXImage->SetPosition(screenwidth/2, screenheight/2-50);
+	GXImage->SetPosition(screenwidth / 2, screenheight / 2 - 50);
 
-	titleTxt = new GuiText("Loading...", 24, (GXColor) {255, 255, 255, 255});
+	titleTxt = new GuiText("Loading...", 24, (GXColor) { 255, 255, 255, 255 });
 	titleTxt->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
-	titleTxt->SetPosition(screenwidth/2, screenheight/2+30);
+	titleTxt->SetPosition(screenwidth / 2, screenheight / 2 + 30);
 
-	messageTxt = new GuiText(" ", 22, (GXColor) {255, 255, 255, 255});
+	messageTxt = new GuiText(" ", 22, (GXColor) { 255, 255, 255, 255 });
 	messageTxt->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
-	messageTxt->SetPosition(screenwidth/2, screenheight/2+60);
+	messageTxt->SetPosition(screenwidth / 2, screenheight / 2 + 60);
 
-	versionTxt = new GuiText(" ", 18, (GXColor) {255, 255, 255, 255});
+	versionTxt = new GuiText(" ", 18, (GXColor) { 255, 255, 255, 255 });
 	versionTxt->SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
-	versionTxt->SetPosition(20, screenheight-20);
+	versionTxt->SetPosition(20, screenheight - 20);
 
 	versionTxt->SetTextf("Release %s", Version_GetName());
 
-	cancelTxt = new GuiText("Press B to cancel", 18, (GXColor) {255, 255, 255, 255});
+	cancelTxt = new GuiText("Press B to cancel", 18, (GXColor) { 255, 255, 255, 255 });
 	cancelTxt->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
-	cancelTxt->SetPosition(screenwidth/2, screenheight/2+90);
+	cancelTxt->SetPosition(screenwidth / 2, screenheight / 2 + 90);
 
 	trigB = new GuiTrigger;
 	trigB->SetButtonOnlyTrigger(-1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B);
@@ -81,35 +79,35 @@ int StartUpProcess::ParseArguments(int argc, char *argv[])
 	int quickBoot = -1;
 
 	//! The arguments override
-	for(int i = 0; i < argc; ++i)
+	for (int i = 0; i < argc; ++i)
 	{
-		if(!argv[i]) continue;
+		if (!argv[i]) continue;
 
-		gprintf("Boot argument %i: %s\n", i+1, argv[i]);
+		gprintf("Boot argument %i: %s\n", i + 1, argv[i]);
 
 		char *ptr = strcasestr(argv[i], "-ios=");
-		if(ptr)
+		if (ptr)
 		{
-			if(atoi(ptr+strlen("-ios=")) == 58)
+			if (atoi(ptr + strlen("-ios=")) == 58)
 				App.Settings.LoaderIOS = 58;
 			else
-				App.Settings.LoaderIOS = LIMIT(atoi(ptr+strlen("-ios=")), 200, 255);
+				App.Settings.LoaderIOS = LIMIT(atoi(ptr + strlen("-ios=")), 200, 255);
 			App.Settings.UseArgumentIOS = ON;
 		}
 
 		ptr = strcasestr(argv[i], "-usbport=");
-		if(ptr)
+		if (ptr)
 		{
-			App.Settings.USBPort = LIMIT(atoi(ptr+strlen("-usbport=")), 0, 2);
+			App.Settings.USBPort = LIMIT(atoi(ptr + strlen("-usbport=")), 0, 2);
 		}
 
 		ptr = strcasestr(argv[i], "-mountusb=");
-		if(ptr)
+		if (ptr)
 		{
-			App.Settings.USBAutoMount = LIMIT(atoi(ptr+strlen("-mountusb=")), 0, 1);
+			App.Settings.USBAutoMount = LIMIT(atoi(ptr + strlen("-mountusb=")), 0, 1);
 		}
 
-		if(strlen(argv[i]) == 6 && strchr(argv[i], '=') == 0 && strchr(argv[i], '-') == 0)
+		if (strlen(argv[i]) == 6 && strchr(argv[i], '=') == 0 && strchr(argv[i], '-') == 0)
 			quickBoot = i;
 	}
 
@@ -118,9 +116,9 @@ int StartUpProcess::ParseArguments(int argc, char *argv[])
 
 void StartUpProcess::TextFade(int direction)
 {
-	if(direction > 0)
+	if (direction > 0)
 	{
-		for(int i = 0; i < 255; i += direction)
+		for (int i = 0; i < 255; i += direction)
 		{
 			messageTxt->SetAlpha(i);
 			Draw();
@@ -128,9 +126,9 @@ void StartUpProcess::TextFade(int direction)
 		messageTxt->SetAlpha(255);
 		Draw();
 	}
-	else if(direction < 0)
+	else if (direction < 0)
 	{
-		for(int i = 255; i > 0; i += direction)
+		for (int i = 255; i > 0; i += direction)
 		{
 			messageTxt->SetAlpha(i);
 			Draw();
@@ -145,7 +143,7 @@ void StartUpProcess::SetTextf(const char * format, ...)
 	char * tmp = NULL;
 	va_list va;
 	va_start(va, format);
-	if((vasprintf(&tmp, format, va) >= 0) && tmp)
+	if ((vasprintf(&tmp, format, va) >= 0) && tmp)
 	{
 		TextFade(-40);
 		gprintf(tmp);
@@ -154,7 +152,7 @@ void StartUpProcess::SetTextf(const char * format, ...)
 	}
 	va_end(va);
 
-	if(tmp)
+	if (tmp)
 		free(tmp);
 }
 
@@ -167,38 +165,37 @@ bool StartUpProcess::USBSpinUp()
 
 	const DISC_INTERFACE * handle0 = NULL;
 	const DISC_INTERFACE * handle1 = NULL;
-	if(App.Settings.USBPort == 0 || App.Settings.USBPort == 2)
+	if (App.Settings.USBPort == 0 || App.Settings.USBPort == 2)
 		handle0 = DeviceHandler::GetUSB0Interface();
-	if(App.Settings.USBPort == 1 || App.Settings.USBPort == 2)
+	if (App.Settings.USBPort == 1 || App.Settings.USBPort == 2)
 		handle1 = DeviceHandler::GetUSB1Interface();
-		
+
 	// wait 20 sec for the USB to spin up...stupid slow ass HDD
 	do
 	{
-		if(handle0)
+		if (handle0)
 			started0 = (handle0->startup() && handle0->isInserted());
 
-		if(handle1)
+		if (handle1)
 			started1 = (handle1->startup() && handle1->isInserted());
 
-		if(   (!handle0 || started0)
-		   && (!handle1 || started1)) {
+		if ((!handle0 || started0)
+			&& (!handle1 || started1)) {
 			break;
 		}
 
 
 		UpdatePads();
-		for(int i = 0; i < 4; ++i)
+		for (int i = 0; i < 4; ++i)
 			cancelBtn->Update(&userInput[i]);
 
-		if(cancelBtn->GetState() == STATE_CLICKED)
+		if (cancelBtn->GetState() == STATE_CLICKED)
 			break;
 
-		messageTxt->SetTextf("Waiting for HDD: %i sec left\n", 20-(int)countDown.elapsed());
+		messageTxt->SetTextf("Waiting for HDD: %i sec left\n", 20 - (int)countDown.elapsed());
 		Draw();
 		usleep(50000);
-	}
-	while(countDown.elapsed() < 20.f);
+	} while (countDown.elapsed() < 20.f);
 
 	drawCancel = false;
 
@@ -213,7 +210,7 @@ int StartUpProcess::Run(int argc, char *argv[])
 
 	int ret = Process.Execute();
 
-	if(quickGameBoot != -1)
+	if (quickGameBoot != -1)
 		return QuickGameBoot(argv[quickGameBoot]);
 
 	return ret;
@@ -225,12 +222,12 @@ int StartUpProcess::Execute()
 
 	// Reload app cios if needed
 	SetTextf("Loading application cIOS %s\n", App.Settings.UseArgumentIOS ? "requested in meta.xml" : "");
-	if(IosLoader::LoadAppCios() < 0)
+	if (IosLoader::LoadAppCios() < 0)
 	{
 		SetTextf("Failed loading any cIOS. Trying with IOS58 + AHB access...");
-		
+
 		// We can allow now operation without cIOS in channel mode with AHB access
-		if(!AHBPROT_DISABLED || (AHBPROT_DISABLED && IOS_GetVersion() != 58))
+		if (!AHBPROT_DISABLED || (AHBPROT_DISABLED && IOS_GetVersion() != 58))
 		{
 			SetTextf("Failed loading IOS 58. USB Loader GX requires a cIOS or IOS 58 with AHB access. Exiting...\n");
 			sleep(5);
@@ -243,8 +240,8 @@ int StartUpProcess::Execute()
 			sleep(5);
 		}
 	}
-	
-	if(!AHBPROT_DISABLED && IOS_GetVersion() < 200)
+
+	if (!AHBPROT_DISABLED && IOS_GetVersion() < 200)
 	{
 		SetTextf("Failed loading IOS %i. USB Loader GX requires a cIOS or IOS58 with AHB access. Exiting...\n", IOS_GetVersion());
 		sleep(5);
@@ -252,35 +249,35 @@ int StartUpProcess::Execute()
 	}
 
 	SetTextf("Using %sIOS %i\n", IOS_GetVersion() >= 200 ? "c" : "", IOS_GetVersion());
-	
+
 	SetupPads();
 
 	SetTextf("Initialize sd card\n");
 	DeviceHandler::Instance()->MountSD();
 
-	if(App.Settings.USBAutoMount == ON)
+	if (App.Settings.USBAutoMount == ON)
 	{
 		SetTextf("Initialize usb device\n");
 		USBSpinUp();
 		DeviceHandler::Instance()->MountAllUSB(false);
 	}
-	
+
 	SetTextf("Loading config files\n");
-	
+
 	gprintf("\tLoading config...%s\n", App.Settings.Load() ? "done" : "failed");
 	gprintf("\tLoading language...%s\n", App.Settings.LoadLanguage(App.Settings.language_path, CONSOLE_DEFAULT) ? "done" : "failed");
-	gprintf("\tLoading game settings...%s\n", GameSettings.Load(App.Settings.ConfigPath) ? "done" : "failed");
-	gprintf("\tLoading game statistics...%s\n", GameStatistics.Load(App.Settings.ConfigPath) ? "done" : "failed");
-	gprintf("\tLoading game categories...%s\n", GameCategories.Load(App.Settings.ConfigPath) ? "done" : "failed");
-	if(App.Settings.CacheTitles)
-		gprintf("\tLoading cached titles...%s\n", GameTitles.ReadCachedTitles(App.Settings.titlestxt_path) ? "done" : "failed (using default)");
-	if(App.Settings.LoaderIOS != IOS_GetVersion())
+	gprintf("\tLoading game settings...%s\n", App.Library.GameSettings.Load(App.Settings.ConfigPath) ? "done" : "failed");
+	gprintf("\tLoading game statistics...%s\n", App.Library.GameStatistics.Load(App.Settings.ConfigPath) ? "done" : "failed");
+	gprintf("\tLoading game categories...%s\n", App.Library.GameCategories.Load(App.Settings.ConfigPath) ? "done" : "failed");
+	if (App.Settings.CacheTitles)
+		gprintf("\tLoading cached titles...%s\n", App.Library.GameTitles.ReadCachedTitles(App.Settings.titlestxt_path) ? "done" : "failed (using default)");
+	if (App.Settings.LoaderIOS != IOS_GetVersion())
 	{
 		SetTextf("Reloading to config file's cIOS...\n");
-		
+
 		// Unmount devices
 		DeviceHandler::DestroyInstance();
-		if(App.Settings.USBAutoMount == ON)
+		if (App.Settings.USBAutoMount == ON)
 			USBStorage2_Deinit();
 
 		// Shut down pads
@@ -295,7 +292,7 @@ int StartUpProcess::Execute()
 		// Re-Mount devices
 		SetTextf("Reinitializing devices...\n");
 		DeviceHandler::Instance()->MountSD();
-		if(App.Settings.USBAutoMount == ON)
+		if (App.Settings.USBAutoMount == ON)
 		{
 			USBSpinUp();
 			DeviceHandler::Instance()->MountAllUSB(false);
@@ -305,30 +302,30 @@ int StartUpProcess::Execute()
 		SetupPads();
 	}
 
-	if(!IosLoader::IsHermesIOS() && !IosLoader::IsD2X())
+	if (!IosLoader::IsHermesIOS() && !IosLoader::IsD2X())
 	{
 		App.Settings.USBPort = 0;
 	}
-	else if(App.Settings.USBPort == 1 && USBStorage2_GetPort() != App.Settings.USBPort)
+	else if (App.Settings.USBPort == 1 && USBStorage2_GetPort() != App.Settings.USBPort)
 	{
-		if(App.Settings.USBAutoMount == ON)
+		if (App.Settings.USBAutoMount == ON)
 		{
 			SetTextf("Changing USB Port to %i\n", App.Settings.USBPort);
 			DeviceHandler::Instance()->UnMountAllUSB();
 			DeviceHandler::Instance()->MountAllUSB();
 		}
 	}
-	else if(App.Settings.USBPort == 2)
+	else if (App.Settings.USBPort == 2)
 	{
-		if(App.Settings.USBAutoMount == ON)
+		if (App.Settings.USBAutoMount == ON)
 		{
 			SetTextf("Mounting USB Port to 1\n");
 			DeviceHandler::Instance()->MountUSBPort1();
 		}
 	}
-	
+
 	// enable isfs permission if using IOS+AHB or Hermes v4
-	if(IOS_GetVersion() < 200 || (IosLoader::IsHermesIOS() && IOS_GetRevision() == 4))
+	if (IOS_GetVersion() < 200 || (IosLoader::IsHermesIOS() && IOS_GetRevision() == 4))
 	{
 		SetTextf("Patching %sIOS%d...\n", IOS_GetVersion() >= 200 ? "c" : "", IOS_GetVersion());
 		if (IosPatch_RUNTIME(true, false, false, false) == ERROR_PATCH)
@@ -356,7 +353,7 @@ void StartUpProcess::Draw()
 	titleTxt->Draw();
 	messageTxt->Draw();
 	versionTxt->Draw();
-	if(drawCancel)
+	if (drawCancel)
 		cancelTxt->Draw();
 	Menu_Render();
 }
@@ -366,17 +363,17 @@ int StartUpProcess::QuickGameBoot(const char * gameID)
 	MountGamePartition(false);
 
 	struct discHdr *header = NULL;
-	for(int i = 0; i < gameList.size(); ++i)
+	for (int i = 0; i < gameList.size(); ++i)
 	{
-		if(strncasecmp((char *) gameList[i]->id, gameID, 6) == 0)
+		if (strncasecmp((char *)gameList[i]->id, gameID, 6) == 0)
 			header = gameList[i];
 	}
 
-	if(!header)
+	if (!header)
 		return -1;
 
-	GameStatistics.SetPlayCount(header->id, GameStatistics.GetPlayCount(header->id)+1);
-	GameStatistics.Save();
+	App.Library.GameStatistics.SetPlayCount(header->id, App.Library.GameStatistics.GetPlayCount(header->id) + 1);
+	App.Library.GameStatistics.Save();
 
 	return GameBooter::BootGame(header);
 }

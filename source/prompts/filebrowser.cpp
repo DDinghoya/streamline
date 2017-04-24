@@ -29,8 +29,7 @@
 #include "sys.h"
 #include "filebrowser.h"
 
-/*** Extern variables ***/
-extern GuiWindow * mainWindow;
+ /*** Extern variables ***/
 extern u8 shutdown;
 extern u8 reset;
 
@@ -80,7 +79,7 @@ int InitBrowsers()
 		if (strcmp(devoptab_list[i]->name, "stdnull") && devoptab_list[i]->write_r != NULL)
 		{
 			snprintf(rootdir, sizeof(rootdir), "%s:/", devoptab_list[i]->name);
-			if ( DIR *dir = opendir( rootdir ) )
+			if (DIR *dir = opendir(rootdir))
 			{
 				closedir(dir);
 				BROWSERINFO browser;
@@ -126,7 +125,7 @@ void ResetBrowser(BROWSERINFO *browser)
  *   <dirs>
  *   <files>
  ***************************************************************************/
-//int FileSortCallback(const void *f1, const void *f2) {
+ //int FileSortCallback(const void *f1, const void *f2) {
 bool operator<(const BROWSERENTRY &f1, const BROWSERENTRY &f2)
 {
 	/* Special case for implicit directories */
@@ -209,7 +208,7 @@ int ParseDirectory(const char* Path, int Flags, FILTERCASCADE *Filter)
 		for (i = 0; i < browsers.size(); i++) // searchs the browser who match the path
 		{
 			if (strncasecmp(fulldir, browsers[i].rootdir, strlen(browsers[i].rootdir) - 1 /*means without trailing '/'*/)
-					== 0)
+				== 0)
 			{
 				browser = &browsers[curDevice];
 				break;
@@ -248,12 +247,12 @@ int ParseDirectory(const char* Path, int Flags, FILTERCASCADE *Filter)
 	}
 
 	struct dirent *dirent = NULL;
-	
+
 	// Adds parent directory ".." manually if in a subdirectory to fix NTFS folder browsing.
 	if (strcmp(fulldir, browser->rootdir) != 0)
 	{
 		snprintf(filename, sizeof(filename), "..");
-		
+
 		BROWSERENTRY newEntry;
 		memset(&newEntry, 0, sizeof(BROWSERENTRY)); // clear the new entry
 		strlcpy(newEntry.filename, filename, sizeof(newEntry.filename));
@@ -265,7 +264,7 @@ int ParseDirectory(const char* Path, int Flags, FILTERCASCADE *Filter)
 	while ((dirent = readdir(dir)) != 0)
 	{
 		snprintf(filename, sizeof(filename), "%s/%s", fulldir, dirent->d_name);
-		if(stat(filename, &filestat) != 0)
+		if (stat(filename, &filestat) != 0)
 			continue;
 
 		snprintf(filename, sizeof(filename), dirent->d_name);
@@ -291,12 +290,12 @@ int ParseDirectory(const char* Path, int Flags, FILTERCASCADE *Filter)
 }
 int ParseDirectory(int Device, int Flags, FILTERCASCADE *Filter)
 {
-	if (Device >= 0 && Device < (int) browsers.size())
+	if (Device >= 0 && Device < (int)browsers.size())
 	{
 		int old_curDevice = curDevice;
 		curDevice = Device;
 		browser = &browsers[curDevice];
-		if (ParseDirectory((char*) NULL, Flags, Filter) == 0) return 0;
+		if (ParseDirectory((char*)NULL, Flags, Filter) == 0) return 0;
 		curDevice = old_curDevice;
 		browser = &browsers[old_curDevice];
 	}
@@ -314,7 +313,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 
 	if (InitBrowsers() || ParseDirectory(Path, Flags, Filter))
 	{
-		WindowPrompt(tr( "Error" ), 0, tr( "OK" ));
+		WindowPrompt(tr("Error"), 0, tr("OK"));
 		return -1;
 	}
 	int menu = MENU_NONE;
@@ -334,7 +333,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 	folderBtn.SetEffectGrow();
 
 	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiText ExitBtnTxt(tr( "Cancel" ), 24, ( GXColor ) {0, 0, 0, 255});
+	GuiText ExitBtnTxt(tr("Cancel"), 24, (GXColor) { 0, 0, 0, 255 });
 	GuiImage ExitBtnImg(&btnOutline);
 	if (App.Settings.wsprompt)
 	{
@@ -350,7 +349,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 	ExitBtn.SetTrigger(&trigB);
 	ExitBtn.SetEffectGrow();
 
-	GuiText usbBtnTxt(browsers[(curDevice + 1) % browsers.size()].rootdir, 24, ( GXColor ) {0, 0, 0, 255});
+	GuiText usbBtnTxt(browsers[(curDevice + 1) % browsers.size()].rootdir, 24, (GXColor) { 0, 0, 0, 255 });
 	GuiImage usbBtnImg(&btnOutline);
 	if (App.Settings.wsprompt)
 	{
@@ -365,7 +364,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 	usbBtn.SetTrigger(&trigA);
 	usbBtn.SetEffectGrow();
 
-	GuiText okBtnTxt(tr( "OK" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
+	GuiText okBtnTxt(tr("OK"), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage okBtnImg(&btnOutline);
 	if (App.Settings.wsprompt)
 	{
@@ -380,7 +379,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 	fileBrowser.SetPosition(0, 120);
 
 	GuiImageData Address(Resources::GetFile("addressbar_textbox.png"), Resources::GetFileSize("addressbar_textbox.png"));
-	GuiText AdressText((char*) NULL, 20, ( GXColor ) {0, 0, 0, 255});
+	GuiText AdressText((char*)NULL, 20, (GXColor) { 0, 0, 0, 255 });
 	AdressText.SetTextf("%s%s", browser->rootdir, browser->dir);
 	AdressText.SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 	AdressText.SetPosition(20, 0);
@@ -401,7 +400,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 	w.Append(&okBtn);
 	if (!(Flags & FB_NOFOLDER_BTN)) w.Append(&folderBtn);
 	if (browsers.size() > 1 && !(Flags & FB_NODEVICE_BTN)) w.Append(&usbBtn);
-	mainWindow->Append(&w);
+	App.MainWindow->Append(&w);
 	ResumeGui();
 	int clickedIndex = -1;
 	while (menu == MENU_NONE)
@@ -442,7 +441,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 					{
 						/* test new directory namelength */
 						if ((strlen(browser->dir) + strlen(browser->browserList[clickedIndex].filename) + 1/*'/'*/)
-								< MAXPATHLEN)
+							< MAXPATHLEN)
 						{
 							/* update current directory name */
 							sprintf(browser->dir, "%s%s/", browser->dir, browser->browserList[clickedIndex].filename);
@@ -451,8 +450,8 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 					}
 					if (pathCanged)
 					{
-						LOCK( &fileBrowser );
-						ParseDirectory((char*) NULL, Flags, Filter);
+						LOCK(&fileBrowser);
+						ParseDirectory((char*)NULL, Flags, Filter);
 						fileBrowser.ResetState();
 						fileBrowser.UpdateList();
 						AdressText.SetTextf("%s%s", browser->rootdir, browser->dir);
@@ -462,7 +461,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 				else /* isFile */
 				{
 					AdressText.SetTextf("%s%s%s", browser->rootdir, browser->dir,
-							browser->browserList[clickedIndex].filename);
+						browser->browserList[clickedIndex].filename);
 				}
 			}
 		}
@@ -476,7 +475,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 		{
 			if (clickedIndex >= 0)
 				snprintf(Path, Path_size, "%s%s%s", browser->rootdir, browser->dir,
-						browser->browserList[clickedIndex].filename);
+					browser->browserList[clickedIndex].filename);
 			else snprintf(Path, Path_size, "%s%s", browser->rootdir, browser->dir);
 			result = 1;
 			break;
@@ -486,7 +485,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 			usbBtn.ResetState();
 			for (u32 i = 1; i < browsers.size(); i++)
 			{
-				LOCK( &fileBrowser );
+				LOCK(&fileBrowser);
 				if (ParseDirectory((curDevice + i) % browsers.size(), Flags, Filter) == 0)
 				{
 					fileBrowser.ResetState();
@@ -502,7 +501,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 			folderBtn.ResetState();
 
 			HaltGui();
-			mainWindow->Remove(&w);
+			App.MainWindow->Remove(&w);
 			ResumeGui();
 			char newfolder[100];
 			char oldfolder[100];
@@ -522,10 +521,10 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 				struct stat st;
 				if (stat(newfolder, &st) != 0)
 				{
-					if (WindowPrompt(tr( "Directory does not exist!" ),
-							tr( "The entered directory does not exist. Would you like to create it?" ),
-							tr( "OK" ), tr( "Cancel" )) == 1) if (CreateSubfolder(newfolder) == false) WindowPrompt(
-							tr( "Error !" ), tr( "Can't create directory" ), tr( "OK" ));
+					if (WindowPrompt(tr("Directory does not exist!"),
+						tr("The entered directory does not exist. Would you like to create it?"),
+						tr("OK"), tr("Cancel")) == 1) if (CreateSubfolder(newfolder) == false) WindowPrompt(
+							tr("Error !"), tr("Can't create directory"), tr("OK"));
 				}
 				if (ParseDirectory(newfolder, Flags, Filter) == 0)
 				{
@@ -536,13 +535,13 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 				}
 			}
 			HaltGui();
-			mainWindow->Append(&w);
+			App.MainWindow->Append(&w);
 			ResumeGui();
 		}
 
 	}
 	HaltGui();
-	mainWindow->Remove(&w);
+	App.MainWindow->Remove(&w);
 	ResumeGui();
 
 	//}

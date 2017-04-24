@@ -31,8 +31,6 @@
 #include "FileOperations/fileops.h"
 #include "Version.h"
 
-CGameSettings GameSettings;
-
 CGameSettings::CGameSettings()
 {
 	SetDefault(DefaultConfig);
@@ -44,15 +42,15 @@ CGameSettings::~CGameSettings()
 
 GameCFG * CGameSettings::GetGameCFG(const char * id)
 {
-	if(!id)
+	if (!id)
 	{
 		DefaultConfig.id[0] = '\0';
 		return &DefaultConfig;
 	}
 
-	for(u32 i = 0; i < GameList.size(); ++i)
+	for (u32 i = 0; i < GameList.size(); ++i)
 	{
-		if(strncasecmp(id, GameList[i].id, 6) == 0)
+		if (strncasecmp(id, GameList[i].id, 6) == 0)
 			return &GameList[i];
 	}
 
@@ -63,9 +61,9 @@ GameCFG * CGameSettings::GetGameCFG(const char * id)
 
 bool CGameSettings::AddGame(const GameCFG & NewGame)
 {
-	for(u32 i = 0; i < GameList.size(); ++i)
+	for (u32 i = 0; i < GameList.size(); ++i)
 	{
-		if(strncasecmp(NewGame.id, GameList[i].id, 6) == 0)
+		if (strncasecmp(NewGame.id, GameList[i].id, 6) == 0)
 		{
 			GameList[i] = NewGame;
 			return true;
@@ -87,14 +85,14 @@ bool CGameSettings::RemoveAll()
 
 bool CGameSettings::Remove(const char * id)
 {
-	if(!id)
+	if (!id)
 		return false;
 
-	for(u32 i = 0; i < GameList.size(); ++i)
+	for (u32 i = 0; i < GameList.size(); ++i)
 	{
-		if(strncasecmp(id, GameList[i].id, 6) == 0)
+		if (strncasecmp(id, GameList[i].id, 6) == 0)
 		{
-			GameList.erase(GameList.begin()+i);
+			GameList.erase(GameList.begin() + i);
 			break;
 		}
 	}
@@ -112,10 +110,10 @@ bool CGameSettings::Load(const char * path)
 	FILE *file = fopen(filepath, "r");
 	if (!file) return false;
 
-	const int lineSize = 20*1024;
+	const int lineSize = 20 * 1024;
 
 	char *line = new (std::nothrow) char[lineSize];
-	if(!line) {
+	if (!line) {
 		fclose(file);
 		return false;
 	}
@@ -128,7 +126,7 @@ bool CGameSettings::Load(const char * path)
 		this->ParseLine(line);
 	}
 
-	delete [] line;
+	delete[] line;
 
 	fclose(file);
 
@@ -141,7 +139,7 @@ bool CGameSettings::Save()
 	strlcpy(filepath, ConfigPath.c_str(), sizeof(filepath));
 
 	char * ptr = strrchr(filepath, '/');
-	if(ptr)
+	if (ptr)
 		ptr[0] = 0;
 
 	CreateSubfolder(filepath);
@@ -232,162 +230,162 @@ bool CGameSettings::SetSetting(GameCFG & game, const char *name, const char *val
 		game.videoPatchDol = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "aspectratio") == 0)
+	else if (strcmp(name, "aspectratio") == 0)
 	{
 		game.aspectratio = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "language") == 0)
+	else if (strcmp(name, "language") == 0)
 	{
 		game.language = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "ocarina") == 0)
+	else if (strcmp(name, "ocarina") == 0)
 	{
 		game.ocarina = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "vipatch") == 0)
+	else if (strcmp(name, "vipatch") == 0)
 	{
 		game.vipatch = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "ios") == 0)
+	else if (strcmp(name, "ios") == 0)
 	{
 		game.ios = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "parentalcontrol") == 0)
+	else if (strcmp(name, "parentalcontrol") == 0)
 	{
 		game.parentalcontrol = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "iosreloadblock") == 0)
+	else if (strcmp(name, "iosreloadblock") == 0)
 	{
 		game.iosreloadblock = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "loadalternatedol") == 0)
+	else if (strcmp(name, "loadalternatedol") == 0)
 	{
 		game.loadalternatedol = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "alternatedolstart") == 0)
+	else if (strcmp(name, "alternatedolstart") == 0)
 	{
 		game.alternatedolstart = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "patchcountrystrings") == 0)
+	else if (strcmp(name, "patchcountrystrings") == 0)
 	{
 		game.patchcountrystrings = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "alternatedolname") == 0)
+	else if (strcmp(name, "alternatedolname") == 0)
 	{
 		game.alternatedolname = value;
 		return true;
 	}
-	else if(strcmp(name, "returnTo") == 0)
+	else if (strcmp(name, "returnTo") == 0)
 	{
 		game.returnTo = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "sneekVideoPatch") == 0)
+	else if (strcmp(name, "sneekVideoPatch") == 0)
 	{
 		game.sneekVideoPatch = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NandEmuMode") == 0)
+	else if (strcmp(name, "NandEmuMode") == 0)
 	{
 		game.NandEmuMode = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NandEmuPath") == 0)
+	else if (strcmp(name, "NandEmuPath") == 0)
 	{
 		game.NandEmuPath = value;
 		return true;
 	}
-	else if(strcmp(name, "Hooktype") == 0)
+	else if (strcmp(name, "Hooktype") == 0)
 	{
 		game.Hooktype = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "WiirdDebugger") == 0)
+	else if (strcmp(name, "WiirdDebugger") == 0)
 	{
 		game.WiirdDebugger = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "Locked") == 0)
+	else if (strcmp(name, "Locked") == 0)
 	{
 		game.Locked = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "GameCubeMode") == 0)
+	else if (strcmp(name, "GameCubeMode") == 0)
 	{
 		game.GameCubeMode = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DMLVideo") == 0)
+	else if (strcmp(name, "DMLVideo") == 0)
 	{
 		game.DMLVideo = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DMLProgPatch") == 0)
+	else if (strcmp(name, "DMLProgPatch") == 0)
 	{
 		game.DMLProgPatch = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DMLNMM") == 0)
+	else if (strcmp(name, "DMLNMM") == 0)
 	{
 		game.DMLNMM = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DMLActivityLED") == 0)
+	else if (strcmp(name, "DMLActivityLED") == 0)
 	{
 		game.DMLActivityLED = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DMLPADHOOK") == 0)
+	else if (strcmp(name, "DMLPADHOOK") == 0)
 	{
 		game.DMLPADHOOK = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DMLNoDisc2") == 0)
+	else if (strcmp(name, "DMLNoDisc2") == 0)
 	{
 		game.DMLNoDisc2 = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DMLWidescreen") == 0)
+	else if (strcmp(name, "DMLWidescreen") == 0)
 	{
 		game.DMLWidescreen = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DMLScreenshot") == 0)
+	else if (strcmp(name, "DMLScreenshot") == 0)
 	{
 		game.DMLScreenshot = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DMLJPNPatch") == 0)
+	else if (strcmp(name, "DMLJPNPatch") == 0)
 	{
 		game.DMLJPNPatch = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DMLDebug") == 0)
+	else if (strcmp(name, "DMLDebug") == 0)
 	{
 		game.DMLDebug = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINDeflicker") == 0)
+	else if (strcmp(name, "NINDeflicker") == 0)
 	{
 		game.NINDeflicker = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINPal50Patch") == 0)
+	else if (strcmp(name, "NINPal50Patch") == 0)
 	{
 		game.NINPal50Patch = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINWiiUWide") == 0)
+	else if (strcmp(name, "NINWiiUWide") == 0)
 	{
 		game.NINWiiUWide = atoi(value);
 		return true;
@@ -407,107 +405,107 @@ bool CGameSettings::SetSetting(GameCFG & game, const char *name, const char *val
 		game.NINRemlimit = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINArcadeMode") == 0)
+	else if (strcmp(name, "NINArcadeMode") == 0)
 	{
 		game.NINArcadeMode = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINCCRumble") == 0)
+	else if (strcmp(name, "NINCCRumble") == 0)
 	{
 		game.NINCCRumble = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINSkipIPL") == 0)
+	else if (strcmp(name, "NINSkipIPL") == 0)
 	{
 		game.NINSkipIPL = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINMCEmulation") == 0)
+	else if (strcmp(name, "NINMCEmulation") == 0)
 	{
 		game.NINMCEmulation = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINMCSize") == 0)
+	else if (strcmp(name, "NINMCSize") == 0)
 	{
 		game.NINMCSize = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINUSBHID") == 0)
+	else if (strcmp(name, "NINUSBHID") == 0)
 	{
 		game.NINUSBHID = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINMaxPads") == 0)
+	else if (strcmp(name, "NINMaxPads") == 0)
 	{
 		game.NINMaxPads = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINNativeSI") == 0)
+	else if (strcmp(name, "NINNativeSI") == 0)
 	{
 		game.NINNativeSI = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINOSReport") == 0)
+	else if (strcmp(name, "NINOSReport") == 0)
 	{
 		game.NINOSReport = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINLED") == 0)
+	else if (strcmp(name, "NINLED") == 0)
 	{
 		game.NINLED = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINLog") == 0)
+	else if (strcmp(name, "NINLog") == 0)
 	{
 		game.NINLog = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "NINLoaderPath") == 0)
+	else if (strcmp(name, "NINLoaderPath") == 0)
 	{
 		game.NINLoaderPath = value;
 		return true;
 	}
-	else if(strcmp(name, "DEVOMCEmulation") == 0)
+	else if (strcmp(name, "DEVOMCEmulation") == 0)
 	{
 		game.DEVOMCEmulation = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DEVOWidescreen") == 0)
+	else if (strcmp(name, "DEVOWidescreen") == 0)
 	{
 		game.DEVOWidescreen = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DEVOActivityLED") == 0)
+	else if (strcmp(name, "DEVOActivityLED") == 0)
 	{
 		game.DEVOActivityLED = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DEVOFZeroAX") == 0)
+	else if (strcmp(name, "DEVOFZeroAX") == 0)
 	{
 		game.DEVOFZeroAX = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DEVOTimerFix") == 0)
+	else if (strcmp(name, "DEVOTimerFix") == 0)
 	{
 		game.DEVOTimerFix = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DEVODButtons") == 0)
+	else if (strcmp(name, "DEVODButtons") == 0)
 	{
 		game.DEVODButtons = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DEVOCropOverscan") == 0)
+	else if (strcmp(name, "DEVOCropOverscan") == 0)
 	{
 		game.DEVOCropOverscan = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "DEVODiscDelay") == 0)
+	else if (strcmp(name, "DEVODiscDelay") == 0)
 	{
 		game.DEVODiscDelay = atoi(value);
 		return true;
 	}
-	else if(strcmp(name, "PrivateServer") == 0)
+	else if (strcmp(name, "PrivateServer") == 0)
 	{
 		game.PrivateServer = atoi(value);
 		return true;
@@ -518,20 +516,20 @@ bool CGameSettings::SetSetting(GameCFG & game, const char *name, const char *val
 
 bool CGameSettings::ReadGameID(const char * src, char * GameID, int size)
 {
-	if(strncasecmp(src, "game:", 5) != 0)
+	if (strncasecmp(src, "game:", 5) != 0)
 		return false;
 
 	char * ptr = strchr(src, ':');
-	if(!ptr)
+	if (!ptr)
 		return false;
 
 	ptr++;
 
 	int i = 0;
 
-	for(i = 0; i < size; i++, ptr++)
+	for (i = 0; i < size; i++, ptr++)
 	{
-		if(*ptr == ' ' || *ptr == '\0')
+		if (*ptr == ' ' || *ptr == '\0')
 			break;
 
 		GameID[i] = *ptr;
@@ -546,10 +544,10 @@ void CGameSettings::ParseLine(char *line)
 {
 	char GameID[8];
 
-	if(!ReadGameID(line, GameID, 6))
+	if (!ReadGameID(line, GameID, 6))
 		return;
 
-	if(strlen(GameID) != 6 && strlen(GameID) != 4)
+	if (strlen(GameID) != 6 && strlen(GameID) != 4)
 		return;
 
 	GameCFG NewCFG;
@@ -559,7 +557,7 @@ void CGameSettings::ParseLine(char *line)
 
 	char * LinePtr = strchr(line, '=');
 
-	while(LinePtr != NULL)
+	while (LinePtr != NULL)
 	{
 		LinePtr++;
 
@@ -582,15 +580,15 @@ void CGameSettings::ParseLine(char *line)
 
 void CGameSettings::TrimLine(std::string &dest, const char *src, char stopChar)
 {
-	if(!src)
+	if (!src)
 		return;
 
 	while (*src == ' ')
 		src++;
 
-	while(*src != 0)
+	while (*src != 0)
 	{
-		if(*src == stopChar || *src == '\n' || *src == '\r')
+		if (*src == stopChar || *src == '\n' || *src == '\r')
 			break;
 
 		dest.push_back(*src);
@@ -600,13 +598,13 @@ void CGameSettings::TrimLine(std::string &dest, const char *src, char stopChar)
 
 int CGameSettings::GetPartenalPEGI(int parental)
 {
-	switch(parental)
+	switch (parental)
 	{
-		case 1: return 7;
-		case 2: return 12;
-		case 3: return 16;
-		case 4: return 18;
-		default: return -1;
+	case 1: return 7;
+	case 2: return 12;
+	case 3: return 16;
+	case 4: return 18;
+	default: return -1;
 	}
 }
 

@@ -209,7 +209,7 @@ int MenuLanguageSelect()
 	w.Append( &defaultBtn );
 	w.Append( &updateBtn );
 	w.Append( &optionBrowser4 );
-	mainWindow->Append( &w );
+	App.MainWindow->Append( &w );
 
 	w.SetEffect( EFFECT_FADE, 20 );
 	ResumeGui();
@@ -317,7 +317,7 @@ int MenuLanguageSelect()
 	while ( w.GetEffect() > 0 ) usleep( 50 );
 
 	HaltGui();
-	mainWindow->Remove( &w );
+	App.MainWindow->Remove( &w );
 	ResumeGui();
 
 	return returnhere;

@@ -32,7 +32,6 @@
 #include "usbloader/GameList.h"
 #include "usbloader/wbfs.h"
 #include "prompts/ProgressWindow.h"
-#include "settings/GameTitles.h"
 #include "system/IosLoader.h"
 #include "wad/nandtitle.h"
 #include "utils/tools.h"
@@ -124,7 +123,7 @@ HardDriveSM::~HardDriveSM()
 		//! Reload the new game titles
 		gameList.ReadGameList();
 		gameList.LoadUnfiltered();
-		GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
+		App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
 		
 		if(oldSettingsUSBAutoMount != App.Settings.USBAutoMount || NewSettingsUSBPort == -1)
 		{

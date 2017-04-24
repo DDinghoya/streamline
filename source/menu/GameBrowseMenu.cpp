@@ -23,9 +23,6 @@
 #include "network/update.h"
 #include "network/ImageDownloader.h"
 #include "App.h"
-#include "settings/CGameStatistics.h"
-#include "settings/CGameSettings.h"
-#include "settings/GameTitles.h"
 #include "SystemMenu/SystemMenuResources.h"
 #include "system/IosLoader.h"
 #include "utils/StringTools.h"
@@ -519,7 +516,7 @@ GameBrowseMenu::~GameBrowseMenu()
 	delete IDBtnTT;
 
 	delete gameBrowser;
-	mainWindow->Remove(searchBar);
+	App.MainWindow->Remove(searchBar);
 	delete searchBar;
 
 	ResumeGui();
@@ -530,7 +527,7 @@ int GameBrowseMenu::Execute()
 	int retMenu = MENU_NONE;
 
 	GameBrowseMenu * Menu = new GameBrowseMenu();
-	mainWindow->Append(Menu);
+	App.MainWindow->Append(Menu);
 
 	if(App.Settings.ShowFreeSpace)
 	{
@@ -564,7 +561,7 @@ void GameBrowseMenu::ReloadBrowser()
 
 	HaltGui();
 	RemoveAll();
-	mainWindow->Remove(searchBar);
+	App.MainWindow->Remove(searchBar);
 
 	gamecntTxt->SetText(fmt("%s: %i", tr( "Games" ), gameList.size()));
 
@@ -891,7 +888,7 @@ void GameBrowseMenu::ReloadBrowser()
 	if (show_searchwindow)
 	{
 		searchBar = new GuiSearchBar;
-		mainWindow->Append(searchBar);
+		App.MainWindow->Append(searchBar);
 	}
 
 	SetEffect(EFFECT_FADE, 40);
@@ -971,7 +968,7 @@ int GameBrowseMenu::MainLoop()
 				else
 				{
 					gameList.ReadGameList();
-					GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
+					App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
 					if(App.Settings.ShowFreeSpace)
 					{
 						ThreadedTask::Instance()->AddCallback(&HDDSizeCallback);
@@ -1000,8 +997,8 @@ int GameBrowseMenu::MainLoop()
 			DeviceHandler::Instance()->MountSD();
 			gprintf("\tLoading config...%s\n", App.Settings.Load() ? "done" : "failed");
 			gprintf("\tLoading language...%s\n", App.Settings.LoadLanguage(App.Settings.language_path, CONSOLE_DEFAULT) ? "done" : "failed");
-			gprintf("\tLoading game settings...%s\n", GameSettings.Load(App.Settings.ConfigPath) ? "done" : "failed");
-			gprintf("\tLoading game statistics...%s\n", GameStatistics.Load(App.Settings.ConfigPath) ? "done" : "failed");
+			gprintf("\tLoading game settings...%s\n", App.Library.GameSettings.Load(App.Settings.ConfigPath) ? "done" : "failed");
+			gprintf("\tLoading game statistics...%s\n", App.Library.GameStatistics.Load(App.Settings.ConfigPath) ? "done" : "failed");
 			gprintf("\tLoading font...%s\n", Theme::LoadFont(App.Settings.theme_path) ? "done" : "failed (using default)");
 			gprintf("\tLoading theme...%s\n", Theme::Load(App.Settings.theme) ? "done" : "failed (using default)");
 			bgMusic->Resume();
@@ -1248,20 +1245,20 @@ int GameBrowseMenu::MainLoop()
 			return returnMenu;
 		}
 
-		mainWindow->SetState(STATE_DISABLED);
+		App.MainWindow->SetState(STATE_DISABLED);
 		CategorySwitchPrompt promptMenu;
 		promptMenu.SetAlignment(thAlign("center - category switch prompt align hor"), thAlign("middle - category switch prompt align ver"));
 		promptMenu.SetPosition(thInt("0 - category switch prompt pos x"), thInt("0 - category switch prompt pos y"));
 		promptMenu.SetEffect(EFFECT_FADE, 20);
-		mainWindow->Append(&promptMenu);
+		App.MainWindow->Append(&promptMenu);
 
 		promptMenu.Show();
 
 		promptMenu.SetEffect(EFFECT_FADE, -20);
 		while(promptMenu.GetEffect() > 0) usleep(100);
-		mainWindow->Remove(&promptMenu);
+		App.MainWindow->Remove(&promptMenu);
 		categBtn->ResetState();
-		mainWindow->SetState(STATE_DEFAULT);
+		App.MainWindow->SetState(STATE_DEFAULT);
 		if(promptMenu.categoriesChanged())
 		{
 			gameList.FilterList();
@@ -1306,7 +1303,7 @@ int GameBrowseMenu::MainLoop()
 			}
 
 			wString oldFilter(gameList.GetCurrentFilter());
-			GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
+			App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
 			gameList.FilterList(oldFilter.c_str());
 			ReloadBrowser();
 		}
@@ -1525,7 +1522,7 @@ int GameBrowseMenu::OpenClickedGame(struct discHdr *header)
 	if (searchBar)
 	{
 		HaltGui();
-		mainWindow->Remove(searchBar);
+		App.MainWindow->Remove(searchBar);
 		ResumeGui();
 	}
 
@@ -1546,7 +1543,7 @@ int GameBrowseMenu::OpenClickedGame(struct discHdr *header)
 			(App.Settings.GameWindowMode == GAMEWINDOW_BOTH && App.Settings.gameDisplay == BANNERGRID_MODE))
 	{
 		BannerWindow GamePrompt(this, header);
-		mainWindow->Append(&GamePrompt);
+		App.MainWindow->Append(&GamePrompt);
 
 		choice = GamePrompt.Run();
 	}
@@ -1555,7 +1552,7 @@ int GameBrowseMenu::OpenClickedGame(struct discHdr *header)
 	{
 		SetAllowDim(true);
 		GameWindow GamePrompt(this, header);
-		mainWindow->Append(&GamePrompt);
+		App.MainWindow->Append(&GamePrompt);
 
 		choice = GamePrompt.Run();
 	}
@@ -1583,7 +1580,7 @@ int GameBrowseMenu::OpenClickedGame(struct discHdr *header)
 	if (searchBar)
 	{
 		HaltGui();
-		mainWindow->Append(searchBar);
+		App.MainWindow->Append(searchBar);
 		ResumeGui();
 	}
 

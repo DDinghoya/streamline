@@ -18,7 +18,6 @@
 #include "GCDeleteMenu.h"
 #include "GameCube/GCGames.h"
 #include "App.h"
-#include "settings/GameTitles.h"
 #include "language/gettext.h"
 #include "themes/gettheme.h"
 #include "themes/Resources.h"
@@ -52,7 +51,7 @@ void GCDeleteMenu::browserRefresh(void)
 		const struct discHdr *gcDiscHdr = &GCGames::Instance()->GetSDHeaders().at(i);
 		float fSize = GCGames::Instance()->GetGameSize((char*)gcDiscHdr->id);
 
-		browser->AddEntrie(GameTitles.GetTitle(gcDiscHdr));
+		browser->AddEntrie(App.Library.GameTitles.GetTitle(gcDiscHdr));
 
 		char size_text[20];
 		snprintf(size_text, sizeof(size_text), "(%.2fGB)", fSize);
@@ -87,7 +86,7 @@ int GCDeleteMenu::Show()
 		{
 			gprintf("\thomeButton clicked\n");
 			WindowExitPrompt();
-			mainWindow->SetState(STATE_DISABLED);
+			App.MainWindow->SetState(STATE_DISABLED);
 			SetState(STATE_DEFAULT);
 			homeButton->ResetState();
 		}

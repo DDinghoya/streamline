@@ -45,7 +45,7 @@ bool Theme::ShowTooltips = true;
 void Theme::Reload()
 {
 	HaltGui();
-	mainWindow->Remove(bgImg);
+	App.MainWindow->Remove(bgImg);
 	for (int i = 0; i < 4; ++i)
 	{
 		char image[50];
@@ -62,7 +62,7 @@ void Theme::Reload()
 	background = Resources::GetImageData(App.Settings.widescreen ? "wbackground.png" : "background.png");
 	delete bgImg;
 	bgImg = new GuiImage(background);
-	mainWindow->Append(bgImg);
+	App.MainWindow->Append(bgImg);
 	ResumeGui();
 }
 

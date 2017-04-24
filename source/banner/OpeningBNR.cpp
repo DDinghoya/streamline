@@ -33,7 +33,6 @@ distribution.
 #include "usbloader/wbfs/wbfs_rw.h"
 #include "utils/uncompress.h"
 #include "themes/CTheme.h"
-#include "settings/GameTitles.h"
 #include "wstring.hpp"
 #include "OpeningBNR.hpp"
 
@@ -454,7 +453,7 @@ CustomBanner *OpeningBNR::CreateGCBanner(const discHdr * header)
 		banner->SetBannerText("T_short_descript", " ");
 	}
 
-	banner->SetBannerText("T_name", GameTitles.GetTitle(header));
+	banner->SetBannerText("T_name", App.Library.GameTitles.GetTitle(header));
 	banner->SetBannerPaneVisible("Line1", false);
 	banner->SetBannerPaneVisible("Line2", false);
 	banner->SetBannerPaneVisible("T_Released", false);

@@ -40,7 +40,6 @@
 #include "wad/nandtitle.h"
 
 /*** Variables that are also used extern ***/
-GuiWindow * mainWindow = NULL;
 WiiPointer * pointer[4] = { NULL, NULL, NULL, NULL };
 GuiImage * bgImg = NULL;
 GuiImageData * background = NULL;
@@ -105,9 +104,9 @@ static void * UpdateGUI(void *arg)
 
 		UpdatePads();
 
-		mainWindow->Draw();
-		if (App.Settings.tooltips && Theme::ShowTooltips && mainWindow->GetState() != STATE_DISABLED)
-			mainWindow->DrawTooltip();
+		App.MainWindow->Draw();
+		if (App.Settings.tooltips && Theme::ShowTooltips && App.MainWindow->GetState() != STATE_DISABLED)
+			App.MainWindow->DrawTooltip();
 
 		// Pointer modifies wpad data struct for easy implementation of "virtual pointer" with PAD-Sticks
 		// That is why it has to be called right before updating other gui elements with the triggers
@@ -116,7 +115,7 @@ static void * UpdateGUI(void *arg)
 			pointer[i]->Draw(&userInput[i]);
 
 		for (i = 0; i < 4; i++)
-			mainWindow->Update(&userInput[i]);
+			App.MainWindow->Update(&userInput[i]);
 
 		Menu_Render();
 
@@ -125,12 +124,12 @@ static void * UpdateGUI(void *arg)
 
 	for (i = 5; i < 255; i += 10)
 	{
-		mainWindow->Draw();
+		App.MainWindow->Draw();
 		Menu_DrawRectangle(0, 0, screenwidth, screenheight, (GXColor) {0, 0, 0, i}, 1);
 		Menu_Render();
 	}
 
-	mainWindow->RemoveAll();
+	App.MainWindow->RemoveAll();
 	ShutoffRumble();
 
 	return NULL;
@@ -212,12 +211,12 @@ int MainMenu(int menu)
 	pointer[2] = new WiiPointer("player3_point.png");
 	pointer[3] = new WiiPointer("player4_point.png");
 
-	mainWindow = new GuiWindow(screenwidth, screenheight);
+	App.MainWindow = new GuiWindow(screenwidth, screenheight);
 
 	background = Resources::GetImageData(App.Settings.widescreen ? "wbackground.png" : "background.png");
 
 	bgImg = new GuiImage(background);
-	mainWindow->Append(bgImg);
+	App.MainWindow->Append(bgImg);
 
 	ResumeGui();
 

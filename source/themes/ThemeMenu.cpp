@@ -92,7 +92,7 @@ ThemeMenu::~ThemeMenu()
 int ThemeMenu::Execute()
 {
 	ThemeMenu * Menu = new ThemeMenu();
-	mainWindow->Append(Menu);
+	App.MainWindow->Append(Menu);
 
 	Menu->ShowMenu();
 
@@ -391,8 +391,8 @@ void ThemeMenu::MainButtonClicked(int button)
 
 	HaltGui();
 	promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&promptWindow);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&promptWindow);
 	ResumeGui();
 
 	while (!leave)
@@ -417,7 +417,7 @@ void ThemeMenu::MainButtonClicked(int button)
 					leave = true;
 				}
 			}
-			mainWindow->SetState(STATE_DISABLED);
+			App.MainWindow->SetState(STATE_DISABLED);
 			promptWindow.SetState(STATE_DEFAULT);
 			applyBtn.ResetState();
 		}
@@ -432,7 +432,7 @@ void ThemeMenu::MainButtonClicked(int button)
 	promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 50);
 	while (promptWindow.GetEffect() > 0) usleep(100);
 	HaltGui();
-	mainWindow->Remove(&promptWindow);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&promptWindow);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	ResumeGui();
 }

@@ -3,13 +3,11 @@
 #include "App.h"
 #include "usbloader/GameList.h"
 #include "Channels/channels.h"
-#include "xml/GameTDB.hpp"
+#include "Data/GameTDB.hpp"
 #include "Version.h"
 #include "gecko.h"
 
 #define VALID_CACHE_REVISION	1148
-
-CGameTitles GameTitles;
 
 void CGameTitles::SetGameTitle(const char * id, const char * title)
 {

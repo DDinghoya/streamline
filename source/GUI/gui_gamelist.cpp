@@ -14,7 +14,6 @@
 #include "App.h"
 #include "App.h"
 #include "settings/newtitles.h"
-#include "settings/GameTitles.h"
 #include "usbloader/GameList.h"
 #include "themes/CTheme.h"
 #include "utils/tools.h"
@@ -220,9 +219,9 @@ void GuiGameList::UpdateListEntries()
 				game[i]->SetVisible(true);
 				game[i]->SetState(STATE_DEFAULT);
 			}
-			gameTxt[i]->SetText(GameTitles.GetTitle(gameList[next]));
+			gameTxt[i]->SetText(App.Library.GameTitles.GetTitle(gameList[next]));
 			gameTxt[i]->SetPosition(24, 0);
-			gameTxtOver[i]->SetText(GameTitles.GetTitle(gameList[next]));
+			gameTxtOver[i]->SetText(App.Library.GameTitles.GetTitle(gameList[next]));
 			gameTxtOver[i]->SetPosition(24, 0);
 
 			if (App.Settings.marknewtitles)

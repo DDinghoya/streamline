@@ -10,9 +10,6 @@
 #include "FileOperations/fileops.h"
 #include "settings/menus/GameSettingsMenu.hpp"
 #include "App.h"
-#include "settings/CGameSettings.h"
-#include "settings/CGameStatistics.h"
-#include "settings/GameTitles.h"
 #include "prompts/PromptWindows.h"
 #include "prompts/gameinfo.h"
 #include "language/gettext.h"
@@ -47,9 +44,9 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	int gameIdx;
 
 	//! get the game index to this header
-	for(gameIdx = 0; gameIdx < gameList.size(); ++gameIdx)
+	for (gameIdx = 0; gameIdx < gameList.size(); ++gameIdx)
 	{
-		if(gameList[gameIdx] == header)
+		if (gameList[gameIdx] == header)
 		{
 			gameSelected = gameIdx;
 			break;
@@ -57,7 +54,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	}
 
 	//! Set dvd header if the header does not match any of the list games
-	if(gameIdx == gameList.size())
+	if (gameIdx == gameList.size())
 		dvdheader = header;
 
 	dialogBox = Resources::GetImageData(App.Settings.widescreen ? "wdialogue_box_startgame.png" : "dialogue_box_startgame.png");
@@ -82,7 +79,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 
 	dialogBoxImg = new GuiImage(dialogBox);
 
-	nameBtnTT = new GuiTooltip(tr( "Rename Game Title" ));
+	nameBtnTT = new GuiTooltip(tr("Rename Game Title"));
 	if (App.Settings.wsprompt) nameBtnTT->SetWidescreen(App.Settings.widescreen);
 	nameTxt = new GuiText("", 22, thColor("r=0 g=0 b=0 a=255 - game window name text color"));
 	if (App.Settings.wsprompt) nameTxt->SetWidescreen(App.Settings.widescreen);
@@ -101,7 +98,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 		nameBtn->SetEffectGrow();
 	}
 
-	sizeTxt = new GuiText((char*) NULL, 22, thColor("r=0 g=0 b=0 a=255 - game window size text color"));
+	sizeTxt = new GuiText((char*)NULL, 22, thColor("r=0 g=0 b=0 a=255 - game window size text color"));
 	sizeTxt->SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	sizeTxt->SetPosition(135, 70);
 
@@ -116,7 +113,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	diskImg2->SetAngle(0);
 	diskImg2->SetBeta(180);
 
-	playcntTxt = new GuiText((char*) NULL, 18, thColor("r=0 g=0 b=0 a=255 - game window playcount text color"));
+	playcntTxt = new GuiText((char*)NULL, 18, thColor("r=0 g=0 b=0 a=255 - game window playcount text color"));
 	playcntTxt->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	playcntTxt->SetPosition(-115, 45);
 
@@ -129,7 +126,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	gameBtn->SetTrigger(trigA);
 	gameBtn->SetState(STATE_SELECTED);
 
-	backBtnTxt = new GuiText(tr( "Back" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
+	backBtnTxt = new GuiText(tr("Back"), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	backBtnImg = new GuiImage(btnOutline);
 	if (App.Settings.wsprompt)
 	{
@@ -142,7 +139,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	backBtn->SetAlignment(ALIGN_CENTER, ALIGN_BOTTOM);
 	backBtn->SetPosition(0, -40);
 
-	settingsBtnTxt = new GuiText(tr( "Settings" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
+	settingsBtnTxt = new GuiText(tr("Settings"), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	settingsBtnImg = new GuiImage(btnOutline);
 	if (App.Settings.wsprompt)
 	{
@@ -153,7 +150,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	settingsBtn->SetLabel(settingsBtnTxt);
 
 	int xPos = -198;
-	for(int i = 0; i < FAVORITE_STARS; ++i)
+	for (int i = 0; i < FAVORITE_STARS; ++i)
 	{
 		FavoriteBtnImg[i] = new GuiImage;
 		FavoriteBtnImg[i]->SetWidescreen(App.Settings.widescreen);
@@ -181,8 +178,8 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	btnRight->SetTrigger(trigR);
 	btnRight->SetTrigger(trigPlus);
 
-	detailsBtnTxt = new GuiText(tr( "Details" ), 22, thColor("r=0 g=0 b=0 a=255 - game window details button text color"));
-	detailsBtnOverTxt = new GuiText(tr( "Details" ), 22, thColor("r=30 g=30 b=240 a=255 - game window details button over text color"));
+	detailsBtnTxt = new GuiText(tr("Details"), 22, thColor("r=0 g=0 b=0 a=255 - game window details button text color"));
+	detailsBtnOverTxt = new GuiText(tr("Details"), 22, thColor("r=30 g=30 b=240 a=255 - game window details button over text color"));
 	detailsBtn = new GuiButton(detailsBtnTxt->GetTextWidth(), 25);
 	detailsBtn->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	detailsBtn->SetPosition(120, 45);
@@ -201,7 +198,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	{
 		Append(btnLeft);
 		Append(btnRight);
-		for(int i = 0; i < FAVORITE_STARS; ++i)
+		for (int i = 0; i < FAVORITE_STARS; ++i)
 			Append(FavoriteBtn[i]);
 	}
 	//check if unlocked
@@ -223,18 +220,18 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 
 GameWindow::~GameWindow()
 {
-	if(!hidden)
+	if (!hidden)
 	{
 		StopEffect();
 		SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 50);
 		ResumeGui();
 
-		while(parentElement && this->GetEffect() > 0) usleep(100);
+		while (parentElement && this->GetEffect() > 0) usleep(100);
 
 		HaltGui();
 
-		if(parentElement)
-			((GuiWindow * ) parentElement)->Remove(this);
+		if (parentElement)
+			((GuiWindow *)parentElement)->Remove(this);
 	}
 
 	RemoveAll();
@@ -282,13 +279,13 @@ GameWindow::~GameWindow()
 	delete btnRight;
 	delete detailsBtn;
 
-	for(int i = 0; i < FAVORITE_STARS; ++i)
+	for (int i = 0; i < FAVORITE_STARS; ++i)
 	{
 		delete FavoriteBtnImg[i];
 		delete FavoriteBtn[i];
 	}
 
-	if(gameSound) gameSound->Stop();
+	if (gameSound) gameSound->Stop();
 	delete gameSound;
 	bgMusic->SetVolume(App.Settings.volume);
 
@@ -309,18 +306,18 @@ void GameWindow::LoadGameSound(const struct discHdr * header)
 		gameSound = NULL;
 	}
 
-	if(   (BNRInstance::Instance()->Get() != NULL)
-	   &&  gameBanner.LoadSound(BNRInstance::Instance()->Get(), BNRInstance::Instance()->GetSize())
-	   &&  gameBanner.getSound())
+	if ((BNRInstance::Instance()->Get() != NULL)
+		&& gameBanner.LoadSound(BNRInstance::Instance()->Get(), BNRInstance::Instance()->GetSize())
+		&& gameBanner.getSound())
 	{
 		gameSound = new GuiSound(gameBanner.getSound(), gameBanner.getSoundSize(), App.Settings.gamesoundvolume);
 	}
-	else if((header->type == TYPE_GAME_GC_IMG) || (header->type == TYPE_GAME_GC_DISC) || (header->type == TYPE_GAME_GC_EXTRACTED))
+	else if ((header->type == TYPE_GAME_GC_IMG) || (header->type == TYPE_GAME_GC_DISC) || (header->type == TYPE_GAME_GC_EXTRACTED))
 	{
 		//! on game cube load the default sound
 		gameSound = new GuiSound(Resources::GetFile("gc_banner.ogg"), Resources::GetFileSize("gc_banner.ogg"), App.Settings.gamesoundvolume);
 	}
-	if(gameSound)
+	if (gameSound)
 	{
 		bgMusic->SetVolume(0);
 		if (App.Settings.gamesound == 2)
@@ -340,7 +337,7 @@ void GameWindow::LoadDiscImage(const u8 * id)
 	char IDFull[7];
 	char ID3[4];
 	char ID4[5];
-	snprintf(IDFull, sizeof(IDFull), "%s", (char*) id);
+	snprintf(IDFull, sizeof(IDFull), "%s", (char*)id);
 	snprintf(ID3, sizeof(ID3), "%s", IDFull);
 	snprintf(ID4, sizeof(ID4), "%s", IDFull);
 
@@ -368,9 +365,9 @@ void GameWindow::LoadDiscImage(const u8 * id)
 
 void GameWindow::SetWindowEffect(int direction, int in_out)
 {
-	if(direction == LEFT && App.Settings.xflip == XFLIP_DISK3D)
+	if (direction == LEFT && App.Settings.xflip == XFLIP_DISK3D)
 	{
-		if(in_out == IN)
+		if (in_out == IN)
 		{
 			diskImg->SetImage(diskImgData);
 			diskImg->SetBeta(90);
@@ -394,9 +391,9 @@ void GameWindow::SetWindowEffect(int direction, int in_out)
 			nameTxt->SetEffect(EFFECT_FADE, -17);
 		}
 	}
-	else if(direction == RIGHT && App.Settings.xflip == XFLIP_DISK3D)
+	else if (direction == RIGHT && App.Settings.xflip == XFLIP_DISK3D)
 	{
-		if(in_out == IN)
+		if (in_out == IN)
 		{
 			diskImg->SetImage(diskImgData);
 			diskImg->SetBeta(270);
@@ -421,24 +418,24 @@ void GameWindow::SetWindowEffect(int direction, int in_out)
 			nameTxt->SetEffect(EFFECT_FADE, -17);
 		}
 	}
-	else if(direction == LEFT)
+	else if (direction == LEFT)
 	{
-		if(in_out == IN)
+		if (in_out == IN)
 			SetEffect(EFFECT_SLIDE_LEFT | EFFECT_SLIDE_IN, 50);
 		else
 			SetEffect(EFFECT_SLIDE_LEFT | EFFECT_SLIDE_OUT, 50);
 	}
-	else if(direction == RIGHT)
+	else if (direction == RIGHT)
 	{
-		if(in_out == IN)
+		if (in_out == IN)
 			SetEffect(EFFECT_SLIDE_RIGHT | EFFECT_SLIDE_IN, 50);
 		else
 			SetEffect(EFFECT_SLIDE_RIGHT | EFFECT_SLIDE_OUT, 50);
 	}
 
 	ResumeGui();
-	while(parentElement && (this->GetEffect() > 0 ||
-		  nameTxt->GetEffect() > 0 || diskImg->GetBetaRotateEffect()))
+	while (parentElement && (this->GetEffect() > 0 ||
+		nameTxt->GetEffect() > 0 || diskImg->GetBetaRotateEffect()))
 	{
 		usleep(1000);
 	}
@@ -459,38 +456,38 @@ void GameWindow::ChangeGame(int EffectDirection)
 
 	if (header->tid != 0)
 	{
-		if(header->type == TYPE_GAME_NANDCHAN)
+		if (header->type == TYPE_GAME_NANDCHAN)
 			sizeTxt->SetTextf(tr("Real Nand"));
-		else if(header->type == TYPE_GAME_EMUNANDCHAN)
+		else if (header->type == TYPE_GAME_EMUNANDCHAN)
 			sizeTxt->SetTextf(tr("Emulated Nand"));
 
 	}
-	else if(header->type == TYPE_GAME_WII_IMG)
+	else if (header->type == TYPE_GAME_WII_IMG)
 	{
 		float size = 0.0f;
 		WBFS_GameSize(header->id, &size);
 		sizeTxt->SetTextf("%.2fGB", size); //set size text;
 	}
-	else if(header->type == TYPE_GAME_WII_DISC)
+	else if (header->type == TYPE_GAME_WII_DISC)
 	{
-		float size = (float) WBFS_EstimeGameSize() / GB_SIZE;
-		if(size == 0.0f)
+		float size = (float)WBFS_EstimeGameSize() / GB_SIZE;
+		if (size == 0.0f)
 			size = 4.37f*GB_SIZE; // Use default disc size if can't be determined
 		sizeTxt->SetTextf("%.2fGB", size); //set size text;
 	}
-	else if(header->type == TYPE_GAME_GC_IMG)
+	else if (header->type == TYPE_GAME_GC_IMG)
 	{
-		float size = GCGames::Instance()->GetGameSize((const char *) header->id);
+		float size = GCGames::Instance()->GetGameSize((const char *)header->id);
 		sizeTxt->SetTextf("%.2fGB", size); //set size text;
 		// TODO: Add GC multi disc size check
 	}
-	
+
 	// Rescale the disc if the picture is bigger (HighRes Disc art from gametdb)
 	/*
 	if(diskImgData->GetWidth() > 160)
 	{
 		diskImg->SetScale(160.0f / diskImgData->GetWidth());
-		diskImg->SetPosition( -(diskImgData->GetWidth() - 160)/2 , -(diskImgData->GetHeight() - 160)/2 );  
+		diskImg->SetPosition( -(diskImgData->GetWidth() - 160)/2 , -(diskImgData->GetHeight() - 160)/2 );
 	}
 	else
 	{
@@ -498,14 +495,14 @@ void GameWindow::ChangeGame(int EffectDirection)
 		diskImg->SetPosition( 0, 0);
 	}
 	*/
-	
-	diskImg->SetImage(diskImgData);
-	nameTxt->SetText(GameTitles.GetTitle(header));
-	playcntTxt->SetTextf("%s: %i", tr( "Play Count" ), GameStatistics.GetPlayCount(header));
 
-	int favoritevar = GameStatistics.GetFavoriteRank(header->id);
-	for(int i = 0; i < FAVORITE_STARS; ++i)
-		FavoriteBtnImg[i]->SetImage(favoritevar >= i+1 ? imgFavorite : imgNotFavorite);
+	diskImg->SetImage(diskImgData);
+	nameTxt->SetText(App.Library.GameTitles.GetTitle(header));
+	playcntTxt->SetTextf("%s: %i", tr("Play Count"), App.Library.GameStatistics.GetPlayCount(header));
+
+	int favoritevar = App.Library.GameStatistics.GetFavoriteRank(header->id);
+	for (int i = 0; i < FAVORITE_STARS; ++i)
+		FavoriteBtnImg[i]->SetImage(favoritevar >= i + 1 ? imgFavorite : imgNotFavorite);
 
 	EffectDirection = EffectDirection == LEFT ? RIGHT : EffectDirection == RIGHT ? LEFT : NONE;
 	SetWindowEffect(EffectDirection, IN);
@@ -514,18 +511,18 @@ void GameWindow::ChangeGame(int EffectDirection)
 
 void GameWindow::Hide(void)
 {
-	GuiWindow *parentWindow = (GuiWindow *) parentElement;
+	GuiWindow *parentWindow = (GuiWindow *)parentElement;
 	this->SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_OUT, 50);
-	while(parentWindow && this->GetEffect() > 0) usleep(100);
-	if(parentWindow) parentWindow->Remove(this);
+	while (parentWindow && this->GetEffect() > 0) usleep(100);
+	if (parentWindow) parentWindow->Remove(this);
 	hidden = true;
 }
 
 void GameWindow::Show(void)
 {
 	this->SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
-	GuiWindow *parentWindow = (GuiWindow *) parentElement;
-	if(parentWindow)
+	GuiWindow *parentWindow = (GuiWindow *)parentElement;
+	if (parentWindow)
 	{
 		parentWindow->SetState(STATE_DISABLED);
 		parentWindow->Append(this);
@@ -537,7 +534,7 @@ int GameWindow::Run()
 {
 	int choice = -1;
 
-	while(choice == -1)
+	while (choice == -1)
 	{
 		usleep(50000);
 
@@ -576,11 +573,11 @@ int GameWindow::MainLoop()
 
 	else if (backBtn->GetState() == STATE_CLICKED) //back
 	{
-		mainWindow->SetState(STATE_DEFAULT);
+		App.MainWindow->SetState(STATE_DEFAULT);
 		returnVal = 0;
 	}
 
-	else if(settingsBtn->GetState() == STATE_CLICKED) //settings
+	else if (settingsBtn->GetState() == STATE_CLICKED) //settings
 	{
 		settingsBtn->ResetState();
 		// Hide the window
@@ -607,16 +604,16 @@ int GameWindow::MainLoop()
 
 		//enter new game title
 		char entered[60];
-		snprintf(entered, sizeof(entered), "%s", GameTitles.GetTitle(header));
+		snprintf(entered, sizeof(entered), "%s", App.Library.GameTitles.GetTitle(header));
 		int result = OnScreenKeyboard(entered, 60, 0);
 		if (result == 1)
 		{
 			WBFS_RenameGame(header->id, entered);
-			GameTitles.SetGameTitle(header->id, entered);
+			App.Library.GameTitles.SetGameTitle(header->id, entered);
 			wString oldFilter(gameList.GetCurrentFilter());
 			gameList.ReadGameList();
 			gameList.FilterList(oldFilter.c_str());
-			if(browserMenu) browserMenu->ReloadBrowser();
+			if (browserMenu) browserMenu->ReloadBrowser();
 		}
 		// Show the window again
 		Show();
@@ -626,17 +623,17 @@ int GameWindow::MainLoop()
 
 	else if (btnRight->GetState() == STATE_CLICKED) //next game
 	{
-		if(App.Settings.xflip == XFLIP_YES)
+		if (App.Settings.xflip == XFLIP_YES)
 		{
 			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
 			ChangeGame(LEFT);
 		}
-		else if(App.Settings.xflip == XFLIP_SYSMENU)
+		else if (App.Settings.xflip == XFLIP_SYSMENU)
 		{
 			gameSelected = (gameSelected + 1) % gameList.size();
 			ChangeGame(LEFT);
 		}
-		else if(App.Settings.xflip == XFLIP_WTF)
+		else if (App.Settings.xflip == XFLIP_WTF)
 		{
 			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
 			ChangeGame(RIGHT);
@@ -652,17 +649,17 @@ int GameWindow::MainLoop()
 
 	else if (btnLeft->GetState() == STATE_CLICKED) //previous game
 	{
-		if(App.Settings.xflip == XFLIP_YES)
+		if (App.Settings.xflip == XFLIP_YES)
 		{
 			gameSelected = (gameSelected + 1) % gameList.size();
 			ChangeGame(RIGHT);
 		}
-		else if(App.Settings.xflip == XFLIP_SYSMENU)
+		else if (App.Settings.xflip == XFLIP_SYSMENU)
 		{
 			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
 			ChangeGame(RIGHT);
 		}
-		else if(App.Settings.xflip == XFLIP_WTF)
+		else if (App.Settings.xflip == XFLIP_WTF)
 		{
 			gameSelected = (gameSelected + 1) % gameList.size();
 			ChangeGame(LEFT);
@@ -675,11 +672,11 @@ int GameWindow::MainLoop()
 
 		btnLeft->ResetState();
 	}
-	else if(detailsBtn->GetState() == STATE_CLICKED)
+	else if (detailsBtn->GetState() == STATE_CLICKED)
 	{
 		diskImg->SetState(STATE_DISABLED);
 		showGameInfo(gameSelected, dvdheader);
-		mainWindow->SetState(STATE_DISABLED);
+		App.MainWindow->SetState(STATE_DISABLED);
 		this->SetState(STATE_DEFAULT);
 		diskImg->SetState(STATE_DEFAULT);
 		detailsBtn->ResetState();
@@ -702,18 +699,18 @@ int GameWindow::MainLoop()
 		}
 	}
 
-	for(int i = 0; i < FAVORITE_STARS; ++i)
+	for (int i = 0; i < FAVORITE_STARS; ++i)
 	{
-		if(FavoriteBtn[i]->GetState() == STATE_CLICKED)
+		if (FavoriteBtn[i]->GetState() == STATE_CLICKED)
 		{
 			// This button can only be clicked when this is not a dvd header
 			struct discHdr * header = gameList[gameSelected];
-			int FavoriteRank = (i+1 == GameStatistics.GetFavoriteRank(header->id)) ? 0 : i+1; // Press the current rank to reset the rank
+			int FavoriteRank = (i + 1 == App.Library.GameStatistics.GetFavoriteRank(header->id)) ? 0 : i + 1; // Press the current rank to reset the rank
 
-			GameStatistics.SetFavoriteRank(header->id, FavoriteRank);
-			GameStatistics.Save();
-			for(int j = 0; j < FAVORITE_STARS; ++j)
-				FavoriteBtnImg[j]->SetImage(FavoriteRank >= j+1 ? imgFavorite : imgNotFavorite);
+			App.Library.GameStatistics.SetFavoriteRank(header->id, FavoriteRank);
+			App.Library.GameStatistics.Save();
+			for (int j = 0; j < FAVORITE_STARS; ++j)
+				FavoriteBtnImg[j]->SetImage(FavoriteRank >= j + 1 ? imgFavorite : imgNotFavorite);
 
 			FavoriteBtn[i]->ResetState();
 		}
@@ -727,14 +724,14 @@ void GameWindow::BootGame(struct discHdr *header)
 {
 	wiilight(0);
 
-	GameCFG* game_cfg = GameSettings.GetGameCFG(header->id);
+	GameCFG* game_cfg = App.Library.GameSettings.GetGameCFG(header->id);
 
 	char IDfull[7];
-	snprintf(IDfull, sizeof(IDfull), "%s", (char *) header->id);
+	snprintf(IDfull, sizeof(IDfull), "%s", (char *)header->id);
 
 	int gameIOS = game_cfg->ios == INHERIT ? App.Settings.cios : game_cfg->ios;
 	int gameNandEmuMode = game_cfg->NandEmuMode == INHERIT ? App.Settings.NandEmuMode : game_cfg->NandEmuMode;
-	if(header->type == TYPE_GAME_EMUNANDCHAN)
+	if (header->type == TYPE_GAME_EMUNANDCHAN)
 		gameNandEmuMode = game_cfg->NandEmuMode == INHERIT ? App.Settings.NandEmuChanMode : game_cfg->NandEmuMode;
 
 	if (game_cfg->loadalternatedol == 2)
@@ -743,20 +740,20 @@ void GameWindow::BootGame(struct discHdr *header)
 		snprintf(filepath, sizeof(filepath), "%s%s.dol", App.Settings.dolpath, IDfull);
 		if (CheckFile(filepath) == false)
 		{
-			sprintf(filepath, "%s %s", filepath, tr( "does not exist!" ));
-			if(!WindowPrompt(tr( "Error" ), filepath, tr( "Continue" ), tr( "Cancel")))
+			sprintf(filepath, "%s %s", filepath, tr("does not exist!"));
+			if (!WindowPrompt(tr("Error"), filepath, tr("Continue"), tr("Cancel")))
 				return;
 		}
 	}
-	else if(game_cfg->loadalternatedol == 3 && WDMMenu::Show(header) == 0)
+	else if (game_cfg->loadalternatedol == 3 && WDMMenu::Show(header) == 0)
 	{
 		// Canceled
 		return;
 	}
-	else if(game_cfg->loadalternatedol == 4)
+	else if (game_cfg->loadalternatedol == 4)
 	{
-		if(!IosLoader::IsD2X(gameIOS))
-			defaultDolPrompt((char *) header->id);
+		if (!IosLoader::IsD2X(gameIOS))
+			defaultDolPrompt((char *)header->id);
 	}
 
 	if (game_cfg->ocarina == ON || (game_cfg->ocarina == INHERIT && App.Settings.ocarina == ON))
@@ -765,22 +762,22 @@ void GameWindow::BootGame(struct discHdr *header)
 		snprintf(filepath, sizeof(filepath), "%s%s.gct", App.Settings.Cheatcodespath, IDfull);
 		if (CheckFile(filepath) == false)
 		{
-			sprintf(filepath, "%s %s", filepath, tr( "does not exist!  Loading game without cheats." ));
-			if(!WindowPrompt(tr( "Error" ), filepath, tr( "Continue" ), tr( "Cancel")))
+			sprintf(filepath, "%s %s", filepath, tr("does not exist!  Loading game without cheats."));
+			if (!WindowPrompt(tr("Error"), filepath, tr("Continue"), tr("Cancel")))
 				return;
 		}
 	}
 
-	if(header->type == TYPE_GAME_EMUNANDCHAN)
+	if (header->type == TYPE_GAME_EMUNANDCHAN)
 	{
-		if(gameNandEmuMode != EMUNAND_NEEK)
+		if (gameNandEmuMode != EMUNAND_NEEK)
 		{
 			// If NandEmuPath is on root of the first FAT32 partition, allow Waninkoko's rev17-21 cIOS for EmuNAND Channels
 			bool NandEmu_compatible = false;
 			const char *NandEmuChanPath = game_cfg->NandEmuPath.size() == 0 ? App.Settings.NandEmuChanPath : game_cfg->NandEmuPath.c_str();
 			NandEmu_compatible = IosLoader::is_NandEmu_compatible(NandEmuChanPath, gameIOS);
-				
-			if(!IosLoader::IsD2X(gameIOS) && !NandEmu_compatible)
+
+			if (!IosLoader::IsD2X(gameIOS) && !NandEmu_compatible)
 			{
 				ShowError(tr("Launching emulated nand channels only works on d2x cIOS! Change game IOS to a d2x cIOS first."));
 				return;
@@ -789,25 +786,25 @@ void GameWindow::BootGame(struct discHdr *header)
 	}
 
 	// Restrict emuNAND with Wii games only with d2x
-	if(header->type == TYPE_GAME_WII_IMG || header->type == TYPE_GAME_WII_DISC)
+	if (header->type == TYPE_GAME_WII_IMG || header->type == TYPE_GAME_WII_DISC)
 	{
-		if(gameNandEmuMode && !IosLoader::IsD2X(gameIOS))
+		if (gameNandEmuMode && !IosLoader::IsD2X(gameIOS))
 		{
 			ShowError(tr("Launching Wii games with emulated nand only works on d2x cIOS! Change game IOS to a d2x cIOS first."));
 			return;
 		}
 	}
 
-	GameStatistics.SetPlayCount(header->id, GameStatistics.GetPlayCount(header->id)+1);
-	GameStatistics.Save();
+	App.Library.GameStatistics.SetPlayCount(header->id, App.Library.GameStatistics.GetPlayCount(header->id) + 1);
+	App.Library.GameStatistics.Save();
 
 	//Just calling that shuts down everything and starts game
 	int ret = GameBooter::BootGame(header);
-	
+
 	//If the launch is canceled, reduce playCount
-	if(ret == -1)
+	if (ret == -1)
 	{
-		GameStatistics.SetPlayCount(header->id, GameStatistics.GetPlayCount(header->id)-1);
-		GameStatistics.Save();
+		App.Library.GameStatistics.SetPlayCount(header->id, App.Library.GameStatistics.GetPlayCount(header->id) - 1);
+		App.Library.GameStatistics.Save();
 	}
 }

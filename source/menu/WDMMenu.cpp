@@ -146,8 +146,8 @@ int WDMMenu::Show(const struct discHdr * header)
 {
 	WDMMenu Menu(header);
 
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&Menu);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&Menu);
 
 	int ret = -1;
 
@@ -156,7 +156,7 @@ int WDMMenu::Show(const struct discHdr * header)
 		usleep(100);
 		ret = Menu.GetChoice();
 	}
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->SetState(STATE_DEFAULT);
 
 	return ret;
 }

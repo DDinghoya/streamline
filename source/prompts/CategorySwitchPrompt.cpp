@@ -21,8 +21,8 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #include "CategorySwitchPrompt.hpp"
-#include "settings/CGameCategories.hpp"
 #include "App.h"
 #include "language/gettext.h"
 
@@ -42,13 +42,13 @@ void CategorySwitchPrompt::onResetChanges()
 	App.Settings.EnabledCategories = oldSettingEnabled;
 	App.Settings.RequiredCategories = oldSettingRequired;
 	App.Settings.ForbiddenCategories = oldSettingForbidden;
-	GameCategories.Load(App.Settings.ConfigPath);
+	App.Library.GameCategories.Load(App.Settings.ConfigPath);
 }
 
 void CategorySwitchPrompt::onBrowserRefresh()
 {
 	browser->Clear();
-	GameCategories.CategoryList.goToFirst();
+	App.Library.GameCategories.CategoryList.goToFirst();
 	do
 	{
 		bool checked = false;
@@ -57,7 +57,7 @@ void CategorySwitchPrompt::onBrowserRefresh()
 		// Verify the Enabled Categories [v]
 		for(u32 i = 0; i < App.Settings.EnabledCategories.size(); ++i)
 		{
-			if(App.Settings.EnabledCategories[i] == GameCategories.CategoryList.getCurrentID())
+			if(App.Settings.EnabledCategories[i] == App.Library.GameCategories.CategoryList.getCurrentID())
 			{
 				checked = true;
 				break;
@@ -69,7 +69,7 @@ void CategorySwitchPrompt::onBrowserRefresh()
 		{
 			for(u32 i = 0; i < App.Settings.ForbiddenCategories.size(); ++i)
 			{
-				if(App.Settings.ForbiddenCategories[i] == GameCategories.CategoryList.getCurrentID())
+				if(App.Settings.ForbiddenCategories[i] == App.Library.GameCategories.CategoryList.getCurrentID())
 				{
 					checked = true;
 					style = GuiCheckbox::CROSS;
@@ -83,7 +83,7 @@ void CategorySwitchPrompt::onBrowserRefresh()
 		{
 			for(u32 i = 0; i < App.Settings.RequiredCategories.size(); ++i)
 			{
-				if(App.Settings.RequiredCategories[i] == GameCategories.CategoryList.getCurrentID())
+				if(App.Settings.RequiredCategories[i] == App.Library.GameCategories.CategoryList.getCurrentID())
 				{
 					checked = true;
 					style = GuiCheckbox::PLUS;
@@ -92,19 +92,19 @@ void CategorySwitchPrompt::onBrowserRefresh()
 			}
 		}
 		
-		browser->AddEntrie(tr(GameCategories.CategoryList.getCurrentName().c_str()), checked, style, true);
+		browser->AddEntrie(tr(App.Library.GameCategories.CategoryList.getCurrentName().c_str()), checked, style, true);
 	}
-	while(GameCategories.CategoryList.goToNext());
+	while(App.Library.GameCategories.CategoryList.goToNext());
 
-	GameCategories.CategoryList.goToFirst();
+	App.Library.GameCategories.CategoryList.goToFirst();
 	browser->RefreshList();
 }
 
 void CategorySwitchPrompt::OnCheckboxClick(GuiCheckbox *checkBox, int index)
 {
-	GameCategories.CategoryList.goToFirst();
+	App.Library.GameCategories.CategoryList.goToFirst();
 	for(int i = 0; i < index; ++i)
-		GameCategories.CategoryList.goToNext();
+		App.Library.GameCategories.CategoryList.goToNext();
 
 	u32 i;
 	if(!checkBox->IsChecked())
@@ -112,7 +112,7 @@ void CategorySwitchPrompt::OnCheckboxClick(GuiCheckbox *checkBox, int index)
 		// Remove from Required
 		for(i = 0; i < App.Settings.RequiredCategories.size(); ++i)
 		{
-			if(App.Settings.RequiredCategories[i] == GameCategories.CategoryList.getCurrentID())
+			if(App.Settings.RequiredCategories[i] == App.Library.GameCategories.CategoryList.getCurrentID())
 			{
 				App.Settings.RequiredCategories.erase(App.Settings.RequiredCategories.begin()+i);
 				markChanged();
@@ -123,7 +123,7 @@ void CategorySwitchPrompt::OnCheckboxClick(GuiCheckbox *checkBox, int index)
 	else if(checkBox->GetStyle() == GuiCheckbox::CHECKSIGN)
 	{
 		// Add to Enabled
-		App.Settings.EnabledCategories.push_back(GameCategories.CategoryList.getCurrentID());
+		App.Settings.EnabledCategories.push_back(App.Library.GameCategories.CategoryList.getCurrentID());
 		markChanged();
 	}
 	else if(checkBox->GetStyle() == GuiCheckbox::CROSS)
@@ -131,14 +131,14 @@ void CategorySwitchPrompt::OnCheckboxClick(GuiCheckbox *checkBox, int index)
 		// Remove from Enabled
 		for(i = 0; i < App.Settings.EnabledCategories.size(); ++i)
 		{
-			if(App.Settings.EnabledCategories[i] == GameCategories.CategoryList.getCurrentID())
+			if(App.Settings.EnabledCategories[i] == App.Library.GameCategories.CategoryList.getCurrentID())
 			{
 				App.Settings.EnabledCategories.erase(App.Settings.EnabledCategories.begin()+i);
 				break;
 			}
 		}
 		// Add to Forbidden
-		App.Settings.ForbiddenCategories.push_back(GameCategories.CategoryList.getCurrentID());
+		App.Settings.ForbiddenCategories.push_back(App.Library.GameCategories.CategoryList.getCurrentID());
 		markChanged();
 	}
 	else if(checkBox->GetStyle() == GuiCheckbox::PLUS && index > 0)
@@ -146,14 +146,14 @@ void CategorySwitchPrompt::OnCheckboxClick(GuiCheckbox *checkBox, int index)
 		// Remove from Forbidden
 		for(i = 0; i < App.Settings.ForbiddenCategories.size(); ++i)
 		{
-			if(App.Settings.ForbiddenCategories[i] == GameCategories.CategoryList.getCurrentID())
+			if(App.Settings.ForbiddenCategories[i] == App.Library.GameCategories.CategoryList.getCurrentID())
 			{
 				App.Settings.ForbiddenCategories.erase(App.Settings.ForbiddenCategories.begin()+i);
 				break;
 			}
 		}
 		// Add to Required
-		App.Settings.RequiredCategories.push_back(GameCategories.CategoryList.getCurrentID());
+		App.Settings.RequiredCategories.push_back(App.Library.GameCategories.CategoryList.getCurrentID());
 		markChanged();
 	}
 
@@ -164,7 +164,7 @@ void CategorySwitchPrompt::OnCheckboxClick(GuiCheckbox *checkBox, int index)
 		checkBox->SetChecked(false);
 		for(i = 0; i < App.Settings.ForbiddenCategories.size(); ++i)
 		{
-			if(App.Settings.ForbiddenCategories[i] == GameCategories.CategoryList.getCurrentID())
+			if(App.Settings.ForbiddenCategories[i] == App.Library.GameCategories.CategoryList.getCurrentID())
 			{
 				App.Settings.ForbiddenCategories.erase(App.Settings.ForbiddenCategories.begin()+i);
 				markChanged();

@@ -407,8 +407,8 @@ static void ProgressWindow(const char *title, const char *msg1, const char *msg2
 
 	HaltGui();
 	promptWindow.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&promptWindow);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&promptWindow);
 	ResumeGui();
 
 	while (promptWindow.GetEffect() > 0) usleep(100);
@@ -455,8 +455,8 @@ static void ProgressWindow(const char *title, const char *msg1, const char *msg2
 	while (promptWindow.GetEffect() > 0) usleep(100);
 
 	HaltGui();
-	mainWindow->Remove(&promptWindow);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&promptWindow);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	ResumeGui();
 }
 

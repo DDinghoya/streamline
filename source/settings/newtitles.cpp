@@ -65,13 +65,13 @@ void NewTitles::Reload(void)
 		memset(title, 0, sizeof(Title));
 
 		char *delimeter = strchr(line, ':');
-		if(!delimeter || ((delimeter-line) > 6)) // check for valid delimiter
+		if (!delimeter || ((delimeter - line) > 6)) // check for valid delimiter
 			continue;
 
 		*delimeter = '\0';
 
 		snprintf(title->titleId, sizeof(title->titleId), "%s", line);
-		title->timestamp = strtoul(delimeter+1, 0, 10);
+		title->timestamp = strtoul(delimeter + 1, 0, 10);
 		title->isNew = ((currenttime - title->timestamp) < NEW_SECONDS);
 		title->next = NULL;
 
@@ -92,7 +92,7 @@ void NewTitles::Reload(void)
 
 void NewTitles::CheckGame(const u8 *titleid)
 {
-	if (titleid == NULL || strlen((char *) titleid) == 0)
+	if (titleid == NULL || strlen((char *)titleid) == 0)
 		return;
 
 	Title *t = firstTitle;
@@ -109,7 +109,7 @@ void NewTitles::CheckGame(const u8 *titleid)
 	t = new Title;
 	memset(t, 0, sizeof(Title));
 
-	snprintf(t->titleId, sizeof(t->titleId), "%s", (char *) titleid);
+	snprintf(t->titleId, sizeof(t->titleId), "%s", (char *)titleid);
 	t->timestamp = time(0);
 	t->next = NULL;
 
@@ -120,7 +120,7 @@ void NewTitles::CheckGame(const u8 *titleid)
 	}
 	else
 	{
-		GameStatus *Status = GameStatistics.GetGameStatus(titleid);
+		GameStatus *Status = App.Library.GameStatistics.GetGameStatus(titleid);
 		t->isNew = (Status == NULL || Status->PlayCount == 0);
 	}
 
@@ -143,7 +143,7 @@ bool NewTitles::IsNew(const u8 *titleid) const
 
 	Title *t = firstTitle;
 
-	while(t != NULL)
+	while (t != NULL)
 	{
 		// Loop all titles, search for the correct titleid
 		if (strncmp((char*)titleid, t->titleId, 6) == 0)

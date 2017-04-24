@@ -26,8 +26,6 @@
 #include <unistd.h>
 #include "FeatureSettingsMenu.hpp"
 #include "Channels/channels.h"
-#include "settings/CGameCategories.hpp"
-#include "settings/GameTitles.h"
 #include "App.h"
 #include "settings/SettingsPrompts.h"
 #include "network/networkops.h"
@@ -95,9 +93,9 @@ FeatureSettingsMenu::~FeatureSettingsMenu()
 			App.Settings.titlesOverride = OFF;
 
 		//! Remove cached titles and reload new titles
-		GameTitles.SetDefault();
+		App.Library.GameTitles.SetDefault();
 		if(App.Settings.titlesOverride) {
-			GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+			App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 		}
 		else
 		{
@@ -222,14 +220,14 @@ int FeatureSettingsMenu::GetMenuInternal()
 		{
 			char xmlpath[300];
 			snprintf(xmlpath, sizeof(xmlpath), "%swiitdb.xml", App.Settings.titlestxt_path);
-			if(!GameCategories.ImportFromGameTDB(xmlpath))
+			if(!App.Library.GameCategories.ImportFromGameTDB(xmlpath))
 			{
 				WindowPrompt(tr("Error"), tr("Could not open the WiiTDB.xml file."), tr("OK"));
 			}
 			else
 			{
-				GameCategories.Save();
-				GameCategories.CategoryList.goToFirst();
+				App.Library.GameCategories.Save();
+				App.Library.GameCategories.CategoryList.goToFirst();
 				WindowPrompt(tr("Import Categories"), tr("Import operation successfully completed."), tr("OK"));
 			}
 		}
@@ -276,7 +274,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 					snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuPath, nandPath);
 				}
 
-				ShowProgress(tr("Extracting files:"), GameTitles.GetTitle(gameList[i]), 0, 0, -1, true, false);
+				ShowProgress(tr("Extracting files:"), App.Library.GameTitles.GetTitle(gameList[i]), 0, 0, -1, true, false);
 
 				int ret = NandTitle::ExtractDir(nandPath, filePath);
 				if(ret == PROGRESS_CANCELED)
@@ -293,7 +291,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 				{
 					noErrors = false;
 					char text[200];
-					snprintf(text, sizeof(text), "%s %s. %s. %s", tr("Could not extract files for:"), GameTitles.GetTitle(gameList[i]), tr("Savegame might not exist for this game."), tr("Continue?"));
+					snprintf(text, sizeof(text), "%s %s. %s. %s", tr("Could not extract files for:"), App.Library.GameTitles.GetTitle(gameList[i]), tr("Savegame might not exist for this game."), tr("Continue?"));
 
 					ProgressStop();
 					int ret = WindowPrompt(tr("Error"), text, tr("Yes"), tr("No"), tr("Skip Errors"));
@@ -478,7 +476,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 				
 				// Refresh new EmuNAND content
 				Channels::Instance()->GetEmuChannelList();
-				GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+				App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 			}
 		}
 		else if(choice == 2)		// Folder mode
@@ -568,7 +566,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 						
 					// Refresh new EmuNAND content
 					Channels::Instance()->GetEmuChannelList();
-					GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+					App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 				}
 				else
 				{

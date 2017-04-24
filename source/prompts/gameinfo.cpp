@@ -6,7 +6,6 @@
 #include <dirent.h>
 
 #include "usbloader/wbfs.h"
-#include "settings/CGameCategories.hpp"
 #include "language/gettext.h"
 #include "GUI/gui.h"
 #include "GUI/Text.hpp"
@@ -17,11 +16,10 @@
 #include "FileOperations/fileops.h"
 #include "prompts/PromptWindows.h"
 #include "themes/CTheme.h"
-#include "settings/GameTitles.h"
 #include "gameinfo.h"
 #include "usbloader/GameList.h"
 #include "gecko.h"
-#include "xml/GameTDB.hpp"
+#include "Data/GameTDB.hpp"
 #include "utils/ShowError.h"
 #include "BoxCover/BoxCover.hpp"
 
@@ -70,7 +68,7 @@ static inline const char * HdrTypeText(u8 type)
  ***************************************************************************/
 static int InternalShowGameInfo(struct discHdr *header)
 {
-	mainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->SetState(STATE_DISABLED);
 
 	char ID[7];
 	strlcpy(ID, (char *) header->id, sizeof(ID));
@@ -768,7 +766,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 	std::vector<GuiText *> categoriesTxt;
 	indexy += 10;
 
-	const std::vector<unsigned int> gameCategories = GameCategories[ID];
+	const std::vector<unsigned int> gameCategories = App.Library.GameCategories[ID];
 	if(gameCategories.size() > 1)
 	{
 		categoryTitle = new GuiText(tr("Categories:"), 16, ( GXColor ) {0, 0, 0, 255});
@@ -793,7 +791,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 			break;
 		}
 
-		categoriesTxt.push_back(new GuiText(GameCategories.CategoryList[gameCategories[i]], 16, ( GXColor ) {0, 0, 0, 255}));
+		categoriesTxt.push_back(new GuiText(App.Library.GameCategories.CategoryList[gameCategories[i]], 16, ( GXColor ) {0, 0, 0, 255}));
 		categoriesTxt[categoriesTxt.size()-1]->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 		categoriesTxt[categoriesTxt.size()-1]->SetPosition(515, 12 + indexy);
 		categoriesTxt[categoriesTxt.size()-1]->SetMaxWidth(74, DOTTED);
@@ -883,9 +881,9 @@ static int InternalShowGameInfo(struct discHdr *header)
 	gameinfoWindow.Append(&InfoWindow);
 
 	HaltGui();
-	//mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(&gameinfoWindow);
-	if(boxCov) mainWindow->Append(boxCov);
+	//App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(&gameinfoWindow);
+	if(boxCov) App.MainWindow->Append(boxCov);
 	ResumeGui();
 
 	while (choice == -1)
@@ -1013,9 +1011,9 @@ static int InternalShowGameInfo(struct discHdr *header)
 
 	while (gameinfoWindow.GetEffect() > 0) usleep(100);
 	HaltGui();
-	mainWindow->Remove(&gameinfoWindow);
-	if(boxCov) mainWindow->Remove(boxCov);
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->Remove(&gameinfoWindow);
+	if(boxCov) App.MainWindow->Remove(boxCov);
+	App.MainWindow->SetState(STATE_DEFAULT);
 
 	delete boxCov;
 	delete playersImgData;
@@ -1120,7 +1118,7 @@ int showGameInfo(int gameSelected, struct discHdr *dvdheader)
  */
 bool save_gamelist(bool bCSV) // save gamelist
 {
-	mainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->SetState(STATE_DISABLED);
 	CreateSubfolder(App.Settings.update_path);
 
 	// Save the game list.
@@ -1133,7 +1131,7 @@ bool save_gamelist(bool bCSV) // save gamelist
 	FILE *f = fopen(tmp, "w");
 	if (!f)
 	{
-		mainWindow->SetState(STATE_DEFAULT);
+		App.MainWindow->SetState(STATE_DEFAULT);
 		return false;
 	}
 	//make sure that all games are added to the gamelist
@@ -1153,7 +1151,7 @@ bool save_gamelist(bool bCSV) // save gamelist
 		{
 			struct discHdr* header = gameList[i];
 			WBFS_GameSize(header->id, &size);
-			fprintf(f, "\"%.6s\",\"%.2f\",\"%s\",\"%s\",\"%s\"\n", (char*)header->id, size, GameTitles.GetTitle(header), HdrTypeText(header->type), ConsoleFromTitleID((char*)header->id));
+			fprintf(f, "\"%.6s\",\"%.2f\",\"%s\",\"%s\",\"%s\"\n", (char*)header->id, size, App.Library.GameTitles.GetTitle(header), HdrTypeText(header->type), ConsoleFromTitleID((char*)header->id));
 		}
 	}
 	else
@@ -1170,7 +1168,7 @@ bool save_gamelist(bool bCSV) // save gamelist
 			WBFS_GameSize(header->id, &size);
 			fprintf(f, "%.6s", (char*)header->id);
 			fprintf(f, " [%.2f]   ", size);
-			fprintf(f, " %s ; ", GameTitles.GetTitle(header));
+			fprintf(f, " %s ; ", App.Library.GameTitles.GetTitle(header));
 			fprintf(f, " %s ; ", HdrTypeText(header->type));
 			fprintf(f, " %s  ", ConsoleFromTitleID((char*)header->id));
 			fprintf(f, "\n");
@@ -1179,6 +1177,6 @@ bool save_gamelist(bool bCSV) // save gamelist
 	fclose(f);
 
 	gameList.FilterList();
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->SetState(STATE_DEFAULT);
 	return true;
 }

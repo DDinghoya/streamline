@@ -42,16 +42,16 @@ int MenuGCInstall()
 		GCMultiDiscMenu gcMenu(gcDumper.GetDiscHeaders());
 		gcMenu.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 		gcMenu.SetEffect(EFFECT_FADE, 20);
-		mainWindow->SetState(STATE_DISABLED);
-		mainWindow->Append(&gcMenu);
+		App.MainWindow->SetState(STATE_DISABLED);
+		App.MainWindow->Append(&gcMenu);
 
 		int choice = gcMenu.ShowSelection();
 
 		gcMenu.SetEffect(EFFECT_FADE, -20);
 		while(gcMenu.GetEffect() > 0) usleep(1000);
 
-		mainWindow->Remove(&gcMenu);
-		mainWindow->SetState(STATE_DEFAULT);
+		App.MainWindow->Remove(&gcMenu);
+		App.MainWindow->SetState(STATE_DEFAULT);
 
 		installGames = gcMenu.GetSelectedGames();
 

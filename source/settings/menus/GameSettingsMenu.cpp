@@ -28,7 +28,6 @@
 #include "prompts/PromptWindows.h"
 #include "prompts/ProgressWindow.h"
 #include "prompts/CategorySelectPrompt.hpp"
-#include "settings/GameTitles.h"
 #include "usbloader/GameList.h"
 #include "language/gettext.h"
 #include "wad/nandtitle.h"
@@ -38,7 +37,7 @@
 #include "UninstallSM.hpp"
 
 GameSettingsMenu::GameSettingsMenu(GameBrowseMenu *parent, struct discHdr * header)
-	: FlyingButtonsMenu(GameTitles.GetTitle(header)), browserMenu(parent)
+	: FlyingButtonsMenu(App.Library.GameTitles.GetTitle(header)), browserMenu(parent)
 {
 	DiscHeader = header;
 	//! Don't switch menu's by default but return to disc window.
@@ -52,7 +51,7 @@ GameSettingsMenu::~GameSettingsMenu()
 int GameSettingsMenu::Execute(GameBrowseMenu *parent, struct discHdr * header)
 {
 	GameSettingsMenu * Menu = new GameSettingsMenu(parent, header);
-	mainWindow->Append(Menu);
+	App.MainWindow->Append(Menu);
 
 	Menu->ShowMenu();
 
@@ -126,24 +125,24 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 		HideMenu();
 		Remove(backBtn);
 		ResumeGui();
-		mainWindow->SetState(STATE_DISABLED);
+		App.MainWindow->SetState(STATE_DISABLED);
 		CategorySelectPrompt promptMenu(DiscHeader);
 		promptMenu.SetAlignment(thAlign("center - category game prompt align hor"), thAlign("middle - category game prompt align ver"));
 		promptMenu.SetPosition(thInt("0 - category game prompt pos x"), thInt("0 - category game prompt pos y"));
 		promptMenu.SetEffect(EFFECT_FADE, 20);
-		mainWindow->Append(&promptMenu);
+		App.MainWindow->Append(&promptMenu);
 
 		promptMenu.Show();
 
 		promptMenu.SetEffect(EFFECT_FADE, -20);
 		while(promptMenu.GetEffect() > 0) usleep(100);
-		mainWindow->Remove(&promptMenu);
+		App.MainWindow->Remove(&promptMenu);
 		if(promptMenu.categoriesChanged())
 		{
 			gameList.FilterList();
 			browserMenu->ReloadBrowser();
 		}
-		mainWindow->SetState(STATE_DEFAULT);
+		App.MainWindow->SetState(STATE_DEFAULT);
 		Append(backBtn);
 		ShowMenu();
 	}
@@ -203,8 +202,8 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 		int choice = WindowPrompt(tr( "Are you sure?" ), 0, tr( "Yes" ), tr( "Cancel" ));
 		if (choice == 1)
 		{
-			GameSettings.Remove(DiscHeader->id);
-			GameSettings.Save();
+			App.Library.GameSettings.Remove(DiscHeader->id);
+			App.Library.GameSettings.Save();
 		}
 	}
 

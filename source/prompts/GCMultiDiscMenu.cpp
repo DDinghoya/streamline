@@ -65,7 +65,7 @@ int GCMultiDiscMenu::ShowSelection()
 		{
 			gprintf("\thomeButton clicked\n");
 			WindowExitPrompt();
-			mainWindow->SetState(STATE_DISABLED);
+			App.MainWindow->SetState(STATE_DISABLED);
 			SetState(STATE_DEFAULT);
 			homeButton->ResetState();
 		}

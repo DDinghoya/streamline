@@ -26,6 +26,7 @@
 #include "themes/CTheme.h"
 #include "menu/menus.h"
 #include "language/gettext.h"
+#include "App.h"
 
 CheckboxPrompt::CheckboxPrompt(const char * title, const char *msg)
 	: PromptWindow(title, msg)
@@ -218,8 +219,8 @@ int CheckboxPrompt::Show(const char *title, const char *msg,
 		Window->SetChecked(5, initChecks & CheckedBox6);
 	}
 
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(Window);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(Window);
 
 	int choice = -2;
 
@@ -236,7 +237,7 @@ int CheckboxPrompt::Show(const char *title, const char *msg,
 	}
 
 	delete Window;
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->SetState(STATE_DEFAULT);
 
 	return choice;
 }

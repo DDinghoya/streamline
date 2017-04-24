@@ -23,7 +23,6 @@
  ***************************************************************************/
 #include <unistd.h>
 #include "CategoryPrompt.hpp"
-#include "settings/CGameCategories.hpp"
 #include "App.h"
 #include "language/gettext.h"
 #include "themes/gettheme.h"
@@ -207,7 +206,7 @@ int CategoryPrompt::Show()
 		{
 			gprintf("\thomeButton clicked\n");
 			WindowExitPrompt();
-			mainWindow->SetState(STATE_DISABLED);
+			App.MainWindow->SetState(STATE_DISABLED);
 			SetState(STATE_DEFAULT);
 			homeButton->ResetState();
 		}
@@ -215,7 +214,7 @@ int CategoryPrompt::Show()
 		else if(saveButton->GetState() == STATE_CLICKED)
 		{
 			if(categoriesChanged())
-				GameCategories.Save();
+				App.Library.GameCategories.Save();
 			return 1;
 		}
 
@@ -224,7 +223,7 @@ int CategoryPrompt::Show()
 			if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_CATEGORIES_MOD))
 			{
 				WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked to be able to use this." ), tr( "OK" ));
-				mainWindow->SetState(STATE_DISABLED);
+				App.MainWindow->SetState(STATE_DISABLED);
 				SetState(STATE_DEFAULT);
 				addButton->ResetState();
 				continue;
@@ -235,12 +234,12 @@ int CategoryPrompt::Show()
 			int result = OnScreenKeyboard(entered, sizeof(entered), 0);
 			if(result)
 			{
-				GameCategories.CategoryList.AddCategory(entered);
+				App.Library.GameCategories.CategoryList.AddCategory(entered);
 				browserRefresh();
 				markChanged();
 			}
 
-			mainWindow->SetState(STATE_DISABLED);
+			App.MainWindow->SetState(STATE_DISABLED);
 			SetState(STATE_DEFAULT);
 			addButton->ResetState();
 		}
@@ -250,7 +249,7 @@ int CategoryPrompt::Show()
 			if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_CATEGORIES_MOD))
 			{
 				WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked to be able to use this." ), tr( "OK" ));
-				mainWindow->SetState(STATE_DISABLED);
+				App.MainWindow->SetState(STATE_DISABLED);
 				SetState(STATE_DEFAULT);
 				deleteButton->ResetState();
 				continue;
@@ -259,7 +258,7 @@ int CategoryPrompt::Show()
 			if(browser->GetSelected() == 0)
 			{
 				WindowPrompt(tr("Error"), tr("You cannot delete this category."), tr("OK"));
-				mainWindow->SetState(STATE_DISABLED);
+				App.MainWindow->SetState(STATE_DISABLED);
 				SetState(STATE_DEFAULT);
 				deleteButton->ResetState();
 				continue;
@@ -268,18 +267,18 @@ int CategoryPrompt::Show()
 			int choice = WindowPrompt(tr("Warning"), tr("Are you sure you want to delete this category?"), tr("Yes"), tr("Cancel"));
 			if(choice)
 			{
-				GameCategories.CategoryList.goToFirst();
+				App.Library.GameCategories.CategoryList.goToFirst();
 				for(int i = 0; i < browser->GetSelected(); ++i)
-					GameCategories.CategoryList.goToNext();
-				int categoryID = GameCategories.CategoryList.getCurrentID();
-				GameCategories.CategoryList.RemoveCategory(categoryID);
-				GameCategories.RemoveCategory(categoryID);
+					App.Library.GameCategories.CategoryList.goToNext();
+				int categoryID = App.Library.GameCategories.CategoryList.getCurrentID();
+				App.Library.GameCategories.CategoryList.RemoveCategory(categoryID);
+				App.Library.GameCategories.RemoveCategory(categoryID);
 
 				browserRefresh();
 				markChanged();
 			}
 
-			mainWindow->SetState(STATE_DISABLED);
+			App.MainWindow->SetState(STATE_DISABLED);
 			SetState(STATE_DEFAULT);
 			deleteButton->ResetState();
 		}
@@ -289,27 +288,27 @@ int CategoryPrompt::Show()
 			if(!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_CATEGORIES_MOD))
 			{
 				WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked to be able to use this." ), tr( "OK" ));
-				mainWindow->SetState(STATE_DISABLED);
+				App.MainWindow->SetState(STATE_DISABLED);
 				SetState(STATE_DEFAULT);
 				continue;
 			}
 
-			GameCategories.CategoryList.goToFirst();
+			App.Library.GameCategories.CategoryList.goToFirst();
 			for(int i = 0; i < browser->GetSelected(); ++i)
-				GameCategories.CategoryList.goToNext();
+				App.Library.GameCategories.CategoryList.goToNext();
 
 			char entered[512];
-			snprintf(entered, sizeof(entered), tr(GameCategories.CategoryList.getCurrentName().c_str()));
+			snprintf(entered, sizeof(entered), tr(App.Library.GameCategories.CategoryList.getCurrentName().c_str()));
 
 			int result = OnScreenKeyboard(entered, sizeof(entered), 0);
 			if(result)
 			{
-				GameCategories.CategoryList.SetCategory(GameCategories.CategoryList.getCurrentID(), entered);
+				App.Library.GameCategories.CategoryList.SetCategory(App.Library.GameCategories.CategoryList.getCurrentID(), entered);
 				browserRefresh();
 				markChanged();
 			}
 
-			mainWindow->SetState(STATE_DISABLED);
+			App.MainWindow->SetState(STATE_DISABLED);
 			SetState(STATE_DEFAULT);
 			editButton->ResetState();
 		}

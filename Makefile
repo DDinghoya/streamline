@@ -18,6 +18,7 @@ TARGET		:=	boot
 BUILD		:=	build
 SOURCES		:=	source \
 				source/Core \
+				source/Data \
 				source/GUI \
 				source/Controls \
 				source/system \
@@ -27,7 +28,6 @@ SOURCES		:=	source \
 				source/mload/modules \
 				source/patches \
 				source/usbloader \
-				source/xml \
 				source/network \
 				source/settings \
 				source/settings/menus \

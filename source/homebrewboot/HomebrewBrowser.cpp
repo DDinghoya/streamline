@@ -130,7 +130,7 @@ HomebrewBrowser::~HomebrewBrowser()
 int HomebrewBrowser::Execute()
 {
 	HomebrewBrowser * Menu = new HomebrewBrowser();
-	mainWindow->Append(Menu);
+	App.MainWindow->Append(Menu);
 
 	Menu->ShowMenu();
 
@@ -295,14 +295,14 @@ void HomebrewBrowser::MainButtonClicked(int button)
 	HomebrewPrompt *HBCWindowPrompt = new HomebrewPrompt(HomebrewName.toUTF8().c_str(), MetaXML.GetCoder(), MetaXML.GetVersion(),
 							MetaXML.GetReleasedate(), MetaXML.GetLongDescription(), IconImgData[button % 4], filesize);
 
-	mainWindow->SetState(STATE_DISABLED);
-	mainWindow->Append(HBCWindowPrompt);
+	App.MainWindow->SetState(STATE_DISABLED);
+	App.MainWindow->Append(HBCWindowPrompt);
 
 	int choice = HBCWindowPrompt->MainLoop();
 
 	delete HBCWindowPrompt;
 
-	mainWindow->SetState(STATE_DEFAULT);
+	App.MainWindow->SetState(STATE_DEFAULT);
 
 	if (choice == 1)
 	{
