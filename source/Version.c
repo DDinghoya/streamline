@@ -1,4 +1,4 @@
-#define SVN_REV "1275"
+#define SVN_REV "1276"
 #define SVN_MAJOR "3"
 #define SVN_MINOR "1"
 #define SVN_BRANCH "master"
