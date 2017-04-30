@@ -17,7 +17,6 @@ include $(DEVKITPPC)/wii_rules
 TARGET		:=	boot
 BUILD		:=	build
 SOURCES		:=	source \
-				source/Core \
 				source/Data \
 				source/GUI \
 				source/Controls \
@@ -70,11 +69,6 @@ endif
 CFLAGS		=	-g -ggdb -O3 -Wall -Wno-multichar -Wno-unused-parameter -Wextra $(MACHDEP) $(INCLUDE) -DBUILD_IOS=$(IOS) -D_GNU_SOURCE 
 CXXFLAGS	=	$(CFLAGS)
 LDFLAGS		=	-g -ggdb $(MACHDEP) -Wl,-Map,$(notdir $@).map,--section-start,.init=0x80B00000,-wrap,malloc,-wrap,free,-wrap,memalign,-wrap,calloc,-wrap,realloc,-wrap,malloc_usable_size,-wrap,wiiuse_register
-
-ifeq ($(BUILDMODE),channel)
-CFLAGS += -DFULLCHANNEL
-CXXFLAGS += -DFULLCHANNEL
-endif
 
 ifeq ($(BUILDMODE),debug)
 CFLAGS += -DDEBUG_TO_FILE
@@ -166,10 +160,6 @@ ifneq ($(IOS),249)
 endif
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
-channel:
-	@[ -d build ] || mkdir -p build
-	@$(MAKE) BUILDMODE=channel --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
-
 debug:
 	@[ -d build ] || mkdir -p build
 	@$(MAKE) BUILDMODE=debug --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
@@ -197,7 +187,7 @@ clean:
 run:
 	$(MAKE)
 	@echo Done building ...
-	@echo Now Run That Shit ...
+	@echo Sending to console ...
 
 	wiiload $(OUTPUT).dol
 
@@ -208,7 +198,7 @@ reload:
 #---------------------------------------------------------------------------------
 release:
 	$(MAKE)
-	cp boot.dol ./hbc/boot.dol
+	cp boot.dol ./distrib/usbloader_gx/boot.dol
 
 
 #---------------------------------------------------------------------------------

@@ -24,7 +24,7 @@
 #pragma once
 #include <gctypes.h>
 #include <map>
-#include <string>
+#include <cstring>
 #include <vector>
 #include <tinyxml2.h>
 #include "CCategoryList.hpp"
@@ -34,7 +34,6 @@ using namespace tinyxml2;
 class CGameCategories
 {
 public:
-	CGameCategories();
 	bool Load(string filepath);
 	bool Save();
 	bool SetCategory(const string &gameID, unsigned int id);
@@ -55,7 +54,11 @@ public:
 	static bool isInCategory(const char *gameID, unsigned int id);
 
 	CCategoryList CategoryList;
+
 protected:
+	friend class TitleLibrary;
+	CGameCategories();
+	~CGameCategories() { }
 	string configPath;
 	const vector<unsigned int> defaultCategory;
 	map<string, vector<unsigned int> > List;

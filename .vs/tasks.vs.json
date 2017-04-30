@@ -1,0 +1,22 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "task-Makefile",
+      "appliesTo": "Makefile",
+      "type": "command",
+      "contextType": "build",
+      "command": "make"
+    },
+    {
+      "taskName": "task-Makefile",
+      "appliesTo": "Makefile",
+      "type": "command",
+      "contextType": "clean",
+      "command": "make",
+      "args": [
+        "clean"
+      ]
+    }
+  ]
+}

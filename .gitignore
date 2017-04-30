@@ -1,4 +1,5 @@
-/boot.*
-/.vs
+/boot.dol
+boot.elf
+/extras/forwarder/boot.dol
 /build
-/CppProperties.json
+/extras/*/build

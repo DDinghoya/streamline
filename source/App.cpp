@@ -33,14 +33,14 @@ extern "C"
 }
 
 // Main loader application reference
-LoaderApp App;
+Application App;
 
-LoaderApp::LoaderApp()
+Application::Application()
+	: MainWindow(NULL)
 {
-
 }
 
-LoaderApp::~LoaderApp()
+Application::~Application()
 {
 	
 }

@@ -1,7 +1,7 @@
 /****************************************************************************
  * USB Loader GX resource files.
  * This file is generated automatically.
- * Includes 200 files.
+ * Includes 196 files.
  *
  * NOTE:
  * Any manual modification of this file will be overwriten by the generation.
@@ -407,18 +407,6 @@ extern const u32 rankIcon_png_size;
 extern const u8 remove_png[];
 extern const u32 remove_png_size;
 
-extern const u8 rplayer1_point_png[];
-extern const u32 rplayer1_point_png_size;
-
-extern const u8 rplayer2_point_png[];
-extern const u32 rplayer2_point_png_size;
-
-extern const u8 rplayer3_point_png[];
-extern const u32 rplayer3_point_png_size;
-
-extern const u8 rplayer4_point_png[];
-extern const u32 rplayer4_point_png_size;
-
 extern const u8 scrollBarBottom_png[];
 extern const u32 scrollBarBottom_png_size;
 
@@ -745,10 +733,6 @@ RecourceFile Resources::RecourceFiles[] =
 	{"progressbar_outline.png", progressbar_outline_png, progressbar_outline_png_size, NULL, 0},
 	{"rankIcon.png", rankIcon_png, rankIcon_png_size, NULL, 0},
 	{"remove.png", remove_png, remove_png_size, NULL, 0},
-	{"rplayer1_point.png", rplayer1_point_png, rplayer1_point_png_size, NULL, 0},
-	{"rplayer2_point.png", rplayer2_point_png, rplayer2_point_png_size, NULL, 0},
-	{"rplayer3_point.png", rplayer3_point_png, rplayer3_point_png_size, NULL, 0},
-	{"rplayer4_point.png", rplayer4_point_png, rplayer4_point_png_size, NULL, 0},
 	{"scrollBarBottom.png", scrollBarBottom_png, scrollBarBottom_png_size, NULL, 0},
 	{"scrollBarTile.png", scrollBarTile_png, scrollBarTile_png_size, NULL, 0},
 	{"scrollBarTop.png", scrollBarTop_png, scrollBarTop_png_size, NULL, 0},

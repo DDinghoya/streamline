@@ -1,20 +1,20 @@
 /*  http -- http convenience functions
 
-    Copyright (C) 2008 bushing
+	Copyright (C) 2008 bushing
 				  2008-2014 Dimok, Cyan
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, version 2.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, version 2.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "http.h"
@@ -222,7 +222,7 @@ struct block downloadfile(const char *url)
 	// Remove Referer from the request header for incompatible websites (ex. Cloudflare proxy)
 	char referer[domainlength + 12];
 	snprintf(referer, sizeof(referer), "Referer: %s\r\n", domain);
-	if(strstr(url, "geckocodes"))
+	if (strstr(url, "geckocodes"))
 	{
 		strcpy(referer, "");
 	}
@@ -230,7 +230,7 @@ struct block downloadfile(const char *url)
 	//Form a nice request header to send to the webserver
 	char* headerformat = "GET %s HTTP/1.0\r\nHost: %s\r\n%sUser-Agent: USBLoaderGX r%s\r\n\r\n";
 	char header[strlen(headerformat) + strlen(path) + strlen(domain) + strlen(referer) + 100];
-	sprintf(header, headerformat, path, domain, referer, Version_GetPatch());
+	sprintf(header, headerformat, path, domain, referer, Version_GetBuild());
 	//gprintf("\nHTTP Request:\n");
 	//gprintf("%s\n",header);
 
@@ -238,10 +238,10 @@ struct block downloadfile(const char *url)
 	send_message(connection, header);
 	struct block response = read_message(connection);
 	net_close(connection);
-	
+
 	// dump response
 	// hexdump(response.data, response.size);
-	
+
 	//Search for the 4-character sequence \r\n\r\n in the response which signals the start of the http payload (file)
 	unsigned char *filestart = NULL;
 	u32 filesize = 0;
@@ -255,30 +255,30 @@ struct block downloadfile(const char *url)
 		{
 			filestart = response.data + i + 1;
 			filesize = response.size - i - 1;
-			
+
 			// Check the HTTP response code
-			if (response.size > 10 && strncmp((char*)response.data, "HTTP/", 5)==0) 
+			if (response.size > 10 && strncmp((char*)response.data, "HTTP/", 5) == 0)
 			{
 				char htstat[i];
 				strncpy(htstat, (char*)response.data, i);
 				htstat[i] = 0;
 				char *codep;
 				codep = strchr(htstat, ' ');
-				if (codep) 
+				if (codep)
 				{
 					int code;
-					if (sscanf(codep+1, "%d", &code) == 1) 
+					if (sscanf(codep + 1, "%d", &code) == 1)
 					{
 						//gprintf("HTTP response code: %d\n", code);
 						if (code == 302) // 302 FOUND (redirected link)
 						{
 							char *ptr = strcasestr((char*)response.data, "Location: ");
-							if(ptr)
+							if (ptr)
 							{
 								ptr += strlen("Location: ");
 								strncpy(newURL, ptr, sizeof(newURL));
-								*(strchr(newURL, '\r'))=0;
-								
+								*(strchr(newURL, '\r')) = 0;
+
 								redirect = true;
 								//gprintf("New URL to download = %s \n", newURL);
 							}
@@ -289,7 +289,7 @@ struct block downloadfile(const char *url)
 								return emptyblock;
 							}
 						}
-						if (code >=400) // Not found
+						if (code >= 400) // Not found
 						{
 							//gprintf("HTTP ERROR: %s\n", htstat);
 							free(response.data);
@@ -302,17 +302,17 @@ struct block downloadfile(const char *url)
 		}
 	}
 
-	if(redirect)
+	if (redirect)
 	{
 		// Prevent endless loop
 		retryloop++;
-		if(retryloop > 3)
+		if (retryloop > 3)
 		{
 			retryloop = 0;
 			free(response.data);
 			return emptyblock;
 		}
-		
+
 		struct block redirected = downloadfile(newURL);
 
 		// copy the newURL data into the original data
@@ -331,7 +331,7 @@ struct block downloadfile(const char *url)
 		filestart = response.data;
 		filesize = redirected.size;
 		free(redirected.data);
-		
+
 	}
 	retryloop = 0;
 

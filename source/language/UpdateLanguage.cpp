@@ -26,13 +26,13 @@ static const char * LanguageFilesURL = "http://svn.code.sf.net/p/usbloadergx/cod
 
 int DownloadAllLanguageFiles(int revision)
 {
-	if(!CreateSubfolder(App.Settings.languagefiles_path))
+	if (!CreateSubfolder(App.Settings.languagefiles_path))
 	{
 		ShowError(tr("Could not create path: %s"), App.Settings.languagefiles_path);
 		return -1;
 	}
 
-	if(!IsNetworkInit())
+	if (!IsNetworkInit())
 	{
 		ShowError(tr("Network is not initiated."));
 		return -2;
@@ -43,20 +43,20 @@ int DownloadAllLanguageFiles(int revision)
 	int listsize = LinkList.GetURLCount();
 	int files_downloaded = 0;
 	char target[6];
-	if(revision > 0)
+	if (revision > 0)
 		snprintf(target, sizeof(target), "%d", revision);
 	else
-		snprintf(target, sizeof(target), "%s", Version_GetPatch());
+		snprintf(target, sizeof(target), "%s", Version_GetBuild());
 
 	ShowProgress(tr("Updating Language Files:"), 0, 0, 0, listsize, false, true);
 
 	for (int i = 0; i < listsize; i++)
 	{
 		const char * filename = strrchr(LinkList.GetURL(i), '/');
-		if(filename) filename++;
+		if (filename) filename++;
 		else filename = LinkList.GetURL(i);
 
-		if(!filename)
+		if (!filename)
 			continue;
 
 		const char * FileExt = strrchr(filename, '.');
@@ -75,7 +75,7 @@ int DownloadAllLanguageFiles(int revision)
 			char filepath[300];
 			snprintf(filepath, sizeof(filepath), "%s/%s", App.Settings.languagefiles_path, filename);
 			FILE * pfile = fopen(filepath, "wb");
-			if(pfile)
+			if (pfile)
 			{
 				fwrite(file.data, 1, file.size, pfile);
 				fclose(pfile);
@@ -88,7 +88,7 @@ int DownloadAllLanguageFiles(int revision)
 	ProgressStop();
 
 	// reload current language file
-	if(App.Settings.language_path[0] != 0)
+	if (App.Settings.language_path[0] != 0)
 		App.Settings.LoadLanguage(App.Settings.language_path, CONSOLE_DEFAULT);
 	else
 		App.Settings.LoadLanguage(NULL, CONSOLE_DEFAULT);
@@ -98,13 +98,13 @@ int DownloadAllLanguageFiles(int revision)
 
 int UpdateLanguageFiles()
 {
-	if(!CreateSubfolder(App.Settings.languagefiles_path))
+	if (!CreateSubfolder(App.Settings.languagefiles_path))
 	{
 		ShowError(tr("Could not create path: %s"), App.Settings.languagefiles_path);
 		return -1;
 	}
 
-	if(!IsNetworkInit())
+	if (!IsNetworkInit())
 	{
 		ShowError(tr("Network is not initiated."));
 		return -2;
@@ -115,7 +115,7 @@ int UpdateLanguageFiles()
 	//give up now if we didn't find any
 	if (Dir.GetFilecount() == 0)
 	{
-		if(WindowPrompt(tr("Error:"), tr("No language files to update on your devices! Do you want to download new language files?"), tr("Yes"), tr("No")))
+		if (WindowPrompt(tr("Error:"), tr("No language files to update on your devices! Do you want to download new language files?"), tr("Yes"), tr("No")))
 			return DownloadAllLanguageFiles();
 
 		return -2;
@@ -129,9 +129,9 @@ int UpdateLanguageFiles()
 	int done = 0;
 
 	//build the URL, save path, and download each file and save it
-	for(int i = 0; i < Dir.GetFilecount(); ++i)
+	for (int i = 0; i < Dir.GetFilecount(); ++i)
 	{
-		snprintf(codeurl, sizeof(codeurl), "%s%s?p=%s", LanguageFilesURL, Dir.GetFilename(i), Version_GetPatch());
+		snprintf(codeurl, sizeof(codeurl), "%s%s?p=%s", LanguageFilesURL, Dir.GetFilename(i), Version_GetBuild());
 		snprintf(savepath, sizeof(savepath), "%s/%s", App.Settings.languagefiles_path, Dir.GetFilename(i));
 
 		struct block file = downloadfile(codeurl);
@@ -155,7 +155,7 @@ int UpdateLanguageFiles()
 	ProgressStop();
 
 	// reload current language file
-	if(App.Settings.language_path[0] != 0)
+	if (App.Settings.language_path[0] != 0)
 		App.Settings.LoadLanguage(App.Settings.language_path, CONSOLE_DEFAULT);
 	else
 		App.Settings.LoadLanguage(NULL, CONSOLE_DEFAULT);

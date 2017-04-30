@@ -7,14 +7,22 @@
 
 #pragma once
 
-#include "Core/Application.h"
+#include "settings/CSettings.h"
+#include "GUI/gui.h"
+#include "Data/TitleLibrary.h"
 
-class LoaderApp : public Application
+class Application
 {
 public:
-    LoaderApp();
-    virtual ~LoaderApp();
-    
+	Application();
+    ~Application();
+	// Main application settings container
+	CSettings Settings;
+
+	TitleLibrary Library;
+	GuiWindow *MainWindow;
+
+
 protected:
 
 private:
@@ -22,4 +30,4 @@ private:
 };
 
 // Main loader application reference
-extern LoaderApp App;
+extern Application App;

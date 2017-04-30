@@ -1,0 +1,46 @@
+{
+  configurations: [
+    {
+      name: "Debug",
+      includePath: [
+        "${projectRoot}",
+        "${projectRoot}\\source",
+        "${projectRoot}\\libs\\include",
+        "C:\\devkitPro\\portlibs\\ppc\\include",
+        "C:\\devkitPro\\libogc\\include",
+        "C:\\devkitPro\\devkitPPC\\powerpc-eabi\\include",
+        "C:\\devkitPro\\devkitPPC\\powerpc-eabi\\include\\c++\\6.3.0"
+      ],
+
+      defines: [
+        "HW_RVL",
+        "GEKKO",
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ]
+    },
+    {
+      "name": "Release",
+
+      "includePath": [
+        "${projectRoot}",
+        "${projectRoot}\\source",
+        "${projectRoot}\\libs\\include",
+        "C:\\devkitPro\\portlibs\\ppc\\include",
+        "C:\\devkitPro\\libogc\\include",
+        "C:\\devkitPro\\devkitPPC\\powerpc-eabi\\include",
+        "C:\\devkitPro\\devkitPPC\\powerpc-eabi\\include\\c++\\6.3.0"
+      ],
+
+      "defines": [
+        "HW_RVL",
+        "GEKKO",
+        "NDEBUG",
+        "NO_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ]
+    }
+  ]
+}

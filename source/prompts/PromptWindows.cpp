@@ -296,7 +296,7 @@ void WindowCredits()
 	txt.push_back(currentTxt);
 
 	char SvnRev[80];
-	snprintf(SvnRev, sizeof(SvnRev), "r%s   IOS%ld (Rev %ld)%s", Version_GetPatch(), IOS_GetVersion(), IOS_GetRevision(), (*(vu32*)0xcd800064 == 0xFFFFFFFF)? " + AHB" : "" );
+	snprintf(SvnRev, sizeof(SvnRev), "r%s   IOS%ld (Rev %ld)%s", Version_GetBuild(), IOS_GetVersion(), IOS_GetRevision(), (*(vu32*)0xcd800064 == 0xFFFFFFFF)? " + AHB" : "" );
 
 	char IosInfo[80] = "";
 	iosinfo_t * info = IosLoader::GetIOSInfo(IOS_GetVersion());

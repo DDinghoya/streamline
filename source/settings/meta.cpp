@@ -40,7 +40,7 @@ int updateMetaXML (void)
 	MetaXML.SetArgument(line);
 	snprintf(line, sizeof(line), "--mountusb=%d", App.Settings.USBAutoMount);
 	MetaXML.SetArgument(line);
-	snprintf(line, sizeof(line), "%s", Version_GetName());
+	snprintf(line, sizeof(line), "%s", Version_GetVersionString());
 	MetaXML.SetVersion(line);
 
 	int ret = MetaXML.SaveHomebrewXMLData(filepath);

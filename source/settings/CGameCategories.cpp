@@ -135,7 +135,7 @@ bool CGameCategories::Save()
 	XMLDeclaration *declaration = xmlDoc.NewDeclaration();
 	xmlDoc.InsertEndChild(declaration);
 	XMLElement *Revision = xmlDoc.NewElement("Revision");
-	XMLText *revText = xmlDoc.NewText(Version_GetPatch());
+	XMLText *revText = xmlDoc.NewText(Version_GetBuild());
 	Revision->InsertEndChild(revText);
 	xmlDoc.InsertEndChild(Revision);
 

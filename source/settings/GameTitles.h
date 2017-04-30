@@ -43,7 +43,11 @@ public:
 	//! Cache titles functions
 	u32 ReadCachedTitles(const char * path);
 	void WriteCachedTitles(const char * path);
+
 protected:
+	friend class TitleLibrary;
+	CGameTitles() { }
+	~CGameTitles() { }
 	void GetMissingTitles(std::vector<std::string> &MissingTitles, bool removeUnused);
 
 	std::vector<GameTitle> TitleList;

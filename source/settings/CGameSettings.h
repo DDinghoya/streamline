@@ -135,10 +135,6 @@ typedef struct _GameCFG
 class CGameSettings
 {
 public:
-	//!Constructor
-	CGameSettings();
-	//!Destructor
-	~CGameSettings();
 	//!Load
 	bool Load(const char * path);
 	//!Save
@@ -161,7 +157,14 @@ public:
 	static int GetPartenalPEGI(int parentalsetting);
 	//!Set the default configuration block
 	void SetDefault(GameCFG &game);
+
 protected:
+	friend class TitleLibrary;
+	//!Constructor
+	CGameSettings();
+	//!Destructor
+	~CGameSettings();
+
 	bool ReadGameID(const char * src, char * GameID, int size);
 	bool SetSetting(GameCFG & game, const char *name, const char *value);
 

@@ -4,6 +4,7 @@ ver_build_raw=$(git rev-list --count HEAD 2>/dev/null | tr '\n' ' ' | tr -d '\r'
 ver_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 ver_major=3
 ver_minor=1
+ver_patch=1
 ver_build=0
 a=$(echo $ver_build_raw | sed 's/\([0-9]*\).*/\1/')
 let "a+=0"
@@ -24,12 +25,8 @@ cat <<EOF > ./source/Version.c
 #define SVN_REV "$ver_build"
 #define SVN_MAJOR "$ver_major"
 #define SVN_MINOR "$ver_minor"
+#define SVN_PATCH "$ver_patch"
 #define SVN_BRANCH "$ver_branch"
-
-const char *Version_GetVersion()
-{
-	return SVN_MAJOR "." SVN_MINOR "." SVN_REV;
-}
 
 const char *Version_GetMajor()
 {
@@ -43,6 +40,11 @@ const char *Version_GetMinor()
 
 const char *Version_GetPatch()
 {
+	return SVN_PATCH;
+}
+
+const char *Version_GetBuild()
+{
 	return SVN_REV;
 }
 
@@ -51,9 +53,9 @@ const char *Version_GetBranch()
 	return SVN_BRANCH;
 }
 
-const char *Version_GetName()
+const char *Version_GetVersionString()
 {
-	return SVN_MAJOR "." SVN_MINOR "." SVN_REV "-" SVN_BRANCH;
+	return SVN_MAJOR "." SVN_MINOR "." SVN_PATCH "." SVN_REV "-" SVN_BRANCH;
 }
 EOF
 
@@ -66,12 +68,12 @@ EOF
 fi
 
 
-cat <<EOF > ./HBC/meta.xml
+cat <<EOF > ./distrib/usbloader_gx/meta.xml
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<app version="1">
 		<name>USB Loader GX</name>
 		<coder>USB Loader GX Team</coder>
-		<version>$ver_major.$ver_minor.$ver_build-$ver_branch</version>
+		<version>$ver_major.$ver_minor.$ver_patch.$ver_build-$ver_branch</version>
 		<release_date>$rev_date</release_date>
 		<!--   // remove this line to enable arguments
 		<arguments>

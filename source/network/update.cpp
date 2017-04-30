@@ -26,10 +26,10 @@
  * Update operations
  * for Wii-Xplorer 2009
  ***************************************************************************/
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include <ogcsys.h>
-#include <string>
+//#include <string>
 
 #include "gecko.h"
 #include "ZipFile.h"
@@ -101,11 +101,11 @@ static bool CheckNewGameTDBVersion(const char *url)
 	u64 Version = 0;
 
 	char * HEAD_Responde = HEAD_Request(url);
-	if(!HEAD_Responde)
+	if (!HEAD_Responde)
 		return false;
 
 	char * version_ptr = strstr(HEAD_Responde, "X-GameTDB-Timestamp: ");
-	if(version_ptr)
+	if (version_ptr)
 	{
 		version_ptr += strlen("X-GameTDB-Timestamp: ");
 		Version = strtoull(version_ptr, NULL, 10);
@@ -115,13 +115,13 @@ static bool CheckNewGameTDBVersion(const char *url)
 
 	std::string Title;
 	std::string Filepath = App.Settings.titlestxt_path;
-	if(App.Settings.titlestxt_path[Filepath.size()-1] != '/')
+	if (App.Settings.titlestxt_path[Filepath.size() - 1] != '/')
 		Filepath += '/';
 	Filepath += "wiitdb.xml";
 
 	GameTDB XML_DB;
 
-	if(!XML_DB.OpenFile((Filepath.c_str())))
+	if (!XML_DB.OpenFile((Filepath.c_str())))
 		return true;	//! If no file exists we need the file
 
 	u64 ExistingVersion = XML_DB.GetGameTDBVersion();
@@ -133,7 +133,7 @@ static bool CheckNewGameTDBVersion(const char *url)
 
 int UpdateGameTDB()
 {
-	if(CheckNewGameTDBVersion(GameTDB_URL) == false)
+	if (CheckNewGameTDBVersion(GameTDB_URL) == false)
 	{
 		gprintf("Not updating GameTDB: Version is the same\n");
 		return -1;
@@ -142,14 +142,14 @@ int UpdateGameTDB()
 	gprintf("Updating GameTDB...\n");
 
 	string ZipPath = App.Settings.titlestxt_path;
-	if(App.Settings.titlestxt_path[ZipPath.size()-1] != '/')
+	if (App.Settings.titlestxt_path[ZipPath.size() - 1] != '/')
 		ZipPath += '/';
 
 	ZipPath += "wiitdb.zip";
 
 	int filesize = DownloadFileToPath(GameTDB_URL, ZipPath.c_str(), false);
 
-	if(filesize <= 0)
+	if (filesize <= 0)
 		return -1;
 
 	ZipFile zFile(ZipPath.c_str());
@@ -175,7 +175,7 @@ static void UpdateIconPng()
 	{
 		snprintf(iconpath, sizeof(iconpath), "%sicon.png", App.Settings.update_path);
 		FILE * pfile = fopen(iconpath, "wb");
-		if(pfile)
+		if (pfile)
 		{
 			fwrite(file.data, 1, file.size, pfile);
 			fclose(pfile);
@@ -194,7 +194,7 @@ static void UpdateMetaXml()
 	{
 		snprintf(xmlpath, sizeof(xmlpath), "%smeta.xml", App.Settings.update_path);
 		FILE *pfile = fopen(xmlpath, "wb");
-		if(pfile)
+		if (pfile)
 		{
 			fwrite(file.data, 1, file.size, pfile);
 			fclose(pfile);
@@ -211,17 +211,13 @@ int CheckUpdate()
 		return -1;
 
 	int revnumber = 0;
-	int currentrev = atoi(Version_GetPatch());
+	int currentrev = atoi(Version_GetBuild());
 
-#ifdef FULLCHANNEL
-	struct block file = downloadfile( "http://svn.code.sf.net/p/usbloadergx/code/branches/updates/update_wad.txt" );
-#else
 	struct block file = downloadfile("http://svn.code.sf.net/p/usbloadergx/code/branches/updates/update_dol.txt");
-#endif
 
 	if (file.data != NULL)
 	{
-		revnumber = atoi((char *) file.data);
+		revnumber = atoi((char *)file.data);
 		free(file.data);
 	}
 
@@ -236,23 +232,19 @@ static int ApplicationDownload(void)
 	return 0;
 	std::string DownloadURL;
 	int newrev = 0;
-	int currentrev = atoi(Version_GetPatch());
+	int currentrev = atoi(Version_GetBuild());
 
-#ifdef FULLCHANNEL
-	struct block file = downloadfile( "http://svn.code.sf.net/p/usbloadergx/code/branches/updates/update_wad.txt" );
-#else
 	struct block file = downloadfile("http://svn.code.sf.net/p/usbloadergx/code/branches/updates/update_dol.txt");
-#endif
 
 	if (file.data != NULL)
 	{
 		// first line of the text file is the revisionc
-		newrev = atoi((char *) file.data);
+		newrev = atoi((char *)file.data);
 		// 2nd line of the text file is the url
 		char *ptr = strchr((char *)file.data, '\n');
-		while(ptr && (*ptr == '\r' || *ptr == '\n' || *ptr == ' '))
+		while (ptr && (*ptr == '\r' || *ptr == '\n' || *ptr == ' '))
 			ptr++;
-		while(ptr && *ptr != '\0' && *ptr != '\r' && *ptr != '\n')
+		while (ptr && *ptr != '\0' && *ptr != '\r' && *ptr != '\n')
 		{
 			DownloadURL.push_back(*ptr);
 			ptr++;
@@ -263,62 +255,37 @@ static int ApplicationDownload(void)
 
 	if (newrev <= currentrev)
 	{
-		WindowPrompt(tr( "No new updates." ), 0, tr( "OK" ));
+		WindowPrompt(tr("No new updates."), 0, tr("OK"));
 		return 0;
 	}
 
 	bool update_error = false;
 	char tmppath[250];
 
-	#ifdef FULLCHANNEL
-		snprintf(tmppath, sizeof(tmppath), "%s/ULNR.wad", App.Settings.BootDevice);
-	#else
-		char realpath[250];
-		snprintf(realpath, sizeof(realpath), "%sboot.dol", App.Settings.update_path);
-		snprintf(tmppath, sizeof(tmppath), "%sboot.tmp", App.Settings.update_path);
-	#endif
+	char realpath[250];
+	snprintf(realpath, sizeof(realpath), "%sboot.dol", App.Settings.update_path);
+	snprintf(tmppath, sizeof(tmppath), "%sboot.tmp", App.Settings.update_path);
 
-	int update_choice = WindowPrompt(fmt("Rev%i %s.", newrev, tr( "available" )), tr( "How do you want to update?" ), tr( "Update DOL" ), tr( "Update All" ), tr( "Cancel" ));
+	int update_choice = WindowPrompt(fmt("Rev%i %s.", newrev, tr("available")), tr("How do you want to update?"), tr("Update DOL"), tr("Update All"), tr("Cancel"));
 	if (update_choice == 0)
 		return 0;
 
 	int ret = DownloadFileToPath(DownloadURL.c_str(), tmppath, false);
-	if(ret < 1024*1024)
+	if (ret < 1024 * 1024)
 	{
 		remove(tmppath);
-		WindowPrompt(tr("Failed updating"), tr("Error while downloding file"), tr( "OK" ));
-		if(update_choice == 1)
+		WindowPrompt(tr("Failed updating"), tr("Error while downloding file"), tr("OK"));
+		if (update_choice == 1)
 			return -1;
 
 		update_error = true;
 	}
 	else
 	{
-	#ifdef FULLCHANNEL
-		FILE * wadFile = fopen(tmppath, "rb");
-		if(!wadFile)
-		{
-			update_error = true;
-			WindowPrompt(tr("Failed updating"), tr("Error opening downloaded file"), tr( "OK" ));
-			return -1;
-		}
-
-		int error = Wad_Install( wadFile );
-		if(error)
-		{
-			update_error = true;
-			ShowError(tr( "The wad installation failed with error %i" ), error);
-		}
-		else
-			WindowPrompt(tr( "Success" ), tr( "The wad file was installed" ), tr( "OK" ));
-
-		RemoveFile(tmppath);
-	#else
 		gprintf("%s\n%s\n", realpath, tmppath);
 		RemoveFile(realpath);
-		if(!RenameFile(tmppath, realpath))
+		if (!RenameFile(tmppath, realpath))
 			update_error = true;
-	#endif
 	}
 
 	if (update_choice == 2)
@@ -329,15 +296,15 @@ static int ApplicationDownload(void)
 		DownloadAllLanguageFiles(newrev);
 	}
 
-	if(update_error)
+	if (update_error)
 	{
-		ShowError(tr( "Error while updating USB Loader GX." ));
+		ShowError(tr("Error while updating USB Loader GX."));
 		return -1;
 	}
 
 	if (update_choice > 0)
 	{
-		WindowPrompt(tr( "Successfully updated." ), tr( "Restarting..." ), 0, 0, 0, 0, 150);
+		WindowPrompt(tr("Successfully updated."), tr("Restarting..."), 0, 0, 0, 0, 150);
 		RebootApp();
 	}
 
@@ -358,33 +325,33 @@ int UpdateApp()
 		return -1;
 	}
 
-	int choice = WindowPrompt(tr( "What do you want to update?" ), 0, "USB Loader GX", tr( "WiiTDB.xml" ), tr( "Language Files" ), tr( "Cancel" ));
-	if(choice == 0)
+	int choice = WindowPrompt(tr("What do you want to update?"), 0, "USB Loader GX", tr("WiiTDB.xml"), tr("Language Files"), tr("Cancel"));
+	if (choice == 0)
 		return 0;
 
-	if(choice == 1)
+	if (choice == 1)
 	{
-			WindowPrompt(fmt("%s", tr( "Updates are disabled." )), 0, tr("OK"));
-			return 1;
+		WindowPrompt(fmt("%s", tr("Updates are disabled.")), 0, tr("OK"));
+		return 1;
 		return ApplicationDownload();
 	}
 	else if (choice == 2)
 	{
-		if(UpdateGameTDB() < 0)
+		if (UpdateGameTDB() < 0)
 		{
-			WindowPrompt(fmt("%s", tr( "WiiTDB.xml is up to date." )), 0, tr("OK"));
+			WindowPrompt(fmt("%s", tr("WiiTDB.xml is up to date.")), 0, tr("OK"));
 			return 1;
 		}
 		else
 		{
-			WindowPrompt(tr( "Successfully Updated" ), 0, tr( "OK" ));
+			WindowPrompt(tr("Successfully Updated"), 0, tr("OK"));
 			return 1;
 		}
 	}
 	else if (choice == 3)
 	{
-		if(UpdateLanguageFiles() > 0)
-			WindowPrompt(tr( "Successfully Updated" ), 0, tr( "OK" ));
+		if (UpdateLanguageFiles() > 0)
+			WindowPrompt(tr("Successfully Updated"), 0, tr("OK"));
 	}
 
 	return 1;

@@ -46,7 +46,7 @@ StartUpProcess::StartUpProcess()
 	versionTxt->SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	versionTxt->SetPosition(20, screenheight - 20);
 
-	versionTxt->SetTextf("Release %s", Version_GetName());
+	versionTxt->SetTextf("Release %s", Version_GetVersionString());
 
 	cancelTxt = new GuiText("Press B to cancel", 18, (GXColor) { 255, 255, 255, 255 });
 	cancelTxt->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);

@@ -26,7 +26,6 @@
 #include "SystemMenu/SystemMenuResources.h"
 #include "system/IosLoader.h"
 #include "utils/StringTools.h"
-#include "utils/rockout.h"
 #include "utils/ShowError.h"
 #include "utils/tools.h"
 #include "utils/PasswordCheck.h"
@@ -1195,11 +1194,9 @@ int GameBrowseMenu::MainLoop()
 		gameInfo->ResetState();
 		if (SelectedGame >= 0 && SelectedGame < (s32) gameList.size())
 		{
-			rockout(gameList[SelectedGame]);
 			SetState(STATE_DISABLED);
 			int choice = showGameInfo(SelectedGame, 0);
 			SetState(STATE_DEFAULT);
-			rockout(0);
 			if (choice == 2)
 				homeBtn->SetState(STATE_CLICKED);
 		}
@@ -1526,8 +1523,6 @@ int GameBrowseMenu::OpenClickedGame(struct discHdr *header)
 		ResumeGui();
 	}
 
-	rockout(header);
-
 	SetAllowDim(false);
 	SetState(STATE_DISABLED);
 	if(gameBrowser)
@@ -1569,8 +1564,7 @@ int GameBrowseMenu::OpenClickedGame(struct discHdr *header)
 	}
 
 	wiilight(0);
-	rockout(0);
-
+	
 	SetState(STATE_DEFAULT);
 	SetAllowDim(true);
 

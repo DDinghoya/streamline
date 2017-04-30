@@ -226,12 +226,6 @@ bool RebootApp(void)
 	// be sure to use current settings as arguments
 	editMetaArguments();
 	
-#ifdef FULLCHANNEL
-	ExitApp();
-	WII_Initialize();
-	return !(WII_LaunchTitle(TITLE_ID(0x00010001, 0x554c4e52)) < 0);
-#else
-
 	// Load meta.xml arguments
 	char filepath[255];
 	HomebrewXML MetaXML;
@@ -257,7 +251,6 @@ bool RebootApp(void)
 	}
 
 	return !(BootHomebrewFromMem() <0);
-#endif
 }
 
 void ScreenShot()

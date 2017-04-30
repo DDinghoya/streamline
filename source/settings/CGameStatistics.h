@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <stdio.h>
+#include <cstdio>
 #include <gctypes.h>
 #include <vector>
 #include "usbloader/disc.h"
@@ -16,10 +16,6 @@ typedef struct _Stats
 class CGameStatistics
 {
 public:
-	//!Constructor
-	CGameStatistics();
-	//!Destructor
-	~CGameStatistics();
 	//!Load
 	bool Load(const char * path);
 	//!Save
@@ -56,6 +52,12 @@ public:
 	GameStatus * GetGameStatus(const struct discHdr * game) const { if (!game) return NULL; else return GetGameStatus(game->id); };
 
 protected:
+	friend class TitleLibrary;
+	//!Constructor
+	CGameStatistics();
+	//!Destructor
+	~CGameStatistics();
+
 	bool ReadGameID(const char * src, char * GameID, int size);
 	bool SetSetting(GameStatus & game, char *name, char *value);
 
