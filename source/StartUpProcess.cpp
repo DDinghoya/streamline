@@ -1,4 +1,7 @@
+#include <gctypes.h>
 #include <unistd.h>
+#include <cstdarg>
+#include <wupc/wupc.h>
 #include "StartUpProcess.h"
 #include "GUI/gui.h"
 #include "video.h"
@@ -12,8 +15,6 @@
 #include <runtimeiospatch.h>
 #include "utils/timer.h"
 #include "App.h"
-#include "settings/CGameSettings.h"
-#include "settings/CGameCategories.hpp"
 #include "usbloader/usbstorage2.h"
 #include "usbloader/MountGamePartition.h"
 #include "usbloader/GameBooter.hpp"
@@ -25,11 +26,11 @@
 StartUpProcess::StartUpProcess()
 {
 	//! Load default font for the next text outputs
-	Theme::LoadFont("");
+	App.Theme.LoadFont("");
 
 	background = new GuiImage(screenwidth, screenheight, (GXColor) { 0, 0, 0, 255 });
 
-	GXImageData = Resources::GetImageData("gxlogo.png");
+	GXImageData = App.Resources.GetImageData("gxlogo.png");
 	GXImage = new GuiImage(GXImageData);
 	GXImage->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	GXImage->SetPosition(screenwidth / 2, screenheight / 2 - 50);
@@ -185,9 +186,9 @@ bool StartUpProcess::USBSpinUp()
 		}
 
 
-		UpdatePads();
+		Input::UpdatePads();
 		for (int i = 0; i < 4; ++i)
-			cancelBtn->Update(&userInput[i]);
+			cancelBtn->Update(Input::GetUserInput(i));
 
 		if (cancelBtn->GetState() == STATE_CLICKED)
 			break;
@@ -220,6 +221,7 @@ int StartUpProcess::Execute()
 {
 	App.Settings.EntryIOS = IOS_GetVersion();
 
+#ifndef USE_DEFAULT_IOS
 	// Reload app cios if needed
 	SetTextf("Loading application cIOS %s\n", App.Settings.UseArgumentIOS ? "requested in meta.xml" : "");
 	if (IosLoader::LoadAppCios() < 0)
@@ -240,6 +242,7 @@ int StartUpProcess::Execute()
 			sleep(5);
 		}
 	}
+#endif
 
 	if (!AHBPROT_DISABLED && IOS_GetVersion() < 200)
 	{
@@ -250,7 +253,7 @@ int StartUpProcess::Execute()
 
 	SetTextf("Using %sIOS %i\n", IOS_GetVersion() >= 200 ? "c" : "", IOS_GetVersion());
 
-	SetupPads();
+	Input::SetupPads();
 
 	SetTextf("Initialize sd card\n");
 	DeviceHandler::Instance()->MountSD();
@@ -299,7 +302,7 @@ int StartUpProcess::Execute()
 		}
 
 		// Start pads again
-		SetupPads();
+		Input::SetupPads();
 	}
 
 	if (!IosLoader::IsHermesIOS() && !IosLoader::IsD2X())

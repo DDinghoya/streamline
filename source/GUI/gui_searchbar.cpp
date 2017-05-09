@@ -1,7 +1,7 @@
 #include <wctype.h>
 #include "gui.h"
 #include "gui_searchbar.h"
-
+#include "video.h"
 #include "wpad.h"
 #include "App.h"
 #include "themes/CTheme.h"
@@ -34,8 +34,8 @@ std::set<wchar_t> GuiSearchBar::SearchChars;
 
 GuiSearchBar::GuiSearchBar() :
 	inSide(0), text((char *)NULL, 22, (GXColor) { 0, 0, 0, 255 }), buttons(0),
-	keyImageData(Resources::GetFile("keyboard_key.png"), Resources::GetFileSize("keyboard_key.png")),
-	keyOverImageData(Resources::GetFile("keyboard_key_over.png"), Resources::GetFileSize("keyboard_key_over.png"))
+	keyImageData(App.Resources.GetFile("keyboard_key.png"), App.Resources.GetFileSize("keyboard_key.png")),
+	keyOverImageData(App.Resources.GetFile("keyboard_key_over.png"), App.Resources.GetFileSize("keyboard_key_over.png"))
 {
 	trig.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 	trigB.SetButtonOnlyTrigger(-1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B);
@@ -76,14 +76,14 @@ GuiSearchBar::GuiSearchBar() :
 	text.SetMaxWidth(width - (55 + 2 * 42 + 10), SCROLL_HORIZONTAL);
 	this->Append(&text);
 
-	imgBacspaceBtn = Resources::GetImageData("keyboard_backspace_over.png");
+	imgBacspaceBtn = App.Resources.GetImageData("keyboard_backspace_over.png");
 	BacspaceBtnImg_Over = new GuiImage(imgBacspaceBtn);
 	BacspaceBtnImg = new GuiImage(BacspaceBtnImg_Over);
 	BacspaceBtnImg->SetGrayscale();
 	BacspaceBtn = new GuiButton(BacspaceBtnImg, BacspaceBtnImg_Over, ALIGN_RIGHT, ALIGN_TOP, -52, 10, &trig, btnSoundOver, btnSoundClick, 1);
 	this->Append(BacspaceBtn);
 
-	imgClearBtn = Resources::GetImageData("keyboard_clear_over.png");
+	imgClearBtn = App.Resources.GetImageData("keyboard_clear_over.png");
 	ClearBtnImg_Over = new GuiImage(imgClearBtn);
 	ClearBtnImg = new GuiImage(ClearBtnImg_Over);
 	ClearBtnImg->SetGrayscale();

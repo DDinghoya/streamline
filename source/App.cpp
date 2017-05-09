@@ -48,14 +48,19 @@ Application::~Application()
 int main(int argc, char *argv[])
 {
 	__exception_setreload(20);
+
 	// activate magic access rights
 	MagicPatches(1);
+
 	// init video
 	InitVideo();
+
 	// video frame buffers must be in mem1
 	MEM2_init(48);
+
 	// init gecko
 	InitGecko();
+
 	// redirect stdout and stderr to gecko
 	USBGeckoOutput();
 	NandTitles.Get();

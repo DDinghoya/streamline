@@ -26,6 +26,7 @@
 
 #include "GUI/gui.h"
 #include "GUI/gui_optionbrowser.h"
+#include "GUI/OptionList.hpp"
 #include "menu.h"
 
 class SettingsMenu : public GuiWindow

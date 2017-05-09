@@ -8,7 +8,14 @@
  * GUI class definitions
  ***************************************************************************/
 
-#include "gui.h"
+#include <math.h>
+#include <cstring>
+#include <ogc/pad.h>
+#include <wupc/wupc.h>
+#include "gui_trigger.h"
+
+#define SCROLL_INITIAL_DELAY	20
+#define SCROLL_LOOP_DELAY	   3
 
 static int scrollDelay = 0;
 
@@ -120,9 +127,9 @@ s8 GuiTrigger::WPAD_Stick(u8 right, int axis)
 	float val;
 
 	if ( axis == 0 ) // x-axis
-		val = (float) (mag * sin( (PI * ang) / 180.0f ));
+		val = (float) (mag * sin( (M_PI * ang) / 180.0f ));
 	else // y-axis
-		val = (float) (mag * cos( (PI * ang) / 180.0f ));
+		val = (float) (mag * cos( (M_PI * ang) / 180.0f ));
 
 	return ( s8 )( val * 128.0f );
 }

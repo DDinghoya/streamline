@@ -10,15 +10,15 @@
 #include "GUI/gui.h"
 #include "GUI/gui_optionbrowser.h"
 #include "App.h"
-#include "settings/GameTitles.h"
 #include "themes/CTheme.h"
-#include "network/URL_List.h"
-#include "FileOperations/fileops.h"
-#include "FileOperations/DirList.h"
+#include "Net/URL_List.h"
+#include "IO/fileops.h"
+#include "IO/DirList.h"
 #include "App.h"
 #include "prompts/filebrowser.h"
 #include "sys.h"
 #include "menu/menus.h"
+#include "video.h"
 
 /*** Extern variables ***/
 extern u8 shutdown;
@@ -93,8 +93,8 @@ int MenuLanguageSelect()
 	int ret = 0, choice = 0;
 	int returnhere = 0;
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiImageData settingsbg(Resources::GetFile("settings_background.png"), Resources::GetFileSize("settings_background.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
+	GuiImageData settingsbg(App.Resources.GetFile("settings_background.png"), App.Resources.GetFileSize("settings_background.png"));
 
 	GuiTrigger trigA;
 	trigA.SetSimpleTrigger( -1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A );

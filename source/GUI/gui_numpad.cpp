@@ -44,7 +44,7 @@ GuiNumpad::GuiNumpad(char * t, u32 max)
 	char thekeys[12] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '0', '.'};
 	memcpy(keys, thekeys, sizeof(thekeys));
 
-	keyTextbox = Resources::GetImageData("keyboard_textbox.png");
+	keyTextbox = App.Resources.GetImageData("keyboard_textbox.png");
 	keyTextboxImg = new GuiImage(keyTextbox);
 	keyTextboxImg->SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	keyTextboxImg->SetPosition(0, 0);
@@ -55,7 +55,7 @@ GuiNumpad::GuiNumpad(char * t, u32 max)
 	kbText->SetPosition(0, 10);
 	this->Append(kbText);
 
-	keyMedium = Resources::GetImageData("keyboard_mediumkey_over.png");
+	keyMedium = App.Resources.GetImageData("keyboard_mediumkey_over.png");
 
 	trigA = new GuiTrigger;
 	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);

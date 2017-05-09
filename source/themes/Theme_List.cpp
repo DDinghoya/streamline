@@ -29,7 +29,7 @@
 #include <string.h>
 #include <gctypes.h>
 
-#include "network/networkops.h"
+#include "Net/networkops.h"
 #include "Theme_List.h"
 #include <tinyxml2.h>
 

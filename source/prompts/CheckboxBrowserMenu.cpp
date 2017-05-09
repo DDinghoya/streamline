@@ -18,7 +18,6 @@
 #include "CheckboxBrowserMenu.h"
 #include "GameCube/GCGames.h"
 #include "App.h"
-#include "settings/GameTitles.h"
 #include "language/gettext.h"
 #include "themes/gettheme.h"
 #include "themes/Resources.h"
@@ -33,9 +32,9 @@ CheckboxBrowserMenu::CheckboxBrowserMenu(void)
 	trigB.SetButtonOnlyTrigger(-1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B);
 	trigHome.SetButtonOnlyTrigger(-1, WPAD_BUTTON_HOME | WPAD_CLASSIC_BUTTON_HOME, PAD_BUTTON_START);
 
-	btnOutline = Resources::GetImageData("button_dialogue_box.png");
-	bgImgData = Resources::GetImageData("categoryprompt.png");
-	browserImgData = Resources::GetImageData("bg_options.png");
+	btnOutline = App.Resources.GetImageData("button_dialogue_box.png");
+	bgImgData = App.Resources.GetImageData("categoryprompt.png");
+	browserImgData = App.Resources.GetImageData("bg_options.png");
 
 	bgImg = new GuiImage(bgImgData);
 	Append(bgImg);

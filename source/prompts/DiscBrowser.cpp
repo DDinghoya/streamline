@@ -22,6 +22,7 @@
 #include "themes/CTheme.h"
 #include "memory/memory.h"
 #include "gecko.h"
+#include "video.h"
 
 /********************************************************************************
  *Disk Browser
@@ -94,8 +95,8 @@ int DiscBrowse(const char * GameID, char * alternatedname, int alternatedname_si
 		return ret;
 	}
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiImageData settingsbg(Resources::GetFile("settings_background.png"), Resources::GetFileSize("settings_background.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
+	GuiImageData settingsbg(App.Resources.GetFile("settings_background.png"), App.Resources.GetFileSize("settings_background.png"));
 
 	GuiTrigger trigA;
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);

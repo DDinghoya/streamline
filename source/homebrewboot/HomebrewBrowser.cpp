@@ -26,14 +26,14 @@
 #include "prompts/PromptWindows.h"
 #include "prompts/HomebrewPrompt.hpp"
 #include "language/gettext.h"
-#include "network/networkops.h"
+#include "Net/networkops.h"
 #include "utils/minizip/miniunz.h"
 #include "prompts/TitleBrowser.h"
 #include "homebrewboot/BootHomebrew.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "prompts/ProgressWindow.h"
 #include "utils/tools.h"
-#include "wstring.hpp"
+#include "utils/wstring.hpp"
 #include "HomebrewXML.h"
 
 extern u32 infilesize;
@@ -50,7 +50,7 @@ HomebrewBrowser::HomebrewBrowser()
 		ResumeNetworkWait();
 
 	wifiNotSet = true;
-	wifiImgData = Resources::GetImageData("wifi_btn.png");
+	wifiImgData = App.Resources.GetImageData("wifi_btn.png");
 	wifiToolTip = new GuiTooltip(" ");
 	wifiImg = new GuiImage(wifiImgData);
 	wifiBtn = new GuiButton(wifiImgData->GetWidth(), wifiImgData->GetHeight());
@@ -63,7 +63,7 @@ HomebrewBrowser::HomebrewBrowser()
 	wifiBtn->SetTrigger(trigA);
 	Append(wifiBtn);
 
-	channelImgData = Resources::GetImageData("channel_btn.png");
+	channelImgData = App.Resources.GetImageData("channel_btn.png");
 	channelBtnImg = new GuiImage(channelImgData);
 	channelBtnImg->SetWidescreen(App.Settings.widescreen);
 	channelBtn = new GuiButton(channelBtnImg->GetWidth(), channelBtnImg->GetHeight());

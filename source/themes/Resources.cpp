@@ -1,10 +1,10 @@
 #include <malloc.h>
 #include <string.h>
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "Resources.h"
 #include "filelist.h"
 
-void Resources::Clear()
+void CResources::Clear()
 {
 	for(int i = 0; RecourceFiles[i].filename != NULL; ++i)
 	{
@@ -19,7 +19,7 @@ void Resources::Clear()
 	}
 }
 
-bool Resources::LoadFiles(const char * path)
+bool CResources::LoadFiles(const char * path)
 {
 	if(!path)
 		return false;
@@ -49,7 +49,7 @@ bool Resources::LoadFiles(const char * path)
 	return result;
 }
 
-const u8 * Resources::GetFile(const char * filename)
+const u8 * CResources::GetFile(const char * filename)
 {
 	for(int i = 0; RecourceFiles[i].filename != NULL; ++i)
 	{
@@ -62,7 +62,7 @@ const u8 * Resources::GetFile(const char * filename)
 	return NULL;
 }
 
-u32 Resources::GetFileSize(const char * filename)
+u32 CResources::GetFileSize(const char * filename)
 {
 	for(int i = 0; RecourceFiles[i].filename != NULL; ++i)
 	{
@@ -75,7 +75,7 @@ u32 Resources::GetFileSize(const char * filename)
 	return 0;
 }
 
-GuiImageData * Resources::GetImageData(const char * filename)
+GuiImageData * CResources::	GetImageData(const char * filename)
 {
 	for(int i = 0; RecourceFiles[i].filename != NULL; ++i)
 	{

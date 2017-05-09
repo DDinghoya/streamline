@@ -41,6 +41,5 @@ extern GuiText *GameRegionTxt;
 extern GuiText *GameIDTxt;
 extern GuiImageData *cover;
 extern GuiImage *coverImg;
-extern FreeTypeGX *fontSystem;
 
 #endif

@@ -28,7 +28,7 @@ WiiPointer::WiiPointer(const char *pntrImg)
 	: posX(screenwidth/2), posY(screenheight/2),
 	  angle(0.0f), lastActivity(301)
 {
-	pointerImg = Resources::GetImageData(pntrImg);
+	pointerImg = App.Resources.GetImageData(pntrImg);
 
 	//! create projection matrix
 	guOrtho(projection, App.Settings.AdjustOverscanY, screenheight - 1 - App.Settings.AdjustOverscanY,
@@ -42,7 +42,7 @@ WiiPointer::~WiiPointer()
 
 void WiiPointer::SetImage(const char *pntrImg)
 {
-	GuiImageData * newPointer = Resources::GetImageData(pntrImg);
+	GuiImageData * newPointer = App.Resources.GetImageData(pntrImg);
 	if(!newPointer)
 		return;
 

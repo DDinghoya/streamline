@@ -28,9 +28,9 @@
 #include "Channels/channels.h"
 #include "App.h"
 #include "settings/SettingsPrompts.h"
-#include "network/networkops.h"
-#include "FileOperations/fileops.h"
-#include "FileOperations/DirList.h"
+#include "Net/networkops.h"
+#include "IO/fileops.h"
+#include "IO/DirList.h"
 #include "utils/StringTools.h"
 #include "prompts/PromptWindows.h"
 #include "prompts/ProgressWindow.h"
@@ -65,7 +65,6 @@ FeatureSettingsMenu::FeatureSettingsMenu()
 	Options->SetName(Idx++, "%s", tr( "Wiilight" ));
 	Options->SetName(Idx++, "%s", tr( "Rumble" ));
 	Options->SetName(Idx++, "%s", tr( "AutoInit Network" ));
-	Options->SetName(Idx++, "%s", tr( "Messageboard Update" ));
 	Options->SetName(Idx++, "%s", tr( "Import Categories" ));
 	Options->SetName(Idx++, "%s", tr( "Export All Saves to EmuNand" ));
 	Options->SetName(Idx++, "%s", tr( "Export Miis to EmuNand" ));
@@ -127,9 +126,6 @@ void FeatureSettingsMenu::SetOptionValues()
 
 	//! Settings: AutoInit Network
 	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.autonetwork] ));
-
-	//! Settings: Messageboard Update
-	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.PlaylogUpdate] ));
 
 	//! Settings: Import categories from GameTDB
 	Options->SetValue(Idx++, " ");
@@ -204,12 +200,6 @@ int FeatureSettingsMenu::GetMenuInternal()
 	else if (ret == ++Idx)
 	{
 		if (++App.Settings.autonetwork >= MAX_ON_OFF) App.Settings.autonetwork = 0;
-	}
-
-	//! Settings: Messageboard Update
-	else if (ret == ++Idx )
-	{
-		if (++App.Settings.PlaylogUpdate >= MAX_ON_OFF) App.Settings.PlaylogUpdate = 0;
 	}
 
 	//! Settings: Import categories from GameTDB

@@ -41,12 +41,12 @@ CategoryPrompt::CategoryPrompt(const string &title)
 	trigMinus.SetButtonOnlyTrigger(-1, WPAD_BUTTON_MINUS | WPAD_CLASSIC_BUTTON_MINUS, PAD_TRIGGER_L);
 	trig1.SetButtonOnlyTrigger(-1, WPAD_BUTTON_1 | WPAD_CLASSIC_BUTTON_Y, PAD_TRIGGER_Z);
 
-	btnOutline = Resources::GetImageData("button_dialogue_box.png");
-	bgImgData = Resources::GetImageData("categoryPrompt.png");
-	browserImgData = Resources::GetImageData("bg_options.png");
-	addImgData = Resources::GetImageData("add.png");
-	deleteImgData = Resources::GetImageData("remove.png");
-	editImgData = Resources::GetImageData("one.png");
+	btnOutline = App.Resources.GetImageData("button_dialogue_box.png");
+	bgImgData = App.Resources.GetImageData("categoryPrompt.png");
+	browserImgData = App.Resources.GetImageData("bg_options.png");
+	addImgData = App.Resources.GetImageData("add.png");
+	deleteImgData = App.Resources.GetImageData("remove.png");
+	editImgData = App.Resources.GetImageData("one.png");
 
 	bgImg = new GuiImage(bgImgData);
 	Append(bgImg);

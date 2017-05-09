@@ -19,22 +19,23 @@
 #include "menu/menus.h"
 #include "mload/mload.h"
 #include "mload/mload_modules.h"
-#include "network/networkops.h"
+#include "Net/networkops.h"
 #include "patches/patchcode.h"
 #include "settings/menus/GlobalSettings.hpp"
-#include "settings/CGameSettings.h"
 #include "themes/CTheme.h"
 #include "themes/ThemeMenu.h"
 #include "usbloader/disc.h"
 #include "usbloader/GameList.h"
 #include "usbloader/MountGamePartition.h"
 #include "mload/mload_modules.h"
+#include "video.h"
 #include "audio.h"
+#include "input.h"
 #include "gecko.h"
 #include "menu.h"
 #include "sys.h"
 #include "wpad.h"
-#include "settings/newtitles.h"
+#include "App.h"
 #include "usbloader/frag.h"
 #include "usbloader/wbfs.h"
 #include "wad/nandtitle.h"
@@ -102,20 +103,20 @@ static void * UpdateGUI(void *arg)
 			continue;
 		}
 
-		UpdatePads();
+		Input::UpdatePads();
 
 		App.MainWindow->Draw();
-		if (App.Settings.tooltips && Theme::ShowTooltips && App.MainWindow->GetState() != STATE_DISABLED)
+		if (App.Settings.tooltips && App.Theme.ShowTooltips && App.MainWindow->GetState() != STATE_DISABLED)
 			App.MainWindow->DrawTooltip();
 
 		// Pointer modifies wpad data struct for easy implementation of "virtual pointer" with PAD-Sticks
 		// That is why it has to be called right before updating other gui elements with the triggers
 		i = 4;
 		while(i--)
-			pointer[i]->Draw(&userInput[i]);
+			pointer[i]->Draw(Input::GetUserInput(i));
 
 		for (i = 0; i < 4; i++)
-			App.MainWindow->Update(&userInput[i]);
+			App.MainWindow->Update(Input::GetUserInput(i));
 
 		Menu_Render();
 
@@ -130,7 +131,7 @@ static void * UpdateGUI(void *arg)
 	}
 
 	App.MainWindow->RemoveAll();
-	ShutoffRumble();
+	Input::ShutoffRumble();
 
 	return NULL;
 }
@@ -171,8 +172,8 @@ static void MenuStartup()
 		App.Settings.GameWindowMode = GAMEWINDOW_DISC;
 	}
 
-	gprintf("\tLoading font...%s\n", Theme::LoadFont(App.Settings.ConfigPath) ? "done" : "failed (using default)");
-	gprintf("\tLoading theme...%s\n", Theme::Load(App.Settings.theme) ? "done" : "failed (using default)");
+	gprintf("\tLoading font...%s\n", App.Theme.LoadFont(App.Settings.ConfigPath) ? "done" : "failed (using default)");
+	gprintf("\tLoading theme...%s\n", App.Theme.Load(App.Settings.theme) ? "done" : "failed (using default)");
 
 	//! Init the rest of the System
 	Sys_Init();
@@ -200,11 +201,11 @@ int MainMenu(int menu)
 		ResumeNetworkThread();
 
 	btnSoundClick = new GuiSound(NULL, 0, App.Settings.sfxvolume);
-	btnSoundClick->LoadSoundEffect(Resources::GetFile("button_click.wav"), Resources::GetFileSize("button_click.wav"));
+	btnSoundClick->LoadSoundEffect(App.Resources.GetFile("button_click.wav"), App.Resources.GetFileSize("button_click.wav"));
 	btnSoundClick2 = new GuiSound(NULL, 0, App.Settings.sfxvolume);
-	btnSoundClick2->LoadSoundEffect(Resources::GetFile("button_click2.wav"), Resources::GetFileSize("button_click2.wav"));
+	btnSoundClick2->LoadSoundEffect(App.Resources.GetFile("button_click2.wav"), App.Resources.GetFileSize("button_click2.wav"));
 	btnSoundOver = new GuiSound(NULL, 0, App.Settings.sfxvolume);
-	btnSoundOver->LoadSoundEffect(Resources::GetFile("button_over.wav"), Resources::GetFileSize("button_over.wav"));
+	btnSoundOver->LoadSoundEffect(App.Resources.GetFile("button_over.wav"), App.Resources.GetFileSize("button_over.wav"));
 
 	pointer[0] = new WiiPointer("player1_point.png");
 	pointer[1] = new WiiPointer("player2_point.png");
@@ -213,14 +214,14 @@ int MainMenu(int menu)
 
 	App.MainWindow = new GuiWindow(screenwidth, screenheight);
 
-	background = Resources::GetImageData(App.Settings.widescreen ? "wbackground.png" : "background.png");
+	background = App.Resources.GetImageData(App.Settings.widescreen ? "wbackground.png" : "background.png");
 
 	bgImg = new GuiImage(background);
 	App.MainWindow->Append(bgImg);
 
 	ResumeGui();
 
-	bgMusic = new GuiBGM(Resources::GetFile("bg_music.ogg"), Resources::GetFileSize("bg_music.ogg"), App.Settings.volume);
+	bgMusic = new GuiBGM(App.Resources.GetFile("bg_music.ogg"), App.Resources.GetFileSize("bg_music.ogg"), App.Settings.volume);
 	bgMusic->SetLoop(App.Settings.musicloopmode); //loop music
 	bgMusic->Load(App.Settings.ogg_path);
 	bgMusic->Play();

@@ -21,15 +21,19 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
+#include <math.h>
 #include "BoxCover.hpp"
 #include "BoxMesh.hpp"
 #include "App.h"
 #include "themes/CTheme.h"
 #include "menu.h"
+#include "video.h"
+#include "input.h"
 
 BoxCover::BoxCover(GuiImageData * img, bool flat)
 	:   GuiImage(img),
-		boxBorder(Resources::GetFile("boxBorder.png"), Resources::GetFileSize("boxBorder.png")),
+		boxBorder(App.Resources.GetFile("boxBorder.png"), App.Resources.GetFileSize("boxBorder.png")),
 		defaultBox(NULL)
 {
 	flatCover = flat;
@@ -57,7 +61,7 @@ BoxCover::BoxCover(GuiImageData * img, bool flat)
 
 	if(flatCover || !image)
 	{
-		defaultBox = Resources::GetImageData("nocoverFull.png");
+		defaultBox = App.Resources.GetImageData("nocoverFull.png");
 		GX_InitTexObj(&defaultBoxTex, defaultBox->GetImage(), defaultBox->GetWidth(), defaultBox->GetHeight(), defaultBox->GetTextureFormat(),GX_CLAMP, GX_CLAMP,GX_FALSE);
 	}
 

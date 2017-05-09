@@ -21,27 +21,23 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
-#ifndef GAMESETTINGSMENU_HPP_
-#define GAMESETTINGSMENU_HPP_
+#pragma once
 
 #include "FlyingButtonsMenu.hpp"
-#include "settings/CGameSettings.h"
 #include "menu/GameBrowseMenu.hpp"
 #include "usbloader/disc.h"
 
 class GameSettingsMenu : public FlyingButtonsMenu
 {
-	public:
-		GameSettingsMenu(GameBrowseMenu *parent, struct discHdr * header);
-		virtual ~GameSettingsMenu();
-		static int Execute(GameBrowseMenu *parent, struct discHdr *header);
-	protected:
-		virtual void CreateSettingsMenu(int index);
-		virtual void DeleteSettingsMenu();
-		virtual void SetupMainButtons();
+public:
+	GameSettingsMenu(GameBrowseMenu *parent, struct discHdr * header);
+	virtual ~GameSettingsMenu();
+	static int Execute(GameBrowseMenu *parent, struct discHdr *header);
+protected:
+	virtual void CreateSettingsMenu(int index);
+	virtual void DeleteSettingsMenu();
+	virtual void SetupMainButtons();
 
-		GameBrowseMenu *browserMenu;
-		struct discHdr * DiscHeader;
+	GameBrowseMenu *browserMenu;
+	struct discHdr * DiscHeader;
 };
-
-#endif

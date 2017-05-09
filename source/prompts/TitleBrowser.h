@@ -5,10 +5,7 @@
  * TitleBrowser.h
  ***************************************************************************/
 
-#ifndef _TITLEBROWSER_H_
-#define _TITLEBROWSER_H_
+#pragma once
 
 int TitleBrowser();
 bool TitleSelector(char output[]);
-
-#endif

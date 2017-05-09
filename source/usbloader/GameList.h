@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "Controls/DeviceHandler.hpp"
-#include "wstring.hpp"
+#include "utils/wstring.hpp"
 #include "usbloader/disc.h"
 
 class GameList

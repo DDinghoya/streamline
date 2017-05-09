@@ -13,13 +13,13 @@
 #include "menu/menus.h"
 #include "sys.h"
 #include "wpad.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "prompts/PromptWindows.h"
 #include "themes/CTheme.h"
 #include "gameinfo.h"
 #include "usbloader/GameList.h"
 #include "gecko.h"
-#include "Data/GameTDB.hpp"
+#include "Library/GameTDB.hpp"
 #include "utils/ShowError.h"
 #include "BoxCover/BoxCover.hpp"
 
@@ -180,10 +180,10 @@ static int InternalShowGameInfo(struct discHdr *header)
 	txtWindow.SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	txtWindow.SetPosition(95, 40);
 
-	GuiImageData dialogBox1(Resources::GetFile("gameinfo1.png"), Resources::GetFileSize("gameinfo1.png"));
-	GuiImageData dialogBox2(Resources::GetFile("gameinfo1a.png"), Resources::GetFileSize("gameinfo1a.png"));
-	GuiImageData dialogBox3(Resources::GetFile("gameinfo2.png"), Resources::GetFileSize("gameinfo2.png"));
-	GuiImageData dialogBox4(Resources::GetFile("gameinfo2a.png"), Resources::GetFileSize("gameinfo2a.png"));
+	GuiImageData dialogBox1(App.Resources.GetFile("gameinfo1.png"), App.Resources.GetFileSize("gameinfo1.png"));
+	GuiImageData dialogBox2(App.Resources.GetFile("gameinfo1a.png"), App.Resources.GetFileSize("gameinfo1a.png"));
+	GuiImageData dialogBox3(App.Resources.GetFile("gameinfo2.png"), App.Resources.GetFileSize("gameinfo2.png"));
+	GuiImageData dialogBox4(App.Resources.GetFile("gameinfo2a.png"), App.Resources.GetFileSize("gameinfo2a.png"));
 
 	GuiTrigger trig1;
 	trig1.SetButtonOnlyTrigger(-1, WPAD_BUTTON_1 | WPAD_CLASSIC_BUTTON_X, 0);
@@ -274,56 +274,56 @@ static int InternalShowGameInfo(struct discHdr *header)
 
 	// switch icons
 	if (nunchuk)
-		nunchukImgData = Resources::GetImageData("nunchukR.png");
-	else nunchukImgData = Resources::GetImageData("nunchuk.png");
+		nunchukImgData = App.Resources.GetImageData("nunchukR.png");
+	else nunchukImgData = App.Resources.GetImageData("nunchuk.png");
 
 	if (classiccontroller)
-		classiccontrollerImgData = Resources::GetImageData("classiccontrollerR.png");
-	else classiccontrollerImgData = Resources::GetImageData("classiccontroller.png");
+		classiccontrollerImgData = App.Resources.GetImageData("classiccontrollerR.png");
+	else classiccontrollerImgData = App.Resources.GetImageData("classiccontroller.png");
 
 	if (guitar)
-		guitarImgData = Resources::GetImageData("guitarR.png");
-	else guitarImgData = Resources::GetImageData("guitar.png");
+		guitarImgData = App.Resources.GetImageData("guitarR.png");
+	else guitarImgData = App.Resources.GetImageData("guitar.png");
 
 	if (gamecube)
-		gamecubeImgData = Resources::GetImageData("gcncontrollerR.png");
-	else gamecubeImgData = Resources::GetImageData("gcncontroller.png");
+		gamecubeImgData = App.Resources.GetImageData("gcncontrollerR.png");
+	else gamecubeImgData = App.Resources.GetImageData("gcncontroller.png");
 
 	if (wheel)
-		wheelImgData = Resources::GetImageData("wheelR.png");
-	else wheelImgData = Resources::GetImageData("wheel.png");
+		wheelImgData = App.Resources.GetImageData("wheelR.png");
+	else wheelImgData = App.Resources.GetImageData("wheel.png");
 
 	if (motionplus)
-		motionplusImgData = Resources::GetImageData("motionplusR.png");
-	else motionplusImgData = Resources::GetImageData("motionplus.png");
+		motionplusImgData = App.Resources.GetImageData("motionplusR.png");
+	else motionplusImgData = App.Resources.GetImageData("motionplus.png");
 
 	if (drums)
-		drumsImgData = Resources::GetImageData("drumsR.png");
-	else drumsImgData = Resources::GetImageData("drums.png");
+		drumsImgData = App.Resources.GetImageData("drumsR.png");
+	else drumsImgData = App.Resources.GetImageData("drums.png");
 
 	if (microphone)
-		microphoneImgData = Resources::GetImageData("microphoneR.png");
-	else microphoneImgData = Resources::GetImageData("microphone.png");
+		microphoneImgData = App.Resources.GetImageData("microphoneR.png");
+	else microphoneImgData = App.Resources.GetImageData("microphone.png");
 
 	if (zapper)
-		zapperImgData = Resources::GetImageData("zapperR.png");
-	else zapperImgData = Resources::GetImageData("zapper.png");
+		zapperImgData = App.Resources.GetImageData("zapperR.png");
+	else zapperImgData = App.Resources.GetImageData("zapper.png");
 
 	if (wiispeak)
-		wiispeakImgData = Resources::GetImageData("wiispeakR.png");
-	else wiispeakImgData = Resources::GetImageData("wiispeak.png");
+		wiispeakImgData = App.Resources.GetImageData("wiispeakR.png");
+	else wiispeakImgData = App.Resources.GetImageData("wiispeak.png");
 
 	if (nintendods)
-		nintendodsImgData = Resources::GetImageData("nintendodsR.png");
-	else nintendodsImgData = Resources::GetImageData("nintendods.png");
+		nintendodsImgData = App.Resources.GetImageData("nintendodsR.png");
+	else nintendodsImgData = App.Resources.GetImageData("nintendods.png");
 
 	if (balanceboard)
-		balanceboardImgData = Resources::GetImageData("balanceboardR.png");
-	else balanceboardImgData = Resources::GetImageData("balanceboard.png");
+		balanceboardImgData = App.Resources.GetImageData("balanceboardR.png");
+	else balanceboardImgData = App.Resources.GetImageData("balanceboard.png");
 
 	if (dancepad)
-		dancepadImgData = Resources::GetImageData("dancepadR.png");
-	else dancepadImgData = Resources::GetImageData("dancepad.png");
+		dancepadImgData = App.Resources.GetImageData("dancepadR.png");
+	else dancepadImgData = App.Resources.GetImageData("dancepad.png");
 
 	// look for optional accessories
 	for (u32 i = 0; i < GameInfo.AccessoirList.size(); ++i)
@@ -420,16 +420,16 @@ static int InternalShowGameInfo(struct discHdr *header)
 	if (GameInfo.Players > 0)
 	{
 		if (GameInfo.Players == 1)
-			playersImgData = Resources::GetImageData("wiimote1.png");
+			playersImgData = App.Resources.GetImageData("wiimote1.png");
 
 		else if (GameInfo.Players == 2)
-			playersImgData = Resources::GetImageData("wiimote2.png");
+			playersImgData = App.Resources.GetImageData("wiimote2.png");
 
 		else if (GameInfo.Players == 3)
-			playersImgData = Resources::GetImageData("wiimote3.png");
+			playersImgData = App.Resources.GetImageData("wiimote3.png");
 
 		else if (GameInfo.Players == 4)
-			playersImgData = Resources::GetImageData("wiimote4.png");
+			playersImgData = App.Resources.GetImageData("wiimote4.png");
 
 		playersImg = new GuiImage(playersImgData);
 		playersImg->SetWidescreen(App.Settings.widescreen);
@@ -562,31 +562,31 @@ static int InternalShowGameInfo(struct discHdr *header)
 	if (GameInfo.WifiPlayers > 0)
 	{
 		if(GameInfo.WifiPlayers == 1)
-			wifiplayersImgData = Resources::GetImageData("wifi1.png");
+			wifiplayersImgData = App.Resources.GetImageData("wifi1.png");
 
 		else if(GameInfo.WifiPlayers == 2)
-			wifiplayersImgData = Resources::GetImageData("wifi2.png");
+			wifiplayersImgData = App.Resources.GetImageData("wifi2.png");
 
 		else if(GameInfo.WifiPlayers == 4)
-			wifiplayersImgData = Resources::GetImageData("wifi4.png");
+			wifiplayersImgData = App.Resources.GetImageData("wifi4.png");
 
 		else if(GameInfo.WifiPlayers == 6)
-			wifiplayersImgData = Resources::GetImageData("wifi6.png");
+			wifiplayersImgData = App.Resources.GetImageData("wifi6.png");
 
 		else if(GameInfo.WifiPlayers == 10)
-			wifiplayersImgData = Resources::GetImageData("wifi10.png");
+			wifiplayersImgData = App.Resources.GetImageData("wifi10.png");
 
 		else if(GameInfo.WifiPlayers == 8)
-			wifiplayersImgData =Resources::GetImageData("wifi8.png");
+			wifiplayersImgData =App.Resources.GetImageData("wifi8.png");
 
 		else if(GameInfo.WifiPlayers == 12)
-			wifiplayersImgData = Resources::GetImageData("wifi12.png");
+			wifiplayersImgData = App.Resources.GetImageData("wifi12.png");
 
 		else if(GameInfo.WifiPlayers == 16)
-			wifiplayersImgData = Resources::GetImageData("wifi16.png");
+			wifiplayersImgData = App.Resources.GetImageData("wifi16.png");
 
 		else if(GameInfo.WifiPlayers == 32)
-			wifiplayersImgData = Resources::GetImageData("wifi32.png");
+			wifiplayersImgData = App.Resources.GetImageData("wifi32.png");
 
 		wifiplayersImg = new GuiImage(wifiplayersImgData);
 		wifiplayersImg->SetWidescreen(App.Settings.widescreen);
@@ -602,58 +602,58 @@ static int InternalShowGameInfo(struct discHdr *header)
 		if (GameInfo.RatingType == 1)
 		{
 			if (strcmp(GameInfo.RatingValue.c_str(), "EC") == 0)
-				ratingImgData = Resources::GetImageData("esrb_ec.png");
+				ratingImgData = App.Resources.GetImageData("esrb_ec.png");
 			else if (strcmp(GameInfo.RatingValue.c_str(), "E") == 0)
-				ratingImgData = Resources::GetImageData("esrb_e.png");
+				ratingImgData = App.Resources.GetImageData("esrb_e.png");
 			else if (strcmp(GameInfo.RatingValue.c_str(), "E10+") == 0)
-				ratingImgData = Resources::GetImageData("esrb_eten.png");
+				ratingImgData = App.Resources.GetImageData("esrb_eten.png");
 			else if (strcmp(GameInfo.RatingValue.c_str(), "T") == 0)
-				ratingImgData = Resources::GetImageData("esrb_t.png");
+				ratingImgData = App.Resources.GetImageData("esrb_t.png");
 			else if (strcmp(GameInfo.RatingValue.c_str(), "M") == 0)
-				ratingImgData = Resources::GetImageData("esrb_m.png");
+				ratingImgData = App.Resources.GetImageData("esrb_m.png");
 			else if (strcmp(GameInfo.RatingValue.c_str(), "AO") == 0)
-				ratingImgData = Resources::GetImageData("esrb_ao.png");
+				ratingImgData = App.Resources.GetImageData("esrb_ao.png");
 			else
-				ratingImgData = Resources::GetImageData("norating.png");
+				ratingImgData = App.Resources.GetImageData("norating.png");
 		} //there are 2 values here cause some countries are stupid and
 		else if (GameInfo.RatingType == 2) //can't use the same as everybody else
 		{
 			if ((strcmp(GameInfo.RatingValue.c_str(), "3") == 0) || (strcmp(GameInfo.RatingValue.c_str(), "4") == 0))
-				ratingImgData = Resources::GetImageData("pegi_3.png");
+				ratingImgData = App.Resources.GetImageData("pegi_3.png");
 			else if ((strcmp(GameInfo.RatingValue.c_str(), "7") == 0) || (strcmp(GameInfo.RatingValue.c_str(), "7") == 0))
-				ratingImgData = Resources::GetImageData("pegi_7.png");
+				ratingImgData = App.Resources.GetImageData("pegi_7.png");
 			else if (strcmp(GameInfo.RatingValue.c_str(), "12") == 0)
-				ratingImgData = Resources::GetImageData("pegi_12.png");
+				ratingImgData = App.Resources.GetImageData("pegi_12.png");
 			else if ((strcmp(GameInfo.RatingValue.c_str(), "16") == 0) || (strcmp(GameInfo.RatingValue.c_str(), "15") == 0))
-				ratingImgData = Resources::GetImageData("pegi_16.png");
+				ratingImgData = App.Resources.GetImageData("pegi_16.png");
 			else if (strcmp(GameInfo.RatingValue.c_str(), "18") == 0)
-				ratingImgData = Resources::GetImageData("pegi_18.png");
+				ratingImgData = App.Resources.GetImageData("pegi_18.png");
 			else
 			{
-				ratingImgData = Resources::GetImageData("norating.png");
+				ratingImgData = App.Resources.GetImageData("norating.png");
 			}
 		}
 		else if (GameInfo.RatingType == 0)
 		{
 			if (strcmp(GameInfo.RatingValue.c_str(), "A") == 0)
-				ratingImgData = Resources::GetImageData("cero_a.png");
+				ratingImgData = App.Resources.GetImageData("cero_a.png");
 			else if (strcmp(GameInfo.RatingValue.c_str(), "B") == 0)
-				ratingImgData = Resources::GetImageData("cero_b.png");
+				ratingImgData = App.Resources.GetImageData("cero_b.png");
 			else if (strcmp(GameInfo.RatingValue.c_str(), "C") == 0)
-				ratingImgData = Resources::GetImageData("cero_c.png");
+				ratingImgData = App.Resources.GetImageData("cero_c.png");
 			else if (strcmp(GameInfo.RatingValue.c_str(), "D") == 0)
-				ratingImgData = Resources::GetImageData("cero_d.png");
+				ratingImgData = App.Resources.GetImageData("cero_d.png");
 			else if (strcmp(GameInfo.RatingValue.c_str(), "Z") == 0)
-				ratingImgData = Resources::GetImageData("cero_z.png");
+				ratingImgData = App.Resources.GetImageData("cero_z.png");
 			else
 			{
-				ratingImgData = Resources::GetImageData("norating.png");
+				ratingImgData = App.Resources.GetImageData("norating.png");
 			}
 		}
 
 		else
 		{
-			ratingImgData = Resources::GetImageData("norating.png");
+			ratingImgData = App.Resources.GetImageData("norating.png");
 		}
 		ratingImg = new GuiImage(ratingImgData);
 		ratingImg->SetWidescreen(App.Settings.widescreen);

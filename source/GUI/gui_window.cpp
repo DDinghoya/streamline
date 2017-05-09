@@ -8,7 +8,9 @@
  * GUI class definitions
  ***************************************************************************/
 
-#include "gui.h"
+#include <math.h>
+#include "gui_window.h"
+#include "video.h"
 
 GuiWindow::GuiWindow()
 {

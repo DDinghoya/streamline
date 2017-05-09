@@ -37,7 +37,7 @@ HomebrewPrompt::HomebrewPrompt(const char *name, const char *coder, const char *
 	SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	SetPosition(0, 6);
 
-	whiteBox = Resources::GetImageData("bg_options.png");
+	whiteBox = App.Resources.GetImageData("bg_options.png");
 
 	iconImg = new GuiImage(iconImgData);
 	iconImg->SetAlignment(ALIGN_LEFT, ALIGN_TOP);

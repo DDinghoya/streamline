@@ -17,7 +17,8 @@ include $(DEVKITPPC)/wii_rules
 TARGET		:=	boot
 BUILD		:=	build
 SOURCES		:=	source \
-				source/Data \
+				source/IO \
+				source/Library \
 				source/GUI \
 				source/Controls \
 				source/system \
@@ -27,7 +28,7 @@ SOURCES		:=	source \
 				source/mload/modules \
 				source/patches \
 				source/usbloader \
-				source/network \
+				source/Net \
 				source/settings \
 				source/settings/menus \
 				source/prompts \
@@ -41,7 +42,6 @@ SOURCES		:=	source \
 				source/themes \
 				source/menu \
 				source/memory \
-				source/FileOperations \
 				source/ImageOperations \
 				source/SoundOperations \
 				source/SystemMenu \
@@ -78,7 +78,8 @@ endif
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS := -lcustomfat -lcustomntfs -lcustomext2fs -lvorbisidec -lmad -lfreetype \
+LIBS := -lcustomfat -lcustomntfs -lcustomext2fs \
+		-lvorbisidec -lmad -lfreetype \
 		-lgd -ljpeg -lpng -lzip -lm -lz -lwiiuse -lwupc -lbte -lasnd -logc \
 		-ltinyxml2 -lruntimeiospatch
 #---------------------------------------------------------------------------------

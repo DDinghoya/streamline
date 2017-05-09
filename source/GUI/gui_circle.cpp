@@ -21,7 +21,9 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #include "gui_circle.hpp"
+#include <math.h>
 
 GuiCircle::GuiCircle()
 	: radius(100.0f), filled(true), accuracy(36)

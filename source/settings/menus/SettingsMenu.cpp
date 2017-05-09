@@ -25,6 +25,7 @@
 #include "SettingsMenu.hpp"
 #include "themes/CTheme.h"
 #include "language/gettext.h"
+#include "video.h"
 
 SettingsMenu::SettingsMenu(const char * title, OptionList * opts, int returnTo)
 	: GuiWindow(screenwidth, screenheight)
@@ -41,7 +42,7 @@ SettingsMenu::SettingsMenu(const char * title, OptionList * opts, int returnTo)
 	//! Skipping back button if there is no menu defined to go back to
 	if(returnToMenu != MENU_NONE)
 	{
-		btnOutline = Resources::GetImageData("button_dialogue_box.png");
+		btnOutline = App.Resources.GetImageData("button_dialogue_box.png");
 
 		trigA = new GuiTrigger();
 		trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);

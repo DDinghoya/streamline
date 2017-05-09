@@ -33,6 +33,8 @@
 #include "usbloader/wbfs.h"
 #include "themes/CTheme.h"
 #include "utils/tools.h"
+#include "video.h"
+#include "input.h"
 
 static const char * OnOffText[MAX_ON_OFF] =
 {
@@ -398,7 +400,7 @@ int GuiSettingsMenu::GetMenuInternal()
 	{
 		if (++App.Settings.screensaver >= SCREENSAVER_MAX) App.Settings.screensaver = 0;
 
-		SetWPADTimeout();
+		Input::SetWPADTimeout();
 	}
 
 	//! Settings: Mark new games
@@ -437,7 +439,7 @@ int GuiSettingsMenu::GetMenuInternal()
 		if (++App.Settings.UseSystemFont >= MAX_ON_OFF) App.Settings.UseSystemFont = 0;
 
 		HaltGui();
-		Theme::LoadFont(App.Settings.ConfigPath);
+		App.Theme.LoadFont(App.Settings.ConfigPath);
 		ResumeGui();
 
 		if(App.Settings.FontScaleFactor == 1.0f && App.Settings.UseSystemFont == ON)

@@ -30,7 +30,7 @@
 #include <sys/statvfs.h>
 
 #include "GCDumper.hpp"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "language/gettext.h"
 #include "prompts/ProgressWindow.h"
 #include "usbloader/disc.h"

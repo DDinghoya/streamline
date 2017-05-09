@@ -1,12 +1,12 @@
 #include <string.h>
 #include <unistd.h>
-
+#include "video.h"
 #include "GUI/gui.h"
 #include "GUI/gui_optionbrowser.h"
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
 #include "themes/CTheme.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "App.h"
 #include "sys.h"
 #include "gct.h"
@@ -21,8 +21,8 @@ int CheatMenu(const char * gameID)
 	bool exit = false;
 	int ret = 1;
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiImageData settingsbg(Resources::GetFile("settings_background.png"), Resources::GetFileSize("settings_background.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
+	GuiImageData settingsbg(App.Resources.GetFile("settings_background.png"), App.Resources.GetFileSize("settings_background.png"));
 	GuiImage settingsbackground(&settingsbg);
 
 	GuiTrigger trigA;

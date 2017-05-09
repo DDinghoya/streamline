@@ -30,19 +30,22 @@
 #include "GUI/gui.h"
 #include "App.h"
 #include "banner/OpeningBNR.hpp"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "SystemMenu/SystemMenuResources.h"
 #include "menu/menus.h"
 #include "wad/nandtitle.h"
-#include "FreeTypeGX.h"
+#include "gecko.h"
 
-FreeTypeGX * fontSystem = NULL;
-static FT_Byte * customFont = NULL;
-static u32 customFontSize = 0;
+CTheme::CTheme()
+	: fontSystem(NULL), customFont(NULL), customFontSize(0), ShowTooltips(true)
+{
+}
 
-bool Theme::ShowTooltips = true;
+CTheme::~CTheme()
+{
+}
 
-void Theme::Reload()
+void CTheme::Reload()
 {
 	HaltGui();
 	App.MainWindow->Remove(bgImg);
@@ -55,25 +58,25 @@ void Theme::Reload()
 	delete btnSoundClick;
 	delete btnSoundClick2;
 	delete btnSoundOver;
-	btnSoundClick = new GuiSound(Resources::GetFile("button_click.wav"), Resources::GetFileSize("button_click.wav"), App.Settings.sfxvolume);
-	btnSoundClick2 = new GuiSound(Resources::GetFile("button_click2.wav"), Resources::GetFileSize("button_click2.wav"), App.Settings.sfxvolume);
-	btnSoundOver = new GuiSound(Resources::GetFile("button_over.wav"), Resources::GetFileSize("button_over.wav"), App.Settings.sfxvolume);
+	btnSoundClick = new GuiSound(App.Resources.GetFile("button_click.wav"), App.Resources.GetFileSize("button_click.wav"), App.Settings.sfxvolume);
+	btnSoundClick2 = new GuiSound(App.Resources.GetFile("button_click2.wav"), App.Resources.GetFileSize("button_click2.wav"), App.Settings.sfxvolume);
+	btnSoundOver = new GuiSound(App.Resources.GetFile("button_over.wav"), App.Resources.GetFileSize("button_over.wav"), App.Settings.sfxvolume);
 	delete background;
-	background = Resources::GetImageData(App.Settings.widescreen ? "wbackground.png" : "background.png");
+	background = App.Resources.GetImageData(App.Settings.widescreen ? "wbackground.png" : "background.png");
 	delete bgImg;
 	bgImg = new GuiImage(background);
 	App.MainWindow->Append(bgImg);
 	ResumeGui();
 }
 
-void Theme::CleanUp()
+void CTheme::CleanUp()
 {
 	ThemeCleanUp();
-	Resources::Clear();
+	App.Resources.Clear();
 	ClearFontData();
 }
 
-void Theme::SetDefault()
+void CTheme::SetDefault()
 {
 	ShowTooltips = true;
 	CleanUp();
@@ -81,13 +84,13 @@ void Theme::SetDefault()
 	LoadFont("");
 }
 
-bool Theme::Load(const char * theme_file_path)
+bool CTheme::Load(const char * theme_file_path)
 {
 	bool result = LoadTheme(theme_file_path);
 	if (!result)
 		return result;
 
-	Theme::ShowTooltips = (thInt("1 - Enable tooltips: 0 for off and 1 for on") != 0);
+	CTheme::ShowTooltips = (thInt("1 - Enable tooltips: 0 for off and 1 for on") != 0);
 
 	FILE * file = fopen(theme_file_path, "rb");
 	if (!file)
@@ -126,7 +129,7 @@ bool Theme::Load(const char * theme_file_path)
 	if (ptr) *ptr = '\0';
 
 	snprintf(theme_path, sizeof(theme_path), "%s/%s", theme_path, Foldername);
-	if (!Resources::LoadFiles(theme_path))
+	if (!App.Resources.LoadFiles(theme_path))
 	{
 		const char * ThemeFilename = strrchr(theme_file_path, '/') + 1;
 		char Filename[255];
@@ -138,7 +141,7 @@ bool Theme::Load(const char * theme_file_path)
 		char * ptr = strrchr(theme_path, '/');
 		*ptr = 0;
 		snprintf(theme_path, sizeof(theme_path), "%s/%s", theme_path, Filename);
-		Resources::LoadFiles(theme_path);
+		App.Resources.LoadFiles(theme_path);
 	}
 
 	//! Override font.ttf with the theme font.ttf if it exists in the image folder
@@ -146,13 +149,15 @@ bool Theme::Load(const char * theme_file_path)
 	snprintf(FontPath, sizeof(FontPath), "%s/font.ttf", theme_path);
 
 	if (CheckFile(FontPath))
-		Theme::LoadFont(theme_path);
+		CTheme::LoadFont(theme_path);
 
 	return result;
 }
 
-bool Theme::LoadFont(const char *path)
+bool CTheme::LoadFont(const char *path)
 {
+	gprintf("\tLoading font...");
+
 	char FontPath[300];
 	bool result = false;
 	FILE *pfile = NULL;
@@ -176,6 +181,7 @@ bool Theme::LoadFont(const char *path)
 			fread(customFont, 1, customFontSize, pfile);
 			result = true;
 		}
+
 		fclose(pfile);
 	}
 
@@ -191,20 +197,21 @@ bool Theme::LoadFont(const char *path)
 		if (loadedFont)
 			isSystemFont = true;
 	}
+
 	if (!loadedFont)
 	{
-		loadedFont = (FT_Byte *)Resources::GetFile("font.ttf");
-		loadedFontSize = Resources::GetFileSize("font.ttf");
+		loadedFont = (FT_Byte *)App.Resources.GetFile("font.ttf");
+		loadedFontSize = App.Resources.GetFileSize("font.ttf");
 	}
 
 	delete fontSystem;
 
 	fontSystem = new FreeTypeGX(loadedFont, loadedFontSize, isSystemFont);
-
+	gprintf(result ? "done\n" : "failed (using default)\n");
 	return result;
 }
 
-void Theme::ClearFontData()
+void CTheme::ClearFontData()
 {
 	if (fontSystem)
 		delete fontSystem;

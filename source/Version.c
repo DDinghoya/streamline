@@ -1,4 +1,4 @@
-#define SVN_REV "1278"
+#define SVN_REV "1279"
 #define SVN_MAJOR "3"
 #define SVN_MINOR "1"
 #define SVN_PATCH "1"

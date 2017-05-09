@@ -23,13 +23,14 @@
  ***************************************************************************/
 #include <string.h>
 #include <unistd.h>
-
+#include <math.h>
 #include "FlyingButtonsMenu.hpp"
 #include "utils/StringTools.h"
 #include "language/gettext.h"
 #include "themes/CTheme.h"
 #include "menu/menus.h"
 #include "sys.h"
+#include "video.h"
 
 #define FADE_SPEED 20
 #define SLIDE_SPEED 35
@@ -66,13 +67,13 @@ FlyingButtonsMenu::FlyingButtonsMenu(const char * menu_title)
 	trigMinus->SetButtonOnlyTrigger(-1, WPAD_BUTTON_MINUS | WPAD_CLASSIC_BUTTON_MINUS, PAD_TRIGGER_L);
 	trigPlus->SetButtonOnlyTrigger(-1, WPAD_BUTTON_PLUS | WPAD_CLASSIC_BUTTON_PLUS, PAD_TRIGGER_R);
 
-	btnOutline = Resources::GetImageData("button_dialogue_box.png");
-	settingsbg = Resources::GetImageData("settings_background.png");
-	MainButtonImgData = Resources::GetImageData("settings_title.png");
-	MainButtonImgOverData = Resources::GetImageData("settings_title_over.png");
-	PageindicatorImgData = Resources::GetImageData("pageindicator.png");
-	arrow_left = Resources::GetImageData("startgame_arrow_left.png");
-	arrow_right = Resources::GetImageData("startgame_arrow_right.png");
+	btnOutline = App.Resources.GetImageData("button_dialogue_box.png");
+	settingsbg = App.Resources.GetImageData("settings_background.png");
+	MainButtonImgData = App.Resources.GetImageData("settings_title.png");
+	MainButtonImgOverData = App.Resources.GetImageData("settings_title_over.png");
+	PageindicatorImgData = App.Resources.GetImageData("pageindicator.png");
+	arrow_left = App.Resources.GetImageData("startgame_arrow_left.png");
+	arrow_right = App.Resources.GetImageData("startgame_arrow_right.png");
 
 	settingsbackground = new GuiImage(settingsbg);
 	Append(settingsbackground);

@@ -114,7 +114,7 @@ GCGameLoadSM::GCGameLoadSM(struct discHdr *hdr)
 	GameConfig = *App.Library.GameSettings.GetGameCFG((const char *) Header->id);
 
 	if(!btnOutline)
-		btnOutline = Resources::GetImageData("button_dialogue_box.png");
+		btnOutline = App.Resources.GetImageData("button_dialogue_box.png");
 	if(!trigA)
 		trigA = new GuiTrigger();
 	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);

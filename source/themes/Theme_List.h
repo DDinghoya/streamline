@@ -8,8 +8,8 @@
 
 #include <vector>
 #include <string>
-#include "network/networkops.h"
-#include "network/http.h"
+#include "Net/networkops.h"
+#include "Net/http.h"
 
 typedef struct _theme_info
 {

@@ -28,10 +28,10 @@
 #include "language/gettext.h"
 #include "prompts/PromptWindows.h"
 #include "prompts/ProgressWindow.h"
-#include "FileOperations/DirList.h"
-#include "network/networkops.h"
+#include "IO/DirList.h"
+#include "Net/networkops.h"
 #include "themes/CTheme.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "sys.h"
 #include "menu/menus.h"
 #include "utils/ShowError.h"
@@ -45,7 +45,7 @@ ThemeMenu::ThemeMenu()
 	delete MainButtonImgData;
 	delete MainButtonImgOverData;
 
-	MainButtonImgData = Resources::GetImageData("theme_box.png");
+	MainButtonImgData = App.Resources.GetImageData("theme_box.png");
 	MainButtonImgOverData = NULL;
 
 	ParentMenu = MENU_SETTINGS;
@@ -113,8 +113,8 @@ int ThemeMenu::MainLoop()
 		if(choice)
 		{
 			HaltGui();
-			Theme::SetDefault();
-			Theme::Reload();
+			App.Theme.SetDefault();
+			App.Theme.Reload();
 			ResumeGui();
 			return MENU_THEMEMENU;
 		}
@@ -293,8 +293,8 @@ void ThemeMenu::MainButtonClicked(int button)
 	gprintf("\nTheme_Prompt(%s ,%s)", title, author);
 	bool leave = false;
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiImageData dialogBox(Resources::GetFile("theme_dialogue_box.png"), Resources::GetFileSize("theme_dialogue_box.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
+	GuiImageData dialogBox(App.Resources.GetFile("theme_dialogue_box.png"), App.Resources.GetFileSize("theme_dialogue_box.png"));
 
 	GuiImage dialogBoxImg(&dialogBox);
 
@@ -409,10 +409,10 @@ void ThemeMenu::MainButtonClicked(int button)
 			int choice = WindowPrompt(tr( "Do you want to apply this theme?" ), title, tr( "Yes" ), tr( "Cancel" ));
 			if (choice)
 			{
-				if (Theme::Load(ThemeList[button].Filepath.c_str()))
+				if (App.Theme.Load(ThemeList[button].Filepath.c_str()))
 				{
 					snprintf(App.Settings.theme, sizeof(App.Settings.theme), ThemeList[button].Filepath.c_str());
-					Theme::Reload();
+					App.Theme.Reload();
 					returnMenu = MENU_THEMEMENU;
 					leave = true;
 				}

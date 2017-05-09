@@ -8,9 +8,12 @@
  * GUI class definitions
  ***************************************************************************/
 
-#include "gui.h"
+#include <gccore.h>
+#include <math.h>
+#include "gui_element.h"
+#include "video.h"
 
-/**
+ /**
  * Constructor for the Object class.
  */
 //mutex_t GuiElement::mutex = LWP_MUTEX_NULL;
@@ -541,16 +544,16 @@ void GuiElement::UpdateEffects()
 		if (fabs(frequency) < circleamount)
 		{
 			angleDyn = (frequency + degree + 90.0f) * anglespeed;
-			xoffsetDyn = (int) lround(((f32) Radius) * cosf((frequency + degree) * PI / 180.0f));
-			yoffsetDyn = (int) lround(((f32) Radius) * sinf((frequency + degree) * PI / 180.0f));
+			xoffsetDyn = (int) lround(((f32) Radius) * cosf((frequency + degree) * M_PI / 180.0f));
+			yoffsetDyn = (int) lround(((f32) Radius) * sinf((frequency + degree) * M_PI / 180.0f));
 			frequency += ((f32) effectAmount) * 0.01f;
 		}
 		else
 		{
 			f32 temp_frequency = ((effectAmount < 0) ? -1.0f : 1.0f) * circleamount;
 			angleDyn = (temp_frequency + degree + 90.0f) * anglespeed;
-			xoffsetDyn = (int) lround(((f32) Radius) * cosf((temp_frequency + degree) * PI / 180.0f));
-			yoffsetDyn = (int) lround(((f32) Radius) * sinf((temp_frequency + degree) * PI / 180.0f));
+			xoffsetDyn = (int) lround(((f32) Radius) * cosf((temp_frequency + degree) * M_PI / 180.0f));
+			yoffsetDyn = (int) lround(((f32) Radius) * sinf((temp_frequency + degree) * M_PI / 180.0f));
 			xoffset += xoffsetDyn;
 			yoffset += yoffsetDyn;
 			effects ^= EFFECT_GOROUND;

@@ -1,5 +1,4 @@
-#ifndef __MEMORY_H_
-#define __MEMORY_H_
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -32,6 +31,4 @@ extern "C"
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

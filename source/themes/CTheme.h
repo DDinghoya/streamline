@@ -5,32 +5,40 @@
 #include <gctypes.h>
 #include "Resources.h"
 #include "gettheme.h"
+#include "FreeTypeGX.h"
 
-class Theme
+class CTheme
 {
 public:
+	FreeTypeGX *fontSystem;
+	FT_Byte *customFont;
+	u32 customFontSize;
+
+	CTheme();
+	~CTheme();
+
 	//!Set Default
-	static void SetDefault();
+	void SetDefault();
 	
 	//!Load
-	static bool Load(const char * path);
+	bool Load(const char * path);
 	
 	//!Load font data
-	static bool LoadFont(const char *path);
+	bool LoadFont(const char *path);
 	
 	//!Load the original Wii System Menu font into memory only. It is not applied.
-	static bool loadSystemFont(bool korean);
+	bool loadSystemFont(bool korean);
 	
 	//!Reload the main images/sounds for the new theme
-	static void Reload();
+	void Reload();
 	
 	//!Clear all image/font/theme data and free the memory
-	static void CleanUp();
+	void CleanUp();
 
 	//!Enable tooltips: special case treaded because it is called every frame
-	static bool ShowTooltips;
+	bool ShowTooltips;
 
 private:
 	//!Clear the font data and free the memory
-	static void ClearFontData();
+	void ClearFontData();
 };

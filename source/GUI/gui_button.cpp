@@ -8,8 +8,9 @@
  * GUI class definitions
  ***************************************************************************/
 
-#include "gui.h"
+#include "gui_button.h"
 #include "App.h"
+#include "input.h"
 
 static int scrollison = 0;
 
@@ -49,12 +50,12 @@ GuiButton::GuiButton(int w, int h)
 }
 
 GuiButton::GuiButton(GuiImage* img, GuiImage* imgOver, int hor, int vert, int x, int y, GuiTrigger* trig,
-		GuiSound* sndOver, GuiSound* sndClick, u8 grow)
+	GuiSound* sndOver, GuiSound* sndClick, u8 grow)
 {
 	width = img ? img->GetWidth() : 0;
 	height = img ? img->GetHeight() : 0;
 	image = img;
-	if(image) image->SetParent(this);
+	if (image) image->SetParent(this);
 	imageOver = imgOver;
 	if (imageOver) imageOver->SetParent(this);
 	imageHold = NULL;
@@ -95,12 +96,12 @@ GuiButton::GuiButton(GuiImage* img, GuiImage* imgOver, int hor, int vert, int x,
 }
 
 GuiButton::GuiButton(GuiImage* img, GuiImage* imgOver, int hor, int vert, int x, int y, GuiTrigger* trig,
-		GuiSound* sndOver, GuiSound* sndClick, u8 grow, GuiTooltip* tt, int ttx, int tty, int h_align, int v_align)
+	GuiSound* sndOver, GuiSound* sndClick, u8 grow, GuiTooltip* tt, int ttx, int tty, int h_align, int v_align)
 {
 	width = img ? img->GetWidth() : 0;
 	height = img ? img->GetHeight() : 0;
 	image = img;
-	if(image) image->SetParent(this);
+	if (image) image->SetParent(this);
 	imageOver = imgOver;
 	if (imageOver) imageOver->SetParent(this);
 	imageHold = NULL;
@@ -140,7 +141,7 @@ GuiButton::GuiButton(GuiImage* img, GuiImage* imgOver, int hor, int vert, int x,
 	}
 
 	toolTip = tt;
-	if(toolTip)
+	if (toolTip)
 	{
 		toolTip->SetParent(this);
 		toolTip->SetAlignment(h_align, v_align);
@@ -158,95 +159,95 @@ GuiButton::~GuiButton()
 
 void GuiButton::SetImage(GuiImage* img)
 {
-	LOCK( this );
+	LOCK(this);
 	image = img;
 	if (img) img->SetParent(this);
 }
 void GuiButton::SetImageOver(GuiImage* img)
 {
-	LOCK( this );
+	LOCK(this);
 	imageOver = img;
 	if (img) img->SetParent(this);
 }
 void GuiButton::SetImageHold(GuiImage* img)
 {
-	LOCK( this );
+	LOCK(this);
 	imageHold = img;
 	if (img) img->SetParent(this);
 }
 void GuiButton::SetImageClick(GuiImage* img)
 {
-	LOCK( this );
+	LOCK(this);
 	imageClick = img;
 	if (img) img->SetParent(this);
 }
 void GuiButton::SetIcon(GuiImage* img)
 {
-	LOCK( this );
+	LOCK(this);
 	icon = img;
 	if (img) img->SetParent(this);
 }
 void GuiButton::SetIconOver(GuiImage* img)
 {
-	LOCK( this );
+	LOCK(this);
 	iconOver = img;
 	if (img) img->SetParent(this);
 }
 void GuiButton::SetIconHold(GuiImage* img)
 {
-	LOCK( this );
+	LOCK(this);
 	iconHold = img;
 	if (img) img->SetParent(this);
 }
 void GuiButton::SetIconClick(GuiImage* img)
 {
-	LOCK( this );
+	LOCK(this);
 	iconClick = img;
 	if (img) img->SetParent(this);
 }
 void GuiButton::SetLabel(GuiText* txt, int n)
 {
-	LOCK( this );
+	LOCK(this);
 	label[n] = txt;
 	if (txt) txt->SetParent(this);
 }
 void GuiButton::SetLabelOver(GuiText* txt, int n)
 {
-	LOCK( this );
+	LOCK(this);
 	labelOver[n] = txt;
 	if (txt) txt->SetParent(this);
 }
 void GuiButton::SetLabelHold(GuiText* txt, int n)
 {
-	LOCK( this );
+	LOCK(this);
 	labelHold[n] = txt;
 	if (txt) txt->SetParent(this);
 }
 void GuiButton::SetLabelClick(GuiText* txt, int n)
 {
-	LOCK( this );
+	LOCK(this);
 	labelClick[n] = txt;
 	if (txt) txt->SetParent(this);
 }
 void GuiButton::SetSoundOver(GuiSound * snd)
 {
-	LOCK( this );
+	LOCK(this);
 	soundOver = snd;
 }
 void GuiButton::SetSoundHold(GuiSound * snd)
 {
-	LOCK( this );
+	LOCK(this);
 	soundHold = snd;
 }
 void GuiButton::SetSoundClick(GuiSound * snd)
 {
-	LOCK( this );
+	LOCK(this);
 	soundClick = snd;
 }
 
 void GuiButton::SetToolTip(GuiTooltip* tt, int x, int y, int h_align, int v_align)
 {
-	LOCK( this );
+	LOCK(this);
 	if (tt)
 	{
 		toolTip = tt;
@@ -259,18 +260,18 @@ void GuiButton::SetToolTip(GuiTooltip* tt, int x, int y, int h_align, int v_alig
 
 void GuiButton::RemoveToolTip()
 {
-	LOCK( this );
+	LOCK(this);
 	toolTip = NULL;
 }
 
 void GuiButton::RemoveSoundOver()
 {
-	LOCK( this );
+	LOCK(this);
 	soundOver = NULL;
 }
 void GuiButton::RemoveSoundClick()
 {
-	LOCK( this );
+	LOCK(this);
 	soundClick = NULL;
 }
 void GuiButton::SetSkew(int XX1, int YY1, int XX2, int YY2, int XX3, int YY3, int XX4, int YY4)
@@ -297,18 +298,19 @@ void GuiButton::SetState(int s, int c)
 {
 	GuiElement::SetState(s, c);
 
-	if(c < 0 || c > 3)
+	if (c < 0 || c > 3)
 		return;
 
 	if (s == STATE_CLICKED)
 	{
-		POINT p = {0, 0};
-
-		if (userInput[c].wpad.ir.valid)
+		POINT p = { 0, 0 };
+		GuiTrigger *trig = Input::GetUserInput(c);
+		if (trig->wpad.ir.valid)
 		{
-			p.x = userInput[c].wpad.ir.x;
-			p.y = userInput[c].wpad.ir.y;
+			p.x = trig->wpad.ir.x;
+			p.y = trig->wpad.ir.y;
 		}
+
 		Clicked(this, c, p);
 	}
 }
@@ -318,7 +320,7 @@ void GuiButton::SetState(int s, int c)
  */
 void GuiButton::Draw()
 {
-	LOCK( this );
+	LOCK(this);
 	if (!this->IsVisible()) return;
 
 	// draw image
@@ -344,16 +346,16 @@ void GuiButton::DrawTooltip()
 	if (!toolTip)
 		return;
 
-	LOCK( this );
+	LOCK(this);
 
 	bool isVisible = this->IsVisible() && state == STATE_SELECTED;
 
 	if (isVisible)
 	{
-		if(!bOldTooltipVisible) {
+		if (!bOldTooltipVisible) {
 			ToolTipDelay.reset();
 		}
-		else if(!toolTip->IsVisible() && (int) ToolTipDelay.elapsed_millisecs() > App.Settings.TooltipDelay)
+		else if (!toolTip->IsVisible() && (int)ToolTipDelay.elapsed_millisecs() > App.Settings.TooltipDelay)
 		{
 			toolTip->SetEffect(EFFECT_FADE, 20);
 			toolTip->SetVisible(true);
@@ -361,10 +363,10 @@ void GuiButton::DrawTooltip()
 	}
 	else
 	{
-		if(bOldTooltipVisible)
+		if (bOldTooltipVisible)
 			toolTip->SetEffect(EFFECT_FADE, -20);
 
-		if(toolTip->GetEffect() == 0)
+		if (toolTip->GetEffect() == 0)
 			toolTip->SetVisible(false);
 	}
 
@@ -379,32 +381,32 @@ void GuiButton::ScrollIsOn(int f)
 
 void GuiButton::Update(GuiTrigger * t)
 {
-	LOCK( this );
+	LOCK(this);
 	if (!this->IsVisible() || state == STATE_CLICKED || state == STATE_DISABLED || !t)
 		return;
 	else if (parentElement && parentElement->GetState() == STATE_DISABLED) return;
 
 #ifdef HW_RVL
 	// cursor
-	if ( t->wpad.ir.valid )
+	if (t->wpad.ir.valid)
 	{
-		if ( this->IsInside( t->wpad.ir.x, t->wpad.ir.y ) )
+		if (this->IsInside(t->wpad.ir.x, t->wpad.ir.y))
 		{
-			if ( state == STATE_DEFAULT ) // we weren't on the button before!
+			if (state == STATE_DEFAULT) // we weren't on the button before!
 
 			{
-				if ( scrollison == 0 )
+				if (scrollison == 0)
 				{
-					this->SetState( STATE_SELECTED, t->chan );
+					this->SetState(STATE_SELECTED, t->chan);
 				}
 
-				if ( this->Rumble() && scrollison == 0 )
-				rumbleRequest[t->chan] = 1;
+				if (this->Rumble() && scrollison == 0)
+					Input::rumbleRequest[t->chan] = 1;
 
-				if ( soundOver && scrollison == 0 )
-				soundOver->Play();
+				if (soundOver && scrollison == 0)
+					soundOver->Play();
 
-				if ( effectsOver && !effects && scrollison == 0 )
+				if (effectsOver && !effects && scrollison == 0)
 				{
 					// initiate effects
 					effects = effectsOver;
@@ -415,10 +417,10 @@ void GuiButton::Update(GuiTrigger * t)
 		}
 		else
 		{
-			if ( state == STATE_SELECTED && ( stateChan == t->chan || stateChan == -1 ) )
-			this->ResetState();
+			if (state == STATE_SELECTED && (stateChan == t->chan || stateChan == -1))
+				this->ResetState();
 
-			if ( effectTarget == effectTargetOver && effectAmount == effectAmountOver )
+			if (effectTarget == effectTargetOver && effectAmount == effectAmountOver)
 			{
 				// initiate effects (in reverse)
 				effects = effectsOver;
@@ -456,13 +458,13 @@ void GuiButton::Update(GuiTrigger * t)
 				// lower 16 bits only (classic controller)
 				cc_btns = t->wpad.btns_d >> 16;
 				cc_btns_trig = trigger[i]->wpad.btns_d >> 16;
-				
+
 				// lower 16 bits only (WiiU Pro controller)
 				wupc_btns = t->wupcdata.btns_d >> 16;
 				wupc_btns_trig = trigger[i]->wupcdata.btns_d >> 16;
 
 
-				if( ((t->wpad.btns_d > 0 && wm_btns == wm_btns_trig) 
+				if (((t->wpad.btns_d > 0 && wm_btns == wm_btns_trig)
 					|| (t->wpad.exp.type == WPAD_EXP_CLASSIC && cc_btns == cc_btns_trig))
 					|| (t->pad.btns_d > 0 && t->pad.btns_d == trigger[i]->pad.btns_d)
 					|| (t->wupcdata.btns_d > 0 && wupc_btns == wupc_btns_trig))
@@ -504,13 +506,13 @@ void GuiButton::Update(GuiTrigger * t)
 				cc_btns = t->wpad.btns_d >> 16;
 				cc_btns_h = t->wpad.btns_h >> 16;
 				cc_btns_trig = trigger[i]->wpad.btns_h >> 16;
-				
+
 				// lower 16 bits only (WiiU Pro controller)
 				wupc_btns = t->wupcdata.btns_d >> 16;
 				wupc_btns_h = t->wupcdata.btns_h >> 16;
 				wupc_btns_trig = trigger[i]->wupcdata.btns_h >> 16;
 
-				if( (t->wpad.btns_d > 0 && wm_btns == wm_btns_trig) 
+				if ((t->wpad.btns_d > 0 && wm_btns == wm_btns_trig)
 					|| (t->wpad.exp.type == WPAD_EXP_CLASSIC && cc_btns == cc_btns_trig)
 					|| (t->pad.btns_d > 0 && t->pad.btns_d == trigger[i]->pad.btns_d)
 					|| (t->wupcdata.btns_d > 0 && wupc_btns == wupc_btns_trig))
@@ -519,11 +521,11 @@ void GuiButton::Update(GuiTrigger * t)
 						this->SetState(STATE_CLICKED, t->chan);
 				}
 
-				if( (t->wpad.btns_h > 0 && wm_btns_h == wm_btns_trig) 
+				if ((t->wpad.btns_h > 0 && wm_btns_h == wm_btns_trig)
 					|| (t->wpad.exp.type == WPAD_EXP_CLASSIC && cc_btns_h == cc_btns_trig)
 					|| (t->pad.btns_h > 0 && t->pad.btns_h == trigger[i]->pad.btns_h)
 					|| (t->wupcdata.btns_h > 0 && wupc_btns_h == wupc_btns_trig)
-				)
+					)
 				{
 					if (trigger[i]->type == TRIGGER_HELD)
 						held = true;
@@ -539,12 +541,12 @@ void GuiButton::Update(GuiTrigger * t)
 				}
 				else if (held && state == STATE_HELD && Held.connected())
 				{
-					POINT p = {0, 0};
-
-					if (userInput[t->chan].wpad.ir.valid)
+					POINT p = { 0, 0 };
+					GuiTrigger *trig = Input::GetUserInput(t->chan);
+					if (trig->wpad.ir.valid)
 					{
-						p.x = userInput[t->chan].wpad.ir.x;
-						p.y = userInput[t->chan].wpad.ir.y;
+						p.x = trig->wpad.ir.x;
+						p.y = trig->wpad.ir.y;
 					}
 					Held(this, t->chan, p);
 				}
@@ -552,6 +554,6 @@ void GuiButton::Update(GuiTrigger * t)
 		}
 	}
 
-	if (updateCB) updateCB(this);
+	if (updateCB)
+		updateCB(this);
 }
-

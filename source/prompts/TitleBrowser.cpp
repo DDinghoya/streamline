@@ -13,19 +13,20 @@
 #include "GUI/gui_optionbrowser.h"
 #include "prompts/PromptWindows.h"
 #include "prompts/ProgressWindow.h"
-#include "network/networkops.h"
-#include "network/http.h"
-#include "FileOperations/fileops.h"
+#include "Net/networkops.h"
+#include "Net/http.h"
+#include "IO/fileops.h"
 #include "themes/CTheme.h"
 #include "sys.h"
 #include "menu.h"
 #include "audio.h"
-#include "Data/GameTDB.hpp"
+#include "Library/GameTDB.hpp"
 #include "wad/nandtitle.h"
 #include "gecko.h"
-
+#include "video.h"
 #include "Controls/DeviceHandler.hpp"
 #include "usbloader/NandEmu.h"
+
 extern u8 shutdown;
 extern u8 reset;
 
@@ -61,7 +62,7 @@ bool TitleSelector(char output[])
 	}
 
 	//make a list of just the tids we are adding to the titlebrowser
-	titleList = (u64*) memalign(32, num_titles * sizeof(u64));
+	titleList = (u64*)memalign(32, num_titles * sizeof(u64));
 	if (!titleList)
 	{
 		gprintf("TitleLister(): out of memory!\n");
@@ -91,19 +92,19 @@ bool TitleSelector(char output[])
 			continue;
 
 		char id[5];
-		NandTitles.AsciiTID(tid, (char*) &id);
+		NandTitles.AsciiTID(tid, (char*)&id);
 
 		const char* name = NULL;
 		std::string TitleName;
 
-		if(XML_DB->GetTitle(id, TitleName))
+		if (XML_DB->GetTitle(id, TitleName))
 			name = TitleName.c_str();
 		else
 			name = NandTitles.NameOf(tid);
 		//gprintf("%016llx: %s: %s\n%p\t%p\n", tid, id, name, &id, name );
 
 		options4.SetName(i, "%s", id);
-		options4.SetValue(i, "%s", name ? name : tr( "Unknown" ));
+		options4.SetValue(i, "%s", name ? name : tr("Unknown"));
 		titleList[i] = tid;
 		i++;
 	}
@@ -112,12 +113,12 @@ bool TitleSelector(char output[])
 	XML_DB = NULL;
 
 	options4.SetName(i, " ");
-	options4.SetValue(i, "%s", tr( "Clear" ));
+	options4.SetValue(i, "%s", tr("Clear"));
 
 	bool exit = false;
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiImageData settingsbg(Resources::GetFile("settings_background.png"), Resources::GetFileSize("settings_background.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
+	GuiImageData settingsbg(App.Resources.GetFile("settings_background.png"), App.Resources.GetFileSize("settings_background.png"));
 
 	GuiImage settingsbackground(&settingsbg);
 	GuiButton settingsbackgroundbtn(settingsbackground.GetWidth(), settingsbackground.GetHeight());
@@ -130,7 +131,7 @@ bool TitleSelector(char output[])
 	GuiTrigger trigB;
 	trigB.SetButtonOnlyTrigger(-1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B);
 
-	GuiText cancelBtnTxt(tr( "Back" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
+	GuiText cancelBtnTxt(tr("Back"), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	cancelBtnTxt.SetMaxWidth(btnOutline.GetWidth() - 30);
 	GuiImage cancelBtnImg(&btnOutline);
 	if (App.Settings.wsprompt)
@@ -170,7 +171,7 @@ bool TitleSelector(char output[])
 			if (r < num_titles)
 			{
 				u64 tid = titleList[r];
-				sprintf(output, "%08x", (unsigned int)TITLE_LOWER( tid ));
+				sprintf(output, "%08x", (unsigned int)TITLE_LOWER(tid));
 			}
 			else output[0] = 0;
 			ret = true;
@@ -229,7 +230,7 @@ int TitleBrowser()
 			break;
 		}
 		//these can't be booted anyways
-		if (TITLE_LOWER( tid ) == 0x48414741 || TITLE_LOWER( tid ) == 0x48414141 || TITLE_LOWER( tid ) == 0x48414641)
+		if (TITLE_LOWER(tid) == 0x48414741 || TITLE_LOWER(tid) == 0x48414141 || TITLE_LOWER(tid) == 0x48414641)
 		{
 			num_sys_titles--;
 			continue;
@@ -243,7 +244,7 @@ int TitleBrowser()
 	}
 
 	//make a list of just the tids we are adding to the titlebrowser
-	titleList = (u64*) memalign(32, (num_titles + num_sys_titles) * sizeof(u64));
+	titleList = (u64*)memalign(32, (num_titles + num_sys_titles) * sizeof(u64));
 	if (!titleList)
 	{
 		gprintf("TitleBrowser(): out of memory!\n");
@@ -277,18 +278,18 @@ int TitleBrowser()
 		}
 
 		char id[5];
-		NandTitles.AsciiTID(tid, (char*) &id);
+		NandTitles.AsciiTID(tid, (char*)&id);
 
 		const char* name = NULL;
 		std::string TitleName;
 
-		if(XML_DB->GetTitle(id, TitleName))
+		if (XML_DB->GetTitle(id, TitleName))
 			name = TitleName.c_str();
 		else
 			name = NandTitles.NameOf(tid);
 
 		options3.SetName(i, "%s", id);
-		options3.SetValue(i, "%s", name ? name : tr( "Unknown" ));
+		options3.SetValue(i, "%s", name ? name : tr("Unknown"));
 		titleList[i] = tid;
 		i++;
 	}
@@ -301,7 +302,7 @@ int TitleBrowser()
 		{
 			break;
 		}
-		if (TITLE_LOWER( tid ) == 0x48414741 || TITLE_LOWER( tid ) == 0x48414141 || TITLE_LOWER( tid ) == 0x48414641) continue;
+		if (TITLE_LOWER(tid) == 0x48414741 || TITLE_LOWER(tid) == 0x48414141 || TITLE_LOWER(tid) == 0x48414641) continue;
 
 		if (!NandTitles.Exists(tid))
 		{
@@ -309,18 +310,18 @@ int TitleBrowser()
 		}
 
 		char id[5];
-		NandTitles.AsciiTID(tid, (char*) &id);
+		NandTitles.AsciiTID(tid, (char*)&id);
 
 		const char* name = NULL;
 		std::string TitleName;
 
-		if(XML_DB->GetTitle(id, TitleName))
+		if (XML_DB->GetTitle(id, TitleName))
 			name = TitleName.c_str();
 		else
 			name = NandTitles.NameOf(tid);
 
 		options3.SetName(i, "%s", id);
-		options3.SetValue(i, "%s", name ? name : tr( "Unknown" ));
+		options3.SetValue(i, "%s", name ? name : tr("Unknown"));
 		titleList[i] = tid;
 		i++;
 	}
@@ -331,7 +332,7 @@ int TitleBrowser()
 	if (i == num_titles + num_sys_titles)
 	{
 		options3.SetName(i, " ");
-		options3.SetValue(i, "%s", tr( "Wii Settings" ));
+		options3.SetValue(i, "%s", tr("Wii Settings"));
 	}
 
 	bool exit = false;
@@ -339,8 +340,8 @@ int TitleBrowser()
 
 	if (IsNetworkInit()) ResumeNetworkWait();
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiImageData settingsbg(Resources::GetFile("settings_background.png"), Resources::GetFileSize("settings_background.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
+	GuiImageData settingsbg(App.Resources.GetFile("settings_background.png"), App.Resources.GetFileSize("settings_background.png"));
 
 	GuiTrigger trigA;
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
@@ -349,8 +350,10 @@ int TitleBrowser()
 	GuiTrigger trigB;
 	trigB.SetButtonOnlyTrigger(-1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B);
 
-	GuiText titleTxt(tr( "Title Launcher" ), 28, ( GXColor )
-	{   0, 0, 0, 255});
+	GuiText titleTxt(tr("Title Launcher"), 28, (GXColor)
+	{
+		0, 0, 0, 255
+	});
 	titleTxt.SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	titleTxt.SetPosition(12, 40);
 	titleTxt.SetMaxWidth(356, SCROLL_HORIZONTAL);
@@ -361,7 +364,7 @@ int TitleBrowser()
 	settingsbackgroundbtn.SetPosition(0, 0);
 	settingsbackgroundbtn.SetImage(&settingsbackground);
 
-	GuiText cancelBtnTxt(tr( "Back" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
+	GuiText cancelBtnTxt(tr("Back"), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	cancelBtnTxt.SetMaxWidth(btnOutline.GetWidth() - 30);
 	GuiImage cancelBtnImg(&btnOutline);
 	if (App.Settings.wsprompt)
@@ -378,7 +381,7 @@ int TitleBrowser()
 	optionBrowser3.SetPosition(0, 90);
 	optionBrowser3.SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 
-	GuiImageData wifiImgData(Resources::GetFile("wifi_btn.png"), Resources::GetFileSize("wifi_btn.png"));
+	GuiImageData wifiImgData(App.Resources.GetFile("wifi_btn.png"), App.Resources.GetFileSize("wifi_btn.png"));
 	GuiImage wifiImg(&wifiImgData);
 	if (App.Settings.wsprompt)
 	{
@@ -431,12 +434,12 @@ int TitleBrowser()
 				//set the title's name, number, ID to text
 				char text[0x100];
 				char id[5];
-				NandTitles.AsciiTID(titleList[ret], (char*) &id);
+				NandTitles.AsciiTID(titleList[ret], (char*)&id);
 
 				snprintf(text, sizeof(text), "%s : %s", id, NandTitles.NameOf(titleList[ret]));
 
 				//prompt to boot selected title
-				if (WindowPrompt(tr( "Boot?" ), text, tr( "OK" ), tr( "Cancel" )))
+				if (WindowPrompt(tr("Boot?"), text, tr("OK"), tr("Cancel")))
 				{ //if they say yes
 					ExitApp();
 					WII_Initialize();
@@ -478,4 +481,3 @@ int TitleBrowser()
 
 	return ret;
 }
-

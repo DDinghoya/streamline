@@ -19,9 +19,9 @@
 #include "usbloader/wbfs.h"
 #include "usbloader/wdvd.h"
 #include "usbloader/GameList.h"
-#include "network/networkops.h"
-#include "network/update.h"
-#include "network/ImageDownloader.h"
+#include "Net/networkops.h"
+#include "Net/update.h"
+#include "Net/ImageDownloader.h"
 #include "App.h"
 #include "SystemMenu/SystemMenuResources.h"
 #include "system/IosLoader.h"
@@ -33,6 +33,8 @@
 #include "menus.h"
 #include "wpad.h"
 #include "sys.h"
+#include "video.h"
+#include "input.h"
 
 extern bool updateavailable;
 
@@ -60,45 +62,45 @@ GameBrowseMenu::GameBrowseMenu()
 	gameList.FilterList();
 	HDDSizeCallback.SetCallback(this, &GameBrowseMenu::UpdateFreeSpace);
 
-	btnInstall = Resources::GetImageData("button_install.png");
-	btnInstallOver = Resources::GetImageData("button_install_over.png");
-	btnSettings = Resources::GetImageData("settings_button.png");
-	btnSettingsOver = Resources::GetImageData("settings_button_over.png");
-	btnpwroff = Resources::GetImageData("wiimote_poweroff.png");
-	btnpwroffOver = Resources::GetImageData("wiimote_poweroff_over.png");
-	btnhome = Resources::GetImageData("menu_button.png");
-	btnhomeOver = Resources::GetImageData("menu_button_over.png");
-	btnsdcardOver = Resources::GetImageData("sdcard_over.png");
-	btnsdcard = Resources::GetImageData("sdcard.png");
+	btnInstall = App.Resources.GetImageData("button_install.png");
+	btnInstallOver = App.Resources.GetImageData("button_install_over.png");
+	btnSettings = App.Resources.GetImageData("settings_button.png");
+	btnSettingsOver = App.Resources.GetImageData("settings_button_over.png");
+	btnpwroff = App.Resources.GetImageData("wiimote_poweroff.png");
+	btnpwroffOver = App.Resources.GetImageData("wiimote_poweroff_over.png");
+	btnhome = App.Resources.GetImageData("menu_button.png");
+	btnhomeOver = App.Resources.GetImageData("menu_button_over.png");
+	btnsdcardOver = App.Resources.GetImageData("sdcard_over.png");
+	btnsdcard = App.Resources.GetImageData("sdcard.png");
 
-	imgfavIcon = Resources::GetImageData("favIcon.png");
-	imgfavIcon_gray = Resources::GetImageData("favIcon_gray.png");
-	imgsearchIcon = Resources::GetImageData("searchIcon.png");
-	imgsearchIcon_gray = Resources::GetImageData("searchIcon_gray.png");
-	imgabcIcon = Resources::GetImageData("abcIcon.png");
-	imgrankIcon = Resources::GetImageData("rankIcon.png");
-	imgplayCountIcon = Resources::GetImageData("playCountIcon.png");
-	imgplayersSortIcon = Resources::GetImageData("playersSort.png");
-	imgarrangeGrid = Resources::GetImageData("arrangeGrid.png");
-	imgarrangeGrid_gray = Resources::GetImageData("arrangeGrid_gray.png");
-	imgarrangeList = Resources::GetImageData("arrangeList.png");
-	imgarrangeList_gray = Resources::GetImageData("arrangeList_gray.png");
-	imgarrangeCarousel = Resources::GetImageData("arrangeCarousel.png");
-	imgarrangeCarousel_gray = Resources::GetImageData("arrangeCarousel_gray.png");
-	imgBannerGrid = Resources::GetImageData("arrangeBannerGrid.png");
-	imgBannerGrid_gray = Resources::GetImageData("arrangeBannerGrid_gray.png");
-	imgdvd = Resources::GetImageData("dvd.png");
-	imgdvd_gray = Resources::GetImageData("dvd_gray.png");
-	imgLock = Resources::GetImageData("lock.png");
-	imgLock_gray = Resources::GetImageData("lock_gray.png");
-	imgUnlock = Resources::GetImageData("unlock.png");
-	imgUnlock_gray = Resources::GetImageData("unlock_gray.png");
-	imgCategory = Resources::GetImageData("category.png");
-	imgCategory_gray = Resources::GetImageData("category_gray.png");
-	imgLoaderMode = Resources::GetImageData("loader_mode.png");
+	imgfavIcon = App.Resources.GetImageData("favIcon.png");
+	imgfavIcon_gray = App.Resources.GetImageData("favIcon_gray.png");
+	imgsearchIcon = App.Resources.GetImageData("searchIcon.png");
+	imgsearchIcon_gray = App.Resources.GetImageData("searchIcon_gray.png");
+	imgabcIcon = App.Resources.GetImageData("abcIcon.png");
+	imgrankIcon = App.Resources.GetImageData("rankIcon.png");
+	imgplayCountIcon = App.Resources.GetImageData("playCountIcon.png");
+	imgplayersSortIcon = App.Resources.GetImageData("playersSort.png");
+	imgarrangeGrid = App.Resources.GetImageData("arrangeGrid.png");
+	imgarrangeGrid_gray = App.Resources.GetImageData("arrangeGrid_gray.png");
+	imgarrangeList = App.Resources.GetImageData("arrangeList.png");
+	imgarrangeList_gray = App.Resources.GetImageData("arrangeList_gray.png");
+	imgarrangeCarousel = App.Resources.GetImageData("arrangeCarousel.png");
+	imgarrangeCarousel_gray = App.Resources.GetImageData("arrangeCarousel_gray.png");
+	imgBannerGrid = App.Resources.GetImageData("arrangeBannerGrid.png");
+	imgBannerGrid_gray = App.Resources.GetImageData("arrangeBannerGrid_gray.png");
+	imgdvd = App.Resources.GetImageData("dvd.png");
+	imgdvd_gray = App.Resources.GetImageData("dvd_gray.png");
+	imgLock = App.Resources.GetImageData("lock.png");
+	imgLock_gray = App.Resources.GetImageData("lock_gray.png");
+	imgUnlock = App.Resources.GetImageData("unlock.png");
+	imgUnlock_gray = App.Resources.GetImageData("unlock_gray.png");
+	imgCategory = App.Resources.GetImageData("category.png");
+	imgCategory_gray = App.Resources.GetImageData("category_gray.png");
+	imgLoaderMode = App.Resources.GetImageData("loader_mode.png");
 
-	homebrewImgData = Resources::GetImageData("browser.png");
-	homebrewImgDataOver = Resources::GetImageData("browser_over.png");
+	homebrewImgData = App.Resources.GetImageData("browser.png");
+	homebrewImgDataOver = App.Resources.GetImageData("browser_over.png");
 
 	trigA = new GuiTrigger;
 	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
@@ -342,12 +344,12 @@ GameBrowseMenu::GameBrowseMenu()
 	clockTimeBack = new GuiText("88:88", 40 / App.Settings.FontScaleFactor * clockFontScaleFactor, (GXColor) {clockColor.r, clockColor.g, clockColor.b, (u8)(clockColor.a / 6)});
 	clockTimeBack->SetAlignment(thAlign("left - clock align hor"), thAlign("top - clock align ver"));
 	clockTimeBack->SetPosition(thInt("275 - clock pos x"), thInt("335 - clock pos y"));
-	clockTimeBack->SetFont(Resources::GetFile("clock.ttf"), Resources::GetFileSize("clock.ttf"));
+	clockTimeBack->SetFont(App.Resources.GetFile("clock.ttf"), App.Resources.GetFileSize("clock.ttf"));
 
 	clockTime = new GuiText("", 40 / App.Settings.FontScaleFactor * clockFontScaleFactor, clockColor);
 	clockTime->SetAlignment(thAlign("left - clock align hor"), thAlign("top - clock align ver"));
 	clockTime->SetPosition(thInt("275 - clock pos x"), thInt("335 - clock pos y"));
-	clockTime->SetFont(Resources::GetFile("clock.ttf"), Resources::GetFileSize("clock.ttf"));
+	clockTime->SetFont(App.Resources.GetFile("clock.ttf"), App.Resources.GetFileSize("clock.ttf"));
 
 	ToolBar.push_back(favoriteBtn);
 	ToolBar.push_back(searchBtn);
@@ -699,7 +701,7 @@ void GameBrowseMenu::ReloadBrowser()
 
 		//! Setup optional background image
 		if(!listBackground)
-			listBackground = Resources::GetImageData("listBackground.png");
+			listBackground = App.Resources.GetImageData("listBackground.png");
 		if(listBackground)
 			bgImg->SetImage(listBackground);
 		else
@@ -747,7 +749,7 @@ void GameBrowseMenu::ReloadBrowser()
 
 		//! Setup optional background image
 		if(!gridBackground)
-			gridBackground = Resources::GetImageData("gridBackground.png");
+			gridBackground = App.Resources.GetImageData("gridBackground.png");
 		if(gridBackground)
 			bgImg->SetImage(gridBackground);
 		else
@@ -795,7 +797,7 @@ void GameBrowseMenu::ReloadBrowser()
 
 		//! Setup optional background image
 		if(!carouselBackground)
-			carouselBackground = Resources::GetImageData("carouselBackground.png");
+			carouselBackground = App.Resources.GetImageData("carouselBackground.png");
 		if(carouselBackground)
 			bgImg->SetImage(carouselBackground);
 		else
@@ -994,18 +996,23 @@ int GameBrowseMenu::MainLoop()
 			App.Settings.Save();
 			DeviceHandler::Instance()->UnMountSD();
 			DeviceHandler::Instance()->MountSD();
-			gprintf("\tLoading config...%s\n", App.Settings.Load() ? "done" : "failed");
+		
+			App.Settings.Load();
 			gprintf("\tLoading language...%s\n", App.Settings.LoadLanguage(App.Settings.language_path, CONSOLE_DEFAULT) ? "done" : "failed");
+			
 			gprintf("\tLoading game settings...%s\n", App.Library.GameSettings.Load(App.Settings.ConfigPath) ? "done" : "failed");
 			gprintf("\tLoading game statistics...%s\n", App.Library.GameStatistics.Load(App.Settings.ConfigPath) ? "done" : "failed");
-			gprintf("\tLoading font...%s\n", Theme::LoadFont(App.Settings.theme_path) ? "done" : "failed (using default)");
-			gprintf("\tLoading theme...%s\n", Theme::Load(App.Settings.theme) ? "done" : "failed (using default)");
+			
+			App.Theme.LoadFont(App.Settings.theme_path);
+			gprintf("\tLoading theme...%s\n", App.Theme.Load(App.Settings.theme) ? "done" : "failed (using default)");
+			
 			bgMusic->Resume();
 			gameList.FilterList();
 			ReloadBrowser();
 			BannerAsync::ResumeThread();
 			ResumeGui();
 		}
+
 		sdcardBtn->ResetState();
 	}
 
@@ -1437,7 +1444,7 @@ void GameBrowseMenu::UpdateClock()
 	}
 	clockTime->SetText(theTime);
 
-	if (App.Settings.screensaver != 0 && ControlActivityTimeout())
+	if (App.Settings.screensaver != 0 && Input::ControlActivityTimeout())
 	{
 		WindowScreensaver();
 	}

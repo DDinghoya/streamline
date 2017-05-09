@@ -1,5 +1,5 @@
 #include <unistd.h>
-
+#include "video.h"
 #include "menus.h"
 #include "usbloader/usbstorage2.h"
 #include "usbloader/wbfs.h"
@@ -41,14 +41,14 @@ int SelectPartitionMenu()
 		counter++;
 	}
 
-	GuiImageData btnpwroff(Resources::GetFile("wiimote_poweroff.png"), Resources::GetFileSize("wiimote_poweroff.png"));
-	GuiImageData btnpwroffOver(Resources::GetFile("wiimote_poweroff_over.png"), Resources::GetFileSize("wiimote_poweroff_over.png"));
-	GuiImageData btnhome(Resources::GetFile("menu_button.png"), Resources::GetFileSize("menu_button.png"));
-	GuiImageData btnhomeOver(Resources::GetFile("menu_button_over.png"), Resources::GetFileSize("menu_button_over.png"));
-	GuiImageData battery(Resources::GetFile("battery.png"), Resources::GetFileSize("battery.png"));
-	GuiImageData batteryBar(Resources::GetFile("battery_bar.png"), Resources::GetFileSize("battery_bar.png"));
-	GuiImageData batteryRed(Resources::GetFile("battery_red.png"), Resources::GetFileSize("battery_red.png"));
-	GuiImageData batteryBarRed(Resources::GetFile("battery_bar_red.png"), Resources::GetFileSize("battery_bar_red.png"));
+	GuiImageData btnpwroff(App.Resources.GetFile("wiimote_poweroff.png"), App.Resources.GetFileSize("wiimote_poweroff.png"));
+	GuiImageData btnpwroffOver(App.Resources.GetFile("wiimote_poweroff_over.png"), App.Resources.GetFileSize("wiimote_poweroff_over.png"));
+	GuiImageData btnhome(App.Resources.GetFile("menu_button.png"), App.Resources.GetFileSize("menu_button.png"));
+	GuiImageData btnhomeOver(App.Resources.GetFile("menu_button_over.png"), App.Resources.GetFileSize("menu_button_over.png"));
+	GuiImageData battery(App.Resources.GetFile("battery.png"), App.Resources.GetFileSize("battery.png"));
+	GuiImageData batteryBar(App.Resources.GetFile("battery_bar.png"), App.Resources.GetFileSize("battery_bar.png"));
+	GuiImageData batteryRed(App.Resources.GetFile("battery_red.png"), App.Resources.GetFileSize("battery_red.png"));
+	GuiImageData batteryBarRed(App.Resources.GetFile("battery_bar_red.png"), App.Resources.GetFileSize("battery_bar_red.png"));
 
 	GuiTrigger trigA;
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);

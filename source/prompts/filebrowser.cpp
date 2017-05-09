@@ -18,11 +18,10 @@
 #include <sys/iosupport.h>
 #include <malloc.h>
 #include <algorithm>
-
+#include "video.h"
 #include "menu.h"
-
 #include "themes/CTheme.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "language/gettext.h"
 #include "PromptWindows.h"
 #include "GUI/gui_filebrowser.h"
@@ -323,7 +322,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 	GuiTrigger trigB;
 	trigB.SetButtonOnlyTrigger(-1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B);
 
-	GuiImageData folderImgData(Resources::GetFile("icon_folder.png"), Resources::GetFileSize("icon_folder.png"));
+	GuiImageData folderImgData(App.Resources.GetFile("icon_folder.png"), App.Resources.GetFileSize("icon_folder.png"));
 	GuiImage folderImg(&folderImgData);
 	GuiButton folderBtn(folderImg.GetWidth(), folderImg.GetHeight());
 	folderBtn.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
@@ -332,7 +331,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 	folderBtn.SetTrigger(&trigA);
 	folderBtn.SetEffectGrow();
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
 	GuiText ExitBtnTxt(tr("Cancel"), 24, (GXColor) { 0, 0, 0, 255 });
 	GuiImage ExitBtnImg(&btnOutline);
 	if (App.Settings.wsprompt)
@@ -378,7 +377,7 @@ int BrowseDevice(char * Path, int Path_size, int Flags, FILTERCASCADE *Filter/*=
 	fileBrowser.SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	fileBrowser.SetPosition(0, 120);
 
-	GuiImageData Address(Resources::GetFile("addressbar_textbox.png"), Resources::GetFileSize("addressbar_textbox.png"));
+	GuiImageData Address(App.Resources.GetFile("addressbar_textbox.png"), App.Resources.GetFileSize("addressbar_textbox.png"));
 	GuiText AdressText((char*)NULL, 20, (GXColor) { 0, 0, 0, 255 });
 	AdressText.SetTextf("%s%s", browser->rootdir, browser->dir);
 	AdressText.SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);

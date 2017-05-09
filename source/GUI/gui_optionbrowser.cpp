@@ -38,13 +38,13 @@ GuiOptionBrowser::GuiOptionBrowser(int w, int h, OptionList * l, const char * cu
 	trigA = new GuiTrigger;
 	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 
-	bgOptions = Resources::GetImageData(custombg);
+	bgOptions = App.Resources.GetImageData(custombg);
 
 	bgOptionsImg = new GuiImage(bgOptions);
 	bgOptionsImg->SetParent(this);
 	bgOptionsImg->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 
-	bgOptionsEntry = Resources::GetImageData("bg_options_entry.png");
+	bgOptionsEntry = App.Resources.GetImageData("bg_options_entry.png");
 
 	scrollBar.SetParent(this);
 	scrollBar.SetAlignment(thAlign("right - options browser scrollbar align hor"), thAlign("top - options browser scrollbar align ver"));

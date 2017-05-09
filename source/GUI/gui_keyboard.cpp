@@ -8,7 +8,7 @@
  * GUI class definitions
  ***************************************************************************/
 
-#include "gui.h"
+#include "gui_keyboard.h"
 #include "App.h"
 #include "App.h"
 #include <stdio.h>
@@ -207,7 +207,7 @@ GuiKeyboard::GuiKeyboard(char * t, u32 max, int minimum, int lang)
 		memcpy(keys, thekeys, sizeof(thekeys));
 	}
 
-	keyTextbox = Resources::GetImageData("keyboard_textbox.png");
+	keyTextbox = App.Resources.GetImageData("keyboard_textbox.png");
 	keyTextboxImg = new GuiImage(keyTextbox);
 	keyTextboxImg->SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	keyTextboxImg->SetPosition(0, 40);//(0,0);
@@ -218,10 +218,10 @@ GuiKeyboard::GuiKeyboard(char * t, u32 max, int minimum, int lang)
 	kbText->SetPosition(0, 53);//(0, 13);
 	this->Append(kbText);
 
-	key = Resources::GetImageData("keyboard_key.png");
-	keyOver = Resources::GetImageData("keyboard_key_over.png");
-	keyMedium = Resources::GetImageData("keyboard_mediumkey_over.png");
-	keyLarge = Resources::GetImageData("keyboard_largekey_over.png");
+	key = App.Resources.GetImageData("keyboard_key.png");
+	keyOver = App.Resources.GetImageData("keyboard_key_over.png");
+	keyMedium = App.Resources.GetImageData("keyboard_mediumkey_over.png");
+	keyLarge = App.Resources.GetImageData("keyboard_largekey_over.png");
 
 	trigA = new GuiTrigger;
 	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);

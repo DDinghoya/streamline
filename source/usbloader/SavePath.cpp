@@ -26,7 +26,7 @@
 #include "App.h"
 #include "usbloader/disc.h"
 #include "usbloader/wbfs.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "gecko.h"
 
 void CreateTitleTMD(const char *path, const struct discHdr *hdr)

@@ -12,8 +12,6 @@
 #include <unistd.h>
 #include "gui_gamelist.h"
 #include "App.h"
-#include "App.h"
-#include "settings/newtitles.h"
 #include "usbloader/GameList.h"
 #include "themes/CTheme.h"
 #include "utils/tools.h"
@@ -24,24 +22,24 @@
 
 #define GAMESELECTSIZE	  30
 
-/**
- * Constructor for the GuiGameList class.
- */
+ /**
+  * Constructor for the GuiGameList class.
+  */
 GuiGameList::GuiGameList(int w, int h, int offset)
-	: scrollBar(h-10)
+	: scrollBar(h - 10)
 {
 	width = w;
 	height = h;
 	pagesize = thInt("9 - game list browser page size");
 	selectable = true;
-	listOffset = LIMIT(offset, 0, MAX(0, gameList.size()-pagesize));
+	listOffset = LIMIT(offset, 0, MAX(0, gameList.size() - pagesize));
 	selectedItem = 0;
 
 	trigA = new GuiTrigger;
 	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 
-	bgGames = Resources::GetImageData("bg_options.png");
-	newGames = Resources::GetImageData("new.png");
+	bgGames = App.Resources.GetImageData("bg_options.png");
+	newGames = App.Resources.GetImageData("new.png");
 
 	scrollBar.SetParent(this);
 	scrollBar.SetAlignment(thAlign("right - game browser scrollbar align hor"), thAlign("top - game browser scrollbar align ver"));
@@ -57,7 +55,7 @@ GuiGameList::GuiGameList(int w, int h, int offset)
 	bgGameImg->SetParent(this);
 	bgGameImg->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 
-	bgGamesEntry = Resources::GetImageData("bg_options_entry.png");
+	bgGamesEntry = App.Resources.GetImageData("bg_options_entry.png");
 
 	maxTextWidth = bgGameImg->GetWidth() - scrollBar.GetWidth() - 38;
 
@@ -69,12 +67,12 @@ GuiGameList::GuiGameList(int w, int h, int offset)
 
 	for (int i = 0; i < pagesize; ++i)
 	{
-		gameTxt[i] = new GuiText((char *) NULL, 20, thColor("r=0 g=0 b=0 a=255 - game browser list text color"));
+		gameTxt[i] = new GuiText((char *)NULL, 20, thColor("r=0 g=0 b=0 a=255 - game browser list text color"));
 		gameTxt[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 		gameTxt[i]->SetPosition(24, 0);
 		gameTxt[i]->SetMaxWidth(maxTextWidth, DOTTED);
 
-		gameTxtOver[i] = new GuiText((char *) NULL, 20, thColor("r=0 g=0 b=0 a=255 - game browser list text color over"));
+		gameTxtOver[i] = new GuiText((char *)NULL, 20, thColor("r=0 g=0 b=0 a=255 - game browser list text color over"));
 		gameTxtOver[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 		gameTxtOver[i]->SetPosition(24, 0);
 		gameTxtOver[i]->SetMaxWidth(maxTextWidth, SCROLL_HORIZONTAL);
@@ -129,7 +127,7 @@ GuiGameList::~GuiGameList()
 
 void GuiGameList::SetFocus(int f)
 {
-	LOCK( this );
+	LOCK(this);
 	if (!gameList.size()) return;
 
 	for (int i = 0; i < pagesize; ++i)
@@ -140,7 +138,7 @@ void GuiGameList::SetFocus(int f)
 
 void GuiGameList::ResetState()
 {
-	LOCK( this );
+	LOCK(this);
 	if (state != STATE_DISABLED)
 	{
 		state = STATE_DEFAULT;
@@ -178,13 +176,13 @@ void GuiGameList::onListChange(int SelItem, int SelInd)
 void GuiGameList::setListOffset(int off)
 {
 	LOCK(this);
-	listOffset = LIMIT(off, 0, MAX(0, gameList.size()-pagesize));
+	listOffset = LIMIT(off, 0, MAX(0, gameList.size() - pagesize));
 }
 
 void GuiGameList::SetSelectedOption(int ind)
 {
 	LOCK(this);
-	selectedItem = LIMIT(ind, 0, MIN(pagesize, MAX(0, gameList.size()-1)));
+	selectedItem = LIMIT(ind, 0, MIN(pagesize, MAX(0, gameList.size() - 1)));
 }
 
 /**
@@ -192,7 +190,7 @@ void GuiGameList::SetSelectedOption(int ind)
  */
 void GuiGameList::Draw()
 {
-	LOCK( this );
+	LOCK(this);
 	if (!this->IsVisible() || !gameList.size()) return;
 
 	bgGameImg->Draw();
@@ -226,7 +224,7 @@ void GuiGameList::UpdateListEntries()
 
 			if (App.Settings.marknewtitles)
 			{
-				bool isNew = NewTitles::Instance()->IsNew(gameList[next]->id);
+				bool isNew = App.Library.NewTitles.IsNew(gameList[next]->id);
 				if (isNew)
 				{
 					gameTxt[i]->SetMaxWidth(maxTextWidth - (newGames->GetWidth() + 1), DOTTED);
@@ -250,13 +248,13 @@ void GuiGameList::UpdateListEntries()
 
 void GuiGameList::Update(GuiTrigger * t)
 {
-	LOCK( this );
+	LOCK(this);
 	if (state == STATE_DISABLED || !t || !gameList.size()) return;
 
 	static int pressedChan = -1;
 
-	if((t->wpad.btns_d & (WPAD_BUTTON_B | WPAD_BUTTON_DOWN | WPAD_BUTTON_UP | WPAD_BUTTON_LEFT | WPAD_BUTTON_RIGHT |
-						  WPAD_CLASSIC_BUTTON_B | WPAD_CLASSIC_BUTTON_UP | WPAD_CLASSIC_BUTTON_DOWN | WPAD_CLASSIC_BUTTON_LEFT | WPAD_CLASSIC_BUTTON_RIGHT)) ||
+	if ((t->wpad.btns_d & (WPAD_BUTTON_B | WPAD_BUTTON_DOWN | WPAD_BUTTON_UP | WPAD_BUTTON_LEFT | WPAD_BUTTON_RIGHT |
+		WPAD_CLASSIC_BUTTON_B | WPAD_CLASSIC_BUTTON_UP | WPAD_CLASSIC_BUTTON_DOWN | WPAD_CLASSIC_BUTTON_LEFT | WPAD_CLASSIC_BUTTON_RIGHT)) ||
 		(t->pad.btns_d & (PAD_BUTTON_UP | PAD_BUTTON_DOWN)) ||
 		(t->wupcdata.btns_d & (WPAD_CLASSIC_BUTTON_B | WPAD_CLASSIC_BUTTON_UP | WPAD_CLASSIC_BUTTON_DOWN | WPAD_CLASSIC_BUTTON_LEFT | WPAD_CLASSIC_BUTTON_RIGHT)))
 		pressedChan = t->chan;
@@ -264,7 +262,7 @@ void GuiGameList::Update(GuiTrigger * t)
 	// update the location of the scroll box based on the position in the option list
 	scrollBar.Update(t);
 
-	if(pressedChan == -1 || (!t->wpad.btns_h && !t->pad.btns_h && !t->wupcdata.btns_h))
+	if (pressedChan == -1 || (!t->wpad.btns_h && !t->pad.btns_h && !t->wupcdata.btns_h))
 	{
 		for (int i = 0, next = listOffset; i < pagesize; ++i, ++next)
 		{
@@ -283,7 +281,7 @@ void GuiGameList::Update(GuiTrigger * t)
 		}
 	}
 
-	if(pressedChan == t->chan && !t->wpad.btns_d && !t->wpad.btns_h && !t->wupcdata.btns_d && !t->wupcdata.btns_h)
+	if (pressedChan == t->chan && !t->wpad.btns_d && !t->wpad.btns_h && !t->wupcdata.btns_d && !t->wupcdata.btns_h)
 		pressedChan = -1;
 
 	scrollBar.SetPageSize(pagesize);

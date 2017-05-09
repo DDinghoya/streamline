@@ -5,14 +5,13 @@
 #include "mload/mload.h"
 #include "banner/BannerAsync.h"
 #include "Controls/DeviceHandler.hpp"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "homebrewboot/BootHomebrew.h"
 #include "homebrewboot/HomebrewXML.h"
 #include "App.h"
-#include "settings/newtitles.h"
 #include "settings/meta.h"
 #include "language/gettext.h"
-#include "network/networkops.h"
+#include "Net/networkops.h"
 #include "utils/ResourceManager.h"
 #include "usbloader/playlog.h"
 #include "usbloader/wbfs.h"
@@ -35,7 +34,7 @@ extern "C"
 //Wiilight stuff
 void wiilight(int enable) // Toggle wiilight (thanks Bool for wiilight source)
 {
-	static vu32 *_wiilight_reg = (u32*) 0xCD0000C0;
+	static vu32 *_wiilight_reg = (u32*)0xCD0000C0;
 	u32 val = (*_wiilight_reg & ~0x20);
 	if (enable && App.Settings.wiilight) val |= 0x20;
 	*_wiilight_reg = val;
@@ -70,14 +69,14 @@ void Sys_Init(void)
 void AppCleanUp(void)
 {
 	static bool app_clean = false;
-	if(app_clean)
+	if (app_clean)
 		return;
 
 	app_clean = true;
 
 	BannerAsync::ThreadExit();
 
-	if(App.Settings.CacheTitles)
+	if (App.Settings.CacheTitles)
 		App.Library.GameTitles.WriteCachedTitles(App.Settings.titlestxt_path);
 	App.Settings.Save();
 
@@ -96,8 +95,8 @@ void AppCleanUp(void)
 		delete pointer[i];
 
 	gettextCleanUp();
-	Theme::CleanUp();
-	NewTitles::DestroyInstance();
+	App.Theme.CleanUp();
+	//CNewTitles::DestroyInstance();
 	ThreadedTask::DestroyInstance();
 	SoundHandler::DestroyInstance();
 	GCGames::DestroyInstance();
@@ -118,9 +117,6 @@ void ExitApp(void)
 	WBFS_CloseAll();
 	DeviceHandler::DestroyInstance();
 	USB_Deinitialize();
-	if(App.Settings.PlaylogUpdate)
-		Playlog_Delete(); // Don't show USB Loader GX in the Wii message board
-
 	MagicPatches(0);
 }
 
@@ -141,7 +137,7 @@ static void _Sys_Shutdown(int SHUTDOWN_MODE)
 
 	/* Poweroff console */
 	if ((CONF_GetShutdownMode() == CONF_SHUTDOWN_IDLE && SHUTDOWN_MODE != ShutdownToStandby) || SHUTDOWN_MODE
-			== ShutdownToIdle)
+		== ShutdownToIdle)
 	{
 		s32 ret;
 
@@ -225,7 +221,7 @@ bool RebootApp(void)
 {
 	// be sure to use current settings as arguments
 	editMetaArguments();
-	
+
 	// Load meta.xml arguments
 	char filepath[255];
 	HomebrewXML MetaXML;
@@ -236,7 +232,7 @@ bool RebootApp(void)
 	u32 filesize = 0;
 	snprintf(filepath, sizeof(filepath), "%s/boot.dol", App.Settings.update_path);
 	LoadFileToMem(filepath, &buffer, &filesize);
-	if(!buffer)
+	if (!buffer)
 	{
 		return false;
 	}
@@ -245,12 +241,12 @@ bool RebootApp(void)
 
 	AddBootArgument(filepath);
 
-	for(u32 i = 0; i < MetaXML.GetArguments().size(); ++i)
+	for (u32 i = 0; i < MetaXML.GetArguments().size(); ++i)
 	{
 		AddBootArgument(MetaXML.GetArguments().at(i).c_str());
 	}
 
-	return !(BootHomebrewFromMem() <0);
+	return !(BootHomebrewFromMem() < 0);
 }
 
 void ScreenShot()
@@ -276,7 +272,7 @@ void ScreenShot()
 	// Create the full pathname.
 	snprintf(fullPath, sizeof(fullPath), "%s%s", App.Settings.ConfigPath, filename);
 
-	if(!CreateSubfolder(App.Settings.ConfigPath))
+	if (!CreateSubfolder(App.Settings.ConfigPath))
 	{
 		gprintf("Can't create screenshot folder\n");
 		return;
@@ -291,5 +287,5 @@ void ScreenShot()
  */
 bool isWiiU()
 {
-	return ((*(vu32*)(0xCD8005A0) >> 16 ) == 0xCAFE);
+	return ((*(vu32*)(0xCD8005A0) >> 16) == 0xCAFE);
 }

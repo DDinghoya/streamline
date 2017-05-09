@@ -1,7 +1,7 @@
 #include <dirent.h>
 #include <unistd.h>
 
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "Controls/DeviceHandler.hpp"
 #include "wad/nandtitle.h"
 #include "system/IosLoader.h"
@@ -9,7 +9,7 @@
 #include "wpad.h"
 #include "usbloader/wbfs.h"
 #include "usbloader/GameList.h"
-#include "Data/GameTDB.hpp"
+#include "Library/GameTDB.hpp"
 #include "utils/ShowError.h"
 
 static int FindGamePartition()

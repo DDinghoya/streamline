@@ -8,8 +8,11 @@
  * GUI class definitions
  ***************************************************************************/
 
-#include "gui.h"
+#include <malloc.h>
+#include "gui_image.h"
 #include "App.h"
+#include "video.h"
+
 /**
  * Constructor for the GuiImage class.
  */

@@ -23,7 +23,7 @@
  ***************************************************************************/
 #include <unistd.h>
 #include "UninstallSM.hpp"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "GameCube/GCGames.h"
 #include "Channels/channels.h"
 #include "App.h"
@@ -31,7 +31,7 @@
 #include "language/gettext.h"
 #include "usbloader/wbfs.h"
 #include "usbloader/GameList.h"
-#include "wstring.hpp"
+#include "utils/wstring.hpp"
 
 UninstallSM::UninstallSM(struct discHdr * header)
 	: SettingsMenu(tr("Uninstall Menu"), &GuiOptions, MENU_NONE)

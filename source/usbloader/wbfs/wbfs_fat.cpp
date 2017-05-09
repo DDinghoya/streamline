@@ -13,7 +13,7 @@
 #include <fat.h>
 
 #include "Controls/DeviceHandler.hpp"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "App.h"
 #include "usbloader/disc.h"
 #include "usbloader/usbstorage2.h"

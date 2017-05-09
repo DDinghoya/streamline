@@ -14,31 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#ifndef GCGAMELOAD_SM_HPP
-#define GCGAMELOAD_SM_HPP
+#pragma once
 
 #include "SettingsMenu.hpp"
-#include "settings/CGameSettings.h"
 
 class GCGameLoadSM : public SettingsMenu
 {
-	public:
-		GCGameLoadSM(struct discHdr *Header);
-		virtual ~GCGameLoadSM();
-	protected:
-		void SetDefaultConfig();
-		void SetOptionNames();
-		void SetOptionValues();
-		int GetMenuInternal();
+public:
+	GCGameLoadSM(struct discHdr *Header);
+	virtual ~GCGameLoadSM();
+protected:
+	void SetDefaultConfig();
+	void SetOptionNames();
+	void SetOptionValues();
+	int GetMenuInternal();
 
-		struct discHdr *Header;
-		GameCFG GameConfig;
-		OptionList GuiOptions;
+	struct discHdr *Header;
+	GameCFG GameConfig;
+	OptionList GuiOptions;
 
-		GuiText * saveBtnTxt;
-		GuiImage * saveBtnImg;
-		GuiButton * saveBtn;
+	GuiText * saveBtnTxt;
+	GuiImage * saveBtnImg;
+	GuiButton * saveBtn;
 };
-
-
-#endif

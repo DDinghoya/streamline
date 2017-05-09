@@ -10,7 +10,7 @@
 #include <vector>
 #include <map>
 
-#include "wstring.hpp"
+#include "utils/wstring.hpp"
 using namespace std;
 
 #define TITLE_ID(x,y)	   (((u64)(x) << 32) | (y))

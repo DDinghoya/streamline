@@ -47,7 +47,7 @@ static GuiImageData *GameCarouselLoadCoverImage(void * Arg)
  * Constructor for the GuiGameCarousel class.
  */
 GuiGameCarousel::GuiGameCarousel(int w, int h, const char *themePath, int offset) :
-	noCover(Resources::GetFile("nocover.png"), Resources::GetFileSize("nocover.png"))
+	noCover(App.Resources.GetFile("nocover.png"), App.Resources.GetFileSize("nocover.png"))
 {
 	width = w;
 	height = h;
@@ -70,8 +70,8 @@ GuiGameCarousel::GuiGameCarousel(int w, int h, const char *themePath, int offset
 	trigMinus = new GuiTrigger;
 	trigMinus->SetButtonOnlyTrigger(-1, WPAD_BUTTON_MINUS | WPAD_CLASSIC_BUTTON_MINUS, PAD_TRIGGER_L);
 
-	imgLeft = Resources::GetImageData("startgame_arrow_left.png");
-	imgRight = Resources::GetImageData("startgame_arrow_right.png");
+	imgLeft = App.Resources.GetImageData("startgame_arrow_left.png");
+	imgRight = App.Resources.GetImageData("startgame_arrow_right.png");
 
 	btnLeftImg = new GuiImage(imgLeft);
 	if (App.Settings.wsprompt == ON) btnLeftImg->SetWidescreen(App.Settings.widescreen);

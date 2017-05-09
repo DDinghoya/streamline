@@ -6,23 +6,23 @@
  * Wii/GameCube controller management
  ***************************************************************************/
 
-#ifndef _INPUT_H_
-#define _INPUT_H_
+#pragma once
 
-#include <gccore.h>
 #include <wiiuse/wpad.h>
+#include "GUI/gui_trigger.h"
 
-#define PI			  3.14159265f
+namespace Input
+{
 #define PADCAL		  50
 #define WUPCCAL		  400
 
-extern int rumbleRequest[4];
+	extern int rumbleRequest[4];
 
-void SetupPads();
-void UpdatePads();
-void ShutoffRumble();
-void DoRumble(int i);
-void SetWPADTimeout();
-bool ControlActivityTimeout(void);
-
-#endif
+	GuiTrigger *GetUserInput(int index);
+	void SetupPads();
+	void UpdatePads();
+	void ShutoffRumble();
+	void DoRumble(int i);
+	void SetWPADTimeout();
+	bool ControlActivityTimeout(void);
+}

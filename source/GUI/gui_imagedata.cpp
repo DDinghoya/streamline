@@ -23,10 +23,11 @@
  *
  * for WiiXplorer 2010
  ***************************************************************************/
-#include "gui.h"
+
+#include "gui_imagedata.h"
 #include "ImageOperations/TextureConverter.h"
 #include "ImageOperations/TplImage.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "utils/ResourceManager.h"
 
 #define ALIGN32(x) (((x) + 31) & ~31)

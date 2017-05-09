@@ -1,5 +1,6 @@
-/boot.dol
+boot.dol
 boot.elf
-/extras/forwarder/boot.dol
-/build
-/extras/*/build
+build/
+.vs/
+.vscode/
+CppProperties.json

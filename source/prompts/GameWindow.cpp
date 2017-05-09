@@ -7,7 +7,7 @@
 #include "usbloader/AlternateDOLOffsets.h"
 #include "GameCube/GCGames.h"
 #include "themes/CTheme.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "settings/menus/GameSettingsMenu.hpp"
 #include "App.h"
 #include "prompts/PromptWindows.h"
@@ -57,12 +57,12 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	if (gameIdx == gameList.size())
 		dvdheader = header;
 
-	dialogBox = Resources::GetImageData(App.Settings.widescreen ? "wdialogue_box_startgame.png" : "dialogue_box_startgame.png");
-	btnOutline = Resources::GetImageData("button_dialogue_box.png");
-	imgFavorite = Resources::GetImageData("favorite.png");
-	imgNotFavorite = Resources::GetImageData("not_favorite.png");
-	imgLeft = Resources::GetImageData("startgame_arrow_left.png");
-	imgRight = Resources::GetImageData("startgame_arrow_right.png");
+	dialogBox = App.Resources.GetImageData(App.Settings.widescreen ? "wdialogue_box_startgame.png" : "dialogue_box_startgame.png");
+	btnOutline = App.Resources.GetImageData("button_dialogue_box.png");
+	imgFavorite = App.Resources.GetImageData("favorite.png");
+	imgNotFavorite = App.Resources.GetImageData("not_favorite.png");
+	imgLeft = App.Resources.GetImageData("startgame_arrow_left.png");
+	imgRight = App.Resources.GetImageData("startgame_arrow_right.png");
 
 	trigA = new GuiTrigger;
 	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
@@ -315,7 +315,7 @@ void GameWindow::LoadGameSound(const struct discHdr * header)
 	else if ((header->type == TYPE_GAME_GC_IMG) || (header->type == TYPE_GAME_GC_DISC) || (header->type == TYPE_GAME_GC_EXTRACTED))
 	{
 		//! on game cube load the default sound
-		gameSound = new GuiSound(Resources::GetFile("gc_banner.ogg"), Resources::GetFileSize("gc_banner.ogg"), App.Settings.gamesoundvolume);
+		gameSound = new GuiSound(App.Resources.GetFile("gc_banner.ogg"), App.Resources.GetFileSize("gc_banner.ogg"), App.Settings.gamesoundvolume);
 	}
 	if (gameSound)
 	{
@@ -359,7 +359,7 @@ void GameWindow::LoadDiscImage(const u8 * id)
 	if (!diskImgData->GetImage())
 	{
 		delete diskImgData;
-		diskImgData = Resources::GetImageData("nodisc.png");
+		diskImgData = App.Resources.GetImageData("nodisc.png");
 	}
 }
 

@@ -2,8 +2,8 @@
 	<app version="1">
 		<name>USB Loader GX</name>
 		<coder>USB Loader GX Team</coder>
-		<version>3.1.1.1278-master</version>
-		<release_date>20170501003117</release_date>
+		<version>3.1.1.1279-master</version>
+		<release_date>20170509130642</release_date>
 		<!--   // remove this line to enable arguments
 		<arguments>
 				<arg>--ios=250</arg>

@@ -288,8 +288,8 @@ static void ProgressWindow(const char *title, const char *msg1, const char *msg2
 	promptWindow.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	promptWindow.SetPosition(0, -10);
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiImageData dialogBox(Resources::GetFile("dialogue_box.png"), Resources::GetFileSize("dialogue_box.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
+	GuiImageData dialogBox(App.Resources.GetFile("dialogue_box.png"), App.Resources.GetFileSize("dialogue_box.png"));
 
 	GuiTrigger trigA;
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
@@ -300,7 +300,7 @@ static void ProgressWindow(const char *title, const char *msg1, const char *msg2
 		dialogBoxImg.SetWidescreen(App.Settings.widescreen);
 	}
 
-	GuiImageData progressbarOutline(Resources::GetFile("progressbar_outline.png"), Resources::GetFileSize("progressbar_outline.png"));
+	GuiImageData progressbarOutline(App.Resources.GetFile("progressbar_outline.png"), App.Resources.GetFileSize("progressbar_outline.png"));
 
 	GuiImage progressbarOutlineImg(&progressbarOutline);
 	if (App.Settings.wsprompt)
@@ -310,13 +310,13 @@ static void ProgressWindow(const char *title, const char *msg1, const char *msg2
 	progressbarOutlineImg.SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 	progressbarOutlineImg.SetPosition(35, ProgressPosY);
 
-	GuiImageData progressbarEmpty(Resources::GetFile("progressbar_empty.png"), Resources::GetFileSize("button_dialogue_box.png"));
+	GuiImageData progressbarEmpty(App.Resources.GetFile("progressbar_empty.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
 	GuiImage progressbarEmptyImg(&progressbarEmpty);
 	progressbarEmptyImg.SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 	progressbarEmptyImg.SetPosition(35, ProgressPosY);
 	progressbarEmptyImg.SetTileHorizontal(100);
 
-	GuiImageData progressbar(Resources::GetFile("progressbar.png"), Resources::GetFileSize("progressbar.png"));
+	GuiImageData progressbar(App.Resources.GetFile("progressbar.png"), App.Resources.GetFileSize("progressbar.png"));
 	GuiImage progressbarImg(&progressbar);
 	progressbarImg.SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 	progressbarImg.SetPosition(35, ProgressPosY);

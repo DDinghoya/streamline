@@ -24,8 +24,8 @@
 #include "gui_checkboxbrowser.hpp"
 #include "themes/Resources.h"
 #include "themes/gettheme.h"
-#include "wstring.hpp"
-
+#include "utils/wstring.hpp"
+#include "App.h"
 
 GuiCheckboxBrowser::GuiCheckboxBrowser(int w, int h, int s)
 	: scrollBar(h-10)
@@ -44,7 +44,7 @@ GuiCheckboxBrowser::GuiCheckboxBrowser(int w, int h, int s)
 	scrollBar.SetButtonScroll(WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B);
 	scrollBar.listChanged.connect(this, &GuiCheckboxBrowser::onListChange);
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
-	markImgData = Resources::GetImageData("checkBoxSelection.png");
+	markImgData = App.Resources.GetImageData("checkBoxSelection.png");
 	markImg = new GuiImage(markImgData);
 	markImg->SetParent(this);
 }

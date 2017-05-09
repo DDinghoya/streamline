@@ -18,7 +18,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include "GCGames.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "App.h"
 #include "prompts/GCDeleteMenu.h"
 #include "prompts/PromptWindows.h"

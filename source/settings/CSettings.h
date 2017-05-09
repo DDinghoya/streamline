@@ -120,7 +120,6 @@ public:
 	short marknewtitles;
 	short InstallToDir;
 	short GameSplit;
-	short PlaylogUpdate;
 	short ShowFreeSpace;
 	short HomeMenu;
 	short MultiplePartitions;

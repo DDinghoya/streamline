@@ -23,7 +23,7 @@
  ***************************************************************************/
 #include <unistd.h>
 #include "WDMMenu.hpp"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "menu/menus.h"
 #include "themes/CTheme.h"
 #include "language/gettext.h"
@@ -31,8 +31,9 @@
 #include "libwbfs/libwbfs.h"
 #include "libwbfs/wiidisc.h"
 #include "usbloader/fstfile.h"
-#include "settings/GameTitles.h"
+#include "App.h"
 #include "gecko.h"
+#include "video.h"
 
 u32 WDMMenu::AlternateDolOffset = 0;
 u32 WDMMenu::AlternateDolParameter = 0;
@@ -42,7 +43,7 @@ WDMMenu::WDMMenu(const struct discHdr * header)
 {
 	Options = new OptionList;
 
-	btnOutline = Resources::GetImageData("button_dialogue_box.png");
+	btnOutline = App.Resources.GetImageData("button_dialogue_box.png");
 
 	trigA = new GuiTrigger();
 	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);

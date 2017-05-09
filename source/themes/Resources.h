@@ -1,6 +1,6 @@
-#ifndef RECOURCES_H_
-#define RECOURCES_H_
+#pragma once
 
+#include <gctypes.h>
 #include "GUI/gui_imagedata.h"
 
 typedef struct _RecourceFile
@@ -12,17 +12,15 @@ typedef struct _RecourceFile
 	u32		 CustomFileSize;
 } RecourceFile;
 
-class Resources
+class CResources
 {
-	public:
-		static void Clear();
-		static bool LoadFiles(const char * path);
-		static const u8 * GetFile(const char * filename);
-		static u32 GetFileSize(const char * filename);
-		static GuiImageData * GetImageData(const char * filename);
+public:
+	void Clear();
+	bool LoadFiles(const char * path);
+	const u8 * GetFile(const char * filename);
+	u32 GetFileSize(const char * filename);
+	GuiImageData * GetImageData(const char * filename);
 
-	private:
-		static RecourceFile RecourceFiles[];
+private:
+	static RecourceFile RecourceFiles[];
 };
-
-#endif

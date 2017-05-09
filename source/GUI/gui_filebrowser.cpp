@@ -29,14 +29,14 @@ GuiFileBrowser::GuiFileBrowser(int w, int h)
 	trigA = new GuiTrigger;
 	trigA->SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 
-	bgFileSelection = new GuiImageData(Resources::GetFile("bg_browser.png"), Resources::GetFileSize("bg_browser.png"));
+	bgFileSelection = new GuiImageData(App.Resources.GetFile("bg_browser.png"), App.Resources.GetFileSize("bg_browser.png"));
 	bgFileSelectionImg = new GuiImage(bgFileSelection);
 	bgFileSelectionImg->SetParent(this);
 	bgFileSelectionImg->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 
-	bgFileSelectionEntry = Resources::GetImageData("bg_browser_selection.png");
+	bgFileSelectionEntry = App.Resources.GetImageData("bg_browser_selection.png");
 
-	fileFolder = Resources::GetImageData("icon_folder.png");
+	fileFolder = App.Resources.GetImageData("icon_folder.png");
 
 	scrollBar.SetParent(this);
 	scrollBar.SetAlignment(ALIGN_RIGHT, ALIGN_TOP);

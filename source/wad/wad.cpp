@@ -19,7 +19,7 @@
 #include <malloc.h>
 #include <string.h>
 #include "prompts/ProgressWindow.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "language/gettext.h"
 #include "utils/ShowError.h"
 #include "utils/tools.h"

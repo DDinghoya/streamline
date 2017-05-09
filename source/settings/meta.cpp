@@ -21,7 +21,7 @@ misrepresented as being the original software.
 distribution.
 */
 #include "homebrewboot/HomebrewXML.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "App.h"
 #include "Version.h"
 

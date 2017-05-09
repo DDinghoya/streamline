@@ -4,6 +4,7 @@
 #include "gui.h"
 #include "gui_scrollbar.hpp"
 #include <vector>
+#include "OptionList.hpp"
 
 //!Display a list of menu options
 class GuiOptionBrowser: public GuiElement, public sigslot::has_slots<>

@@ -599,7 +599,7 @@ extern const u32 custom_banner_bnr_size;
 extern const u8 stub_bin[];
 extern const u32 stub_bin_size;
 
-RecourceFile Resources::RecourceFiles[] =
+RecourceFile CResources::RecourceFiles[] =
 {
 	{"abcIcon.png", abcIcon_png, abcIcon_png_size, NULL, 0},
 	{"add.png", add_png, add_png_size, NULL, 0},

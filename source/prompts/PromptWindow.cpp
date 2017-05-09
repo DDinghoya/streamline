@@ -33,8 +33,8 @@ PromptWindow::PromptWindow(const char *title, const char *msg)
 	SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	SetPosition(0, -10);
 
-	btnOutline = Resources::GetImageData("button_dialogue_box.png");
-	dialogBox = Resources::GetImageData("dialogue_box.png");
+	btnOutline = App.Resources.GetImageData("button_dialogue_box.png");
+	dialogBox = App.Resources.GetImageData("dialogue_box.png");
 
 	width = dialogBox->GetWidth();
 	height = dialogBox->GetHeight();

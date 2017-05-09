@@ -21,10 +21,11 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
 #include <unistd.h>
 #include "GameSettingsMenu.hpp"
 #include "themes/CTheme.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "prompts/PromptWindows.h"
 #include "prompts/ProgressWindow.h"
 #include "prompts/CategorySelectPrompt.hpp"
@@ -57,7 +58,7 @@ int GameSettingsMenu::Execute(GameBrowseMenu *parent, struct discHdr * header)
 
 	int returnMenu = MENU_NONE;
 
-	while((returnMenu = Menu->MainLoop()) == MENU_NONE);
+	while ((returnMenu = Menu->MainLoop()) == MENU_NONE);
 
 	delete Menu;
 
@@ -68,34 +69,34 @@ void GameSettingsMenu::SetupMainButtons()
 {
 	int pos = 0;
 
-	SetMainButton(pos++, tr( "Game Load" ), MainButtonImgData, MainButtonImgOverData);
-	SetMainButton(pos++, tr( "Ocarina" ), MainButtonImgData, MainButtonImgOverData);
-	SetMainButton(pos++, tr( "Categories" ), MainButtonImgData, MainButtonImgOverData);
-	if(		DiscHeader->type == TYPE_GAME_WII_IMG
-		||	DiscHeader->type == TYPE_GAME_WII_DISC
-		||	DiscHeader->type == TYPE_GAME_NANDCHAN)
+	SetMainButton(pos++, tr("Game Load"), MainButtonImgData, MainButtonImgOverData);
+	SetMainButton(pos++, tr("Ocarina"), MainButtonImgData, MainButtonImgOverData);
+	SetMainButton(pos++, tr("Categories"), MainButtonImgData, MainButtonImgOverData);
+	if (DiscHeader->type == TYPE_GAME_WII_IMG
+		|| DiscHeader->type == TYPE_GAME_WII_DISC
+		|| DiscHeader->type == TYPE_GAME_NANDCHAN)
 	{
-		SetMainButton(pos++, tr( "Extract Save to EmuNand" ), MainButtonImgData, MainButtonImgOverData);
+		SetMainButton(pos++, tr("Extract Save to EmuNand"), MainButtonImgData, MainButtonImgOverData);
 	}
-	SetMainButton(pos++, tr( "Default Gamesettings" ), MainButtonImgData, MainButtonImgOverData);
-	SetMainButton(pos++, tr( "Uninstall Menu" ), MainButtonImgData, MainButtonImgOverData);
+	SetMainButton(pos++, tr("Default Gamesettings"), MainButtonImgData, MainButtonImgOverData);
+	SetMainButton(pos++, tr("Uninstall Menu"), MainButtonImgData, MainButtonImgOverData);
 }
 
 void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 {
-	if(CurrentMenu)
+	if (CurrentMenu)
 		return;
 
 	int Idx = 0;
 
 	//! Game Load
-	if(menuNr == Idx++)
+	if (menuNr == Idx++)
 	{
 		HideMenu();
 		ResumeGui();
-		if(   DiscHeader->type == TYPE_GAME_GC_IMG
-		   || DiscHeader->type == TYPE_GAME_GC_DISC
-		   || DiscHeader->type == TYPE_GAME_GC_EXTRACTED)
+		if (DiscHeader->type == TYPE_GAME_GC_IMG
+			|| DiscHeader->type == TYPE_GAME_GC_DISC
+			|| DiscHeader->type == TYPE_GAME_GC_EXTRACTED)
 		{
 			CurrentMenu = new GCGameLoadSM(DiscHeader);
 		}
@@ -107,19 +108,19 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 	}
 
 	//! Ocarina
-	else if(menuNr == Idx++)
+	else if (menuNr == Idx++)
 	{
 		char ID[7];
-		snprintf(ID, sizeof(ID), "%s", (char *) DiscHeader->id);
+		snprintf(ID, sizeof(ID), "%s", (char *)DiscHeader->id);
 		CheatMenu(ID);
 	}
 
 	//! Categories
-	else if(menuNr == Idx++)
+	else if (menuNr == Idx++)
 	{
 		if (!App.Settings.godmode && (App.Settings.ParentalBlocks & BLOCK_CATEGORIES_MENU))
 		{
-			WindowPrompt(tr( "Permission denied." ), tr( "Console must be unlocked for this option." ), tr( "OK" ));
+			WindowPrompt(tr("Permission denied."), tr("Console must be unlocked for this option."), tr("OK"));
 			return;
 		}
 		HideMenu();
@@ -135,9 +136,9 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 		promptMenu.Show();
 
 		promptMenu.SetEffect(EFFECT_FADE, -20);
-		while(promptMenu.GetEffect() > 0) usleep(100);
+		while (promptMenu.GetEffect() > 0) usleep(100);
 		App.MainWindow->Remove(&promptMenu);
-		if(promptMenu.categoriesChanged())
+		if (promptMenu.categoriesChanged())
 		{
 			gameList.FilterList();
 			browserMenu->ReloadBrowser();
@@ -148,19 +149,19 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 	}
 
 	//! Extract Save to EmuNand
-	else if(	(DiscHeader->type == TYPE_GAME_WII_IMG
-			||	 DiscHeader->type == TYPE_GAME_WII_DISC
-			||	 DiscHeader->type == TYPE_GAME_NANDCHAN)
-			&&	menuNr == Idx++)
+	else if ((DiscHeader->type == TYPE_GAME_WII_IMG
+		|| DiscHeader->type == TYPE_GAME_WII_DISC
+		|| DiscHeader->type == TYPE_GAME_NANDCHAN)
+		&& menuNr == Idx++)
 	{
-		int choice = WindowPrompt(tr( "Do you want to extract the save game?" ), tr("The save game will be extracted to your emu nand path."), tr( "Yes" ), tr( "Cancel" ));
+		int choice = WindowPrompt(tr("Do you want to extract the save game?"), tr("The save game will be extracted to your emu nand path."), tr("Yes"), tr("Cancel"));
 		if (choice == 1)
 		{
 			char filePath[512];
 			char nandPath[512];
-			if(DiscHeader->tid != 0) //! Channels
+			if (DiscHeader->tid != 0) //! Channels
 			{
-				snprintf(nandPath, sizeof(nandPath), "/title/%08x/%08x/data", (unsigned int) (DiscHeader->tid >> 32), (unsigned int) DiscHeader->tid);
+				snprintf(nandPath, sizeof(nandPath), "/title/%08x/%08x/data", (unsigned int)(DiscHeader->tid >> 32), (unsigned int)DiscHeader->tid);
 				snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuChanPath, nandPath);
 			}
 			else //! Wii games
@@ -173,7 +174,7 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 			StartProgress(tr("Extracting file:"), 0, 0, true, false);
 			int ret = NandTitle::ExtractDir(nandPath, filePath);
 
-			if(ret < 0) //! Games with installable channels: Mario Kart, Wii Fit, etc.
+			if (ret < 0) //! Games with installable channels: Mario Kart, Wii Fit, etc.
 			{
 				snprintf(nandPath, sizeof(nandPath), "/title/00010004/%02x%02x%02x%02x", DiscHeader->id[0], DiscHeader->id[1], DiscHeader->id[2], DiscHeader->id[3]);
 				snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuPath, nandPath);
@@ -183,13 +184,13 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 			//! extract the Mii file if not yet done
 			snprintf(nandPath, sizeof(nandPath), "/shared2/menu/FaceLib/RFL_DB.dat");
 			snprintf(filePath, sizeof(filePath), "%s%s", (DiscHeader->tid != 0) ? App.Settings.NandEmuChanPath : App.Settings.NandEmuPath, nandPath);
-			if(!CheckFile(filePath))
+			if (!CheckFile(filePath))
 				NandTitle::ExtractDir(nandPath, filePath);
 
 			ProgressStop();
 			ProgressCancelEnable(false);
 
-			if(ret < 0)
+			if (ret < 0)
 				WindowPrompt(tr("Error:"), tr("Failed to extract all files. Savegame might not exist."), tr("OK"));
 			else
 				WindowPrompt(tr("Files extracted successfully."), 0, tr("OK"));
@@ -197,9 +198,9 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 	}
 
 	//! Default Gamesettings
-	else if(menuNr == Idx++)
+	else if (menuNr == Idx++)
 	{
-		int choice = WindowPrompt(tr( "Are you sure?" ), 0, tr( "Yes" ), tr( "Cancel" ));
+		int choice = WindowPrompt(tr("Are you sure?"), 0, tr("Yes"), tr("Cancel"));
 		if (choice == 1)
 		{
 			App.Library.GameSettings.Remove(DiscHeader->id);
@@ -208,7 +209,7 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 	}
 
 	//! Uninstall Menu
-	else if(menuNr == Idx++)
+	else if (menuNr == Idx++)
 	{
 		HideMenu();
 		ResumeGui();

@@ -18,11 +18,9 @@
 #include "GUI/gui_numpad.h"
 #include "GUI/gui_diskcover.h"
 #include "GUI/Text.hpp"
-#include "settings/CGameStatistics.h"
-#include "settings/GameTitles.h"
-#include "network/networkops.h"
-#include "network/update.h"
-#include "network/http.h"
+#include "Net/networkops.h"
+#include "Net/update.h"
+#include "Net/http.h"
 #include "prompts/PromptWindows.h"
 #include "prompts/PromptWindow.hpp"
 #include "prompts/gameinfo.h"
@@ -30,8 +28,9 @@
 #include "utils/StringTools.h"
 #include "utils/tools.h"
 #include "mload/mload.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "menu/menus.h"
+#include "App.h"
 #include "sys.h"
 #include "wpad.h"
 #include "wad/wad.h"
@@ -42,6 +41,8 @@
 #include "system/IosLoader.h"
 #include "gecko.h"
 #include "lstub.h"
+#include "video.h"
+#include "input.h"
 
 static const char * DMLVersions[] =
 {
@@ -99,7 +100,7 @@ int OnScreenNumpad(char * var, u32 maxlen)
 
 	GuiNumpad numpad(var, maxlen);
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
 
 	GuiTrigger trigA;
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
@@ -179,7 +180,7 @@ int OnScreenKeyboard(char * var, u32 maxlen, int min, bool hide)
 	GuiKeyboard keyboard(var, maxlen, min, App.Settings.keyset);
 	keyboard.SetVisibleText(!hide);
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
 
 	GuiTrigger trigA;
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
@@ -250,7 +251,7 @@ void WindowCredits()
 
 	bgMusic->Pause();
 
-	creditsMusic = new GuiSound(Resources::GetFile("credits_music.ogg"), Resources::GetFileSize("credits_music.ogg"), 55);
+	creditsMusic = new GuiSound(App.Resources.GetFile("credits_music.ogg"), App.Resources.GetFileSize("credits_music.ogg"), 55);
 	creditsMusic->SetVolume(60);
 	creditsMusic->SetLoop(1);
 	creditsMusic->Play();
@@ -273,12 +274,12 @@ void WindowCredits()
 	GuiWindow creditsWindowBox(580, 448);
 	creditsWindowBox.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 
-	GuiImageData creditsBox(Resources::GetFile("credits_bg.png"), Resources::GetFileSize("credits_bg.png"));
+	GuiImageData creditsBox(App.Resources.GetFile("credits_bg.png"), App.Resources.GetFileSize("credits_bg.png"));
 	GuiImage creditsBoxImg(&creditsBox);
 	creditsBoxImg.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	creditsWindowBox.Append(&creditsBoxImg);
 
-	GuiImageData star(Resources::GetFile("little_star.png"), Resources::GetFileSize("little_star.png"));
+	GuiImageData star(App.Resources.GetFile("little_star.png"), App.Resources.GetFileSize("little_star.png"));
 	GuiImage starImg(&star);
 	starImg.SetWidescreen(App.Settings.widescreen); //added
 	starImg.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
@@ -286,8 +287,8 @@ void WindowCredits()
 
 	std::vector<GuiText *> txt;
 
-	const u8 *creditsFont = Resources::GetFile("font.ttf");
-	u32 creditsFontSize = Resources::GetFileSize("font.ttf");
+	const u8 *creditsFont = App.Resources.GetFile("font.ttf");
+	u32 creditsFontSize = App.Resources.GetFileSize("font.ttf");
 
 	GuiText * currentTxt = new GuiText(tr( "Credits" ), 28, ( GXColor ) {255, 255, 255, 255});
 	currentTxt->SetAlignment(ALIGN_CENTER, ALIGN_TOP);
@@ -592,7 +593,7 @@ int WindowScreensaver()
 	/* initialize random seed: */
 	srand(time(NULL));
 
-	GuiImageData GXlogo(Resources::GetFile("gxlogo.png"), Resources::GetFileSize("gxlogo.png"));//uncomment for themable screensaver
+	GuiImageData GXlogo(App.Resources.GetFile("gxlogo.png"), App.Resources.GetFileSize("gxlogo.png"));//uncomment for themable screensaver
 	//GuiImageData GXlogo(gxlogo_png);//comment for themable screensaver
 	GuiImage GXlogoImg(&GXlogo);
 	GXlogoImg.SetPosition(172, 152);
@@ -618,7 +619,7 @@ int WindowScreensaver()
 		if (reset)
 			Sys_Reboot();
 
-		if(!ControlActivityTimeout())
+		if(!Input::ControlActivityTimeout())
 			break;
 
 			/* Set random position */
@@ -710,13 +711,13 @@ int WindowExitPrompt()
 	bgMusic->Pause();
 
 	GuiSound * homein = NULL;
-	homein = new GuiSound(Resources::GetFile("menuin.ogg"), Resources::GetFileSize("menuin.ogg"), App.Settings.sfxvolume);
+	homein = new GuiSound(App.Resources.GetFile("menuin.ogg"), App.Resources.GetFileSize("menuin.ogg"), App.Settings.sfxvolume);
 	homein->SetVolume(App.Settings.sfxvolume);
 	homein->SetLoop(0);
 	homein->Play();
 
 	GuiSound * homeout = NULL;
-	homeout = new GuiSound(Resources::GetFile("menuout.ogg"), Resources::GetFileSize("menuout.ogg"), App.Settings.sfxvolume);
+	homeout = new GuiSound(App.Resources.GetFile("menuout.ogg"), App.Resources.GetFileSize("menuout.ogg"), App.Settings.sfxvolume);
 	homeout->SetVolume(App.Settings.sfxvolume);
 	homeout->SetLoop(0);
 
@@ -729,18 +730,18 @@ int WindowExitPrompt()
 	GuiWindow promptWindow(640, 480);
 	promptWindow.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	promptWindow.SetPosition(0, 0);
-	GuiImageData top(Resources::GetFile("exit_top.png"), Resources::GetFileSize("exit_top.png"));
-	GuiImageData topOver(Resources::GetFile("exit_top_over.png"), Resources::GetFileSize("exit_top_over.png"));
-	GuiImageData bottom(Resources::GetFile("exit_bottom.png"), Resources::GetFileSize("exit_bottom.png"));
-	GuiImageData bottomOver(Resources::GetFile("exit_bottom_over.png"), Resources::GetFileSize("exit_bottom_over.png"));
-	GuiImageData button(Resources::GetFile("exit_button.png"), Resources::GetFileSize("exit_button.png"));
-	GuiImageData wiimote(Resources::GetFile("wiimote.png"), Resources::GetFileSize("wiimote.png"));
-	GuiImageData close(Resources::GetFile("closebutton.png"), Resources::GetFileSize("closebutton.png"));
+	GuiImageData top(App.Resources.GetFile("exit_top.png"), App.Resources.GetFileSize("exit_top.png"));
+	GuiImageData topOver(App.Resources.GetFile("exit_top_over.png"), App.Resources.GetFileSize("exit_top_over.png"));
+	GuiImageData bottom(App.Resources.GetFile("exit_bottom.png"), App.Resources.GetFileSize("exit_bottom.png"));
+	GuiImageData bottomOver(App.Resources.GetFile("exit_bottom_over.png"), App.Resources.GetFileSize("exit_bottom_over.png"));
+	GuiImageData button(App.Resources.GetFile("exit_button.png"), App.Resources.GetFileSize("exit_button.png"));
+	GuiImageData wiimote(App.Resources.GetFile("wiimote.png"), App.Resources.GetFileSize("wiimote.png"));
+	GuiImageData close(App.Resources.GetFile("closebutton.png"), App.Resources.GetFileSize("closebutton.png"));
 
-	GuiImageData battery(Resources::GetFile("battery_white.png"), Resources::GetFileSize("battery_white.png"));
-	GuiImageData batteryBar(Resources::GetFile("battery_bar_white.png"), Resources::GetFileSize("battery_bar_white.png"));
-	GuiImageData batteryRed(Resources::GetFile("battery_red.png"), Resources::GetFileSize("battery_red.png"));
-	GuiImageData batteryBarRed(Resources::GetFile("battery_bar_red.png"), Resources::GetFileSize("battery_bar_red.png"));
+	GuiImageData battery(App.Resources.GetFile("battery_white.png"), App.Resources.GetFileSize("battery_white.png"));
+	GuiImageData batteryBar(App.Resources.GetFile("battery_bar_white.png"), App.Resources.GetFileSize("battery_bar_white.png"));
+	GuiImageData batteryRed(App.Resources.GetFile("battery_red.png"), App.Resources.GetFileSize("battery_red.png"));
+	GuiImageData batteryBarRed(App.Resources.GetFile("battery_bar_red.png"), App.Resources.GetFileSize("battery_bar_red.png"));
 
 	int i = 0, ret = 0, level;
 	char txt[3];
@@ -895,7 +896,7 @@ int WindowExitPrompt()
 		{
 			if (WPAD_Probe(i, NULL) == WPAD_ERR_NONE) // controller connected
 			{
-				level = (userInput[i].wpad.battery_level / 100.0) * 4;
+				level = (Input::GetUserInput(i)->wpad.battery_level / 100.0) * 4;
 				if (level > 4) level = 4;
 
 				if (level <= 1)
@@ -1054,8 +1055,8 @@ int DiscWait(const char *title, const char *msg, const char *btn1Label, const ch
 	promptWindow.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	promptWindow.SetPosition(0, -10);
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiImageData dialogBox(Resources::GetFile("dialogue_box.png"), Resources::GetFileSize("dialogue_box.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
+	GuiImageData dialogBox(App.Resources.GetFile("dialogue_box.png"), App.Resources.GetFileSize("dialogue_box.png"));
 	GuiTrigger trigA;
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 	GuiTrigger trigB;
@@ -1204,8 +1205,8 @@ int FormatingPartition(const char *title, int part_num)
 	promptWindow.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	promptWindow.SetPosition(0, -10);
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiImageData dialogBox(Resources::GetFile("dialogue_box.png"), Resources::GetFileSize("dialogue_box.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
+	GuiImageData dialogBox(App.Resources.GetFile("dialogue_box.png"), App.Resources.GetFileSize("dialogue_box.png"));
 
 	GuiTrigger trigA;
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
@@ -1276,8 +1277,8 @@ bool NetworkInitPrompt()
 	promptWindow.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	promptWindow.SetPosition(0, -10);
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiImageData dialogBox(Resources::GetFile("dialogue_box.png"), Resources::GetFileSize("dialogue_box.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
+	GuiImageData dialogBox(App.Resources.GetFile("dialogue_box.png"), App.Resources.GetFileSize("dialogue_box.png"));
 	GuiTrigger trigA;
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 
@@ -1377,8 +1378,8 @@ int CodeDownload(const char *id)
 	promptWindow.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	promptWindow.SetPosition(0, -10);
 
-	GuiImageData btnOutline(Resources::GetFile("button_dialogue_box.png"), Resources::GetFileSize("button_dialogue_box.png"));
-	GuiImageData dialogBox(Resources::GetFile("dialogue_box.png"), Resources::GetFileSize("dialogue_box.png"));
+	GuiImageData btnOutline(App.Resources.GetFile("button_dialogue_box.png"), App.Resources.GetFileSize("button_dialogue_box.png"));
+	GuiImageData dialogBox(App.Resources.GetFile("dialogue_box.png"), App.Resources.GetFileSize("dialogue_box.png"));
 	GuiTrigger trigA;
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 

@@ -17,10 +17,10 @@
 #include "GuiBannerGrid.h"
 #include "themes/CTheme.h"
 #include "App.h"
-#include "settings/newtitles.h"
 #include "SystemMenu/SystemMenuResources.h"
 #include "usbloader/GameList.h"
 #include "gecko.h"
+#include "video.h"
 
 //! some math to get the row and column from channel idx
 static inline int Idx2Row(int sIdx)
@@ -75,9 +75,9 @@ GuiBannerGrid::GuiBannerGrid(int listOffset)
 	trigPlus.SetButtonOnlyTrigger(-1, WPAD_BUTTON_PLUS | WPAD_CLASSIC_BUTTON_PLUS, PAD_TRIGGER_R);
 	trigMinus.SetButtonOnlyTrigger(-1, WPAD_BUTTON_MINUS | WPAD_CLASSIC_BUTTON_MINUS, PAD_TRIGGER_L);
 
-	imgLeft = Resources::GetImageData("startgame_arrow_left.png");
-	imgRight = Resources::GetImageData("startgame_arrow_right.png");
-	imgNewData = Resources::GetImageData("new.png");
+	imgLeft = App.Resources.GetImageData("startgame_arrow_left.png");
+	imgRight = App.Resources.GetImageData("startgame_arrow_right.png");
+	imgNewData = App.Resources.GetImageData("new.png");
 
 	btnLeftImg = new GuiImage(imgLeft);
 	if (App.Settings.wsprompt) btnLeftImg->SetWidescreen(App.Settings.widescreen);
@@ -552,7 +552,7 @@ void GuiBannerGrid::Draw()
 			gridBtn[i]->ResetState();
 
 		if (!AnimationRunning && App.Settings.marknewtitles && (pageNo * 12 + i) < gameList.size()
-			&& NewTitles::Instance()->IsNew(gameList[pageNo * 12 + i]->id))
+			&& App.Library.NewTitles.IsNew(gameList[pageNo * 12 + i]->id))
 				gridBtn[i]->Draw();
 
 		gridBtn[i]->DrawTooltip();

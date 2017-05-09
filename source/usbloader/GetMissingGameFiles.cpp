@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "usbloader/GameList.h"
-#include "wstring.hpp"
+#include "utils/wstring.hpp"
 #include "gecko.h"
 
 extern struct discHdr *dvdheader;

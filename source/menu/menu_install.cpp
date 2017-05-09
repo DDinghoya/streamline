@@ -183,7 +183,7 @@ int MenuGCInstall()
 
 	gameList.FilterList();
 	bgMusic->Pause();
-	GuiSound instsuccess(Resources::GetFile("success.ogg"), Resources::GetFileSize("success.ogg"), App.Settings.sfxvolume);
+	GuiSound instsuccess(App.Resources.GetFile("success.ogg"), App.Resources.GetFileSize("success.ogg"), App.Settings.sfxvolume);
 	instsuccess.SetVolume(App.Settings.sfxvolume);
 	instsuccess.SetLoop(0);
 	instsuccess.Play();
@@ -290,7 +290,7 @@ int MenuInstall()
 				gameList.ReadGameList(); //get the entries again
 				gameList.FilterList();
 				bgMusic->Pause();
-				GuiSound instsuccess(Resources::GetFile("success.ogg"), Resources::GetFileSize("success.ogg"), App.Settings.sfxvolume);
+				GuiSound instsuccess(App.Resources.GetFile("success.ogg"), App.Resources.GetFileSize("success.ogg"), App.Settings.sfxvolume);
 				instsuccess.SetVolume(App.Settings.sfxvolume);
 				instsuccess.SetLoop(0);
 				instsuccess.Play();

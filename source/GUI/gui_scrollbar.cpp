@@ -21,10 +21,13 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+
+#include <math.h>
 #include "themes/Resources.h"
 #include "menu/menus.h"
 #include "gui_scrollbar.hpp"
 #include "utils/tools.h"
+#include "input.h"
 
 GuiScrollbar::GuiScrollbar(int h, u8 m)
 {
@@ -43,27 +46,27 @@ GuiScrollbar::GuiScrollbar(int h, u8 m)
 	Mode = m;
 	listChanged.connect(this, &GuiScrollbar::setScrollboxPosition);
 
-	scrollbarTop = Resources::GetImageData("scrollBarTop.png");
-	scrollbarBottom = Resources::GetImageData("scrollBarBottom.png");
-	scrollbarTile = Resources::GetImageData("scrollBarTile.png");
-	arrowDown = Resources::GetImageData("scrollbar_arrowdown.png");
-	arrowDownOver = Resources::GetImageData("scrollbar_arrowdown.png");
-	arrowUp = Resources::GetImageData("scrollbar_arrowup.png");
-	arrowUpOver = Resources::GetImageData("scrollbar_arrowup.png");
-	scrollbarBox = Resources::GetImageData("scrollbar_box.png");
-	scrollbarBoxOver = Resources::GetImageData("scrollbar_box.png");
-	oneButtonScrollImgData = Resources::GetImageData("oneButtonScroll.png");
+	scrollbarTop = App.Resources.GetImageData("scrollBarTop.png");
+	scrollbarBottom = App.Resources.GetImageData("scrollBarBottom.png");
+	scrollbarTile = App.Resources.GetImageData("scrollBarTile.png");
+	arrowDown = App.Resources.GetImageData("scrollbar_arrowdown.png");
+	arrowDownOver = App.Resources.GetImageData("scrollbar_arrowdown.png");
+	arrowUp = App.Resources.GetImageData("scrollbar_arrowup.png");
+	arrowUpOver = App.Resources.GetImageData("scrollbar_arrowup.png");
+	scrollbarBox = App.Resources.GetImageData("scrollbar_box.png");
+	scrollbarBoxOver = App.Resources.GetImageData("scrollbar_box.png");
+	oneButtonScrollImgData = App.Resources.GetImageData("oneButtonScroll.png");
 
 	height = h;
 	width = MAX(scrollbarBox->GetWidth(), scrollbarTile->GetWidth());
 
 	MinHeight = arrowUp->GetHeight();
-	MaxHeight = height-scrollbarBox->GetHeight()-arrowDown->GetHeight();
+	MaxHeight = height - scrollbarBox->GetHeight() - arrowDown->GetHeight();
 
 	trigHeldA = new GuiTrigger;
 	trigHeldA->SetHeldTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
 
-	int Tiles = (height-scrollbarTop->GetHeight()-scrollbarBottom->GetHeight())/4;
+	int Tiles = (height - scrollbarTop->GetHeight() - scrollbarBottom->GetHeight()) / 4;
 	int PositionY = 0;
 	ButtonPositionX = 0;
 
@@ -164,27 +167,27 @@ GuiScrollbar::~GuiScrollbar()
 
 void GuiScrollbar::ScrollOneUp()
 {
-	if(Mode == ICONMODE)
+	if (Mode == ICONMODE)
 	{
-		if(SelInd+SelItem-RowSize >= 0)
+		if (SelInd + SelItem - RowSize >= 0)
 		{
-			SelItem = SelItem-RowSize;
-			if(SelItem < 0)
+			SelItem = SelItem - RowSize;
+			if (SelItem < 0)
 			{
 				// move list up by 1
-				SelInd = SelInd-RowSize;
-				SelItem = SelItem+RowSize;
+				SelInd = SelInd - RowSize;
+				SelItem = SelItem + RowSize;
 			}
 		}
 	}
-	else if(Mode == LISTMODE)
+	else if (Mode == LISTMODE)
 	{
-		if(SelItem == 0 && SelInd > 0)
+		if (SelItem == 0 && SelInd > 0)
 		{
 			// move list up by 1
 			--SelInd;
 		}
-		else if(SelInd+SelItem > 0)
+		else if (SelInd + SelItem > 0)
 		{
 			--SelItem;
 		}
@@ -193,30 +196,30 @@ void GuiScrollbar::ScrollOneUp()
 
 void GuiScrollbar::ScrollOneDown()
 {
-	if(Mode == ICONMODE)
+	if (Mode == ICONMODE)
 	{
 		int i = RowSize;
-		while(SelInd+SelItem+RowSize >= EntrieCount && i > 0 && SelItem > 0 && RowSize < EntrieCount)
+		while (SelInd + SelItem + RowSize >= EntrieCount && i > 0 && SelItem > 0 && RowSize < EntrieCount)
 		{
 			--i;
 			--SelItem;
 		}
-		if(SelInd+SelItem+RowSize < EntrieCount)
+		if (SelInd + SelItem + RowSize < EntrieCount)
 		{
-			SelItem = SelItem+RowSize;
-			if(SelItem >= PageSize)
+			SelItem = SelItem + RowSize;
+			if (SelItem >= PageSize)
 			{
 				// move list down by 1
 				SelInd += RowSize;
-				SelItem = SelItem-RowSize;
+				SelItem = SelItem - RowSize;
 			}
 		}
 	}
-	else if(Mode == LISTMODE)
+	else if (Mode == LISTMODE)
 	{
-		if(SelInd+SelItem + 1 < EntrieCount)
+		if (SelInd + SelItem + 1 < EntrieCount)
 		{
-			if(SelItem == PageSize-1)
+			if (SelItem == PageSize - 1)
 			{
 				// move list down by 1
 				SelInd++;
@@ -231,7 +234,7 @@ void GuiScrollbar::ScrollOneDown()
 
 void GuiScrollbar::OnUpButtonHold(GuiButton *sender, int pointer, const POINT &p)
 {
-	if(ScrollState < ScrollSpeed)
+	if (ScrollState < ScrollSpeed)
 		return;
 
 	ScrollOneUp();
@@ -242,7 +245,7 @@ void GuiScrollbar::OnUpButtonHold(GuiButton *sender, int pointer, const POINT &p
 
 void GuiScrollbar::OnDownButtonHold(GuiButton *sender, int pointer, const POINT &p)
 {
-	if(ScrollState < ScrollSpeed)
+	if (ScrollState < ScrollSpeed)
 		return;
 
 	ScrollOneDown();
@@ -253,59 +256,59 @@ void GuiScrollbar::OnDownButtonHold(GuiButton *sender, int pointer, const POINT 
 
 void GuiScrollbar::OnBoxButtonHold(GuiButton *sender, int pointer, const POINT &p)
 {
-	if(ScrollState < ScrollSpeed)
+	if (ScrollState < ScrollSpeed)
 		return;
 
-	if(!userInput[pointer].wpad.ir.valid)
+	if (!Input::GetUserInput(pointer)->wpad.ir.valid)
 		return;
 
-	int y = p.y-this->GetTop()-scrollbarBox->GetHeight()/2;
+	int y = p.y - this->GetTop() - scrollbarBox->GetHeight() / 2;
 
-	int positionWiimote = LIMIT(y-MinHeight, 0, MaxHeight-MinHeight);
+	int positionWiimote = LIMIT(y - MinHeight, 0, MaxHeight - MinHeight);
 
-	int newSelected = (int) ((float) positionWiimote / (float) (MaxHeight-MinHeight) * (float) (EntrieCount-1));
+	int newSelected = (int)((float)positionWiimote / (float)(MaxHeight - MinHeight) * (float)(EntrieCount - 1));
 
-	if(Mode == ICONMODE)
+	if (Mode == ICONMODE)
 	{
-		int rows = (int) floor(((float) (newSelected-SelInd-SelItem)) / ((float) RowSize));
+		int rows = (int)floor(((float)(newSelected - SelInd - SelItem)) / ((float)RowSize));
 
-		while(SelInd+rows*RowSize >= EntrieCount-PageSize+RowSize)
+		while (SelInd + rows*RowSize >= EntrieCount - PageSize + RowSize)
 			rows--;
 
-		int pageIndex = LIMIT(SelInd+rows*RowSize, 0, EntrieCount-1-RowSize);
+		int pageIndex = LIMIT(SelInd + rows*RowSize, 0, EntrieCount - 1 - RowSize);
 
-		if(newSelected <= 0)
+		if (newSelected <= 0)
 			SelItem = 0;
-		else if(newSelected >= EntrieCount-1)
-			SelItem = EntrieCount-1-pageIndex;
+		else if (newSelected >= EntrieCount - 1)
+			SelItem = EntrieCount - 1 - pageIndex;
 
 		SelInd = pageIndex;
 	}
-	else if(Mode == LISTMODE)
+	else if (Mode == LISTMODE)
 	{
-		int diff = newSelected-SelInd-SelItem;
+		int diff = newSelected - SelInd - SelItem;
 
-		if(newSelected <= 0)
+		if (newSelected <= 0)
 		{
 			SelItem = 0;
 			SelInd = 0;
 		}
-		else if(newSelected >= EntrieCount-1)
+		else if (newSelected >= EntrieCount - 1)
 		{
-			SelItem = (PageSize-1 < EntrieCount-1) ? PageSize-1 : EntrieCount-1;
-			SelInd = EntrieCount-PageSize;
+			SelItem = (PageSize - 1 < EntrieCount - 1) ? PageSize - 1 : EntrieCount - 1;
+			SelInd = EntrieCount - PageSize;
 		}
-		else if(newSelected < PageSize && SelInd == 0 && diff < 0)
+		else if (newSelected < PageSize && SelInd == 0 && diff < 0)
 		{
-			SelItem = MAX(SelItem+diff, 0);
+			SelItem = MAX(SelItem + diff, 0);
 		}
-		else if(EntrieCount-newSelected < PageSize && SelInd == EntrieCount-PageSize && diff > 0)
+		else if (EntrieCount - newSelected < PageSize && SelInd == EntrieCount - PageSize && diff > 0)
 		{
-			SelItem = MIN(SelItem+diff, PageSize-1);
+			SelItem = MIN(SelItem + diff, PageSize - 1);
 		}
 		else
 		{
-			SelInd = LIMIT(SelInd+diff, 0, ((EntrieCount-PageSize < 0) ? 0 : EntrieCount-PageSize));
+			SelInd = LIMIT(SelInd + diff, 0, ((EntrieCount - PageSize < 0) ? 0 : EntrieCount - PageSize));
 		}
 	}
 
@@ -315,7 +318,7 @@ void GuiScrollbar::OnBoxButtonHold(GuiButton *sender, int pointer, const POINT &
 
 void GuiScrollbar::SetPageSize(int size)
 {
-	if(PageSize == size)
+	if (PageSize == size)
 		return;
 
 	PageSize = size;
@@ -324,7 +327,7 @@ void GuiScrollbar::SetPageSize(int size)
 
 void GuiScrollbar::SetRowSize(int size)
 {
-	if(RowSize == size)
+	if (RowSize == size)
 		return;
 
 	RowSize = size;
@@ -333,7 +336,7 @@ void GuiScrollbar::SetRowSize(int size)
 
 void GuiScrollbar::SetSelectedItem(int pos)
 {
-	if(SelItem == pos)
+	if (SelItem == pos)
 		return;
 
 	SelItem = pos;
@@ -341,7 +344,7 @@ void GuiScrollbar::SetSelectedItem(int pos)
 
 void GuiScrollbar::SetSelectedIndex(int pos)
 {
-	if(SelInd == pos)
+	if (SelInd == pos)
 		return;
 
 	SelInd = pos;
@@ -350,7 +353,7 @@ void GuiScrollbar::SetSelectedIndex(int pos)
 
 void GuiScrollbar::SetEntrieCount(int cnt)
 {
-	if(EntrieCount == cnt)
+	if (EntrieCount == cnt)
 		return;
 
 	EntrieCount = cnt;
@@ -359,26 +362,26 @@ void GuiScrollbar::SetEntrieCount(int cnt)
 
 void GuiScrollbar::setScrollboxPosition(int SelItem, int SelInd)
 {
-	if(Mode == ICONMODE)
+	if (Mode == ICONMODE)
 	{
-		u8 row = (u8) floor((float) SelItem / (float) RowSize);
+		u8 row = (u8)floor((float)SelItem / (float)RowSize);
 
-		int position = MinHeight+(MaxHeight-MinHeight)*(SelInd+row*RowSize)/(EntrieCount-1);
+		int position = MinHeight + (MaxHeight - MinHeight)*(SelInd + row*RowSize) / (EntrieCount - 1);
 
-		if(position < MinHeight)
+		if (position < MinHeight)
 			position = MinHeight;
-		else if(position > MaxHeight || ((SelInd+PageSize >= (EntrieCount-1)) && row > 1))
+		else if (position > MaxHeight || ((SelInd + PageSize >= (EntrieCount - 1)) && row > 1))
 			position = MaxHeight;
 
 		scrollbarBoxBtn->SetPosition(ButtonPositionX, position);
 	}
-	else if(Mode == LISTMODE)
+	else if (Mode == LISTMODE)
 	{
-		int position = MinHeight+(MaxHeight-MinHeight)*(SelInd+SelItem)/(EntrieCount-1);
+		int position = MinHeight + (MaxHeight - MinHeight)*(SelInd + SelItem) / (EntrieCount - 1);
 
-		if(position < MinHeight)
+		if (position < MinHeight)
 			position = MinHeight;
-		else if(position > MaxHeight || (SelInd+SelItem >= EntrieCount-1))
+		else if (position > MaxHeight || (SelInd + SelItem >= EntrieCount - 1))
 			position = MaxHeight;
 
 		scrollbarBoxBtn->SetPosition(ButtonPositionX, position);
@@ -387,22 +390,22 @@ void GuiScrollbar::setScrollboxPosition(int SelItem, int SelInd)
 
 void GuiScrollbar::CheckDPadControls(GuiTrigger *t)
 {
-	if(t->Up())
+	if (t->Up())
 	{
 		ScrollOneUp();
 		listChanged(SelItem, SelInd);
 		MovePointer = true;
 	}
-	else if(t->Down())
+	else if (t->Down())
 	{
 		ScrollOneDown();
 		listChanged(SelItem, SelInd);
 		MovePointer = true;
 	}
-	else if(t->Left() && Mode == LISTMODE)
+	else if (t->Left() && Mode == LISTMODE)
 	{
 		SelInd -= PageSize;
-		if(SelInd < 0)
+		if (SelInd < 0)
 		{
 			SelInd = 0;
 			SelItem = 0;
@@ -410,24 +413,24 @@ void GuiScrollbar::CheckDPadControls(GuiTrigger *t)
 		listChanged(SelItem, SelInd);
 		MovePointer = true;
 	}
-	else if(t->Right() && Mode == LISTMODE)
+	else if (t->Right() && Mode == LISTMODE)
 	{
 		SelInd += PageSize;
-		if(SelInd+PageSize >= EntrieCount)
+		if (SelInd + PageSize >= EntrieCount)
 		{
-			SelInd = MAX(EntrieCount-PageSize, 0);
-			SelItem = LIMIT(PageSize-1, 0, EntrieCount-1);
+			SelInd = MAX(EntrieCount - PageSize, 0);
+			SelItem = LIMIT(PageSize - 1, 0, EntrieCount - 1);
 		}
 		listChanged(SelItem, SelInd);
 		MovePointer = true;
 	}
-	
-	if(MovePointer)
+
+	if (MovePointer)
 	{
-		int selHeight = (arrowDownBtn->GetTop()+arrowDownBtn->GetHeight()-arrowUpBtn->GetTop())/PageSize;
-		int position = arrowUpBtn->GetTop()+(selHeight*SelItem)+(selHeight/2);
+		int selHeight = (arrowDownBtn->GetTop() + arrowDownBtn->GetHeight() - arrowUpBtn->GetTop()) / PageSize;
+		int position = arrowUpBtn->GetTop() + (selHeight*SelItem) + (selHeight / 2);
 		for (int i = 3; i >= 0; i--)
-			pointer[i]->SetPosition(scrollbarBoxBtn->GetLeft()-22, position, 0);
+			pointer[i]->SetPosition(scrollbarBoxBtn->GetLeft() - 22, position, 0);
 		MovePointer = false;
 	}
 }
@@ -436,29 +439,29 @@ void GuiScrollbar::ScrollByButton(GuiTrigger *t)
 {
 	static int pressedPosition = -1;
 
-	if(!t->wpad.ir.valid || ScrollState < ButtonScrollSpeed-ButtonScrollSpeed*fabs(pressedPosition-t->wpad.ir.y)/250.f)
+	if (!t->wpad.ir.valid || ScrollState < ButtonScrollSpeed - ButtonScrollSpeed*fabs(pressedPosition - t->wpad.ir.y) / 250.f)
 		return;
 
-	if(pressedChan == -1 && ((t->wpad.btns_d & ButtonScroll) || (t->wupcdata.btns_d & ButtonScroll) ) &&
-	   parentElement && parentElement->IsInside(t->wpad.ir.x, t->wpad.ir.y))
+	if (pressedChan == -1 && ((t->wpad.btns_d & ButtonScroll) || (t->wupcdata.btns_d & ButtonScroll)) &&
+		parentElement && parentElement->IsInside(t->wpad.ir.x, t->wpad.ir.y))
 	{
 		pressedPosition = t->wpad.ir.y;
 		pressedChan = t->chan;
-		oneButtonScrollImg->SetPosition(t->wpad.ir.x-oneButtonScrollImg->GetWidth()/2, t->wpad.ir.y-oneButtonScrollImg->GetHeight()/2);
+		oneButtonScrollImg->SetPosition(t->wpad.ir.x - oneButtonScrollImg->GetWidth() / 2, t->wpad.ir.y - oneButtonScrollImg->GetHeight() / 2);
 	}
 
-	if(pressedChan == t->chan && ((t->wpad.btns_h & ButtonScroll) || (t->wupcdata.btns_h & ButtonScroll) ))
+	if (pressedChan == t->chan && ((t->wpad.btns_h & ButtonScroll) || (t->wupcdata.btns_h & ButtonScroll)))
 	{
-		if(pressedPosition-oneButtonScrollImg->GetHeight()/2 > t->wpad.ir.y)
+		if (pressedPosition - oneButtonScrollImg->GetHeight() / 2 > t->wpad.ir.y)
 			ScrollOneUp();
-		else if(pressedPosition+oneButtonScrollImg->GetHeight()/2 < t->wpad.ir.y)
+		else if (pressedPosition + oneButtonScrollImg->GetHeight() / 2 < t->wpad.ir.y)
 			ScrollOneDown();
 
 		ScrollState = 0;
 		listChanged(SelItem, SelInd);
 	}
 
-	if(pressedChan == t->chan && !t->wpad.btns_d && !t->wpad.btns_h && !t->wupcdata.btns_d && !t->wupcdata.btns_h)
+	if (pressedChan == t->chan && !t->wpad.btns_d && !t->wpad.btns_h && !t->wupcdata.btns_d && !t->wupcdata.btns_h)
 	{
 		pressedChan = -1;
 		pressedPosition = -1;
@@ -467,7 +470,7 @@ void GuiScrollbar::ScrollByButton(GuiTrigger *t)
 
 void GuiScrollbar::Draw()
 {
-	if(PageSize <= EntrieCount)
+	if (PageSize <= EntrieCount)
 	{
 		scrollbarTileImg->Draw();
 		scrollbarTopImg->Draw();
@@ -477,7 +480,7 @@ void GuiScrollbar::Draw()
 		scrollbarBoxBtn->Draw();
 	}
 
-	if(pressedChan >= 0 && userInput[pressedChan].wpad.ir.valid)
+	if (pressedChan >= 0 && Input::GetUserInput(pressedChan)->wpad.ir.valid)
 		oneButtonScrollImg->Draw();
 
 	UpdateEffects();
@@ -485,16 +488,16 @@ void GuiScrollbar::Draw()
 
 void GuiScrollbar::Update(GuiTrigger * t)
 {
-	if(PageSize <= EntrieCount)
+	if (PageSize <= EntrieCount)
 	{
 		arrowUpBtn->Update(t);
 		arrowDownBtn->Update(t);
 		scrollbarBoxBtn->Update(t);
 	}
 
-	if(AllowDPad)
+	if (AllowDPad)
 		CheckDPadControls(t);
-	if(ButtonScroll)
+	if (ButtonScroll)
 		ScrollByButton(t);
 
 	++ScrollState;

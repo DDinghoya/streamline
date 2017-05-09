@@ -25,7 +25,7 @@ Text::Text(const char * t, int s, GXColor c) :
 		wText->push_back(0);
 	}
 
-	textWidth = (font ? font : fontSystem)->getWidth(wText->data(), currentSize);
+	textWidth = (font ? font : App.Theme.fontSystem)->getWidth(wText->data(), currentSize);
 	delete[] text;
 	text = NULL;
 
@@ -33,7 +33,7 @@ Text::Text(const char * t, int s, GXColor c) :
 }
 
 Text::Text(const wchar_t * t, int s, GXColor c) :
-	GuiText((wchar_t *) NULL, s, c)
+	GuiText((wchar_t *)NULL, s, c)
 {
 	maxWidth = 400;
 	linestodraw = 9;
@@ -55,7 +55,7 @@ Text::Text(const wchar_t * t, int s, GXColor c) :
 		wText->push_back(0);
 	}
 
-	textWidth = (font ? font : fontSystem)->getWidth(wText->data(), currentSize);
+	textWidth = (font ? font : App.Theme.fontSystem)->getWidth(wText->data(), currentSize);
 
 	SetMaxWidth(maxWidth);
 }
@@ -88,7 +88,7 @@ void Text::SetText(const char * t)
 		wText->push_back(0);
 	}
 
-	textWidth = (font ? font : fontSystem)->getWidth(wText->data(), currentSize);
+	textWidth = (font ? font : App.Theme.fontSystem)->getWidth(wText->data(), currentSize);
 
 	delete[] tmp;
 
@@ -103,7 +103,7 @@ void Text::SetText(const wchar_t * t)
 	if (wText) delete wText;
 
 	wText = new wString(t);
-	textWidth = (font ? font : fontSystem)->getWidth(wText->data(), currentSize);
+	textWidth = (font ? font : App.Theme.fontSystem)->getWidth(wText->data(), currentSize);
 	CalcLineOffsets();
 }
 
@@ -124,7 +124,7 @@ void Text::SetTextLine(int line)
 
 	FillRows();
 
-	while ((int) textDyn.size() < linestodraw && curLineStart > 0)
+	while ((int)textDyn.size() < linestodraw && curLineStart > 0)
 	{
 		PreviousLine();
 	}
@@ -148,7 +148,7 @@ void Text::SetTextPos(int pos)
 
 	FillRows();
 
-	while ((int) textDyn.size() < linestodraw && curLineStart > 0)
+	while ((int)textDyn.size() < linestodraw && curLineStart > 0)
 	{
 		PreviousLine();
 	}
@@ -170,7 +170,7 @@ int Text::GetLineOffset(int ind)
 
 	if (ind < 0) return TextLines[0].LineOffset;
 
-	if (ind >= (int) TextLines.size() - 1) return TextLines[TextLines.size() - 1].LineOffset;
+	if (ind >= (int)TextLines.size() - 1) return TextLines[TextLines.size() - 1].LineOffset;
 
 	return TextLines[ind].LineOffset;
 }
@@ -181,7 +181,7 @@ const wchar_t * Text::GetTextLine(int ind)
 
 	if (ind < 0) return textDyn[0];
 
-	if (ind >= (int) textDyn.size()) return textDyn[textDyn.size() - 1];
+	if (ind >= (int)textDyn.size()) return textDyn[textDyn.size() - 1];
 
 	return textDyn[ind];
 }
@@ -194,7 +194,7 @@ void Text::Refresh()
 
 void Text::NextLine()
 {
-	if (!wText || (curLineStart + 1 > ((int) TextLines.size() - linestodraw))) return;
+	if (!wText || (curLineStart + 1 > ((int)TextLines.size() - linestodraw))) return;
 
 	++curLineStart;
 
@@ -218,9 +218,9 @@ void Text::FillRows()
 
 	ClearDynamicText();
 
-	for (int i = 0; i < linestodraw && curLineStart+i < (int) TextLines.size(); i++)
+	for (int i = 0; i < linestodraw && curLineStart + i < (int)TextLines.size(); i++)
 	{
-		if (i >= (int) textDyn.size())
+		if (i >= (int)textDyn.size())
 		{
 			textDyn.resize(i + 1);
 			textDyn[i] = new wchar_t[maxWidth];
@@ -228,7 +228,7 @@ void Text::FillRows()
 		int offset = TextLines[curLineStart + i].LineOffset;
 		int count = TextLines[curLineStart + i].CharCount + 1;
 
-		for (int n = 0; n < count && offset + n < (int) wText->size(); n++)
+		for (int n = 0; n < count && offset + n < (int)wText->size(); n++)
 			textDyn[i][n] = wText->at(offset + n);
 
 		textDyn[i][count] = 0;
@@ -258,7 +258,7 @@ void Text::CalcLineOffsets()
 
 	while (origTxt[ch])
 	{
-		currWidth += fontSystem->getCharWidth(origTxt[ch], currentSize, ch > 0 ? origTxt[ch - 1] : 0x0000);
+		currWidth += App.Theme.fontSystem->getCharWidth(origTxt[ch], currentSize, ch > 0 ? origTxt[ch - 1] : 0x0000);
 
 		if (currWidth >= maxWidth)
 		{
@@ -296,7 +296,7 @@ void Text::CalcLineOffsets()
 	TmpLine.CharCount = ch - TmpLine.LineOffset;
 	TmpLine.width = currWidth;
 
-	if (TmpLine.CharCount-1 > 0)
+	if (TmpLine.CharCount - 1 > 0)
 	{
 		TmpLine.CharCount -= 1;
 		TextLines.push_back(TmpLine);
@@ -312,20 +312,20 @@ void Text::Draw()
 	GXColor c = color;
 	c.a = this->GetAlpha();
 
-	int newSize = (int) (size * GetScale());
+	int newSize = (int)(size * GetScale());
 
 	if (newSize != currentSize)
 	{
 		currentSize = LIMIT(newSize, 1, 100);
 
-		if (wText) textWidth = (font ? font : fontSystem)->getWidth(wText->data(), currentSize);
+		if (wText) textWidth = (font ? font : App.Theme.fontSystem)->getWidth(wText->data(), currentSize);
 	}
 
 	u16 lineheight = newSize + 6;
 
 	for (u32 i = 0; i < textDyn.size(); i++)
 	{
-		if (!filling) (font ? font : fontSystem)->drawText(this->GetLeft(), this->GetTop() + i * lineheight, 0,
-				textDyn[i], currentSize, c, style, 0, maxWidth);
+		if (!filling) (font ? font : App.Theme.fontSystem)->drawText(this->GetLeft(), this->GetTop() + i * lineheight, 0,
+			textDyn[i], currentSize, c, style, 0, maxWidth);
 	}
 }

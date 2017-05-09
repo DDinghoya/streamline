@@ -1,7 +1,7 @@
 #include <ogc/isfs.h>
 #include <stdlib.h>
 #include "nandtitle.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "prompts/ProgressWindow.h"
 #include "language/gettext.h"
 #include "usbloader/playlog.h"

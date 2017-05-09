@@ -5,7 +5,7 @@
 #include <vector>
 #include "gui.h"
 #include "usbloader/disc.h"
-#include "wstring.hpp"
+#include "utils/wstring.hpp"
 
 class cSearchButton;
 

@@ -35,7 +35,7 @@
 #include "language/gettext.h"
 #include "prompts/filebrowser.h"
 #include "themes/CTheme.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "gecko.h"
 
 CustomPathsSM::CustomPathsSM()

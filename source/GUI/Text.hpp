@@ -2,7 +2,7 @@
 #define _TEXT_HPP_
 
 #include "GUI/gui.h"
-#include "wstring.hpp"
+#include "utils/wstring.hpp"
 
 typedef struct
 {

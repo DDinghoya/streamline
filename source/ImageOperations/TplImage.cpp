@@ -28,7 +28,7 @@
 #include <gccore.h>
 #include <malloc.h>
 #include <string.h>
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "TextureConverter.h"
 #include "TplImage.h"
 

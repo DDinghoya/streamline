@@ -1,6 +1,6 @@
 #include "GUI/gui.h"
 #include "usbloader/disc.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "App.h"
 #include "themes/CTheme.h"
 
@@ -16,8 +16,8 @@ GuiImageData *LoadCoverImage(struct discHdr *header, bool Prefere3D, bool noCove
 	char Path[255];
 	bool flag = Prefere3D;
 
-	snprintf(ID3, sizeof(ID3), "%s", (char *) header->id);
-	snprintf(IDfull, sizeof(IDfull), "%s", (char *) header->id);
+	snprintf(ID3, sizeof(ID3), "%s", (char *)header->id);
+	snprintf(IDfull, sizeof(IDfull), "%s", (char *)header->id);
 
 	for (int i = 0; i < 2; ++i)
 	{
@@ -26,10 +26,10 @@ GuiImageData *LoadCoverImage(struct discHdr *header, bool Prefere3D, bool noCove
 		//Load full id image
 		snprintf(Path, sizeof(Path), "%s%s.png", coverPath, IDfull);
 
-		if(!CheckFile(Path))
+		if (!CheckFile(Path))
 		{
 			snprintf(Path, sizeof(Path), "%s%s.png", coverPath, ID3);
-			if(!CheckFile(Path))
+			if (!CheckFile(Path))
 				continue;
 		}
 
@@ -51,7 +51,7 @@ GuiImageData *LoadCoverImage(struct discHdr *header, bool Prefere3D, bool noCove
 		for (int i = 0; i < 2; ++i)
 		{
 			delete Cover;
-			Cover = Resources::GetImageData(flag ? "nocover.png" : "nocoverFlat.png");
+			Cover = App.Resources.GetImageData(flag ? "nocover.png" : "nocoverFlat.png");
 			if (Cover && Cover->GetImage()) break;
 			flag = !flag;
 		}

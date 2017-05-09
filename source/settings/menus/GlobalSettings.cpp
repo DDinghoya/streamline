@@ -24,7 +24,7 @@
 #include "GlobalSettings.hpp"
 #include "themes/CTheme.h"
 #include "prompts/PromptWindows.h"
-#include "network/update.h"
+#include "Net/update.h"
 #include "language/gettext.h"
 #include "GUISettingsMenu.hpp"
 #include "LoaderSettings.hpp"
@@ -38,8 +38,8 @@
 GlobalSettings::GlobalSettings()
 	: FlyingButtonsMenu(tr("Global Settings"))
 {
-	creditsImgData = Resources::GetImageData("credits_button.png");
-	creditsImgOverData = Resources::GetImageData("credits_button_over.png");
+	creditsImgData = App.Resources.GetImageData("credits_button.png");
+	creditsImgOverData = App.Resources.GetImageData("credits_button_over.png");
 }
 
 GlobalSettings::~GlobalSettings()

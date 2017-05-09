@@ -27,14 +27,13 @@
 #include <string.h>
 
 #include "CSettings.h"
-#include "CGameSettings.h"
-#include "CGameStatistics.h"
 #include "Controls/DeviceHandler.hpp"
 #include "language/gettext.h"
 #include "themes/CTheme.h"
-#include "FileOperations/fileops.h"
+#include "IO/fileops.h"
 #include "utils/encrypt.h"
 #include "Version.h"
+#include "gecko.h"
 
 CSettings::CSettings()
 {
@@ -101,7 +100,7 @@ void CSettings::SetDefault()
 	tooltips = ON;
 	gamesound = ON;
 	parentalcontrol = PARENTAL_LVL_ADULT;
-	LoaderIOS = BUILD_IOS;
+	LoaderIOS = 58;
 	cios = BUILD_IOS;
 	gridRows = 3;
 	partition = 0;
@@ -118,7 +117,6 @@ void CSettings::SetDefault()
 	musicloopmode = ON;
 	marknewtitles = ON;
 	ShowFreeSpace = ON;
-	PlaylogUpdate = OFF;
 	ParentalBlocks = BLOCK_ALL;
 	InstallToDir = INSTALL_TO_NAME_GAMEID;
 	GameSplit = GAMESPLIT_4GB;
@@ -213,6 +211,7 @@ void CSettings::SetDefault()
 
 bool CSettings::Load()
 {
+	gprintf("\tLoading config...");
 	FindConfig();
 	//! Reset default path variables to the right device
 	SetDefault();
@@ -221,22 +220,28 @@ bool CSettings::Load()
 	snprintf(filepath, sizeof(filepath), "%sGXGlobal.cfg", ConfigPath);
 
 	FILE * file = fopen(filepath, "r");
-	if (!file) return false;
+	if (!file)
+	{
+		gprintf("failed\n");
+		return false;
+	}
 
 	char line[1024];
 
 	while (fgets(line, sizeof(line), file))
 	{
-		if (line[0] == '#') continue;
+		if (line[0] == '#') 
+			continue;
 
 		this->ParseLine(line);
 	}
+
 	fclose(file);
 
 	// A valid config file exists on the loader
 	// meaning it is not the first run of the loader.
 	FirstTimeRun = false;
-
+	gprintf("done\n");
 	return true;
 }
 
@@ -325,7 +330,6 @@ bool CSettings::Save()
 	fprintf(file, "InstallToDir = %d\n", InstallToDir);
 	fprintf(file, "GameSplit = %d\n", GameSplit);
 	fprintf(file, "InstallPartitions = %08X\n", (unsigned int)InstallPartitions);
-	fprintf(file, "PlaylogUpdate = %d\n", PlaylogUpdate);
 	fprintf(file, "ParentalBlocks = %08X\n", (unsigned int)ParentalBlocks);
 	fprintf(file, "returnTo = %s\n", returnTo);
 	fprintf(file, "HomeMenu = %d\n", HomeMenu);
@@ -690,11 +694,6 @@ bool CSettings::SetSetting(char *name, char *value)
 	else if (strcmp(name, "GameSplit") == 0)
 	{
 		GameSplit = atoi(value);
-		return true;
-	}
-	else if (strcmp(name, "PlaylogUpdate") == 0)
-	{
-		PlaylogUpdate = atoi(value);
 		return true;
 	}
 	else if (strcmp(name, "SelectedGame") == 0)
