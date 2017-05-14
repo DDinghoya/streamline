@@ -2,7 +2,7 @@
 #include "gui.h"
 #include "gui_searchbar.h"
 #include "video.h"
-#include "wpad.h"
+#include "Input/wpad.h"
 #include "App.h"
 #include "themes/CTheme.h"
 #include "usbloader/GameList.h"

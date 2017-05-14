@@ -14,7 +14,7 @@
 
 #include "usbloader/GameList.h"
 #include "menu/menus.h"
-#include "gecko.h"
+#include "Debug.h"
 
 #define VALID(x) (x >= 0 && x < (int) WbfsList.size() && WbfsList[x] != NULL)
 

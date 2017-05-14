@@ -16,7 +16,7 @@
 */
 
 #include "mload.h"
-#include "gecko.h"
+#include "Debug.h"
 
 static const char mload_fs[] ATTRIBUTE_ALIGN(32) = "/dev/mload";
 

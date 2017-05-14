@@ -29,7 +29,7 @@
 #include "themes/CTheme.h"
 #include "menu.h"
 #include "video.h"
-#include "input.h"
+#include "Input/input.h"
 
 BoxCover::BoxCover(GuiImageData * img, bool flat)
 	:   GuiImage(img),

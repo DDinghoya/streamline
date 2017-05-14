@@ -27,7 +27,6 @@
 #include "language/gettext.h"
 #include "usbloader/GetMissingGameFiles.hpp"
 #include "utils/StringTools.h"
-#include "gecko.h"
 
 #define VALID_IMAGE(x) (!(x.size == 36864 || x.size <= 1024 || x.size == 7386 || x.size <= 1174 || x.size == 4446 || x.data == NULL))
 

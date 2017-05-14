@@ -1,5 +1,4 @@
-#ifndef _WPAD_H_
-#define _WPAD_H_
+#pragma once
 
 #include <wiiuse/wpad.h>
 #include <wupc/wupc.h>
@@ -18,6 +17,4 @@ extern "C"
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

@@ -6,11 +6,11 @@
 #include "wad/nandtitle.h"
 #include "system/IosLoader.h"
 #include "menu/menus.h"
-#include "wpad.h"
+#include "Input/wpad.h"
 #include "usbloader/wbfs.h"
 #include "usbloader/GameList.h"
-#include "Library/GameTDB.hpp"
-#include "utils/ShowError.h"
+#include "Data/GameTDB.h"
+#include "Debug.h"
 
 static int FindGamePartition()
 {

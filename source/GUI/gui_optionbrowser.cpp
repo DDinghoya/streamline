@@ -7,9 +7,8 @@
  ***************************************************************************/
 
 #include "gui.h"
-#include "wpad.h"
+#include "Input/wpad.h"
 #include "App.h"
-#include "gecko.h"
 #include "App.h"
 #include "gui_optionbrowser.h"
 #include "themes/CTheme.h"

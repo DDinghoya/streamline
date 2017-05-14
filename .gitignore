@@ -1,6 +1,6 @@
-boot.dol
-boot.elf
+/boot.*
+/extras/*/boot.*
+/libs/source/*/*.a
 build/
 .vs/
 .vscode/
-CppProperties.json

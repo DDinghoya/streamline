@@ -34,7 +34,7 @@
 #include "themes/CTheme.h"
 #include "utils/tools.h"
 #include "video.h"
-#include "input.h"
+#include "Input/input.h"
 
 static const char * OnOffText[MAX_ON_OFF] =
 {

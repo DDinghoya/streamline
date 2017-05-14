@@ -5,7 +5,7 @@
 #include "usbloader/disc.h"
 #include "dolpatcher.h"
 #include "wip.h"
-#include "gecko.h"
+#include "Debug.h"
 #include "patchcode.h"
 #include "gamepatches.h"
 #include "memory/memory.h"

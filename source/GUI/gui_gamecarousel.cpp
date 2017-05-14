@@ -7,7 +7,7 @@
  ***************************************************************************/
 
 #include "gui.h"
-#include "wpad.h"
+#include "Input/wpad.h"
 #include "menu.h"
 
 #include <unistd.h>

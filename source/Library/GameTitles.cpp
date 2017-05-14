@@ -2,9 +2,8 @@
 #include "App.h"
 #include "usbloader/GameList.h"
 #include "Channels/channels.h"
-#include "GameTDB.hpp"
+#include "Data/GameTDB.h"
 #include "Version.h"
-#include "gecko.h"
 
 #define VALID_CACHE_REVISION	1148
 

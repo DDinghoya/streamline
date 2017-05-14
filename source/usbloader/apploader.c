@@ -5,11 +5,11 @@
 
 #include "apploader.h"
 #include "wdvd.h"
-#include "wpad.h"
+#include "Input/wpad.h"
 #include "disc.h"
 #include "alternatedol.h"
 #include "fstfile.h"
-#include "gecko.h"
+#include "Debug.h"
 #include "patches/gamepatches.h"
 #include "patches/wip.h"
 #include "settings/SettingsEnums.h"

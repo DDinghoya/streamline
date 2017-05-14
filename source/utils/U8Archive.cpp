@@ -21,7 +21,7 @@
 
 #include "ash.h"
 #include "lz77.h"
-#include "gecko.h"
+#include "Debug.h"
 #include "U8Archive.h"
 #include "uncompress.h"
 

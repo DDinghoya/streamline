@@ -21,7 +21,6 @@
 #include "sys.h"
 #include "themes/CTheme.h"
 #include "memory/memory.h"
-#include "gecko.h"
 #include "video.h"
 
 /********************************************************************************

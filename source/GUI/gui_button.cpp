@@ -10,7 +10,7 @@
 
 #include "gui_button.h"
 #include "App.h"
-#include "input.h"
+#include "Input/input.h"
 
 static int scrollison = 0;
 

@@ -32,17 +32,16 @@
 #include "menu/menus.h"
 #include "App.h"
 #include "sys.h"
-#include "wpad.h"
+#include "Input/wpad.h"
 #include "wad/wad.h"
 #include "zlib.h"
 #include "Version.h"
 #include "audio.h"
 #include "language/UpdateLanguage.h"
 #include "system/IosLoader.h"
-#include "gecko.h"
-#include "lstub.h"
+#include "HBC/lstub.h"
 #include "video.h"
-#include "input.h"
+#include "Input/input.h"
 
 static const char * DMLVersions[] =
 {

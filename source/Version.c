@@ -1,8 +1,9 @@
-#define SVN_REV "1279"
+#define SVN_REV "1280"
 #define SVN_MAJOR "3"
 #define SVN_MINOR "1"
 #define SVN_PATCH "1"
 #define SVN_BRANCH "master"
+#define SVN_DESC "b1278-1-g79cc3c31"
 
 const char *Version_GetMajor()
 {
@@ -31,5 +32,5 @@ const char *Version_GetBranch()
 
 const char *Version_GetVersionString()
 {
-	return SVN_MAJOR "." SVN_MINOR "." SVN_PATCH "." SVN_REV "-" SVN_BRANCH;
+	return SVN_DESC;
 }

@@ -29,9 +29,7 @@
 #include <cstdio>
 #include <cstring>
 #include <ogcsys.h>
-//#include <string>
-
-#include "gecko.h"
+ //#include <string>
 #include "IO/ZipFile.h"
 #include "http.h"
 #include "networkops.h"
@@ -40,12 +38,11 @@
 #include "App.h"
 #include "language/gettext.h"
 #include "language/UpdateLanguage.h"
-#include "homebrewboot/BootHomebrew.h"
+#include "HBC/BootHomebrew.h"
 #include "utils/StringTools.h"
-#include "utils/ShowError.h"
 #include "prompts/PromptWindows.h"
 #include "IO/fileops.h"
-#include "Library/GameTDB.hpp"
+#include "Data/GameTDB.h"
 #include "wad/nandtitle.h"
 #include "wad/wad.h"
 #include "sys.h"

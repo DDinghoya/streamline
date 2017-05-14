@@ -25,8 +25,8 @@
  ***************************************************************************/
 
 #include "gui_imagedata.h"
-#include "ImageOperations/TextureConverter.h"
-#include "ImageOperations/TplImage.h"
+#include "Imaging/TextureConverter.h"
+#include "Imaging/TplImage.h"
 #include "IO/fileops.h"
 #include "utils/ResourceManager.h"
 

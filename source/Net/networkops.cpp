@@ -20,7 +20,6 @@
 #include "App.h"
 #include "http.h"
 #include "Version.h"
-#include "gecko.h"
 #include "update.h"
 
 #define PORT			4299

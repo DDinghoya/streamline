@@ -26,15 +26,13 @@
 #include "SystemMenu/SystemMenuResources.h"
 #include "system/IosLoader.h"
 #include "utils/StringTools.h"
-#include "utils/ShowError.h"
 #include "utils/tools.h"
 #include "utils/PasswordCheck.h"
-#include "gecko.h"
 #include "menus.h"
-#include "wpad.h"
+#include "Input/wpad.h"
 #include "sys.h"
 #include "video.h"
-#include "input.h"
+#include "Input/input.h"
 
 extern bool updateavailable;
 

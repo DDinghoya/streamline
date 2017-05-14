@@ -26,7 +26,6 @@
 #include "IO/fileops.h"
 #include "App.h"
 #include "sys.h"
-#include "gecko.h"
 
 typedef struct {
 	u32 hdrsize;

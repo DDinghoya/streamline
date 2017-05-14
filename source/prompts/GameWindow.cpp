@@ -17,7 +17,6 @@
 #include "menu/menus.h"
 #include "menu/WDMMenu.hpp"
 #include "banner/OpeningBNR.hpp"
-#include "utils/ShowError.h"
 #include "utils/tools.h"
 
 #define NONE		0

@@ -30,14 +30,19 @@
 #include <unistd.h>
 #include <network.h>
 
+#ifndef DESTINATION_IP
 #define DESTINATION_IP	  "192.168.1.255"
+#endif 
+
+#ifndef DESTINATION_PORT
 #define DESTINATION_PORT	4405
+#endif
 
 static int connection = -1;
 
 void WifiGecko_Close()
 {
-	if(connection >= 0)
+	if (connection >= 0)
 		net_close(connection);
 
 	connection = -1;
@@ -45,7 +50,7 @@ void WifiGecko_Close()
 
 int WifiGecko_Connect()
 {
-	if(connection >= 0)
+	if (connection >= 0)
 		return connection;
 
 	connection = net_socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
@@ -58,7 +63,7 @@ int WifiGecko_Connect()
 	connect_addr.sin_port = htons(DESTINATION_PORT);
 	inet_aton(DESTINATION_IP, &connect_addr.sin_addr);
 
-	if(net_connect(connection, (struct sockaddr*)&connect_addr, sizeof(connect_addr)) < 0)
+	if (net_connect(connection, (struct sockaddr*)&connect_addr, sizeof(connect_addr)) < 0)
 	{
 		WifiGecko_Close();
 		return -1;
@@ -69,29 +74,29 @@ int WifiGecko_Connect()
 
 int WifiGecko_Send(const char * data, int datasize)
 {
-	if(WifiGecko_Connect() < 0)
+	if (WifiGecko_Connect() < 0)
 		return connection;
 
 	int ret = 0, done = 0, blocksize = 1024;
 
 	while (done < datasize)
 	{
-		if(blocksize > datasize-done)
-			blocksize = datasize-done;
+		if (blocksize > datasize - done)
+			blocksize = datasize - done;
 
-		ret = net_send(connection, data+done, blocksize, 0);
+		ret = net_send(connection, data + done, blocksize, 0);
 		if (ret < 0)
 		{
 			WifiGecko_Close();
 			return ret;
 		}
-		else if(ret == 0)
+		else if (ret == 0)
 		{
 			break;
 		}
 
 		done += ret;
-		usleep (1000);
+		usleep(1000);
 	}
 
 	return ret;
@@ -102,12 +107,12 @@ void wifi_printf(const char * format, ...)
 	char * tmp = NULL;
 	va_list va;
 	va_start(va, format);
-	if((vasprintf(&tmp, format, va) >= 0) && tmp)
+	if ((vasprintf(&tmp, format, va) >= 0) && tmp)
 	{
 		WifiGecko_Send(tmp, strlen(tmp));
 	}
 	va_end(va);
 
-	if(tmp)
+	if (tmp)
 		free(tmp);
 }

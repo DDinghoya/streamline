@@ -3,7 +3,7 @@
 #include <ogc/pad.h>
 
 #include "sys.h"
-#include "wpad.h"
+#include "Input/wpad.h"
 
 /* Constants */
 #define MAX_WIIMOTES	4

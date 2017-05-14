@@ -6,7 +6,7 @@
 #include "language/gettext.h"
 #include "usbloader/playlog.h"
 #include "utils/tools.h"
-#include "gecko.h"
+#include "Debug.h"
 
 NandTitle NandTitles;
 

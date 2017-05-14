@@ -14,7 +14,7 @@
 #include "usbloader/usbstorage2.h"
 #include "frag.h"
 #include "sys.h"
-#include "gecko.h"
+#include "Debug.h"
 
 #define SAFE_FREE(x) if(x) { free(x); x = NULL; }
 

@@ -35,16 +35,6 @@ extern "C"
 // Main loader application reference
 Application App;
 
-Application::Application()
-	: MainWindow(NULL)
-{
-}
-
-Application::~Application()
-{
-	
-}
-
 int main(int argc, char *argv[])
 {
 	__exception_setreload(20);

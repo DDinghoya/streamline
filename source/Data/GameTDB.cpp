@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string>
 #include <cstring>
-#include "GameTDB.hpp"
+#include "GameTDB.h"
 
 #define NAME_OFFSET_DB  "wiitdb_offsets.bin"
 #define MAXREADSIZE	 1024*1024   // Cache size only for parsing the offsets: 1MB

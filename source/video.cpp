@@ -17,12 +17,11 @@
 #include <wiiuse/wpad.h>
 
 #include "GUI/gui.h"
-#include "ImageOperations/TextureConverter.h"
-#include "ImageOperations/ImageWrite.h"
+#include "Imaging/TextureConverter.h"
+#include "Imaging/ImageWrite.h"
 #include "App.h"
-#include "input.h"
+#include "Input/input.h"
 #include "sys.h"
-#include "gecko.h"
 
 #define GP_FIFO_SIZE (256 * 1024 * 3)
 static u32 *xfb[2] = { NULL, NULL }; // Double buffered

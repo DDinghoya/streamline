@@ -12,15 +12,14 @@
 #include "menu.h"
 #include "menu/menus.h"
 #include "sys.h"
-#include "wpad.h"
+#include "Input/wpad.h"
 #include "IO/fileops.h"
 #include "prompts/PromptWindows.h"
 #include "themes/CTheme.h"
 #include "gameinfo.h"
 #include "usbloader/GameList.h"
-#include "gecko.h"
-#include "Library/GameTDB.hpp"
-#include "utils/ShowError.h"
+#include "Debug.h"
+#include "Data/GameTDB.h"
 #include "BoxCover/BoxCover.hpp"
 
 static inline const char * ConsoleFromTitleID(const char* TitleID)

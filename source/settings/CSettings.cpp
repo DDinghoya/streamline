@@ -33,7 +33,7 @@
 #include "IO/fileops.h"
 #include "utils/encrypt.h"
 #include "Version.h"
-#include "gecko.h"
+#include "Debug.h"
 
 CSettings::CSettings()
 {

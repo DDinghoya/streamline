@@ -20,17 +20,17 @@ misrepresented as being the original software.
 3. This notice may not be removed or altered from any source
 distribution.
 */
-#include "homebrewboot/HomebrewXML.h"
+#include "HomebrewXML.h"
 #include "IO/fileops.h"
 #include "App.h"
 #include "Version.h"
 
-int updateMetaXML (void)
+int updateMetaXML(void)
 {
 	HomebrewXML MetaXML;
 	char filepath[255];
 	snprintf(filepath, sizeof(filepath), "%s/meta.xml", App.Settings.update_path);
-	if(!MetaXML.LoadHomebrewXMLData(filepath))
+	if (!MetaXML.LoadHomebrewXMLData(filepath))
 		return 0;
 
 	char line[50];
@@ -47,7 +47,7 @@ int updateMetaXML (void)
 	return ret;
 }
 
-int editMetaArguments (void)
+int editMetaArguments(void)
 {
 	char metapath[255] = "";
 	char metatmppath[255] = "";
@@ -56,13 +56,13 @@ int editMetaArguments (void)
 	snprintf(metatmppath, sizeof(metatmppath), "%s/meta.tmp", App.Settings.update_path);
 
 	FILE *source = fopen(metapath, "rb");
-	if(!source)
+	if (!source)
 	{
 		return 0;
 	}
 
 	FILE *destination = fopen(metatmppath, "wb");
-	if(!destination)
+	if (!destination)
 	{
 		fclose(source);
 		return 0;
@@ -70,17 +70,17 @@ int editMetaArguments (void)
 
 	const int max_line_size = 255;
 	char *line = new char[max_line_size];
-	while (fgets(line, max_line_size, source) != NULL) 
+	while (fgets(line, max_line_size, source) != NULL)
 	{
 		// delete commented lines
-		if( strstr(line, "<!--   // remove this line to enable arguments") != NULL ||
-			strstr(line, "// remove this line to enable arguments -->")   != NULL)
+		if (strstr(line, "<!--   // remove this line to enable arguments") != NULL ||
+			strstr(line, "// remove this line to enable arguments -->") != NULL)
 		{
 			strcpy(line, "		\n");
 		}
 
 		// generate argurments
-		if(strstr(line, "<arguments>") != NULL)
+		if (strstr(line, "<arguments>") != NULL)
 		{
 			fputs(line, destination);
 			snprintf(line, max_line_size, "				<arg>--ios=%d</arg>\n", App.Settings.LoaderIOS);
@@ -89,15 +89,15 @@ int editMetaArguments (void)
 			fputs(line, destination);
 			snprintf(line, max_line_size, "				<arg>--mountusb=%d</arg>\n", App.Settings.USBAutoMount);
 			fputs(line, destination);
-			
-			while(strstr(line, "</arguments>") == NULL)
+
+			while (strstr(line, "</arguments>") == NULL)
 			{
 				fgets(line, max_line_size, source); // advance one line
-				if(feof(source))
+				if (feof(source))
 				{
 					fclose(source);
 					fclose(destination);
-					delete [] line;
+					delete[] line;
 					return 0;
 				}
 			}
@@ -107,12 +107,12 @@ int editMetaArguments (void)
 
 	fclose(source);
 	fclose(destination);
-	delete [] line;
-	
-	if(CopyFile(metatmppath, metapath) <0)
+	delete[] line;
+
+	if (CopyFile(metatmppath, metapath) < 0)
 		return 0;
-	
+
 	RemoveFile(metatmppath);
-	
+
 	return 1;
 }

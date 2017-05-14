@@ -30,7 +30,7 @@
 #include "language/gettext.h"
 #include "IO/fileops.h"
 #include "prompts/ProgressWindow.h"
-#include "GameTDB.hpp"
+#include "Data/GameTDB.h"
 #include "utils/StringTools.h"
 #include "Version.h"
 

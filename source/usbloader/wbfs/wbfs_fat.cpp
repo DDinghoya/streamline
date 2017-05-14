@@ -19,15 +19,12 @@
 #include "usbloader/usbstorage2.h"
 #include "language/gettext.h"
 #include <fatfile_frag.h>
-#include "utils/ShowError.h"
 #include "wbfs_fat.h"
 #include "prompts/ProgressWindow.h"
 #include "usbloader/wbfs.h"
 #include "usbloader/GameList.h"
 #include "utils/tools.h"
 #include "wbfs_rw.h"
-
-#include "gecko.h"
 
 #define MAX_FAT_PATH 1024
 #define TITLE_LEN 64

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
-#include "gecko.h"
+#include "Debug.h"
 #include "SystemMenu/SystemMenuResources.h"
 #include "memory/mem2.h"
 #include "utils/U8Archive.h"

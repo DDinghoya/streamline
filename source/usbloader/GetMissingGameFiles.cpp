@@ -4,7 +4,7 @@
 #include "IO/fileops.h"
 #include "usbloader/GameList.h"
 #include "utils/wstring.hpp"
-#include "gecko.h"
+#include "Debug.h"
 
 extern struct discHdr *dvdheader;
 

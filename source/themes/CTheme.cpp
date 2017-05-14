@@ -34,7 +34,6 @@
 #include "SystemMenu/SystemMenuResources.h"
 #include "menu/menus.h"
 #include "wad/nandtitle.h"
-#include "gecko.h"
 
 CTheme::CTheme()
 	: fontSystem(NULL), customFont(NULL), customFontSize(0), ShowTooltips(true)

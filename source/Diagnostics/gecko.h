@@ -1,6 +1,4 @@
-
-#ifndef _GECKO_H_
-#define _GECKO_H_
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
@@ -24,6 +22,3 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-
-#endif
-

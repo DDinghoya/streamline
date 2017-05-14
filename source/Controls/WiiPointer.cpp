@@ -19,8 +19,7 @@
 #include "themes/Resources.h"
 #include "utils/tools.h"
 #include "video.h"
-#include "input.h"
-
+#include "Input/input.h"
 
 Mtx44 WiiPointer::projection;
 

@@ -6,17 +6,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "Xml.h"
 #include "IO/fileops.h"
-#include <tinyxml2.h>
-#include "gecko.h"
-
 #include "HomebrewXML.h"
-
-using namespace tinyxml2;
+#include "App.h"
 
 #define ENTRIE_SIZE	 8192
 
-/* qparam filename Filepath of the XML file */
+ /* qparam filename Filepath of the XML file */
 int HomebrewXML::LoadHomebrewXMLData(const char* filename)
 {
 	Name.clear();
@@ -27,40 +24,40 @@ int HomebrewXML::LoadHomebrewXMLData(const char* filename)
 	Releasedate.clear();
 
 	XMLDocument xmlDoc;
-	if(xmlDoc.LoadFile(filename) != 0)
+	if (xmlDoc.LoadFile(filename) != 0)
 		return false;
 
-	XMLElement *appNode =  xmlDoc.FirstChildElement("app");
-	if(!appNode)
+	XMLElement *appNode = xmlDoc.FirstChildElement("app");
+	if (!appNode)
 		return false;
 
 	XMLElement *node = NULL;
 
 	node = appNode->FirstChildElement("name");
-	if(node && node->FirstChild() && node->FirstChild()->Value())
+	if (node && node->FirstChild() && node->FirstChild()->Value())
 		Name = node->FirstChild()->Value();
 
 	node = appNode->FirstChildElement("coder");
-	if(node && node->FirstChild() && node->FirstChild()->Value())
+	if (node && node->FirstChild() && node->FirstChild()->Value())
 		Coder = node->FirstChild()->Value();
 
 	node = appNode->FirstChildElement("version");
-	if(node && node->FirstChild() && node->FirstChild()->Value())
+	if (node && node->FirstChild() && node->FirstChild()->Value())
 		Version = node->FirstChild()->Value();
 
 	node = appNode->FirstChildElement("short_description");
-	if(node && node->FirstChild() && node->FirstChild()->Value())
+	if (node && node->FirstChild() && node->FirstChild()->Value())
 		ShortDescription = node->FirstChild()->Value();
 
 	node = appNode->FirstChildElement("long_description");
-	if(node && node->FirstChild() && node->FirstChild()->Value())
+	if (node && node->FirstChild() && node->FirstChild()->Value())
 		LongDescription = node->FirstChild()->Value();
 
 	char ReleaseText[200];
 	memset(ReleaseText, 0, sizeof(ReleaseText));
 
 	node = appNode->FirstChildElement("release_date");
-	if(node && node->FirstChild() && node->FirstChild()->Value())
+	if (node && node->FirstChild() && node->FirstChild()->Value())
 		snprintf(ReleaseText, sizeof(ReleaseText), node->FirstChild()->Value());
 
 	int len = (strlen(ReleaseText) - 6); //length of the date string without the 200000 at the end
@@ -74,14 +71,14 @@ int HomebrewXML::LoadHomebrewXMLData(const char* filename)
 	Releasedate = ReleaseText;
 
 	node = appNode->FirstChildElement("arguments");
-	if(!node)
+	if (!node)
 		return 1;
 
 	XMLElement *argNode = node->FirstChildElement("arg");
 
-	while(argNode)
+	while (argNode)
 	{
-		if(argNode->FirstChild() && argNode->FirstChild()->Value())
+		if (argNode->FirstChild() && argNode->FirstChild()->Value())
 			Arguments.push_back(std::string(argNode->FirstChild()->Value()));
 
 		argNode = argNode->NextSiblingElement();
@@ -94,37 +91,37 @@ int HomebrewXML::SaveHomebrewXMLData(const char* filename)
 {
 	const int max_line_size = 4096;
 	char *line = new (std::nothrow) char[max_line_size];
-	if(!line) return 0;
+	if (!line) return 0;
 
 	FILE *fp = fopen(filename, "wb");
-	if(!fp)
+	if (!fp)
 	{
-		delete [] line;
+		delete[] line;
 		return 0;
 	}
 
-	snprintf(line, max_line_size,"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"); fputs(line, fp);
-	snprintf(line, max_line_size,"<app version=\"1\">\n"); fputs(line, fp);
-	snprintf(line, max_line_size,"	<name>%s</name>\n", GetName()); fputs(line, fp);
-	snprintf(line, max_line_size,"	<coder>%s</coder>\n", GetCoder()); fputs(line, fp);
-	snprintf(line, max_line_size,"	<version>%s</version>\n", GetVersion()); fputs(line, fp);
-	snprintf(line, max_line_size,"	<release_date>%s</release_date>\n", GetReleasedate()); fputs(line, fp);
+	snprintf(line, max_line_size, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"); fputs(line, fp);
+	snprintf(line, max_line_size, "<app version=\"1\">\n"); fputs(line, fp);
+	snprintf(line, max_line_size, "	<name>%s</name>\n", GetName()); fputs(line, fp);
+	snprintf(line, max_line_size, "	<coder>%s</coder>\n", GetCoder()); fputs(line, fp);
+	snprintf(line, max_line_size, "	<version>%s</version>\n", GetVersion()); fputs(line, fp);
+	snprintf(line, max_line_size, "	<release_date>%s</release_date>\n", GetReleasedate()); fputs(line, fp);
 	if (Arguments.size() > 0)
 	{
-		snprintf(line, max_line_size,"	<arguments>\n"); fputs(line, fp);
-		for(u8 i = 0; i < Arguments.size(); i++)
+		snprintf(line, max_line_size, "	<arguments>\n"); fputs(line, fp);
+		for (u8 i = 0; i < Arguments.size(); i++)
 		{
-			snprintf(line, max_line_size,"		<arg>%s</arg>\n", Arguments[i].c_str()); fputs(line, fp);
+			snprintf(line, max_line_size, "		<arg>%s</arg>\n", Arguments[i].c_str()); fputs(line, fp);
 		}
-		snprintf(line, max_line_size,"	</arguments>\n"); fputs(line, fp);
+		snprintf(line, max_line_size, "	</arguments>\n"); fputs(line, fp);
 	}
-	snprintf(line, max_line_size,"	<ahb_access/>\n"); fputs(line, fp);
-	snprintf(line, max_line_size,"	<short_description>%s</short_description>\n", GetShortDescription()); fputs(line, fp);
-	snprintf(line, max_line_size,"	<long_description>%s</long_description>\n", GetLongDescription()); fputs(line, fp);
-	snprintf(line, max_line_size,"</app>\n"); fputs(line, fp);
-		
+	snprintf(line, max_line_size, "	<ahb_access/>\n"); fputs(line, fp);
+	snprintf(line, max_line_size, "	<short_description>%s</short_description>\n", GetShortDescription()); fputs(line, fp);
+	snprintf(line, max_line_size, "	<long_description>%s</long_description>\n", GetLongDescription()); fputs(line, fp);
+	snprintf(line, max_line_size, "</app>\n"); fputs(line, fp);
+
 	fclose(fp);
-	delete [] line;
+	delete[] line;
 	return 1;
 }
 
@@ -132,17 +129,17 @@ int HomebrewXML::SaveHomebrewXMLData(const char* filename)
 void HomebrewXML::SetArgument(const char* argument)
 {
 	// Crop value from argument, if present
-	char argName[strlen(argument)+1];
+	char argName[strlen(argument) + 1];
 	strcpy(argName, argument);
 	char *ptr = strrchr(argName, '=');
-	if(ptr) *(ptr+1) = 0;
+	if (ptr) *(ptr + 1) = 0;
 
 	// Check if argument already exists and edit it
 	bool found = false;
-	for(u8 i=0; i < Arguments.size(); i++)
+	for (u8 i = 0; i < Arguments.size(); i++)
 	{
 		size_t pos = Arguments[i].find(argName);
-		if(pos != std::string::npos)
+		if (pos != std::string::npos)
 		{
 			Arguments[i] = argument;
 			found = true;
@@ -151,7 +148,7 @@ void HomebrewXML::SetArgument(const char* argument)
 	}
 
 	// if it doesn't exist, add the new argument.
-	if(!found)
+	if (!found)
 		Arguments.push_back(argument);
 }
 

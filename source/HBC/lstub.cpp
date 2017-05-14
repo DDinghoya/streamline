@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #include "lstub.h"
-#include "gecko.h"
+#include "Debug.h"
 
 #include "wad/nandtitle.h"
 

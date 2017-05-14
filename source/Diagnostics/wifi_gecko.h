@@ -1,6 +1,6 @@
 /****************************************************************************
- * Copyright (C) 2014
- * by cyan
+ * Copyright (C) 2010
+ * by Dimok
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any
@@ -20,11 +20,20 @@
  *
  * 3. This notice may not be removed or altered from any source
  * distribution.
+ *
+ * for WiiXplorer 2010
  ***************************************************************************/
-#ifndef _META_H_
-#define _META_H_
+#pragma once
 
-int updateMetaXML(void);
-int editMetaArguments(void);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+	int WifiGecko_Connect();
+	void WifiGecko_Close();
+	int WifiGecko_Send(const char * data, int datasize);
+	void wifi_printf(const char * format, ...);
+
+#ifdef __cplusplus
+}
 #endif

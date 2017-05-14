@@ -34,10 +34,8 @@
 #include "IO/fileops.h"
 #include "sys.h"
 #include "menu/menus.h"
-#include "utils/ShowError.h"
 #include "utils/tools.h"
-#include "gecko.h"
-
+#include "Debug.h"
 
 ThemeMenu::ThemeMenu()
 	: FlyingButtonsMenu(tr("Theme Menu"))

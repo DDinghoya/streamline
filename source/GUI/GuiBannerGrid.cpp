@@ -19,7 +19,6 @@
 #include "App.h"
 #include "SystemMenu/SystemMenuResources.h"
 #include "usbloader/GameList.h"
-#include "gecko.h"
 #include "video.h"
 
 //! some math to get the row and column from channel idx

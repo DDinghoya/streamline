@@ -18,8 +18,8 @@
 */
 
 #include "http.h"
-#include "../Version.h"
-#include "gecko.h"
+#include "Version.h"
+#include "Debug.h"
 
 extern char incommingIP[50];
 static u8 retryloop = 0;

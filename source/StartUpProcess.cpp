@@ -6,9 +6,8 @@
 #include "GUI/gui.h"
 #include "video.h"
 #include "audio.h"
-#include "input.h"
+#include "Input/input.h"
 #include "themes/CTheme.h"
-#include "gecko.h"
 #include "Controls/DeviceHandler.hpp"
 #include "wad/nandtitle.h"
 #include "system/IosLoader.h"
@@ -47,7 +46,7 @@ StartUpProcess::StartUpProcess()
 	versionTxt->SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	versionTxt->SetPosition(20, screenheight - 20);
 
-	versionTxt->SetTextf("Release %s", Version_GetVersionString());
+	versionTxt->SetTextf(Version_GetVersionString());
 
 	cancelTxt = new GuiText("Press B to cancel", 18, (GXColor) { 255, 255, 255, 255 });
 	cancelTxt->SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
@@ -221,6 +220,9 @@ int StartUpProcess::Execute()
 {
 	App.Settings.EntryIOS = IOS_GetVersion();
 
+	SetTextf("Initialize sd card\n");
+	DeviceHandler::Instance()->MountSD();
+
 #ifndef USE_DEFAULT_IOS
 	// Reload app cios if needed
 	SetTextf("Loading application cIOS %s\n", App.Settings.UseArgumentIOS ? "requested in meta.xml" : "");
@@ -254,9 +256,6 @@ int StartUpProcess::Execute()
 	SetTextf("Using %sIOS %i\n", IOS_GetVersion() >= 200 ? "c" : "", IOS_GetVersion());
 
 	Input::SetupPads();
-
-	SetTextf("Initialize sd card\n");
-	DeviceHandler::Instance()->MountSD();
 
 	if (App.Settings.USBAutoMount == ON)
 	{

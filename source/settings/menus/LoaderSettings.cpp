@@ -25,7 +25,7 @@
 #include "LoaderSettings.hpp"
 #include "usbloader/usbstorage2.h"
 #include "App.h"
-#include "settings/meta.h"
+#include "HBC/meta.h"
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
 #include "wad/nandtitle.h"

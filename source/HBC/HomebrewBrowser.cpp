@@ -29,7 +29,7 @@
 #include "Net/networkops.h"
 #include "utils/minizip/miniunz.h"
 #include "prompts/TitleBrowser.h"
-#include "homebrewboot/BootHomebrew.h"
+#include "BootHomebrew.h"
 #include "IO/fileops.h"
 #include "prompts/ProgressWindow.h"
 #include "utils/tools.h"

@@ -17,7 +17,6 @@
 #include "mload/modules/dip_plugin_249.h"
 #include "mload/modules/odip_frag.h"
 #include "utils/tools.h"
-#include "gecko.h"
 
 #define MEM2_PROT		0x0D8B420A
 #define ES_MODULE_START	((u16 *)0x939F0000)

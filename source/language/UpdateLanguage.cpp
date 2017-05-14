@@ -18,8 +18,7 @@
 #include "Net/URL_List.h"
 #include "prompts/PromptWindows.h"
 #include "prompts/ProgressWindow.h"
-#include "utils/ShowError.h"
-#include "gecko.h"
+#include "Debug.h"
 #include "Version.h"
 
 static const char * LanguageFilesURL = "http://svn.code.sf.net/p/usbloadergx/code/trunk/Languages/";

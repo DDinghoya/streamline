@@ -17,7 +17,11 @@ include $(DEVKITPPC)/wii_rules
 TARGET		:=	boot
 BUILD		:=	build
 SOURCES		:=	source \
+				source/Core \
+				source/Input \
+				source/Diagnostics \
 				source/IO \
+				source/Data \
 				source/Library \
 				source/GUI \
 				source/Controls \
@@ -38,11 +42,11 @@ SOURCES		:=	source \
 				source/BoxCover \
 				source/GameCube \
 				source/cheats \
-				source/homebrewboot \
+				source/HBC \
 				source/themes \
 				source/menu \
 				source/memory \
-				source/ImageOperations \
+				source/Imaging \
 				source/SoundOperations \
 				source/SystemMenu \
 				source/utils \

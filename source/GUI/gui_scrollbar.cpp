@@ -27,7 +27,7 @@
 #include "menu/menus.h"
 #include "gui_scrollbar.hpp"
 #include "utils/tools.h"
-#include "input.h"
+#include "Input/input.h"
 
 GuiScrollbar::GuiScrollbar(int h, u8 m)
 {

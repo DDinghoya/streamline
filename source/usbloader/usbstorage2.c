@@ -34,7 +34,7 @@
 #include <string.h>
 #include "usbstorage2.h"
 #include "memory/mem2.h"
-#include "gecko.h"
+#include "Debug.h"
 
 
 /* IOCTL commands */

@@ -21,7 +21,7 @@
 #include "prompts/ProgressWindow.h"
 #include "IO/fileops.h"
 #include "language/gettext.h"
-#include "utils/ShowError.h"
+#include "Debug.h"
 #include "utils/tools.h"
 #include "wad.h"
 

@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "gecko.h"
 
 #include "App.h"
 #include "memory/mem2.h"

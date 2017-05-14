@@ -37,9 +37,8 @@
 #include "usbloader/wdvd.h"
 #include "usbloader/wbfs/wbfs_fat.h"
 #include "usbloader/wbfs/wbfs_rw.h"
-#include "utils/ShowError.h"
 #include "utils/tools.h"
-#include "gecko.h"
+#include "Debug.h"
 
 static const u32 BUF_SIZE = (64*1024);
 

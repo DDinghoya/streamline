@@ -20,7 +20,7 @@
 /**
  * Version information for Libruntimeiospatch.
  */
-#define LIB_RUNTIMEIOSPATCH_VERSION "1.5.2"
+#define LIB_RUNTIMEIOSPATCH_VERSION "1.5.3"
 
 //==============================================================================
 // HW_RVL header
@@ -49,6 +49,7 @@ extern "C" {
 //==============================================================================
 // Extra standard declarations
 //==============================================================================
+//typedef signed int s32;
 #include <gctypes.h>
 //==============================================================================
 
@@ -133,16 +134,6 @@ s32 IosPatch_RUNTIME(bool wii, bool sciifii, bool vwii, bool verbose);
  *      ERROR_PATCH     : Error     - Patching HW_AHBPROT access failed
  */
 s32 IosPatch_FULL(bool wii, bool sciifii, bool vwii, bool verbose, int IOS);
-
-/**
- * This function patches only SSL certificate check
- * @param verbose Flag determing whether or not to print messages on-screen.
- * @example if(AHBPROT_DISABLED) IosPatch_SSL(true);
- * @return Signed 32bit integer representing code
- *      > 0             : Success   - return equals to number of applied patches
- *      ERROR_AHBPROT   : Error     - No HW_AHBPROT access
- */
-s32 IosPatch_SSL(bool verbose);
 
 //==============================================================================
 // C++ footer

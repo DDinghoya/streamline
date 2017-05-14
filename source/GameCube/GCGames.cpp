@@ -28,7 +28,6 @@
 #include "utils/tools.h"
 #include "system/IosLoader.h"
 #include "menu.h"
-#include "gecko.h"
 
 GCGames *GCGames::instance = NULL;
 

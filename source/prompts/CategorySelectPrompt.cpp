@@ -25,7 +25,6 @@
 #include "App.h"
 #include "language/gettext.h"
 #include "utils/StringTools.h"
-#include "gecko.h"
 
 CategorySelectPrompt::CategorySelectPrompt(struct discHdr * header)
 	: CategoryPrompt(fmt("%s - %s", (char *)header->id, tr("Categories"))),

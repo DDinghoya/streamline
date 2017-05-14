@@ -1,6 +1,6 @@
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
-#include "gecko.h"
+#include "Debug.h"
 
 static int defaultDolSelected = 0;
 

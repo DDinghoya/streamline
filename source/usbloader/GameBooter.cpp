@@ -45,7 +45,7 @@
 #include "menu/menus.h"
 #include "memory/memory.h"
 #include "utils/StringTools.h"
-#include "homebrewboot/BootHomebrew.h"
+#include "HBC/BootHomebrew.h"
 #include "GameBooter.hpp"
 #include "NandEmu.h"
 #include "SavePath.h"

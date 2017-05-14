@@ -9,7 +9,7 @@
 // #define WIFI_GECKO // don't keep this for released build
 
 #ifdef WIFI_GECKO
-#include <utils/wifi_gecko.h>
+#include "wifi_gecko.h"
 #endif
 
 /* init-globals */
@@ -17,35 +17,35 @@ static bool geckoinit = false;
 
 void gprintf(const char *format, ...)
 {
-	#ifndef DEBUG_TO_FILE
-		#ifndef WIFI_GECKO
-		if (!geckoinit)
-			return;
-		#endif
-	#endif
+#ifndef DEBUG_TO_FILE
+#ifndef WIFI_GECKO
+	if (!geckoinit)
+		return;
+#endif
+#endif
 
 	static char stringBuf[4096];
 	int len;
 	va_list va;
 	va_start(va, format);
-	if((len = vsnprintf(stringBuf, sizeof(stringBuf), format, va)) > 0)
+	if ((len = vsnprintf(stringBuf, sizeof(stringBuf), format, va)) > 0)
 	{
-		#ifdef DEBUG_TO_FILE
+#ifdef DEBUG_TO_FILE
 		FILE *debugF = fopen("sd:/debug.txt", "a");
-		if(!debugF)
+		if (!debugF)
 			debugF = fopen("sd:/debug.txt", "w");
-		if(debugF)
+		if (debugF)
 		{
 			fwrite(stringBuf, 1, strlen(stringBuf), debugF);
 			fclose(debugF);
 		}
-		#else
+#else
 		usb_sendbuffer(1, stringBuf, len);
-		#endif
-		
-		#ifdef WIFI_GECKO
+#endif
+
+#ifdef WIFI_GECKO
 		wifi_printf(stringBuf);
-		#endif
+#endif
 	}
 	va_end(va);
 }
@@ -74,7 +74,7 @@ void hexdump(void *d, int len)
 {
 	u8 *data;
 	int i, off;
-	data = (u8*) d;
+	data = (u8*)d;
 
 	gprintf("\n       0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  0123456789ABCDEF");
 	gprintf("\n====  ===============================================  ================\n");
@@ -83,22 +83,29 @@ void hexdump(void *d, int len)
 	{
 		gprintf("%04x  ", off);
 		for (i = 0; i < 16; i++)
+		{
 			if ((i + off) >= len)
 				gprintf("   ");
-			else gprintf("%02x ", data[off + i]);
+			else
+				gprintf("%02x ", data[off + i]);
+		}
 
 		gprintf(" ");
 		for (i = 0; i < 16; i++)
+		{
 			if ((i + off) >= len)
 				gprintf(" ");
-			else gprintf("%c", ascii(data[off + i]));
+			else
+				gprintf("%c", ascii(data[off + i]));
+		}
+
 		gprintf("\n");
 	}
 }
 
 static ssize_t __out_write(struct _reent *r, void *fd, const char *ptr, size_t len)
 {
-	if(len > 0)
+	if (len > 0)
 		usb_sendbuffer(1, ptr, len);
 
 	return len;

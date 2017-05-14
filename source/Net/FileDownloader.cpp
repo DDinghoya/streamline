@@ -32,7 +32,7 @@
 #include "IO/fileops.h"
 #include "prompts/PromptWindows.h"
 #include "prompts/ProgressWindow.h"
-#include "utils/ShowError.h"
+#include "Debug.h"
 
 /****************************************************************************
  * Download a file from a given url with a Progressbar

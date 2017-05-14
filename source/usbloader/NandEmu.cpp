@@ -10,7 +10,7 @@
 
 #include "system/IosLoader.h"
 #include "utils/tools.h"
-#include "gecko.h"
+#include "Debug.h"
 #include "NandEmu.h"
 
 /* 'NAND Device' structure */

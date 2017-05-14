@@ -40,7 +40,7 @@
 #include "language/gettext.h"
 #include "DirList.h"
 #include "fileops.h"
-#include "gecko.h"
+#include "Debug.h"
 
 #define BLOCKSIZE			   70*1024	  //70KB
 #define VectorResize(List) if(List.capacity()-List.size() == 0) List.reserve(List.size()+100)

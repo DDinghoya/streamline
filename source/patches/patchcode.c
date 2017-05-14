@@ -35,7 +35,7 @@
 #include "IO/fileops.h"
 #include "memory/mem2.h"
 #include "memory/memory.h"
-#include "gecko.h"
+#include "Debug.h"
 
 static u8 *codelistend = (u8 *) 0x80003000;
 static u8 *codelist = (u8 *) 0x800022A8;

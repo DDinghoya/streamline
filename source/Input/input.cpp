@@ -22,7 +22,7 @@
 #include "video.h"
 #include "input.h"
 #include "sys.h"
-#include "gecko.h"
+#include "Debug.h"
 
 
 namespace Input

@@ -33,7 +33,6 @@
 #include "wad/nandtitle.h"
 #include "memory/memory.h"
 #include "utils/lz77.h"
-#include "gecko.h"
 
 #include "channels.h"
 
@@ -186,7 +185,9 @@ u8 * Channels::GetDol(const u64 &title, u8 *tmdBuffer)
 	if(bootcontent == 0xDEADBEAF)
 	{
 		bootcontent = tmd_file->contents[tmd_file->boot_index].cid;
-		if(!App.Settings.UseChanLauncher) gprintf("Main dol not found -> ");
+		if(!App.Settings.UseChanLauncher) 
+			gprintf("Main dol not found -> ");
+
 		gprintf("Loading boot content index\n");
 	}
 

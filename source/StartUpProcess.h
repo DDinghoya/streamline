@@ -6,6 +6,7 @@ class StartUpProcess
 {
 public:
 	static int Run(int argc, char *argv[]);
+
 private:
 	StartUpProcess();
 	~StartUpProcess();

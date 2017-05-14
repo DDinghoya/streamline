@@ -32,7 +32,6 @@
 #include "libwbfs/wiidisc.h"
 #include "usbloader/fstfile.h"
 #include "App.h"
-#include "gecko.h"
 #include "video.h"
 
 u32 WDMMenu::AlternateDolOffset = 0;

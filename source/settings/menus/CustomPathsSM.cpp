@@ -36,7 +36,6 @@
 #include "prompts/filebrowser.h"
 #include "themes/CTheme.h"
 #include "IO/fileops.h"
-#include "gecko.h"
 
 CustomPathsSM::CustomPathsSM()
 	: SettingsMenu(tr("Custom Paths"), &GuiOptions, MENU_NONE)

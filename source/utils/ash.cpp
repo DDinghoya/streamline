@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 #include "ash.h"
-#include "gecko.h"
+#include "Debug.h"
 
 #include <stdlib.h>
 #include <stdio.h>
