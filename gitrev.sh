@@ -55,9 +55,14 @@ const char *Version_GetBranch()
 	return SVN_BRANCH;
 }
 
-const char *Version_GetVersionString()
+const char *Version_GetDescription()
 {
 	return SVN_DESC;
+}
+
+const char *Version_GetVersionString()
+{
+	return SVN_MAJOR "." SVN_MINOR "." SVN_PATCH "." SVN_REV "-" SVN_BRANCH;
 }
 EOF
 
@@ -75,7 +80,7 @@ cat <<EOF > ./distrib/usbloader_gx/meta.xml
 	<app version="1">
 		<name>USB Loader GX</name>
 		<coder>USB Loader GX Team</coder>
-		<version>$ver_desc</version>
+		<version>$ver_major.$ver_minor.$ver_patch.$ver_build-$ver_branch</version>
 		<release_date>$rev_date</release_date>
 		<!--   // remove this line to enable arguments
 		<arguments>

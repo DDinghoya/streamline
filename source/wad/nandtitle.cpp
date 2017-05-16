@@ -34,7 +34,8 @@ s32 NandTitle::Get()
 	NameList.clear();
 
 	ret = ES_GetNumTitles(&numTitles);
-	if (ret < 0) return WII_EINTERNAL;
+	if (ret < 0) 
+		return WII_EINTERNAL;
 
 	list = (u64*) memalign(32, numTitles * sizeof(u64));
 	if (!list)

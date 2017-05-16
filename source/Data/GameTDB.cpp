@@ -21,11 +21,13 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
+#include <gctypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
 #include <cstring>
 #include "GameTDB.h"
+#include "Xml.h"
 
 #define NAME_OFFSET_DB  "wiitdb_offsets.bin"
 #define MAXREADSIZE	 1024*1024   // Cache size only for parsing the offsets: 1MB
@@ -49,12 +51,12 @@ static const ReplaceStruct Replacements[] =
 };
 
 GameTDB::GameTDB()
-	: file(0), LangCode("EN"), GameNodeCache(0)
+	: file(0), LangCode("EN"), GameNodeCache(0), titleOverrides(NULL)
 {
 }
 
 GameTDB::GameTDB(const char * filepath)
-	: file(0), LangCode("EN"), GameNodeCache(0)
+	: file(0), LangCode("EN"), GameNodeCache(0), titleOverrides(NULL)
 {
 	OpenFile(filepath);
 }

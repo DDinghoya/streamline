@@ -36,7 +36,7 @@
 
 #include "channels.h"
 
-typedef struct _dolheader{
+typedef struct _dolheader {
 	u32 section_pos[18];
 	u32 section_start[18];
 	u32 section_size[18];
@@ -87,7 +87,7 @@ void Channels::InternalGetNandChannelList(u32 type)
 			break;
 
 		//these can't be booted anyways
-		if (TITLE_LOWER( tid ) == 0x48414741 || TITLE_LOWER( tid ) == 0x48414141 || TITLE_LOWER( tid ) == 0x48414641)
+		if (TITLE_LOWER(tid) == 0x48414741 || TITLE_LOWER(tid) == 0x48414141 || TITLE_LOWER(tid) == 0x48414641)
 			continue;
 
 		//these aren't installed on the nand
@@ -98,17 +98,17 @@ void Channels::InternalGetNandChannelList(u32 type)
 		NandTitles.AsciiTID(tid, id);
 
 		// Force old and new format to be "JODI" which is known by GameTDB
-		if(tid == 0x000100014c554c5aLL || tid == 0x00010001AF1BF516LL || tid == 0x0001000148415858LL)
+		if (tid == 0x000100014c554c5aLL || tid == 0x00010001AF1BF516LL || tid == 0x0001000148415858LL)
 			strcpy(id, "JODI");
 
 		const char *name = App.Library.GameTitles.GetTitle(id);
 		std::string TitleName;
 
-		if(!name || *name == '\0')
+		if (!name || *name == '\0')
 		{
 			name = NandTitles.NameOf(tid);
 			// Set title for caching
-			if(name)
+			if (name)
 				App.Library.GameTitles.SetGameTitle(id, name);
 		}
 
@@ -118,13 +118,13 @@ void Channels::InternalGetNandChannelList(u32 type)
 		memcpy(NandChannels[s].id, id, 4);
 		NandChannels[s].tid = tid;
 		NandChannels[s].type = TYPE_GAME_NANDCHAN;
-		strncpy(NandChannels[s].title, name ? name : "", sizeof(NandChannels[s].title)-1);
+		strncpy(NandChannels[s].title, name ? name : "", sizeof(NandChannels[s].title) - 1);
 	}
 }
 
 vector<struct discHdr> & Channels::GetNandHeaders(void)
 {
-	if(NandChannels.empty())
+	if (NandChannels.empty())
 		this->GetChannelList();
 
 	return NandChannels;
@@ -132,7 +132,7 @@ vector<struct discHdr> & Channels::GetNandHeaders(void)
 
 vector<struct discHdr> & Channels::GetEmuHeaders(void)
 {
-	if(EmuChannels.empty())
+	if (EmuChannels.empty())
 		this->GetEmuChannelList();
 
 	return EmuChannels;
@@ -140,40 +140,40 @@ vector<struct discHdr> & Channels::GetEmuHeaders(void)
 
 u8 * Channels::GetDol(const u64 &title, u8 *tmdBuffer)
 {
-	static const u8 dolsign[6] = {0x00, 0x00, 0x01, 0x00, 0x00, 0x00};
+	static const u8 dolsign[6] = { 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
 	static u8 dolhead[32] ATTRIBUTE_ALIGN(32);
 	u8 *buffer = NULL;
 	u32 filesize = 0;
 	u32 bootcontent = 0xDEADBEAF;
 	u32 high = TITLE_UPPER(title);
-	u32 low  = TITLE_LOWER(title);
+	u32 low = TITLE_LOWER(title);
 
-	char *filepath = (char *) memalign(32, ISFS_MAXPATH);
-	if(!filepath)
+	char *filepath = (char *)memalign(32, ISFS_MAXPATH);
+	if (!filepath)
 		return NULL;
 
-	_tmd * tmd_file = (_tmd *) SIGNATURE_PAYLOAD((u32 *)tmdBuffer);
+	_tmd * tmd_file = (_tmd *)SIGNATURE_PAYLOAD((u32 *)tmdBuffer);
 
-	if(!App.Settings.UseChanLauncher)
+	if (!App.Settings.UseChanLauncher)
 	{
-		for(u32 i = 0; i < tmd_file->num_contents; ++i)
+		for (u32 i = 0; i < tmd_file->num_contents; ++i)
 		{
-			if(tmd_file->contents[i].index == tmd_file->boot_index)
+			if (tmd_file->contents[i].index == tmd_file->boot_index)
 				continue; // Skip loader
 
 			snprintf(filepath, ISFS_MAXPATH, "/title/%08x/%08x/content/%08x.app", (unsigned int)high, (unsigned int)low, (unsigned int)tmd_file->contents[i].cid);
 
 			s32 fd = ISFS_Open(filepath, ISFS_OPEN_READ);
-			if(fd < 0)
+			if (fd < 0)
 				continue;
 
 			s32 ret = ISFS_Read(fd, dolhead, 32);
 			ISFS_Close(fd);
 
-			if(ret != 32)
+			if (ret != 32)
 				continue;
 
-			if(memcmp(dolhead, dolsign, sizeof(dolsign)) == 0)
+			if (memcmp(dolhead, dolsign, sizeof(dolsign)) == 0)
 			{
 				bootcontent = tmd_file->contents[i].cid;
 				break;
@@ -182,10 +182,10 @@ u8 * Channels::GetDol(const u64 &title, u8 *tmdBuffer)
 	}
 
 	//! Fall back to boot content if dol is not found
-	if(bootcontent == 0xDEADBEAF)
+	if (bootcontent == 0xDEADBEAF)
 	{
 		bootcontent = tmd_file->contents[tmd_file->boot_index].cid;
-		if(!App.Settings.UseChanLauncher) 
+		if (!App.Settings.UseChanLauncher)
 			gprintf("Main dol not found -> ");
 
 		gprintf("Loading boot content index\n");
@@ -219,8 +219,8 @@ u8 * Channels::GetDol(const u64 &title, u8 *tmdBuffer)
 	}
 
 	// move dol to mem2
-	u8 *outBuf = (u8 *) MEM2_alloc(filesize);
-	if(!outBuf)
+	u8 *outBuf = (u8 *)MEM2_alloc(filesize);
+	if (!outBuf)
 		return buffer;
 
 	memcpy(outBuf, buffer, filesize);
@@ -238,7 +238,7 @@ u8 Channels::GetRequestedIOS(const u64 &title)
 	if (!titleTMD)
 		return 0;
 
-	if(tmdSize > 0x18B)
+	if (tmdSize > 0x18B)
 		IOS = titleTMD[0x18B];
 
 	free(titleTMD);
@@ -248,11 +248,11 @@ u8 Channels::GetRequestedIOS(const u64 &title)
 
 u8 *Channels::GetTMD(const u64 &tid, u32 *size, const char *prefix)
 {
-	char *filepath = (char *) memalign(32, ISFS_MAXPATH);
-	if(!filepath)
+	char *filepath = (char *)memalign(32, ISFS_MAXPATH);
+	if (!filepath)
 		return NULL;
 
-	if(!prefix)
+	if (!prefix)
 		prefix = "";
 
 	snprintf(filepath, ISFS_MAXPATH, "%s/title/%08x/%08x/content/title.tmd", prefix, (unsigned int)TITLE_UPPER(tid), (unsigned int)TITLE_LOWER(tid));
@@ -262,7 +262,7 @@ u8 *Channels::GetTMD(const u64 &tid, u32 *size, const char *prefix)
 
 	int ret;
 
-	if(*prefix != '\0')
+	if (*prefix != '\0')
 		ret = LoadFileToMem(filepath, &tmdBuffer, &tmdSize);
 	else
 		ret = NandTitle::LoadFileFromNand(filepath, &tmdBuffer, &tmdSize);
@@ -272,12 +272,12 @@ u8 *Channels::GetTMD(const u64 &tid, u32 *size, const char *prefix)
 	if (ret < 0)
 	{
 		gprintf("Reading TMD...Failed!\n");
-		if(tmdBuffer)
+		if (tmdBuffer)
 			free(tmdBuffer);
 		return NULL;
 	}
 
-	if(size)
+	if (size)
 		*size = tmdSize;
 
 	return tmdBuffer;
@@ -290,21 +290,21 @@ u32 Channels::LoadChannel(const u64 &chantitle)
 	u32 ios = 0;
 	u32 tmdSize = 0;
 	u8 *tmdBuffer = GetTMD(chantitle, &tmdSize, "");
-	if(!tmdBuffer)
+	if (!tmdBuffer)
 	{
 		ISFS_Deinitialize();
 		return 0;
 	}
 
 	u8 *chanDOL = GetDol(chantitle, tmdBuffer);
-	if(!chanDOL)
+	if (!chanDOL)
 	{
 		ISFS_Deinitialize();
 		free(tmdBuffer);
 		return 0;
 	}
 
-	if(tmdSize > 0x18B)
+	if (tmdSize > 0x18B)
 		ios = tmdBuffer[0x18B];
 
 	Identify(chantitle, tmdBuffer, tmdSize);
@@ -313,14 +313,14 @@ u32 Channels::LoadChannel(const u64 &chantitle)
 
 	dolheader *dolfile = (dolheader *)chanDOL;
 
-	if(dolfile->bss_start)
+	if (dolfile->bss_start)
 	{
 		dolfile->bss_start |= 0x80000000;
 
-		if(dolfile->bss_start < 0x81800000)
+		if (dolfile->bss_start < 0x81800000)
 		{
 			// For homebrews...not all have it clean.
-			if(dolfile->bss_start + dolfile->bss_size >= 0x81800000)
+			if (dolfile->bss_start + dolfile->bss_size >= 0x81800000)
 				dolfile->bss_size = 0x81800000 - dolfile->bss_start;
 
 			memset((void *)dolfile->bss_start, 0, dolfile->bss_size);
@@ -330,17 +330,17 @@ u32 Channels::LoadChannel(const u64 &chantitle)
 	}
 
 	int i;
-	for(i = 0; i < 18; i++)
+	for (i = 0; i < 18; i++)
 	{
 		if (!dolfile->section_size[i]) continue;
 		if (dolfile->section_pos[i] < sizeof(dolheader)) continue;
-		if(!(dolfile->section_start[i] & 0x80000000))
+		if (!(dolfile->section_start[i] & 0x80000000))
 			dolfile->section_start[i] |= 0x80000000;
 
 		u8 *dolChunkOffset = (u8 *)dolfile->section_start[i];
 		u32 dolChunkSize = dolfile->section_size[i];
 
-		memmove (dolChunkOffset, chanDOL + dolfile->section_pos[i], dolChunkSize);
+		memmove(dolChunkOffset, chanDOL + dolfile->section_pos[i], dolChunkSize);
 		DCFlushRange(dolChunkOffset, dolChunkSize);
 		ICInvalidateRange(dolChunkOffset, dolChunkSize);
 
@@ -365,8 +365,8 @@ u32 Channels::LoadChannel(const u64 &chantitle)
 	DCFlushRange((void*)0x817FE000, 0x2000);
 
 	// IOS Version Check
-	*(vu32*)0x80003140	= ((ios << 16)) | 0xFFFF;
-	*(vu32*)0x80003188	= ((ios << 16)) | 0xFFFF;
+	*(vu32*)0x80003140 = ((ios << 16)) | 0xFFFF;
+	*(vu32*)0x80003188 = ((ios << 16)) | 0xFFFF;
 
 	ISFS_Deinitialize();
 
@@ -382,7 +382,7 @@ static bool Identify_GenerateTik(signed_blob **outbuf, u32 *outlen)
 	sig_rsa2048 *signature = (sig_rsa2048 *)buffer;
 	signature->type = ES_SIG_RSA2048;
 
-	tik *tik_data  = (tik *)SIGNATURE_PAYLOAD(buffer);
+	tik *tik_data = (tik *)SIGNATURE_PAYLOAD(buffer);
 	strcpy(tik_data->issuer, "Root-CA00000001-XS00000003");
 	memset(tik_data->cidx_mask, 0xFF, 32);
 
@@ -394,14 +394,14 @@ static bool Identify_GenerateTik(signed_blob **outbuf, u32 *outlen)
 
 bool Channels::Identify(const u64 &titleid, u8 *tmdBuffer, u32 tmdSize)
 {
-	char *filepath = (char *) memalign(32, ISFS_MAXPATH);
-	if(!filepath)
+	char *filepath = (char *)memalign(32, ISFS_MAXPATH);
+	if (!filepath)
 		return false;
 
 	u32 tikSize;
 	signed_blob *tikBuffer = NULL;
 
-	if(!Identify_GenerateTik(&tikBuffer,&tikSize))
+	if (!Identify_GenerateTik(&tikBuffer, &tikSize))
 	{
 		free(filepath);
 		gprintf("Generating fake ticket...Failed!");
@@ -421,23 +421,23 @@ bool Channels::Identify(const u64 &titleid, u8 *tmdBuffer, u32 tmdSize)
 	s32 ret = ES_Identify((signed_blob*)certBuffer, certSize, (signed_blob*)tmdBuffer, tmdSize, tikBuffer, tikSize, NULL);
 	if (ret < 0)
 	{
-		switch(ret)
+		switch (ret)
 		{
-			case ES_EINVAL:
-				gprintf("Error! ES_Identify (ret = %d;) Data invalid!\n", ret);
-				break;
-			case ES_EALIGN:
-				gprintf("Error! ES_Identify (ret = %d;) Data not aligned!\n", ret);
-				break;
-			case ES_ENOTINIT:
-				gprintf("Error! ES_Identify (ret = %d;) ES not initialized!\n", ret);
-				break;
-			case ES_ENOMEM:
-				gprintf("Error! ES_Identify (ret = %d;) No memory!\n", ret);
-				break;
-			default:
-				gprintf("Error! ES_Identify (ret = %d)\n", ret);
-				break;
+		case ES_EINVAL:
+			gprintf("Error! ES_Identify (ret = %d;) Data invalid!\n", ret);
+			break;
+		case ES_EALIGN:
+			gprintf("Error! ES_Identify (ret = %d;) Data not aligned!\n", ret);
+			break;
+		case ES_ENOTINIT:
+			gprintf("Error! ES_Identify (ret = %d;) ES not initialized!\n", ret);
+			break;
+		case ES_ENOMEM:
+			gprintf("Error! ES_Identify (ret = %d;) No memory!\n", ret);
+			break;
+		default:
+			gprintf("Error! ES_Identify (ret = %d)\n", ret);
+			break;
 		}
 	}
 
@@ -453,58 +453,58 @@ bool Channels::emuExists(char *tmdpath)
 	u8 *buffer = NULL;
 	u32 size = 0;
 
-	if(LoadFileToMem(tmdpath, &buffer, &size) < 0)
+	if (LoadFileToMem(tmdpath, &buffer, &size) < 0)
 		return false;
 
-	signed_blob *s_tmd = (signed_blob *) buffer;
+	signed_blob *s_tmd = (signed_blob *)buffer;
 
 	u32 i;
-	tmd *titleTmd = (tmd *) SIGNATURE_PAYLOAD(s_tmd);
+	tmd *titleTmd = (tmd *)SIGNATURE_PAYLOAD(s_tmd);
 
 	for (i = 0; i < titleTmd->num_contents; i++)
 		if (!titleTmd->contents[i].index)
 			break;
 
-	if(i == titleTmd->num_contents)
+	if (i == titleTmd->num_contents)
 	{
 		free(buffer);
 		return false;
 	}
 
-	u32 cid  = titleTmd->contents[i].cid;
-	
+	u32 cid = titleTmd->contents[i].cid;
+
 	free(buffer);
 
 	char *ptr = strrchr(tmdpath, '/');
-	if(!ptr)
+	if (!ptr)
 		return false;
 
 	//! tmdpath has length of 1024
-	snprintf(ptr+1, 1024-(ptr+1-tmdpath), "%08x.app", (unsigned int)cid);
+	snprintf(ptr + 1, 1024 - (ptr + 1 - tmdpath), "%08x.app", (unsigned int)cid);
 
 	FILE *f = fopen(tmdpath, "rb");
-	if(!f)
+	if (!f)
 		return false;
 
 	fclose(f);
-	
+
 	return true;
 }
 
 bool Channels::ParseTitleDir(char *path, int language)
 {
-	if(!path)
+	if (!path)
 		return false;
 
 	const char *tidPtr = strrchr(path, '/');
-	if(!tidPtr)
+	if (!tidPtr)
 		return false;
 	else
 		tidPtr++;
 
 	struct dirent *dirent = NULL;
 	DIR *dir = opendir(path);
-	if(!dir)
+	if (!dir)
 		return false;
 
 	char *pathEndPtr = path + strlen(path);
@@ -514,43 +514,43 @@ bool Channels::ParseTitleDir(char *path, int language)
 
 	while ((dirent = readdir(dir)) != 0)
 	{
-		if(!dirent->d_name)
+		if (!dirent->d_name)
 			continue;
 
 		//these can't be booted anyways
-		if(*dirent->d_name == '.' || strcmp(dirent->d_name, "48414141") == 0 || strcmp(dirent->d_name, "48414641") == 0)
+		if (*dirent->d_name == '.' || strcmp(dirent->d_name, "48414141") == 0 || strcmp(dirent->d_name, "48414641") == 0)
 		{
 			continue;
 		}
 
-		snprintf(pathEndPtr, 1024-(pathEndPtr-path), "/%s/content/title.tmd", dirent->d_name);
+		snprintf(pathEndPtr, 1024 - (pathEndPtr - path), "/%s/content/title.tmd", dirent->d_name);
 
-		if(stat(path, &st) != 0)
+		if (stat(path, &st) != 0)
 			continue;
 
 		// check if content in tmd exists
-		if(!emuExists(path))
+		if (!emuExists(path))
 			continue;
-			
+
 		u32 tidLow = strtoul(dirent->d_name, NULL, 16);
 		char id[5];
 		memset(id, 0, sizeof(id));
 		memcpy(id, &tidLow, 4);
 
-		u64 tid = ((u64)tidHigh << 32) | ((u64) tidLow);
+		u64 tid = ((u64)tidHigh << 32) | ((u64)tidLow);
 
 		// Force old and new format to be "JODI" which is known by GameTDB
-		if(tid == 0x000100014c554c5aLL || tid == 0x00010001AF1BF516LL || tid == 0x0001000148415858LL)
+		if (tid == 0x000100014c554c5aLL || tid == 0x00010001AF1BF516LL || tid == 0x0001000148415858LL)
 			strcpy(id, "JODI");
 
 		std::string TitleName;
 
 		const char *title = App.Library.GameTitles.GetTitle(id);
-		if(title && *title != '\0')
+		if (title && *title != '\0')
 		{
 			TitleName = title;
 		}
-		else if(GetEmuChanTitle(path, language, TitleName))
+		else if (GetEmuChanTitle(path, language, TitleName))
 		{
 			App.Library.GameTitles.SetGameTitle(id, TitleName.c_str());
 		}
@@ -565,7 +565,7 @@ bool Channels::ParseTitleDir(char *path, int language)
 		memcpy(EmuChannels[s].id, id, 4);
 		EmuChannels[s].tid = tid;
 		EmuChannels[s].type = TYPE_GAME_EMUNANDCHAN;
-		strncpy(EmuChannels[s].title, TitleName.c_str(), sizeof(EmuChannels[s].title)-1);
+		strncpy(EmuChannels[s].title, TitleName.c_str(), sizeof(EmuChannels[s].title) - 1);
 	}
 
 	closedir(dir);
@@ -578,53 +578,53 @@ bool Channels::GetEmuChanTitle(char *tmdpath, int language, std::string &Title)
 	u8 *buffer = NULL;
 	u32 size = 0;
 
-	if(LoadFileToMem(tmdpath, &buffer, &size) < 0)
+	if (LoadFileToMem(tmdpath, &buffer, &size) < 0)
 		return false;
 
-	signed_blob *s_tmd = (signed_blob *) buffer;
+	signed_blob *s_tmd = (signed_blob *)buffer;
 
 	u32 i;
-	tmd *titleTmd = (tmd *) SIGNATURE_PAYLOAD(s_tmd);
+	tmd *titleTmd = (tmd *)SIGNATURE_PAYLOAD(s_tmd);
 
 	for (i = 0; i < titleTmd->num_contents; i++)
 		if (!titleTmd->contents[i].index)
 			break;
 
-	if(i == titleTmd->num_contents)
+	if (i == titleTmd->num_contents)
 	{
 		free(buffer);
 		return false;
 	}
 
-	u32 cid  = titleTmd->contents[i].cid;
+	u32 cid = titleTmd->contents[i].cid;
 
 	free(buffer);
 
 	char *ptr = strrchr(tmdpath, '/');
-	if(!ptr)
+	if (!ptr)
 		return false;
 
 	//! tmdpath has length of 1024
-	snprintf(ptr+1, 1024-(ptr+1-tmdpath), "%08x.app", (unsigned int)cid);
+	snprintf(ptr + 1, 1024 - (ptr + 1 - tmdpath), "%08x.app", (unsigned int)cid);
 
 	FILE *f = fopen(tmdpath, "rb");
-	if(!f)
+	if (!f)
 		return false;
 
-	if(fseek(f, IMET_OFFSET, SEEK_SET) != 0)
+	if (fseek(f, IMET_OFFSET, SEEK_SET) != 0)
 	{
 		fclose(f);
 		return false;
 	}
 
-	IMET *imet = (IMET*) malloc(sizeof(IMET));
-	if(!imet)
+	IMET *imet = (IMET*)malloc(sizeof(IMET));
+	if (!imet)
 	{
 		fclose(f);
 		return false;
 	}
 
-	if(fread(imet, 1, sizeof(IMET), f) != sizeof(IMET))
+	if (fread(imet, 1, sizeof(IMET), f) != sizeof(IMET))
 	{
 		free(imet);
 		fclose(f);
@@ -642,7 +642,7 @@ bool Channels::GetEmuChanTitle(char *tmdpath, int language, std::string &Title)
 	// names not available
 	if (imet->name_japanese[language * IMET_MAX_NAME_LEN] == 0)
 	{
-		if(imet->name_english[0] != 0)
+		if (imet->name_english[0] != 0)
 			language = CONF_LANG_ENGLISH;
 		else
 		{
@@ -669,22 +669,23 @@ u8 *Channels::GetOpeningBnr(const u64 &title, u32 * outsize, const char *pathPre
 {
 	u8 *banner = NULL;
 	u32 high = TITLE_UPPER(title);
-	u32 low  = TITLE_LOWER(title);
+	u32 low = TITLE_LOWER(title);
 
-	char *filepath = (char *) memalign(32, ISFS_MAXPATH);
-	if(!filepath)
+	int pathlen = (strlen(pathPrefix) > 0) ? 1024 : ISFS_MAXPATH;
+	char *filepath = (char *)memalign(32, pathlen);
+	if (!filepath)
 		return NULL;
 
 	do
 	{
-		snprintf(filepath, ISFS_MAXPATH, "%s/title/%08x/%08x/content/title.tmd", pathPrefix, (unsigned int)high, (unsigned int)low);
+		snprintf(filepath, pathlen, "%s/title/%08x/%08x/content/title.tmd", pathPrefix, (unsigned int)high, (unsigned int)low);
 
 		u8 *buffer = NULL;
 		u32 filesize = 0;
 
 		int ret = 0;
 
-		if(pathPrefix && *pathPrefix != 0)
+		if (pathPrefix && *pathPrefix != 0)
 			ret = LoadFileToMem(filepath, &buffer, &filesize);
 		else
 			ret = NandTitle::LoadFileFromNand(filepath, &buffer, &filesize);
@@ -692,12 +693,12 @@ u8 *Channels::GetOpeningBnr(const u64 &title, u32 * outsize, const char *pathPre
 		if (ret < 0)
 			break;
 
-		_tmd * tmd_file = (_tmd *) SIGNATURE_PAYLOAD((u32 *)buffer);
+		_tmd * tmd_file = (_tmd *)SIGNATURE_PAYLOAD((u32 *)buffer);
 		bool found = false;
 		u32 bootcontent = 0;
-		for(u32 i = 0; i < tmd_file->num_contents; ++i)
+		for (u32 i = 0; i < tmd_file->num_contents; ++i)
 		{
-			if(tmd_file->contents[i].index == 0)
+			if (tmd_file->contents[i].index == 0)
 			{
 				bootcontent = tmd_file->contents[i].cid;
 				found = true;
@@ -709,12 +710,12 @@ u8 *Channels::GetOpeningBnr(const u64 &title, u32 * outsize, const char *pathPre
 		buffer = NULL;
 		filesize = 0;
 
-		if(!found)
+		if (!found)
 			break;
 
-		snprintf(filepath, ISFS_MAXPATH, "%s/title/%08x/%08x/content/%08x.app", pathPrefix, (unsigned int)high, (unsigned int)low, (unsigned int)bootcontent);
+		snprintf(filepath, pathlen, "%s/title/%08x/%08x/content/%08x.app", pathPrefix, (unsigned int)high, (unsigned int)low, (unsigned int)bootcontent);
 
-		if(pathPrefix && *pathPrefix != 0)
+		if (pathPrefix && *pathPrefix != 0)
 			ret = LoadFileToMem(filepath, &buffer, &filesize);
 		else
 			ret = NandTitle::LoadFileFromNand(filepath, &buffer, &filesize);
@@ -722,8 +723,8 @@ u8 *Channels::GetOpeningBnr(const u64 &title, u32 * outsize, const char *pathPre
 		if (ret < 0)
 			break;
 
-		IMET *imet = (IMET *) (buffer + IMET_OFFSET);
-		if(imet->sig != 'IMET')
+		IMET *imet = (IMET *)(buffer + IMET_OFFSET);
+		if (imet->sig != 'IMET')
 		{
 			free(buffer);
 			break;
@@ -732,8 +733,8 @@ u8 *Channels::GetOpeningBnr(const u64 &title, u32 * outsize, const char *pathPre
 		// move IMET_OFFSET bytes back
 		filesize -= IMET_OFFSET;
 
-		banner = (u8 *) memalign(32, filesize);
-		if(!banner)
+		banner = (u8 *)memalign(32, filesize);
+		if (!banner)
 		{
 			free(buffer);
 			break;
@@ -743,10 +744,9 @@ u8 *Channels::GetOpeningBnr(const u64 &title, u32 * outsize, const char *pathPre
 
 		free(buffer);
 
-		if(outsize)
+		if (outsize)
 			*outsize = filesize;
-	}
-	while(0);
+	} while (0);
 
 	free(filepath);
 

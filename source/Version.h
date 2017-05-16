@@ -11,6 +11,7 @@ extern "C"
 	const char *Version_GetBuild();
 	const char *Version_GetPatch();
 	const char *Version_GetBranch();
+	const char *Version_GetDescription();
 
 #ifdef __cplusplus
 }
