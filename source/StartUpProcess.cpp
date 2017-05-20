@@ -220,9 +220,6 @@ int StartUpProcess::Execute()
 {
 	App.Settings.EntryIOS = IOS_GetVersion();
 
-	SetTextf("Initialize sd card\n");
-	DeviceHandler::Instance()->MountSD();
-
 #ifndef USE_DEFAULT_IOS
 	// Reload app cios if needed
 	SetTextf("Loading application cIOS %s\n", App.Settings.UseArgumentIOS ? "requested in meta.xml" : "");
@@ -256,6 +253,9 @@ int StartUpProcess::Execute()
 	SetTextf("Using %sIOS %i\n", IOS_GetVersion() >= 200 ? "c" : "", IOS_GetVersion());
 
 	Input::SetupPads();
+
+	SetTextf("Initialize sd card\n");
+	DeviceHandler::Instance()->MountSD();
 
 	if (App.Settings.USBAutoMount == ON)
 	{

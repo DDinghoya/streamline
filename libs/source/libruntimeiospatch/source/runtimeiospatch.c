@@ -24,12 +24,6 @@
 #define MEM_REG_BASE 0xd8b4000
 #define MEM_PROT (MEM_REG_BASE + 0x20a)
 
-void TextColor(u32 color, u8 bold)
-{
-	/* Set foreground color */
-	printf("\x1b[%u;%um", (unsigned int)(color + 30), bold);
-	fflush(stdout);
-}
 
 static inline void disable_memory_protection(void) {
 	write32(MEM_PROT, read32(MEM_PROT) & 0x0000FFFF);
@@ -45,17 +39,15 @@ static const u8 di_readlimit_patch[] = { 0x7e, 0xd4 };
 
 static const u8 isfs_permissions_old[] = { 0x42, 0x8B, 0xD0, 0x01, 0x25, 0x66 };
 static const u8 isfs_permissions_patch[] = { 0x42, 0x8B, 0xE0, 0x01, 0x25, 0x66 };
-static const u8 setuid_old[] = { 0xD1, 0x2A, 0x1C, 0x39 };
-static const u8 setuid_patch[] = { 0x46, 0xC0 };
+// static const u8 setuid_old[] = { 0xD1, 0x2A, 0x1C, 0x39 };
+// static const u8 setuid_patch[] = { 0x46, 0xC0 };
 static const u8 es_identify_old[] = { 0x28, 0x03, 0xD1, 0x23 };
 static const u8 es_identify_patch[] = { 0x00, 0x00 };
 static const u8 hash_old[] = { 0x20, 0x07, 0x23, 0xA2 };
 static const u8 hash_patch[] = { 0x00 };
 static const u8 new_hash_old[] = { 0x20, 0x07, 0x4B, 0x0B };
-#ifdef USE_ADDTICKET
-static const u8 addticket_vers_check[] = { 0xD2, 0x01, 0x4E, 0x56 };
-static const u8 addticket_patch[] = { 0xE0 };
-#endif
+// static const u8 addticket_vers_check[] = { 0xD2, 0x01, 0x4E, 0x56 };
+// static const u8 addticket_patch[] = { 0xE0 };
 static const u8 es_set_ahbprot_old[] = { 0x68, 0x5B, 0x22, 0xEC, 0x00, 0x52, 0x18, 0x9B, 0x68, 0x1B, 0x46, 0x98, 0x07, 0xDB };
 static const u8 es_set_ahbprot_patch[]   = { 0x01 };
 
@@ -100,19 +92,18 @@ static const u8 Kill_AntiSysTitleInstallv3_pt3_old[] = { 0x68, 0xFB, 0x2B, 0x00,
 static const u8 Kill_AntiSysTitleInstallv3_pt3_patch[] = { 0x68, 0xFB, 0x2B, 0x00, 0xDB, 0x10 };
 
 /* ISFS_SetAttr patches made by megazig */
+#if 0
 static const u8 isfs_setattr_pt1_old[] = { 0x42, 0xAB, 0xD0, 0x02, 0x20, 0x66 };
 static const u8 isfs_setattr_pt1_patch[] = { 0x42, 0xAB, 0xE0, 0x02, 0x20, 0x66 };
 static const u8 isfs_setattr_pt2_old[] = { 0x2D, 0x00, 0xD0, 0x02, 0x20, 0x66 };
 static const u8 isfs_setattr_pt2_patch[] = { 0x2D, 0x00, 0xE0, 0x02, 0x20, 0x66 };
+#endif
 
 static u8 apply_patch(const char *name, const u8 *old, u32 old_size, const u8 *patch, size_t patch_size, u32 patch_offset, bool verbose) {
 	u8 *ptr_start = (u8*)*((u32*)0x80003134), *ptr_end = (u8*)0x94000000;
 	u8 found = 0;
 	if(verbose)
-	{
-		TextColor(7,1);
-		printf("\t\t    Patching %-30s", name);
-	}
+		printf("    Patching %-30s", name);
 	u8 *location = NULL;
 	while (ptr_start < (ptr_end - patch_size)) {
 		if (!memcmp(ptr_start, old, old_size)) {
@@ -130,15 +121,9 @@ static u8 apply_patch(const char *name, const u8 *old, u32 old_size, const u8 *p
 	}
 	if(verbose){
 		if (found)
-		{
-			TextColor(2, 1);
-			printf("\t\t patched\n");
-		}
+			printf(" patched\n");
 		else
-		{
-			TextColor(1, 1);
-			printf("\t\t not patched\n");
-		}
+			printf(" not patched\n");
 	}
 	return found;
 }
@@ -160,34 +145,25 @@ s32 IosPatch_RUNTIME(bool wii, bool sciifii, bool vwii, bool verbose) {
 
 	if (AHBPROT_DISABLED) {
 		disable_memory_protection();
-		if(verbose) printf("\t\t\n\n\n\n\n");
 		if(wii)
 		{
-			if(verbose)
-			{
-				TextColor(6, 1);
-				printf("\t>> Applying standard Wii patches:\n");
-			}
+			if(verbose) printf(">> Applying standard Wii patches:\n");
 			count += apply_patch("di_readlimit", di_readlimit_old, sizeof(di_readlimit_old), di_readlimit_patch, sizeof(di_readlimit_patch), 12, verbose);
 			count += apply_patch("isfs_permissions", isfs_permissions_old, sizeof(isfs_permissions_old), isfs_permissions_patch, sizeof(isfs_permissions_patch), 0, verbose);
-			count += apply_patch("es_setuid", setuid_old, sizeof(setuid_old), setuid_patch, sizeof(setuid_patch), 0, verbose);
+			//count += apply_patch("es_setuid", setuid_old, sizeof(setuid_old), setuid_patch, sizeof(setuid_patch), 0, verbose);
 			count += apply_patch("es_identify", es_identify_old, sizeof(es_identify_old), es_identify_patch, sizeof(es_identify_patch), 2, verbose);
 			count += apply_patch("hash_check", hash_old, sizeof(hash_old), hash_patch, sizeof(hash_patch), 1, verbose);
 			count += apply_patch("new_hash_check", new_hash_old, sizeof(new_hash_old), hash_patch, sizeof(hash_patch), 1, verbose);
-			count += apply_patch("isfs_setattr_pt1", isfs_setattr_pt1_old, sizeof(isfs_setattr_pt1_old), isfs_setattr_pt1_patch, sizeof(isfs_setattr_pt1_patch), 0, verbose);
-			count += apply_patch("isfs_setattr_pt2", isfs_setattr_pt2_old, sizeof(isfs_setattr_pt2_old), isfs_setattr_pt2_patch, sizeof(isfs_setattr_pt2_patch), 0, verbose);
-			count += apply_patch("ssl_patch1", ssl_patch1_old, sizeof(ssl_patch1_old), ssl_patch1_new, sizeof(ssl_patch1_new), 0, verbose);
-			count += apply_patch("ssl_patch2", ssl_patch2_old, sizeof(ssl_patch2_old), ssl_patch2_new, sizeof(ssl_patch2_new), 0, verbose);
-			count += apply_patch("ssl_patch3", ssl_patch3_old, sizeof(ssl_patch3_old), ssl_patch3_new, sizeof(ssl_patch3_new), 0, verbose);
-			count += apply_patch("ssl_patch4", ssl_patch4_old, sizeof(ssl_patch4_old), ssl_patch4_new, sizeof(ssl_patch4_new), 0, verbose);
+			//count += apply_patch("isfs_setattr_pt1", isfs_setattr_pt1_old, sizeof(isfs_setattr_pt1_old), isfs_setattr_pt1_patch, sizeof(isfs_setattr_pt1_patch), 0, verbose);
+			//count += apply_patch("isfs_setattr_pt2", isfs_setattr_pt2_old, sizeof(isfs_setattr_pt2_old), isfs_setattr_pt2_patch, sizeof(isfs_setattr_pt2_patch), 0, verbose);
+			//count += apply_patch("ssl_patch1", ssl_patch1_old, sizeof(ssl_patch1_old), ssl_patch1_new, sizeof(ssl_patch1_new), 0, verbose);
+			//count += apply_patch("ssl_patch2", ssl_patch2_old, sizeof(ssl_patch2_old), ssl_patch2_new, sizeof(ssl_patch2_new), 0, verbose);
+			//count += apply_patch("ssl_patch3", ssl_patch3_old, sizeof(ssl_patch3_old), ssl_patch3_new, sizeof(ssl_patch3_new), 0, verbose);
+			//count += apply_patch("ssl_patch4", ssl_patch4_old, sizeof(ssl_patch4_old), ssl_patch4_new, sizeof(ssl_patch4_new), 0, verbose);
 		}
 		if(sciifii)
 		{
-			if(verbose)
-			{
-				TextColor(6, 1);
-				printf("\t>> Applying Sciifii patches:\n");
-			}
+			if(verbose) printf(">> Applying Sciifii patches:\n");
 			count += apply_patch("MEM2_prot", MEM2_prot_old, sizeof(MEM2_prot_old), MEM2_prot_patch, sizeof(MEM2_prot_patch), 0, verbose);
 			count += apply_patch("ES_OpenTitleContent1", ES_OpenTitleContent1_old, sizeof(ES_OpenTitleContent1_old), ES_OpenTitleContent1_patch, sizeof(ES_OpenTitleContent1_patch), 0, verbose);
 			count += apply_patch("ES_OpenTitleContent2", ES_OpenTitleContent2_old, sizeof(ES_OpenTitleContent2_old), ES_OpenTitleContent2_patch, sizeof(ES_OpenTitleContent2_patch), 0, verbose);
@@ -198,11 +174,7 @@ s32 IosPatch_RUNTIME(bool wii, bool sciifii, bool vwii, bool verbose) {
 		}
 		if(vwii)
 		{
-			if(verbose)
-			{
-				TextColor(6, 1);
-				printf("\t>> Applying vWii patches:\n");
-			}
+			if(verbose) printf(">> Applying vWii patches:\n");
 			count += apply_patch("Kill_AntiSysTitleInstallv3_pt1", Kill_AntiSysTitleInstallv3_pt1_old, sizeof(Kill_AntiSysTitleInstallv3_pt1_old), Kill_AntiSysTitleInstallv3_pt1_patch, sizeof(Kill_AntiSysTitleInstallv3_pt1_patch), 0, verbose);
 			count += apply_patch("Kill_AntiSysTitleInstallv3_pt2", Kill_AntiSysTitleInstallv3_pt2_old, sizeof(Kill_AntiSysTitleInstallv3_pt2_old), Kill_AntiSysTitleInstallv3_pt2_patch, sizeof(Kill_AntiSysTitleInstallv3_pt2_patch), 0, verbose);
 			count += apply_patch("Kill_AntiSysTitleInstallv3_pt3", Kill_AntiSysTitleInstallv3_pt3_old, sizeof(Kill_AntiSysTitleInstallv3_pt3_old), Kill_AntiSysTitleInstallv3_pt3_patch, sizeof(Kill_AntiSysTitleInstallv3_pt3_patch), 0, verbose);
@@ -230,4 +202,19 @@ s32 IosPatch_FULL(bool wii, bool sciifii, bool vwii, bool verbose, int IOS) {
 
 	return xret;
 
+}
+
+s32 IosPatch_SSL(bool verbose) {
+	s32 count = 0;
+
+	if (AHBPROT_DISABLED) {
+		disable_memory_protection();
+		if(verbose) printf(">> Applying SSL patches:\n");
+		count += apply_patch("ssl_patch1", ssl_patch1_old, sizeof(ssl_patch1_old), ssl_patch1_new, sizeof(ssl_patch1_new), 0, verbose);
+		count += apply_patch("ssl_patch2", ssl_patch2_old, sizeof(ssl_patch2_old), ssl_patch2_new, sizeof(ssl_patch2_new), 0, verbose);
+		count += apply_patch("ssl_patch3", ssl_patch3_old, sizeof(ssl_patch3_old), ssl_patch3_new, sizeof(ssl_patch3_new), 0, verbose);
+		count += apply_patch("ssl_patch4", ssl_patch4_old, sizeof(ssl_patch4_old), ssl_patch4_new, sizeof(ssl_patch4_new), 0, verbose);
+		return count;
+	}
+	return ERROR_AHBPROT;
 }
