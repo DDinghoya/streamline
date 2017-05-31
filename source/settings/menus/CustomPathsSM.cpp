@@ -300,7 +300,7 @@ int CustomPathsSM::GetMenuInternal()
 		else if(result == 1)
 		{
 			Channels::Instance()->GetEmuChannelList();
-			App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
+			App.Library.DisplayNames.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
 		}
 	}
 

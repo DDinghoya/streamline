@@ -420,8 +420,8 @@ void ImageDownloader::CreateCSVLog()
 			ImageType = "Custom Banner";
 		}
 
-		fprintf(f, "\"%s\",\"%s\",\"%s\"\n", MissingImages[i].gameID.c_str(), App.Library.GameTitles.GetTitle(MissingImages[i].gameID.c_str()), ImageType);
-		gprintf("\"%s\",\"%s\",\"%s\"\n", MissingImages[i].gameID.c_str(), App.Library.GameTitles.GetTitle(MissingImages[i].gameID.c_str()), ImageType);
+		fprintf(f, "\"%s\",\"%s\",\"%s\"\n", MissingImages[i].gameID.c_str(), App.Library.DisplayNames.GetTitle(MissingImages[i].gameID.c_str()), ImageType);
+		gprintf("\"%s\",\"%s\",\"%s\"\n", MissingImages[i].gameID.c_str(), App.Library.DisplayNames.GetTitle(MissingImages[i].gameID.c_str()), ImageType);
 	}
 
 	fclose(f);

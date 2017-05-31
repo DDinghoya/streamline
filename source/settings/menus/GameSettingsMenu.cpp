@@ -29,7 +29,6 @@
 #include "prompts/PromptWindows.h"
 #include "prompts/ProgressWindow.h"
 #include "prompts/CategorySelectPrompt.hpp"
-#include "usbloader/GameList.h"
 #include "language/gettext.h"
 #include "wad/nandtitle.h"
 #include "cheats/cheatmenu.h"
@@ -38,7 +37,7 @@
 #include "UninstallSM.hpp"
 
 GameSettingsMenu::GameSettingsMenu(GameBrowseMenu *parent, struct discHdr * header)
-	: FlyingButtonsMenu(App.Library.GameTitles.GetTitle(header)), browserMenu(parent)
+	: FlyingButtonsMenu(App.Library.DisplayNames.GetTitle(header)), browserMenu(parent)
 {
 	DiscHeader = header;
 	//! Don't switch menu's by default but return to disc window.
@@ -140,7 +139,7 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 		App.MainWindow->Remove(&promptMenu);
 		if (promptMenu.categoriesChanged())
 		{
-			gameList.FilterList();
+			App.Library.Games.FilterList();
 			browserMenu->ReloadBrowser();
 		}
 		App.MainWindow->SetState(STATE_DEFAULT);
@@ -203,8 +202,8 @@ void GameSettingsMenu::CreateSettingsMenu(int menuNr)
 		int choice = WindowPrompt(tr("Are you sure?"), 0, tr("Yes"), tr("Cancel"));
 		if (choice == 1)
 		{
-			App.Library.GameSettings.Remove(DiscHeader->id);
-			App.Library.GameSettings.Save();
+			App.Library.Settings.Remove(DiscHeader->id);
+			App.Library.Settings.Save();
 		}
 	}
 

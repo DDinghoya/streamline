@@ -70,7 +70,9 @@ endif
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
-CFLAGS		=	-g -ggdb -O3 -Wall -Wno-multichar -Wno-unused-parameter -Wextra $(MACHDEP) $(INCLUDE) -DBUILD_IOS=$(IOS) -D_GNU_SOURCE 
+CFLAGS		=	-g -ggdb -O3 -Wall -Wno-multichar -Wno-unused-parameter -Wextra $(MACHDEP) $(INCLUDE) -DBUILD_IOS=$(IOS) -D_GNU_SOURCE \
+			-DSQLITE_OMIT_WAL -DSQLITE_OMIT_LOAD_EXTENSION -DSQLITE_MUTEX_NOOP -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_DEPRECATED -DSQLITE_OS_OTHER
+
 CXXFLAGS	=	$(CFLAGS)
 LDFLAGS		=	-g -ggdb $(MACHDEP) -Wl,-Map,$(notdir $@).map,--section-start,.init=0x80B00000,-wrap,malloc,-wrap,free,-wrap,memalign,-wrap,calloc,-wrap,realloc,-wrap,malloc_usable_size,-wrap,wiiuse_register
 
@@ -204,7 +206,6 @@ reload:
 release:
 	$(MAKE)
 	cp boot.dol ./distrib/usbloader_gx/boot.dol
-
 
 #---------------------------------------------------------------------------------
 else

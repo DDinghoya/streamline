@@ -11,7 +11,6 @@
 #include "usbloader/wbfs.h"
 #include "usbloader/wdvd.h"
 #include "usbloader/usbstorage2.h"
-#include "usbloader/GameList.h"
 #include "GameCube/GCGames.h"
 #include "language/gettext.h"
 #include "GUI/gui.h"
@@ -106,7 +105,7 @@ int OnScreenNumpad(char * var, u32 maxlen)
 	GuiTrigger trigB;
 	trigB.SetSimpleTrigger(-1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B);
 
-	GuiText okBtnTxt(tr( "OK" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
+	GuiText okBtnTxt(tr("OK"), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage okBtnImg(&btnOutline);
 	if (App.Settings.wsprompt)
 	{
@@ -115,7 +114,7 @@ int OnScreenNumpad(char * var, u32 maxlen)
 	}
 	GuiButton okBtn(&okBtnImg, &okBtnImg, 0, 4, 5, -15, &trigA, btnSoundOver, btnSoundClick2, 1);
 	okBtn.SetLabel(&okBtnTxt);
-	GuiText cancelBtnTxt(tr( "Cancel" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
+	GuiText cancelBtnTxt(tr("Cancel"), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage cancelBtnImg(&btnOutline);
 	if (App.Settings.wsprompt)
 	{
@@ -149,9 +148,9 @@ int OnScreenNumpad(char * var, u32 maxlen)
 		snprintf(var, maxlen, "%s", numpad.GetText());
 
 		// convert all , to . characters
-		for(u32 i = 0; i < maxlen; ++i)
+		for (u32 i = 0; i < maxlen; ++i)
 		{
-			if(var[i] == ',')
+			if (var[i] == ',')
 				var[i] = '.';
 		}
 	}
@@ -186,7 +185,7 @@ int OnScreenKeyboard(char * var, u32 maxlen, int min, bool hide)
 	GuiTrigger trigB;
 	trigB.SetSimpleTrigger(-1, WPAD_BUTTON_B | WPAD_CLASSIC_BUTTON_B, PAD_BUTTON_B);
 
-	GuiText okBtnTxt(tr( "OK" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
+	GuiText okBtnTxt(tr("OK"), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage okBtnImg(&btnOutline);
 	if (App.Settings.wsprompt)
 	{
@@ -195,7 +194,7 @@ int OnScreenKeyboard(char * var, u32 maxlen, int min, bool hide)
 	}
 	GuiButton okBtn(&okBtnImg, &okBtnImg, 0, 4, 5, 15, &trigA, btnSoundOver, btnSoundClick2, 1);
 	okBtn.SetLabel(&okBtnTxt);
-	GuiText cancelBtnTxt(tr( "Cancel" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
+	GuiText cancelBtnTxt(tr("Cancel"), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage cancelBtnImg(&btnOutline);
 	if (App.Settings.wsprompt)
 	{
@@ -263,7 +262,7 @@ void WindowCredits()
 	backBtn.SetPosition(-20, -20);
 	backBtn.SetTrigger(&trigA);
 	backBtn.SetTrigger(&trigB);
-	
+
 	u32 i = 0;
 	int y = 20;
 	float oldFontScale = App.Settings.FontScaleFactor;
@@ -289,24 +288,24 @@ void WindowCredits()
 	const u8 *creditsFont = App.Resources.GetFile("font.ttf");
 	u32 creditsFontSize = App.Resources.GetFileSize("font.ttf");
 
-	GuiText * currentTxt = new GuiText(tr( "Credits" ), 28, ( GXColor ) {255, 255, 255, 255});
+	GuiText * currentTxt = new GuiText(tr("Credits"), 28, (GXColor) { 255, 255, 255, 255 });
 	currentTxt->SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	currentTxt->SetPosition(0, 8);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
 	txt.push_back(currentTxt);
 
 	char SvnRev[80];
-	snprintf(SvnRev, sizeof(SvnRev), "r%s   IOS%ld (Rev %ld)%s", Version_GetBuild(), IOS_GetVersion(), IOS_GetRevision(), (*(vu32*)0xcd800064 == 0xFFFFFFFF)? " + AHB" : "" );
+	snprintf(SvnRev, sizeof(SvnRev), "r%s   IOS%ld (Rev %ld)%s", Version_GetBuild(), IOS_GetVersion(), IOS_GetRevision(), (*(vu32*)0xcd800064 == 0xFFFFFFFF) ? " + AHB" : "");
 
 	char IosInfo[80] = "";
 	iosinfo_t * info = IosLoader::GetIOSInfo(IOS_GetVersion());
-	if(info)
+	if (info)
 		snprintf(IosInfo, sizeof(IosInfo), "(%s v%lu%s base%lu)", info->name, info->version, info->versionstring, info->baseios);
 
 	// Check if DIOS MIOS (Lite) is available 
 	char GCInfo[80] = "";
 	int currentMIOS = IosLoader::GetMIOSInfo();
-	if(currentMIOS == DIOS_MIOS)
+	if (currentMIOS == DIOS_MIOS)
 		snprintf(GCInfo, sizeof(GCInfo), "DIOS-MIOS %s", DMLVersions[IosLoader::GetDMLVersion()]);
 	else if (currentMIOS == DIOS_MIOS_LITE)
 		snprintf(GCInfo, sizeof(GCInfo), "DIOS-MIOS Lite %s", DMLVersions[IosLoader::GetDMLVersion()]);
@@ -314,90 +313,90 @@ void WindowCredits()
 		snprintf(GCInfo, sizeof(GCInfo), "QuadForce %s", DMLVersions[IosLoader::GetDMLVersion()]);
 	else if (currentMIOS == QUADFORCE_USB)
 		snprintf(GCInfo, sizeof(GCInfo), "QuadForce USB %s", DMLVersions[IosLoader::GetDMLVersion()]);
-		
+
 	// Check if Devolution is available
 	char DEVO_loader_path[100];
 	snprintf(DEVO_loader_path, sizeof(DEVO_loader_path), "%sloader.bin", App.Settings.DEVOLoaderPath);
 	FILE *f = fopen(DEVO_loader_path, "rb");
-	if(f)
+	if (f)
 	{
 		char version[5];
 		fseek(f, 23, SEEK_SET);
 		fread(version, 1, 4, f);
 		fclose(f);
 		char *ptr = strchr(version, ' ');
-		if(ptr) *ptr = 0;
+		if (ptr) *ptr = 0;
 		else version[4] = 0;
 		snprintf(GCInfo, sizeof(GCInfo), "%s%sDevolution r%d", GCInfo, strlen(GCInfo) > 1 ? "  /  " : "", atoi(version));
 	}
 
 	// Check if Nintendont is available
 	char GCInfo2[80] = "";
-	char NINVersion[7]= "";
+	char NINVersion[7] = "";
 	nintendontVersion(App.Settings.NINLoaderPath, NINVersion, sizeof(NINVersion));
-	if(strlen(NINVersion) > 0)
+	if (strlen(NINVersion) > 0)
 	{
-		snprintf(GCInfo2, sizeof(GCInfo2), "Nintendont v%.6s",  NINVersion );
+		snprintf(GCInfo2, sizeof(GCInfo2), "Nintendont v%.6s", NINVersion);
 	}
 	else
 	{
 		char NINBuildDate[21] = "";
-		if(nintendontBuildDate(App.Settings.NINLoaderPath, NINBuildDate))
-			snprintf(GCInfo2, sizeof(GCInfo2), "Nintendont Built %.20s",  NINBuildDate );
+		if (nintendontBuildDate(App.Settings.NINLoaderPath, NINBuildDate))
+			snprintf(GCInfo2, sizeof(GCInfo2), "Nintendont Built %.20s", NINBuildDate);
 	}
 
 	// Header - Top left
-	currentTxt = new GuiText(GCInfo2, 16, ( GXColor ) {255, 255, 255, 255});
+	currentTxt = new GuiText(GCInfo2, 16, (GXColor) { 255, 255, 255, 255 });
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	currentTxt->SetPosition(0, strlen(GCInfo) > 0 ? y-10 : y);
+	currentTxt->SetPosition(0, strlen(GCInfo) > 0 ? y - 10 : y);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
 	txt.push_back(currentTxt);
 
 	// Header - Bottom left
-	currentTxt = new GuiText(GCInfo, 16, ( GXColor ) {255, 255, 255, 255});
+	currentTxt = new GuiText(GCInfo, 16, (GXColor) { 255, 255, 255, 255 });
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-	currentTxt->SetPosition(0, y+6);
+	currentTxt->SetPosition(0, y + 6);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
 	txt.push_back(currentTxt);
 
 	// Header - Top right
-	currentTxt = new GuiText(SvnRev, 16, ( GXColor ) {255, 255, 255, 255});
+	currentTxt = new GuiText(SvnRev, 16, (GXColor) { 255, 255, 255, 255 });
 	currentTxt->SetAlignment(ALIGN_RIGHT, ALIGN_TOP);
-	currentTxt->SetPosition(0, (info || currentMIOS > DEFAULT_MIOS) ? y-10 : y);
+	currentTxt->SetPosition(0, (info || currentMIOS > DEFAULT_MIOS) ? y - 10 : y);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
 	txt.push_back(currentTxt);
 
 	// Header - Bottom right
-	currentTxt = new GuiText(IosInfo, 16, ( GXColor ) {255, 255, 255, 255});
+	currentTxt = new GuiText(IosInfo, 16, (GXColor) { 255, 255, 255, 255 });
 	currentTxt->SetAlignment(ALIGN_RIGHT, ALIGN_TOP);
-	currentTxt->SetPosition(0, y+6);
+	currentTxt->SetPosition(0, y + 6);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
 	txt.push_back(currentTxt);
 	y += 34;
 
-	currentTxt = new GuiText("USB Loader GX", 24, ( GXColor ) {255, 255, 255, 255});
+	currentTxt = new GuiText("USB Loader GX", 24, (GXColor) { 255, 255, 255, 255 });
 	currentTxt->SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	currentTxt->SetPosition(0, y);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
 	txt.push_back(currentTxt);
 	y += 24;
 
-	currentTxt = new GuiText(tr( "Official Site:" ), 20, ( GXColor ) {255, 255, 255, 255});
+	currentTxt = new GuiText(tr("Official Site:"), 20, (GXColor) { 255, 255, 255, 255 });
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(10, y);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
 	txt.push_back(currentTxt);
 
-	currentTxt = new GuiText("http://sourceforge.net/p/usbloadergx/", 20, ( GXColor ) {255, 255, 255, 255});
+	currentTxt = new GuiText("http://sourceforge.net/p/usbloadergx/", 20, (GXColor) { 255, 255, 255, 255 });
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(160, y);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
 	txt.push_back(currentTxt);
 	y += 22;
 
-	GuiText::SetPresets(20, ( GXColor ) {255, 255, 255, 255}, 3000, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_TOP, ALIGN_LEFT, ALIGN_TOP);
+	GuiText::SetPresets(20, (GXColor) { 255, 255, 255, 255 }, 3000, FTGX_JUSTIFY_LEFT | FTGX_ALIGN_TOP, ALIGN_LEFT, ALIGN_TOP);
 
-	currentTxt = new GuiText(tr( "Coding:" ));
+	currentTxt = new GuiText(tr("Coding:"));
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(10, y);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
@@ -419,7 +418,7 @@ void WindowCredits()
 
 	char text[100];
 
-	currentTxt = new GuiText(tr( "Design:" ));
+	currentTxt = new GuiText(tr("Design:"));
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(10, y);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
@@ -445,13 +444,13 @@ void WindowCredits()
 	txt.push_back(currentTxt);
 	y += 22;
 
-	currentTxt = new GuiText(tr( "Big thanks to:" ));
+	currentTxt = new GuiText(tr("Big thanks to:"));
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(10, y);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
 	txt.push_back(currentTxt);
 
-	sprintf(text, "lustar %s", tr( "for GameTDB and hosting covers / disc images" ));
+	sprintf(text, "lustar %s", tr("for GameTDB and hosting covers / disc images"));
 	currentTxt = new GuiText(text);
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(160, y);
@@ -459,7 +458,7 @@ void WindowCredits()
 	txt.push_back(currentTxt);
 	y += 20;
 
-	sprintf(text, "Cyan and Shano56 %s", tr( "for their work on the wiki page" ));
+	sprintf(text, "Cyan and Shano56 %s", tr("for their work on the wiki page"));
 	currentTxt = new GuiText(text);
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(160, y);
@@ -467,7 +466,7 @@ void WindowCredits()
 	txt.push_back(currentTxt);
 	y += 20;
 
-	sprintf(text, "Kinyo %s", tr( "and translators for language files updates" ));
+	sprintf(text, "Kinyo %s", tr("and translators for language files updates"));
 	currentTxt = new GuiText(text);
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(160, y);
@@ -475,7 +474,7 @@ void WindowCredits()
 	txt.push_back(currentTxt);
 	y += 20;
 
-	sprintf(text, "Deak Phreak %s", tr( "for hosting the themes" ));
+	sprintf(text, "Deak Phreak %s", tr("for hosting the themes"));
 	currentTxt = new GuiText(text);
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(160, y);
@@ -483,14 +482,14 @@ void WindowCredits()
 	txt.push_back(currentTxt);
 	y += 24;
 
-	currentTxt = new GuiText(tr( "Special thanks to:" ));
+	currentTxt = new GuiText(tr("Special thanks to:"));
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(10, y);
 	currentTxt->SetFont(creditsFont, creditsFontSize);
 	txt.push_back(currentTxt);
 	y += 20;
 
-	sprintf(text, "Waninkoko, Kwiirk & Hermes %s", tr( "for the USB Loader source" ));
+	sprintf(text, "Waninkoko, Kwiirk & Hermes %s", tr("for the USB Loader source"));
 	currentTxt = new GuiText(text);
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(10, y);
@@ -498,7 +497,7 @@ void WindowCredits()
 	txt.push_back(currentTxt);
 	y += 20;
 
-	sprintf(text, "Tantric %s", tr( "for his awesome tool LibWiiGui" ));
+	sprintf(text, "Tantric %s", tr("for his awesome tool LibWiiGui"));
 	currentTxt = new GuiText(text);
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(10, y);
@@ -506,7 +505,7 @@ void WindowCredits()
 	txt.push_back(currentTxt);
 	y += 20;
 
-	sprintf(text, "Fishears/Nuke %s", tr( "for Ocarina" ));
+	sprintf(text, "Fishears/Nuke %s", tr("for Ocarina"));
 	currentTxt = new GuiText(text);
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(10, y);
@@ -514,7 +513,7 @@ void WindowCredits()
 	txt.push_back(currentTxt);
 	y += 20;
 
-	sprintf(text, "WiiPower %s", tr( "for diverse patches" ));
+	sprintf(text, "WiiPower %s", tr("for diverse patches"));
 	currentTxt = new GuiText(text);
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(10, y);
@@ -522,7 +521,7 @@ void WindowCredits()
 	txt.push_back(currentTxt);
 	y += 20;
 
-	sprintf(text, "Oggzee %s", tr( "for FAT/NTFS support" ));
+	sprintf(text, "Oggzee %s", tr("for FAT/NTFS support"));
 	currentTxt = new GuiText(text);
 	currentTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	currentTxt->SetPosition(10, y);
@@ -544,7 +543,7 @@ void WindowCredits()
 	App.MainWindow->Append(&creditsWindow);
 	ResumeGui();
 
-	while(backBtn.GetState() != STATE_CLICKED)
+	while (backBtn.GetState() != STATE_CLICKED)
 	{
 		usleep(12000);
 
@@ -558,7 +557,7 @@ void WindowCredits()
 		starImg.SetAngle(angle);
 	}
 	backBtn.ResetState();
-	
+
 	creditsMusic->Stop();
 
 	delete creditsMusic;
@@ -598,7 +597,7 @@ int WindowScreensaver()
 	GXlogoImg.SetPosition(172, 152);
 	GXlogoImg.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 
-	GuiImage BackgroundImg(640, 480, ( GXColor ) {0, 0, 0, 255});
+	GuiImage BackgroundImg(640, 480, (GXColor) { 0, 0, 0, 255 });
 	BackgroundImg.SetPosition(0, 0);
 	BackgroundImg.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 
@@ -618,10 +617,10 @@ int WindowScreensaver()
 		if (reset)
 			Sys_Reboot();
 
-		if(!Input::ControlActivityTimeout())
+		if (!Input::ControlActivityTimeout())
 			break;
 
-			/* Set random position */
+		/* Set random position */
 		GXlogoImg.SetPosition((rand() % 345), (rand() % 305));
 
 		sleep(4);
@@ -645,7 +644,7 @@ int WindowScreensaver()
  * place.
  ***************************************************************************/
 int WindowPrompt(const char *title, const char *msg, const char *btn1Label, const char *btn2Label,
-		const char *btn3Label, const char *btn4Label, int wait)
+	const char *btn3Label, const char *btn4Label, int wait)
 {
 	int choice = -1;
 	int count = wait;
@@ -654,13 +653,13 @@ int WindowPrompt(const char *title, const char *msg, const char *btn1Label, cons
 	PromptWindow *Window = new PromptWindow;
 	Window->SetTitle(title);
 	Window->SetMessageText(msg);
-	if(btn1Label)
+	if (btn1Label)
 		Window->AddButton(btn1Label);
-	if(btn2Label)
+	if (btn2Label)
 		Window->AddButton(btn2Label);
-	if(btn3Label)
+	if (btn3Label)
 		Window->AddButton(btn3Label);
-	if(btn4Label)
+	if (btn4Label)
 		Window->AddButton(btn4Label);
 
 	App.MainWindow->SetState(STATE_DISABLED);
@@ -753,7 +752,7 @@ int WindowExitPrompt()
 	{
 		sprintf(txt, "P%d", i + 1);
 
-		batteryTxt[i] = new GuiText(txt, 22, ( GXColor ) {255, 255, 255, 255});
+		batteryTxt[i] = new GuiText(txt, 22, (GXColor) { 255, 255, 255, 255 });
 		batteryTxt[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
 		batteryImg[i] = new GuiImage(&battery);
 		batteryImg[i]->SetAlignment(ALIGN_LEFT, ALIGN_MIDDLE);
@@ -785,12 +784,12 @@ int WindowExitPrompt()
 	GuiTrigger trigHome;
 	trigHome.SetButtonOnlyTrigger(-1, WPAD_BUTTON_HOME | WPAD_CLASSIC_BUTTON_HOME, 0);
 
-	GuiText titleTxt(tr( "HOME Menu" ), 36, ( GXColor ) {255, 255, 255, 255});
+	GuiText titleTxt(tr("HOME Menu"), 36, (GXColor) { 255, 255, 255, 255 });
 	titleTxt.SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	titleTxt.SetPosition(-180, 40);
 	titleTxt.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
 
-	GuiText closeTxt(tr( "Close" ), 28, ( GXColor ) {0, 0, 0, 255});
+	GuiText closeTxt(tr("Close"), 28, (GXColor) { 0, 0, 0, 255 });
 	closeTxt.SetPosition(10, 3);
 	GuiImage closeImg(&close);
 	if (App.Settings.wsprompt)
@@ -811,14 +810,14 @@ int WindowExitPrompt()
 	GuiButton btn1(&btn1Img, &btn1OverImg, 0, 3, 0, 0, &trigA, btnSoundOver, btnSoundClick2, 0);
 	btn1.SetEffect(EFFECT_SLIDE_TOP | EFFECT_SLIDE_IN, 50);
 
-	GuiText btn2Txt(tr( "Homebrew Channel" ), 26, ( GXColor ) {0, 0, 0, 255});
+	GuiText btn2Txt(tr("Homebrew Channel"), 26, (GXColor) { 0, 0, 0, 255 });
 	if (App.Settings.HomeMenu == HOME_MENU_SYSTEM)
 	{
-		btn2Txt.SetText(tr( "Wii Menu" ));
+		btn2Txt.SetText(tr("Wii Menu"));
 	}
 	else if (App.Settings.HomeMenu == HOME_MENU_FULL)
 	{
-		btn2Txt.SetText(tr( "Exit" ));
+		btn2Txt.SetText(tr("Exit"));
 	}
 	GuiImage btn2Img(&button);
 	if (App.Settings.wsprompt)
@@ -832,14 +831,14 @@ int WindowExitPrompt()
 	btn2.SetRumble(false);
 	btn2.SetPosition(-150, 0);
 
-	GuiText btn3Txt(tr( "Wii Menu" ), 26, ( GXColor ) {0, 0, 0, 255});
+	GuiText btn3Txt(tr("Wii Menu"), 26, (GXColor) { 0, 0, 0, 255 });
 	if (App.Settings.HomeMenu == HOME_MENU_SYSTEM)
 	{
-	   btn3Txt.SetText(tr( "Reset" ));
+		btn3Txt.SetText(tr("Reset"));
 	}
 	else if (App.Settings.HomeMenu == HOME_MENU_FULL)
 	{
-		btn3Txt.SetText(tr( "Shutdown Wii" ));
+		btn3Txt.SetText(tr("Shutdown Wii"));
 	}
 	GuiImage btn3Img(&button);
 	if (App.Settings.wsprompt)
@@ -955,12 +954,12 @@ int WindowExitPrompt()
 				Sys_LoadHBC();
 			else if (App.Settings.HomeMenu == HOME_MENU_FULL)
 			{
-				ret = WindowPrompt(tr( "Exit to where?" ), 0, tr( "Homebrew Channel" ), tr( "Wii Menu" ), tr( "Reset" ), tr( "Cancel" ));
+				ret = WindowPrompt(tr("Exit to where?"), 0, tr("Homebrew Channel"), tr("Wii Menu"), tr("Reset"), tr("Cancel"));
 				if (ret == 1)
 					Sys_LoadHBC();
-				else if(ret == 2)
+				else if (ret == 2)
 					Sys_LoadMenu();
-				else if(ret == 3)
+				else if (ret == 3)
 					RebootApp();
 			}
 			HaltGui();
@@ -977,14 +976,14 @@ int WindowExitPrompt()
 				Sys_LoadMenu();
 			else if (App.Settings.HomeMenu == HOME_MENU_FULL)
 			{
-				if(isWiiU())
-					ret = WindowPrompt(tr( "How to Shutdown?" ), 0, tr( "Full shutdown" ), tr("Cancel"));
+				if (isWiiU())
+					ret = WindowPrompt(tr("How to Shutdown?"), 0, tr("Full shutdown"), tr("Cancel"));
 				else
-					ret = WindowPrompt(tr( "How to Shutdown?" ), 0, tr( "Full shutdown" ), tr( "Standby" ), tr("Cancel"));
+					ret = WindowPrompt(tr("How to Shutdown?"), 0, tr("Full shutdown"), tr("Standby"), tr("Cancel"));
 
 				if (ret == 1)
 					Sys_ShutdownToStandby();
-				else if(ret == 2)
+				else if (ret == 2)
 					Sys_ShutdownToIdle();
 			}
 			HaltGui();
@@ -1028,7 +1027,7 @@ int WindowExitPrompt()
 	homeout->Stop();
 	delete homeout;
 
-	for(int i = 0; i < 4; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
 		delete batteryTxt[i];
 		delete batteryImg[i];
@@ -1125,7 +1124,7 @@ int DiscWait(const char *title, const char *msg, const char *btn1Label, const ch
 		}
 	}
 
-	GuiText timerTxt((char*) NULL, 26, thColor("r=0 g=0 b=0 a=255 - prompt windows text color"));
+	GuiText timerTxt((char*)NULL, 26, thColor("r=0 g=0 b=0 a=255 - prompt windows text color"));
 	timerTxt.SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	timerTxt.SetPosition(0, 160);
 
@@ -1149,16 +1148,15 @@ int DiscWait(const char *title, const char *msg, const char *btn1Label, const ch
 		time_t timenow = starttime;
 		do
 		{
-			gprintf("%i\n", (int) (timenow-starttime));
+			gprintf("%i\n", (int)(timenow - starttime));
 			ret = WBFS_Init(WBFS_DEVICE_USB);
 			if (ret >= 0) break;
 
-			timerTxt.SetTextf("%i %s", (int) (30-(timenow-starttime)), tr( "seconds left" ));
+			timerTxt.SetTextf("%i %s", (int)(30 - (timenow - starttime)), tr("seconds left"));
 			DeviceHandler::Instance()->UnMountAllUSB();
 			DeviceHandler::Instance()->MountAllUSB();
 			timenow = time(0);
-		}
-		while (timenow-starttime < 30);
+		} while (timenow - starttime < 30);
 	}
 	else
 	{
@@ -1194,8 +1192,8 @@ int FormatingPartition(const char *title, int part_num)
 	int portPart = DeviceHandler::PartitionToPortPartition(part_num);
 
 	char text[255];
-	sprintf(text, "%s: %.2fGB", tr( "Partition" ), usbHandle->GetSize(portPart) / GB_SIZE);
-	int choice = WindowPrompt(tr( "Do you want to format:" ), text, tr( "Yes" ), tr( "No" ));
+	sprintf(text, "%s: %.2fGB", tr("Partition"), usbHandle->GetSize(portPart) / GB_SIZE);
+	int choice = WindowPrompt(tr("Do you want to format:"), text, tr("Yes"), tr("No"));
 	if (choice == 0)
 		return -666;
 
@@ -1234,7 +1232,7 @@ int FormatingPartition(const char *title, int part_num)
 
 	if (ret < 0)
 	{
-		WindowPrompt(tr( "Error !" ), tr( "Failed formating" ), tr( "Return" ));
+		WindowPrompt(tr("Error !"), tr("Failed formating"), tr("Return"));
 	}
 	else
 	{
@@ -1243,11 +1241,11 @@ int FormatingPartition(const char *title, int part_num)
 		partition->FSName = "WBFS";
 		sleep(1);
 		ret = WBFS_OpenPart(part_num);
-		sprintf(text, "%s %s", text, tr( "formatted!" ));
-		WindowPrompt(tr( "Success:" ), text, tr( "OK" ));
+		sprintf(text, "%s %s", text, tr("formatted!"));
+		WindowPrompt(tr("Success:"), text, tr("OK"));
 		if (ret < 0)
 		{
-			WindowPrompt(tr( "ERROR" ), tr( "Failed to open partition" ), tr( "OK" ));
+			WindowPrompt(tr("ERROR"), tr("Failed to open partition"), tr("OK"));
 			Sys_LoadMenu();
 		}
 	}
@@ -1288,7 +1286,7 @@ bool NetworkInitPrompt()
 		dialogBoxImg.SetWidescreen(App.Settings.widescreen);
 	}
 
-	GuiText titleTxt(tr( "Initializing Network" ), 26, thColor("r=0 g=0 b=0 a=255 - prompt windows text color"));
+	GuiText titleTxt(tr("Initializing Network"), 26, thColor("r=0 g=0 b=0 a=255 - prompt windows text color"));
 	titleTxt.SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	titleTxt.SetPosition(0, 60);
 
@@ -1297,7 +1295,7 @@ bool NetworkInitPrompt()
 	msgTxt.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	msgTxt.SetPosition(0, -40);
 
-	GuiText btn1Txt(tr( "Cancel" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
+	GuiText btn1Txt(tr("Cancel"), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage btn1Img(&btnOutline);
 	if (App.Settings.wsprompt)
 	{
@@ -1335,7 +1333,7 @@ bool NetworkInitPrompt()
 
 		if (--iTimeout == 0)
 		{
-			msgTxt.SetText(tr( "Could not initialize network, time out!" ));
+			msgTxt.SetText(tr("Could not initialize network, time out!"));
 			sleep(3);
 			success = false;
 			break;
@@ -1367,7 +1365,7 @@ int CodeDownload(const char *id)
 {
 	if (!CreateSubfolder(App.Settings.TxtCheatcodespath))
 	{
-		WindowPrompt(tr( "Error !" ), tr( "Can't create directory" ), tr( "OK" ));
+		WindowPrompt(tr("Error !"), tr("Can't create directory"), tr("OK"));
 		return -1;
 	}
 
@@ -1389,12 +1387,12 @@ int CodeDownload(const char *id)
 	}
 
 	char title[50];
-	sprintf(title, "%s", tr( "Code Download" ));
+	sprintf(title, "%s", tr("Code Download"));
 	GuiText titleTxt(title, 26, thColor("r=0 g=0 b=0 a=255 - prompt windows text color"));
 	titleTxt.SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	titleTxt.SetPosition(0, 50);
 	char msg[50];
-	sprintf(msg, "%s", tr( "Initializing Network" ));
+	sprintf(msg, "%s", tr("Initializing Network"));
 	GuiText msgTxt(msg, 26, thColor("r=0 g=0 b=0 a=255 - prompt windows text color"));
 	msgTxt.SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 	msgTxt.SetPosition(0, 140);
@@ -1403,7 +1401,7 @@ int CodeDownload(const char *id)
 	msg2Txt.SetAlignment(ALIGN_CENTER, ALIGN_MIDDLE);
 	msg2Txt.SetPosition(0, 50);
 
-	GuiText btn1Txt(tr( "Cancel" ), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
+	GuiText btn1Txt(tr("Cancel"), 22, thColor("r=0 g=0 b=0 a=255 - prompt windows button text color"));
 	GuiImage btn1Img(&btnOutline);
 	if (App.Settings.wsprompt)
 	{
@@ -1439,7 +1437,7 @@ int CodeDownload(const char *id)
 		}
 		else
 		{
-			msgTxt.SetText(tr( "Could not initialize network!" ));
+			msgTxt.SetText(tr("Could not initialize network!"));
 		}
 		if (btn1.GetState() == STATE_CLICKED)
 		{
@@ -1457,69 +1455,69 @@ int CodeDownload(const char *id)
 		char codeurl[250];
 		snprintf(codeurl, sizeof(codeurl), "http://geckocodes.org/txt.php?txt=%s", id);
 		//snprintf(codeurl, sizeof(codeurl), "http://geckocodes.org/codes/G/%s.txt", id);
-		
+
 		struct block file = downloadfile(codeurl);
 
 		if (file.data != NULL)
 		{
 			bool validUrl = false;
-			if(file.size > 0)
+			if (file.size > 0)
 			{
-				char *textCpy = new (std::nothrow) char[file.size+1];
-				if(textCpy)
+				char *textCpy = new (std::nothrow) char[file.size + 1];
+				if (textCpy)
 				{
 					memcpy(textCpy, file.data, file.size);
 					textCpy[file.size] = '\0';
 					validUrl = (strcasestr(textCpy, "404 Not Found") == 0);
-					delete [] textCpy;
+					delete[] textCpy;
 				}
 			}
 
-			if(!validUrl)
+			if (!validUrl)
 			{
-				snprintf(codeurl, sizeof(codeurl), "%s%s", codeurl, tr( " is not on the server." ));
-				WindowPrompt(tr( "Error" ), codeurl, tr( "OK" ));
+				snprintf(codeurl, sizeof(codeurl), "%s%s", codeurl, tr(" is not on the server."));
+				WindowPrompt(tr("Error"), codeurl, tr("OK"));
 			}
 			else
 			{
 				FILE * pfile = fopen(txtpath, "wb");
-				if(pfile)
+				if (pfile)
 				{
 					fwrite(file.data, 1, file.size, pfile);
 					fclose(pfile);
-					
+
 					// verify downloaded content - thanks airline38
 					pfile = fopen(txtpath, "rb");
-					if(pfile)
+					if (pfile)
 					{
 						char target[4];
-						fseek(pfile,0,SEEK_SET);
+						fseek(pfile, 0, SEEK_SET);
 						fread(target, sizeof(char), 4, pfile);
 						fclose(pfile);
 						//printf("target=%s  game id=%s\n",target,id);
-						if (strncmp(target,id,4)== 0 )
+						if (strncmp(target, id, 4) == 0)
 						{
-							snprintf(txtpath, sizeof(txtpath), "%s%s", txtpath, tr(" has been Saved.  The text has not been verified.  Some of the code may not work right with each other.  If you experience trouble, open the text in a real text editor for more information." ));
-							WindowPrompt(0, txtpath, tr( "OK" ));
+							snprintf(txtpath, sizeof(txtpath), "%s%s", txtpath, tr(" has been Saved.  The text has not been verified.  Some of the code may not work right with each other.  If you experience trouble, open the text in a real text editor for more information."));
+							WindowPrompt(0, txtpath, tr("OK"));
 							ret = 0;
 						}
 						else
 						{
 							RemoveFile(txtpath);
-							snprintf(codeurl, sizeof(codeurl), "%s%s", codeurl, tr( " is not on the server." ));
-							WindowPrompt(tr( "Error" ), codeurl, tr( "OK" ));
+							snprintf(codeurl, sizeof(codeurl), "%s%s", codeurl, tr(" is not on the server."));
+							WindowPrompt(tr("Error"), codeurl, tr("OK"));
 						}
 					}
 				}
 				else
-					WindowPrompt(tr("Error"), tr("Could not write file."), tr( "OK" ));
+					WindowPrompt(tr("Error"), tr("Could not write file."), tr("OK"));
 			}
 			free(file.data);
 		}
 		else
 		{
 			snprintf(codeurl, sizeof(codeurl), "%s%s", codeurl, tr(" could not be downloaded."));
-			WindowPrompt(tr( "Error" ), codeurl, tr( "OK" ));
+			WindowPrompt(tr("Error"), codeurl, tr("OK"));
 		}
 	}
 
@@ -1535,4 +1533,3 @@ int CodeDownload(const char *id)
 
 	return ret;
 }
-

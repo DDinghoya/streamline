@@ -25,7 +25,6 @@
 #include "themes/CTheme.h"
 #include "themes/ThemeMenu.h"
 #include "usbloader/disc.h"
-#include "usbloader/GameList.h"
 #include "usbloader/MountGamePartition.h"
 #include "mload/mload_modules.h"
 #include "video.h"

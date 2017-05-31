@@ -280,8 +280,8 @@ int GuiSettingsMenu::GetMenuInternal()
 		if (returnhere == 2)
 		{
 			//! Language changed. Reload game titles with new lang code.
-			App.Library.GameTitles.SetDefault();
-			App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+			App.Library.DisplayNames.SetDefault();
+			App.Library.DisplayNames.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 			return MENU_SETTINGS;
 		}
 

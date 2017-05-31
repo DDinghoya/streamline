@@ -214,7 +214,8 @@ int CategoryPrompt::Show()
 		else if(saveButton->GetState() == STATE_CLICKED)
 		{
 			if(categoriesChanged())
-				App.Library.GameCategories.Save();
+				App.Library.Categories.Save();
+
 			return 1;
 		}
 
@@ -234,7 +235,7 @@ int CategoryPrompt::Show()
 			int result = OnScreenKeyboard(entered, sizeof(entered), 0);
 			if(result)
 			{
-				App.Library.GameCategories.CategoryList.AddCategory(entered);
+				App.Library.Categories.CategoryList.AddCategory(entered);
 				browserRefresh();
 				markChanged();
 			}
@@ -267,12 +268,12 @@ int CategoryPrompt::Show()
 			int choice = WindowPrompt(tr("Warning"), tr("Are you sure you want to delete this category?"), tr("Yes"), tr("Cancel"));
 			if(choice)
 			{
-				App.Library.GameCategories.CategoryList.goToFirst();
+				App.Library.Categories.CategoryList.goToFirst();
 				for(int i = 0; i < browser->GetSelected(); ++i)
-					App.Library.GameCategories.CategoryList.goToNext();
-				int categoryID = App.Library.GameCategories.CategoryList.getCurrentID();
-				App.Library.GameCategories.CategoryList.RemoveCategory(categoryID);
-				App.Library.GameCategories.RemoveCategory(categoryID);
+					App.Library.Categories.CategoryList.goToNext();
+				int categoryID = App.Library.Categories.CategoryList.getCurrentID();
+				App.Library.Categories.CategoryList.RemoveCategory(categoryID);
+				App.Library.Categories.RemoveCategory(categoryID);
 
 				browserRefresh();
 				markChanged();
@@ -293,17 +294,17 @@ int CategoryPrompt::Show()
 				continue;
 			}
 
-			App.Library.GameCategories.CategoryList.goToFirst();
+			App.Library.Categories.CategoryList.goToFirst();
 			for(int i = 0; i < browser->GetSelected(); ++i)
-				App.Library.GameCategories.CategoryList.goToNext();
+				App.Library.Categories.CategoryList.goToNext();
 
 			char entered[512];
-			snprintf(entered, sizeof(entered), tr(App.Library.GameCategories.CategoryList.getCurrentName().c_str()));
+			snprintf(entered, sizeof(entered), tr(App.Library.Categories.CategoryList.getCurrentName().c_str()));
 
 			int result = OnScreenKeyboard(entered, sizeof(entered), 0);
 			if(result)
 			{
-				App.Library.GameCategories.CategoryList.SetCategory(App.Library.GameCategories.CategoryList.getCurrentID(), entered);
+				App.Library.Categories.CategoryList.SetCategory(App.Library.Categories.CategoryList.getCurrentID(), entered);
 				browserRefresh();
 				markChanged();
 			}

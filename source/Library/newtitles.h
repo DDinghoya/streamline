@@ -4,24 +4,20 @@
 
 class CNewTitles
 {
-public:
-	//static CNewTitles *Instance() { if (!instance) instance = new CNewTitles(); return instance; }
-	//static void DestroyInstance() { delete instance; instance = NULL; }
-
-	void Save(void);
+protected:
+	friend class TitleLibrary;
+	CNewTitles();
+	~CNewTitles();
 	void Clean(void);
 	void Reload(void);
 	void CheckGame(const u8 *titleid);
 	bool IsNew(const u8 *titleid) const;
 	void Remove(const u8 *titleid);
 
-protected:
-	friend class TitleLibrary;
-	CNewTitles();
-	~CNewTitles();
+	friend class GameList;
+	void Save(void);
 
 private:
-	//static CNewTitles *instance;
 
 	struct Title
 	{

@@ -111,7 +111,7 @@ GCGameLoadSM::GCGameLoadSM(struct discHdr *hdr)
 	: SettingsMenu(tr("Game Load"), &GuiOptions, MENU_NONE),
 	  Header(hdr)
 {
-	GameConfig = *App.Library.GameSettings.GetGameCFG((const char *) Header->id);
+	GameConfig = *App.Library.Settings.GetGameCFG((const char *) Header->id);
 
 	if(!btnOutline)
 		btnOutline = App.Resources.GetImageData("button_dialogue_box.png");
@@ -152,7 +152,7 @@ void GCGameLoadSM::SetDefaultConfig()
 {
 	char id[7];
 	snprintf(id, sizeof(id), GameConfig.id);
-	App.Library.GameSettings.SetDefault(GameConfig);
+	App.Library.Settings.SetDefault(GameConfig);
 	snprintf(GameConfig.id, sizeof(GameConfig.id), id);
 }
 
@@ -232,7 +232,7 @@ void GCGameLoadSM::SetOptionValues()
 	Options->SetValue(Idx++, "%s", tr( OnOffText[GameConfig.Locked] ));
 
 	//! Settings: Favorite Level
-	Options->SetValue(Idx++, "%i", App.Library.GameStatistics.GetFavoriteRank(Header->id));
+	Options->SetValue(Idx++, "%i", App.Library.Statistics.GetFavoriteRank(Header->id));
 
 	//! Settings: Game Language
 	if(GameConfig.language == INHERIT)
@@ -538,7 +538,7 @@ int GCGameLoadSM::GetMenuInternal()
 {
 	if (saveBtn->GetState() == STATE_CLICKED)
 	{
-		if (App.Library.GameSettings.AddGame(GameConfig) && App.Library.GameSettings.Save())
+		if (App.Library.Settings.AddGame(GameConfig) && App.Library.Settings.Save())
 		{
 			WindowPrompt(tr( "Successfully Saved" ), 0, tr( "OK" ));
 		}
@@ -564,11 +564,11 @@ int GCGameLoadSM::GetMenuInternal()
 	//! Settings: Favorite Level
 	else if (ret == ++Idx)
 	{
-		int Level = App.Library.GameStatistics.GetFavoriteRank(Header->id);
+		int Level = App.Library.Statistics.GetFavoriteRank(Header->id);
 		if (++Level > 5) Level = 0;
 
-		App.Library.GameStatistics.SetFavoriteRank(Header->id, Level);
-		App.Library.GameStatistics.Save();
+		App.Library.Statistics.SetFavoriteRank(Header->id, Level);
+		App.Library.Statistics.Save();
 	}
 
 	//! Settings: Game Language

@@ -18,15 +18,14 @@
 #include "themes/CTheme.h"
 #include "App.h"
 #include "SystemMenu/SystemMenuResources.h"
-#include "usbloader/GameList.h"
 #include "video.h"
 
-//! some math to get the row and column from channel idx
+ //! some math to get the row and column from channel idx
 static inline int Idx2Row(int sIdx)
 {
-	if(sIdx > 0)
+	if (sIdx > 0)
 		return (sIdx / 4) % 3;
-	else if(sIdx < 0)
+	else if (sIdx < 0)
 		return (2 + ((sIdx + 1) / 4) % 3);
 	else
 		return 0;
@@ -34,16 +33,16 @@ static inline int Idx2Row(int sIdx)
 
 static inline int Idx2Column(int sIdx)
 {
-	if(sIdx == 0)
+	if (sIdx == 0)
 		return 0;
 
-	if(sIdx > 0) {
-		return ( (sIdx / 12) * 4 + sIdx % 4 );
+	if (sIdx > 0) {
+		return ((sIdx / 12) * 4 + sIdx % 4);
 	}
 	else
 	{
 		int column = (sIdx % 4);
-		if(column == 0)
+		if (column == 0)
 			column = -4;
 		column += ((sIdx + 1) / 12) * 4;
 
@@ -65,7 +64,7 @@ GuiBannerGrid::GuiBannerGrid(int listOffset)
 	gridTevColor[1] = thColor("r=180 g=180 b=180 a=255 - banner icon frame edge tev color 2");
 	gridTevColor[2] = thColor("r=255 g=255 b=255 a=255 - banner icon frame edge tev color 3");
 
-	for(int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 		gridFrameTevColor[i] = (GXColorS10) { gridTevColor[i].r, gridTevColor[i].g, gridTevColor[i].b, gridTevColor[i].a };
 
 	trigA.SetSimpleTrigger(-1, WPAD_BUTTON_A | WPAD_CLASSIC_BUTTON_A, PAD_BUTTON_A);
@@ -93,7 +92,7 @@ GuiBannerGrid::GuiBannerGrid(int listOffset)
 	btnRight->SetParent(this);
 
 	//! Get chanSel archive
-	if(SystemMenuResources::Instance()->GetChanSelAsh())
+	if (SystemMenuResources::Instance()->GetChanSelAsh())
 	{
 		U8Archive chanSelArc(SystemMenuResources::Instance()->GetChanSelAsh(), SystemMenuResources::Instance()->GetChanSelAshSize());
 
@@ -107,12 +106,12 @@ GuiBannerGrid::GuiBannerGrid(int listOffset)
 	}
 
 	//! create vector with empty banner list
-	bannerList.resize(gameList.size(), NULL);
+	bannerList.resize(App.Library.Games.size(), NULL);
 
 	//! Calculate the page count
 	//! 1 page is minumum to show statics even if no games are loaded
 	pageCnt = std::max((int)(bannerList.size() + 11) / 12, 1);
-	pageNo = LIMIT(listOffset / 12, 0, pageCnt-1);
+	pageNo = LIMIT(listOffset / 12, 0, pageCnt - 1);
 
 	//! set screen properties
 	width = ScreenProps.x = screenwidth;
@@ -122,11 +121,11 @@ GuiBannerGrid::GuiBannerGrid(int listOffset)
 	guMtxIdentity(gridview);
 	guMtxTransApply(gridview, gridview, 0.0F, 0.0F, -9900.0F);
 
-	for(int i = 0; i < MAX_BUTTONS; i++)
+	for (int i = 0; i < MAX_BUTTONS; i++)
 	{
 		int row = Idx2Row(i);
 		int column = Idx2Column(i);
-		float fx = XOffset + chanWidth * column + ScreenProps.x * 0.5f  - chanWidth * 2.f;
+		float fx = XOffset + chanWidth * column + ScreenProps.x * 0.5f - chanWidth * 2.f;
 		float fy = YOffset + chanHeight * row + (ScreenProps.y - chanHeight) * 0.5f - chanHeight;
 
 		gridNewImg[i] = new GuiImage(imgNewData);
@@ -145,7 +144,7 @@ GuiBannerGrid::GuiBannerGrid(int listOffset)
 		gridBtn[i]->SetSoundClick(btnSoundClick2);
 		gridBtn[i]->SetParent(this);
 		gridBtn[i]->SetIcon(gridNewImg[i]);
-		if(i >= (int) bannerList.size())
+		if (i >= (int)bannerList.size())
 			gridBtn[i]->SetState(STATE_DISABLED);
 	}
 
@@ -154,16 +153,16 @@ GuiBannerGrid::GuiBannerGrid(int listOffset)
 
 GuiBannerGrid::~GuiBannerGrid()
 {
-	for(int i = 0; i < MAX_BUTTONS; ++i)
+	for (int i = 0; i < MAX_BUTTONS; ++i)
 	{
 		delete gridBtn[i];
 		delete gridTT[i];
 		delete gridNewImg[i];
 	}
 
-	for(u32 i = 0; i < bannerList.size(); ++i)
+	for (u32 i = 0; i < bannerList.size(); ++i)
 	{
-		if(bannerList[i] != NULL)
+		if (bannerList[i] != NULL)
 			BannerAsync::RemoveBanner(bannerList[i]);
 	}
 
@@ -205,26 +204,26 @@ void GuiBannerGrid::UpdateTooltips(void)
 {
 	int chIdx = pageNo * 12;
 
-	for(int i = 0; i < MAX_BUTTONS; i++)
+	for (int i = 0; i < MAX_BUTTONS; i++)
 	{
-		if(chIdx < 0 || chIdx >= (int) bannerList.size())
+		if (chIdx < 0 || chIdx >= (int)bannerList.size())
 		{
 			gridBtn[i]->SetState(STATE_DISABLED);
 		}
 		else
 		{
-			if(gridBtn[i]->GetState() == STATE_DISABLED)
+			if (gridBtn[i]->GetState() == STATE_DISABLED)
 				gridBtn[i]->SetState(STATE_DEFAULT);
-			gridTT[i]->SetText(App.Library.GameTitles.GetTitle(gameList[chIdx]));
+			gridTT[i]->SetText(App.Library.DisplayNames.GetTitle(App.Library.Games[chIdx]));
 			gridBtn[i]->SetToolTip(gridTT[i], 0, 30, ALIGN_CENTER, ALIGN_BOTTOM);
 
-			if(gridTT[i]->GetLeft() < 20)
+			if (gridTT[i]->GetLeft() < 20)
 				gridBtn[i]->SetToolTip(gridTT[i], 20 - gridTT[i]->GetLeft(),
-									   30, ALIGN_CENTER, ALIGN_BOTTOM);
+					30, ALIGN_CENTER, ALIGN_BOTTOM);
 
-			else if((gridTT[i]->GetLeft() + gridTT[i]->GetWidth()) > (screenwidth - 20))
-				gridBtn[i]->SetToolTip(gridTT[i], (screenwidth - 20) -  (gridTT[i]->GetLeft() + gridTT[i]->GetWidth()),
-									   30, ALIGN_CENTER, ALIGN_BOTTOM);
+			else if ((gridTT[i]->GetLeft() + gridTT[i]->GetWidth()) > (screenwidth - 20))
+				gridBtn[i]->SetToolTip(gridTT[i], (screenwidth - 20) - (gridTT[i]->GetLeft() + gridTT[i]->GetWidth()),
+					30, ALIGN_CENTER, ALIGN_BOTTOM);
 		}
 		chIdx++;
 	}
@@ -234,7 +233,7 @@ void GuiBannerGrid::GetIconCoordinates(int icon, f32 *x, f32 *y)
 {
 	int row = Idx2Row(icon % 12);
 	int column = Idx2Column(icon % 12);
-	*x = XOffset + chanWidth * column + ScreenProps.x * 0.5f  - chanWidth * 2.f;
+	*x = XOffset + chanWidth * column + ScreenProps.x * 0.5f - chanWidth * 2.f;
 	*y = YOffset + chanHeight * row + (ScreenProps.y - chanHeight) * 0.5f - chanHeight;
 }
 
@@ -246,7 +245,7 @@ void GuiBannerGrid::RenderHighliter(Mtx &modelview)
 	Mtx m1, mv;
 	guMtxIdentity(mv);
 	guMtxScaleApply(modelview, m1, 1.f, -1.f, 1.f);
-	guMtxTransApply(m1, m1,ScreenProps.x * 0.5f, ScreenProps.y * 0.5f, 0.f);
+	guMtxTransApply(m1, m1, ScreenProps.x * 0.5f, ScreenProps.y * 0.5f, 0.f);
 	guMtxScaleApply(mv, mv, chanWidth, chanHeight, 0.f);
 	guMtxTransApply(mv, mv, -chanWidth * 0.5f, -chanHeight * 0.5f, 0.f);
 	guMtxConcat(m1, mv, mv);
@@ -281,17 +280,17 @@ void GuiBannerGrid::RenderHighliter(Mtx &modelview)
 
 void GuiBannerGrid::Update(GuiTrigger *t)
 {
-	if(!t || state == STATE_DISABLED)
+	if (!t || state == STATE_DISABLED)
 		return;
 
-	for(int i = 0; i < MAX_BUTTONS && !AnimationRunning; i++)
+	for (int i = 0; i < MAX_BUTTONS && !AnimationRunning; i++)
 		gridBtn[i]->Update(t);
 
-	if(pageNo > 0)
+	if (pageNo > 0)
 	{
 		btnLeft->Update(t);
 
-		if((btnLeft->GetState() == STATE_CLICKED) && !AnimationRunning) {
+		if ((btnLeft->GetState() == STATE_CLICKED) && !AnimationRunning) {
 			btnLeft->SetState(STATE_DEFAULT);
 			fAnimation -= chanWidth * 4.f;
 			pageNo--;
@@ -300,11 +299,11 @@ void GuiBannerGrid::Update(GuiTrigger *t)
 	}
 
 
-	if(pageNo < pageCnt-1)
+	if (pageNo < pageCnt - 1)
 	{
 		btnRight->Update(t);
 
-		if((btnRight->GetState() == STATE_CLICKED) && !AnimationRunning) {
+		if ((btnRight->GetState() == STATE_CLICKED) && !AnimationRunning) {
 			btnRight->SetState(STATE_DEFAULT);
 			fAnimation += chanWidth * 4.f;
 			pageNo++;
@@ -315,16 +314,16 @@ void GuiBannerGrid::Update(GuiTrigger *t)
 
 void GuiBannerGrid::Draw()
 {
-	if(!this->IsVisible())
+	if (!this->IsVisible())
 		return;
 
 	u8 Tlut = 0;
 
-	if(fAnimation > -fAnimStep  && fAnimation < fAnimStep)
+	if (fAnimation > -fAnimStep  && fAnimation < fAnimStep)
 		fAnimation = 0.0f;
-	else if(fAnimation > 0.0f)
+	else if (fAnimation > 0.0f)
 		fAnimation -= fAnimStep;
-	else if(fAnimation < 0.0f)
+	else if (fAnimation < 0.0f)
 		fAnimation += fAnimStep;
 
 	AnimationRunning = (fAnimation != 0.0f);
@@ -337,9 +336,9 @@ void GuiBannerGrid::Draw()
 	int chIdx = pageNo * 12;
 
 	//! removed unneeded banners
-	for(int i = 0; i < (int) bannerList.size(); i++)
+	for (int i = 0; i < (int)bannerList.size(); i++)
 	{
-		if((i < (chIdx - 24) || i > (chIdx + 36)) && bannerList[i] != NULL)
+		if ((i < (chIdx - 24) || i >(chIdx + 36)) && bannerList[i] != NULL)
 		{
 			BannerAsync::RemoveBanner(bannerList[i]);
 			bannerList[i] = NULL;
@@ -347,14 +346,14 @@ void GuiBannerGrid::Draw()
 	}
 
 	//! Load the games that are seen first and after that the rest
-	for(int i = chIdx+11; i >= chIdx; i--) // counting backwards so the loading is upwards
+	for (int i = chIdx + 11; i >= chIdx; i--) // counting backwards so the loading is upwards
 	{
-		if(i >= 0 && i < (int) bannerList.size())
+		if (i >= 0 && i < (int)bannerList.size())
 		{
-			if(!bannerList[i])
-				bannerList[i] = new BannerAsync(gameList[i]);
+			if (!bannerList[i])
+				bannerList[i] = new BannerAsync(App.Library.Games[i]);
 
-			if(!bannerList[i]->getIcon())
+			if (!bannerList[i]->getIcon())
 				BannerAsync::PushFront(bannerList[i]);
 		}
 	}
@@ -365,24 +364,24 @@ void GuiBannerGrid::Draw()
 	int GridCutLeft = 0;
 	int GridCutRight = vmode->fbWidth;
 
-	for(int sIdx = -24; sIdx < 36; sIdx++, chIdx++)
+	for (int sIdx = -24; sIdx < 36; sIdx++, chIdx++)
 	{
 		int row = Idx2Row(sIdx);
 		int column = Idx2Column(sIdx);
 
-		if(chIdx < 0 || chIdx >= pageCnt*12)
+		if (chIdx < 0 || chIdx >= pageCnt * 12)
 			continue;
 
-		if(chIdx >= 0 && chIdx < (int) bannerList.size() && !bannerList[chIdx])
-			bannerList[chIdx] = new BannerAsync(gameList[chIdx]);
+		if (chIdx >= 0 && chIdx < (int)bannerList.size() && !bannerList[chIdx])
+			bannerList[chIdx] = new BannerAsync(App.Library.Games[chIdx]);
 
 		Mtx mv1, mv2, iconview;
 		guMtxTransApply(modelview, iconview, XOffset + chanWidth * column - chanWidth * 1.5f,
-											-YOffset - chanHeight * row + chanHeight, 0.f);
+			-YOffset - chanHeight * row + chanHeight, 0.f);
 
 		guMtxScaleApply(iconview, mv1, 1.f, -1.f, 1.f);
-		guMtxTransApply(mv1,mv1, (ScreenProps.x - chanWidth) * 0.5f, (ScreenProps.y - chanHeight) * 0.5f, 0.f);
-		guMtxTransApply(mv1,mv2, chanWidth, chanHeight, 0.f);
+		guMtxTransApply(mv1, mv1, (ScreenProps.x - chanWidth) * 0.5f, (ScreenProps.y - chanHeight) * 0.5f, 0.f);
+		guMtxTransApply(mv1, mv2, chanWidth, chanHeight, 0.f);
 
 		f32 viewportv[6];
 		f32 projectionv[7];
@@ -398,43 +397,43 @@ void GuiBannerGrid::Draw()
 		//! Round scissor box offset up and the box size down
 		u32 scissorX = (u32)(0.5f + std::max(vecTL.x, (f32)std::max(-App.Settings.AdjustOverscanX, 0)));
 		u32 scissorY = (u32)(0.5f + std::max(vecTL.y, (f32)std::max(-App.Settings.AdjustOverscanY, 0)));
-		u32 scissorW = (u32)std::max(std::min(vecBR.x, ScreenProps.x-1+App.Settings.AdjustOverscanX) - scissorX, 0.0f);
+		u32 scissorW = (u32)std::max(std::min(vecBR.x, ScreenProps.x - 1 + App.Settings.AdjustOverscanX) - scissorX, 0.0f);
 		u32 scissorH = (u32)std::max(vecBR.y - scissorY, 0.0f);
 
-		GX_SetScissor(scissorX, scissorY, scissorW, scissorH );
+		GX_SetScissor(scissorX, scissorY, scissorW, scissorH);
 
 		// save scissor value for grid cut of left/right part
-		if(chIdx == 0)
+		if (chIdx == 0)
 			GridCutLeft = scissorX;
-		if(chIdx == pageCnt*12-1)
-			GridCutRight = scissorX+scissorW;
+		if (chIdx == pageCnt * 12 - 1)
+			GridCutRight = scissorX + scissorW;
 
-		if(chIdx >= (int) bannerList.size() || !bannerList[chIdx]->getIcon())
+		if (chIdx >= (int)bannerList.size() || !bannerList[chIdx]->getIcon())
 		{
 			//! If out of range or the icon is not loaded yet render the static frame
 			staticFrame.Render(iconview, ScreenProps, App.Settings.widescreen);
 		}
 		else
 		{
-			Menu_DrawRectangle(0, 0, screenwidth, screenheight, (GXColor) { 0, 0, 0, 255}, 1);
+			Menu_DrawRectangle(0, 0, screenwidth, screenheight, (GXColor) { 0, 0, 0, 255 }, 1);
 			bannerList[chIdx]->getIcon()->Render(iconview, ScreenProps, App.Settings.widescreen);
 			bannerList[chIdx]->getIcon()->AdvanceFrame();
-			if(bSkipFrame)
+			if (bSkipFrame)
 				bannerList[chIdx]->getIcon()->AdvanceFrame();
 		}
 	}
 
 	//! only advance the static animation once for the whole loop
 	staticFrame.AdvanceFrame();
-	if(bSkipFrame)
+	if (bSkipFrame)
 		staticFrame.AdvanceFrame();
 
 	//! scissor box for the grid
 	//! don't draw grid outside of overscan render range and cut off the stuff before first and after last element
 	u32 scissorX = (u32)std::max(-App.Settings.AdjustOverscanX, GridCutLeft);
 	u32 scissorY = (u32)std::max(-App.Settings.AdjustOverscanY, 0);
-	u32 scissorW = (u32)LIMIT(ScreenProps.x-1 + App.Settings.AdjustOverscanX * 2.f, 0.f, GridCutRight - scissorX);
-	u32 scissorH = (u32)std::max(ScreenProps.x-1 + App.Settings.AdjustOverscanY * 2.f, 0.f);
+	u32 scissorW = (u32)LIMIT(ScreenProps.x - 1 + App.Settings.AdjustOverscanX * 2.f, 0.f, GridCutRight - scissorX);
+	u32 scissorH = (u32)std::max(ScreenProps.x - 1 + App.Settings.AdjustOverscanY * 2.f, 0.f);
 	GX_SetScissor(scissorX, scissorY, scissorW, scissorH);
 
 	//! Reset GX after icons
@@ -452,8 +451,8 @@ void GuiBannerGrid::Draw()
 	guMtxIdentity(mv);
 	guMtxScaleApply(mv, mv, gridwidth, gridheight, 1.0f);
 	guMtxTransApply(mv, mv, (ScreenProps.x - gridwidth) * 0.5f + XOffset,
-							(ScreenProps.y - gridheight) * 0.5f + YOffset,
-							0.f);
+		(ScreenProps.y - gridheight) * 0.5f + YOffset,
+		0.f);
 	guMtxConcat(modelview, mv, mv);
 
 	GX_LoadPosMtxImm(mv, GX_PNMTX0);
@@ -488,14 +487,14 @@ void GuiBannerGrid::Draw()
 	GX_SetTevColorS10(GX_TEVREG2, gridFrameTevColor[2]);
 
 	// texture environment
-	GX_SetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLORNULL );
+	GX_SetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLORNULL);
 	GX_SetTevSwapMode(GX_TEVSTAGE0, GX_TEV_SWAP0, GX_TEV_SWAP0);
 	GX_SetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_C1);
-	GX_SetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV );
-	GX_SetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K3_A );
+	GX_SetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
+	GX_SetTevKColorSel(GX_TEVSTAGE0, GX_TEV_KCSEL_K3_A);
 	GX_SetTevAlphaIn(GX_TEVSTAGE0, GX_CA_A0, GX_CA_A1, GX_CA_TEXA, GX_CA_ZERO);
-	GX_SetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV );
-	GX_SetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K3_A );
+	GX_SetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_FALSE, GX_TEVPREV);
+	GX_SetTevKAlphaSel(GX_TEVSTAGE0, GX_TEV_KASEL_K3_A);
 	GX_SetNumTevStages(1);
 
 	GX_Begin(GX_QUADS, GX_VTXFMT0, 4);
@@ -520,16 +519,16 @@ void GuiBannerGrid::Draw()
 	ReSetup_GX();
 
 	// render highlter
-	for(int sIdx = 0; sIdx < MAX_BUTTONS; sIdx++)
+	for (int sIdx = 0; sIdx < MAX_BUTTONS; sIdx++)
 	{
 		// only render selected and when no animation is on going
-		if(!AnimationRunning && gridBtn[sIdx]->GetState() == STATE_SELECTED)
+		if (!AnimationRunning && gridBtn[sIdx]->GetState() == STATE_SELECTED)
 		{
 			int row = Idx2Row(sIdx);
 			int column = Idx2Column(sIdx);
 			Mtx hlview;
 			guMtxTransApply(modelview, hlview, XOffset + chanWidth * column - chanWidth * 1.5f,
-											  -YOffset - chanHeight * row + chanHeight, 0.f);
+				-YOffset - chanHeight * row + chanHeight, 0.f);
 			RenderHighliter(hlview);
 		}
 	}
@@ -540,19 +539,19 @@ void GuiBannerGrid::Draw()
 	// remove scissor again
 	GX_SetScissor(0, 0, vmode->fbWidth, vmode->efbHeight);
 
-	if(pageNo > 0)
+	if (pageNo > 0)
 		btnLeft->Draw();
-	if(pageNo < pageCnt-1)
+	if (pageNo < pageCnt - 1)
 		btnRight->Draw();
 
-	for(int i = 0; i < MAX_BUTTONS; i++)
+	for (int i = 0; i < MAX_BUTTONS; i++)
 	{
-		if(AnimationRunning)
+		if (AnimationRunning)
 			gridBtn[i]->ResetState();
 
-		if (!AnimationRunning && App.Settings.marknewtitles && (pageNo * 12 + i) < gameList.size()
-			&& App.Library.NewTitles.IsNew(gameList[pageNo * 12 + i]->id))
-				gridBtn[i]->Draw();
+		if (!AnimationRunning && (App.Settings.marknewtitles && (pageNo * 12 + i) < App.Library.Games.size())
+			&& App.Library.IsNew(App.Library.Games[pageNo * 12 + i]->id))
+			gridBtn[i]->Draw();
 
 		gridBtn[i]->DrawTooltip();
 	}

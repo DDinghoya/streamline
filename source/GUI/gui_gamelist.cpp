@@ -12,7 +12,6 @@
 #include <unistd.h>
 #include "gui_gamelist.h"
 #include "App.h"
-#include "usbloader/GameList.h"
 #include "themes/CTheme.h"
 #include "utils/tools.h"
 #include "menu.h"
@@ -32,7 +31,7 @@ GuiGameList::GuiGameList(int w, int h, int offset)
 	height = h;
 	pagesize = thInt("9 - game list browser page size");
 	selectable = true;
-	listOffset = LIMIT(offset, 0, MAX(0, gameList.size() - pagesize));
+	listOffset = LIMIT(offset, 0, MAX(0, App.Library.Games.size() - pagesize));
 	selectedItem = 0;
 
 	trigA = new GuiTrigger;
@@ -48,7 +47,7 @@ GuiGameList::GuiGameList(int w, int h, int offset)
 	scrollBar.SetPageSize(pagesize);
 	scrollBar.SetSelectedItem(selectedItem);
 	scrollBar.SetSelectedIndex(listOffset);
-	scrollBar.SetEntrieCount(gameList.size());
+	scrollBar.SetEntrieCount(App.Library.Games.size());
 	scrollBar.listChanged.connect(this, &GuiGameList::onListChange);
 
 	bgGameImg = new GuiImage(bgGames);
@@ -128,7 +127,7 @@ GuiGameList::~GuiGameList()
 void GuiGameList::SetFocus(int f)
 {
 	LOCK(this);
-	if (!gameList.size()) return;
+	if (!App.Library.Games.size()) return;
 
 	for (int i = 0; i < pagesize; ++i)
 		game[i]->ResetState();
@@ -176,13 +175,13 @@ void GuiGameList::onListChange(int SelItem, int SelInd)
 void GuiGameList::setListOffset(int off)
 {
 	LOCK(this);
-	listOffset = LIMIT(off, 0, MAX(0, gameList.size() - pagesize));
+	listOffset = LIMIT(off, 0, MAX(0, App.Library.Games.size() - pagesize));
 }
 
 void GuiGameList::SetSelectedOption(int ind)
 {
 	LOCK(this);
-	selectedItem = LIMIT(ind, 0, MIN(pagesize, MAX(0, gameList.size() - 1)));
+	selectedItem = LIMIT(ind, 0, MIN(pagesize, MAX(0, App.Library.Games.size() - 1)));
 }
 
 /**
@@ -191,13 +190,14 @@ void GuiGameList::SetSelectedOption(int ind)
 void GuiGameList::Draw()
 {
 	LOCK(this);
-	if (!this->IsVisible() || !gameList.size()) return;
+	if (!this->IsVisible() || !App.Library.Games.size())
+		return;
 
 	bgGameImg->Draw();
 
 	for (int i = 0, next = listOffset; i < pagesize; ++i, ++next)
 	{
-		if (next < gameList.size())
+		if (next < App.Library.Games.size())
 			game[i]->Draw();
 	}
 
@@ -210,21 +210,21 @@ void GuiGameList::UpdateListEntries()
 {
 	for (int i = 0, next = listOffset; i < pagesize; ++i, ++next)
 	{
-		if (next < gameList.size())
+		if (next < App.Library.Games.size())
 		{
 			if (game[i]->GetState() == STATE_DISABLED)
 			{
 				game[i]->SetVisible(true);
 				game[i]->SetState(STATE_DEFAULT);
 			}
-			gameTxt[i]->SetText(App.Library.GameTitles.GetTitle(gameList[next]));
+			gameTxt[i]->SetText(App.Library.DisplayNames.GetTitle(App.Library.Games[next]));
 			gameTxt[i]->SetPosition(24, 0);
-			gameTxtOver[i]->SetText(App.Library.GameTitles.GetTitle(gameList[next]));
+			gameTxtOver[i]->SetText(App.Library.DisplayNames.GetTitle(App.Library.Games[next]));
 			gameTxtOver[i]->SetPosition(24, 0);
 
 			if (App.Settings.marknewtitles)
 			{
-				bool isNew = App.Library.NewTitles.IsNew(gameList[next]->id);
+				bool isNew = App.Library.IsNew(App.Library.Games[next]->id);
 				if (isNew)
 				{
 					gameTxt[i]->SetMaxWidth(maxTextWidth - (newGames->GetWidth() + 1), DOTTED);
@@ -249,7 +249,8 @@ void GuiGameList::UpdateListEntries()
 void GuiGameList::Update(GuiTrigger * t)
 {
 	LOCK(this);
-	if (state == STATE_DISABLED || !t || !gameList.size()) return;
+	if (state == STATE_DISABLED || !t || !App.Library.Games.size())
+		return;
 
 	static int pressedChan = -1;
 
@@ -266,7 +267,7 @@ void GuiGameList::Update(GuiTrigger * t)
 	{
 		for (int i = 0, next = listOffset; i < pagesize; ++i, ++next)
 		{
-			if (next >= gameList.size())
+			if (next >= App.Library.Games.size())
 				break;
 
 			if (i != selectedItem && game[i]->GetState() == STATE_SELECTED)
@@ -287,8 +288,7 @@ void GuiGameList::Update(GuiTrigger * t)
 	scrollBar.SetPageSize(pagesize);
 	scrollBar.SetSelectedItem(selectedItem);
 	scrollBar.SetSelectedIndex(listOffset);
-	scrollBar.SetEntrieCount(gameList.size());
+	scrollBar.SetEntrieCount(App.Library.Games.size());
 
 	if (updateCB) updateCB(this);
 }
-

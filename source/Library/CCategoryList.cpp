@@ -46,7 +46,7 @@ void CCategoryList::clear()
 const char * CCategoryList::operator[](unsigned int id)
 {
 	map<unsigned int, string>::iterator itr = nameList.find(id);
-	if(itr == nameList.end())
+	if (itr == nameList.end())
 		return NULL;
 
 	return nameList[id].c_str();
@@ -54,14 +54,14 @@ const char * CCategoryList::operator[](unsigned int id)
 
 bool CCategoryList::AddCategory(const string &name)
 {
-	if(findCategory(name))
+	if (findCategory(name))
 		return false;
 
 	unsigned int i = 1;
 	map<unsigned int, string>::iterator itr;
 
 	//! Find next free key
-	while((itr = nameList.find(i)) != nameList.end())
+	while ((itr = nameList.find(i)) != nameList.end())
 		i++;
 
 	nameList[i] = name;
@@ -82,7 +82,7 @@ void CCategoryList::RemoveCategory(const string &name)
 {
 	for (map<unsigned int, string>::iterator itr = nameList.begin(); itr != nameList.end(); itr++)
 	{
-		if(strcasecmp(name.c_str(), itr->second.c_str()) == 0)
+		if (strcasecmp(name.c_str(), itr->second.c_str()) == 0)
 		{
 			nameList.erase(itr);
 			break;
@@ -94,7 +94,7 @@ void CCategoryList::RemoveCategory(unsigned int id)
 {
 	map<unsigned int, string>::iterator itr = nameList.find(id);
 
-	if(itr != nameList.end())
+	if (itr != nameList.end())
 		nameList.erase(itr);
 }
 
@@ -102,7 +102,7 @@ bool CCategoryList::findCategory(const string &name)
 {
 	for (listIter = nameList.begin(); listIter != nameList.end(); listIter++)
 	{
-		if(strcasecmp(name.c_str(), listIter->second.c_str()) == 0)
+		if (strcasecmp(name.c_str(), listIter->second.c_str()) == 0)
 			return true;
 	}
 	return false;

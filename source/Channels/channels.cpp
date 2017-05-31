@@ -101,7 +101,7 @@ void Channels::InternalGetNandChannelList(u32 type)
 		if (tid == 0x000100014c554c5aLL || tid == 0x00010001AF1BF516LL || tid == 0x0001000148415858LL)
 			strcpy(id, "JODI");
 
-		const char *name = App.Library.GameTitles.GetTitle(id);
+		const char *name = App.Library.DisplayNames.GetTitle(id);
 		std::string TitleName;
 
 		if (!name || *name == '\0')
@@ -109,7 +109,7 @@ void Channels::InternalGetNandChannelList(u32 type)
 			name = NandTitles.NameOf(tid);
 			// Set title for caching
 			if (name)
-				App.Library.GameTitles.SetGameTitle(id, name);
+				App.Library.DisplayNames.SetGameTitle(id, name);
 		}
 
 		int s = NandChannels.size();
@@ -545,14 +545,14 @@ bool Channels::ParseTitleDir(char *path, int language)
 
 		std::string TitleName;
 
-		const char *title = App.Library.GameTitles.GetTitle(id);
+		const char *title = App.Library.DisplayNames.GetTitle(id);
 		if (title && *title != '\0')
 		{
 			TitleName = title;
 		}
 		else if (GetEmuChanTitle(path, language, TitleName))
 		{
-			App.Library.GameTitles.SetGameTitle(id, TitleName.c_str());
+			App.Library.DisplayNames.SetGameTitle(id, TitleName.c_str());
 		}
 		else
 		{

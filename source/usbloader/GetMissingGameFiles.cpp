@@ -2,9 +2,8 @@
 #include <string>
 #include <vector>
 #include "IO/fileops.h"
-#include "usbloader/GameList.h"
 #include "utils/wstring.hpp"
-#include "Debug.h"
+#include "App.h"
 
 extern struct discHdr *dvdheader;
 
@@ -20,15 +19,15 @@ int GetMissingGameFiles(const char * path, const char * fileext, std::vector<std
 	char gameID[7];
 	char filepath[512];
 	MissingFilesList.clear();
-	wString oldFilter(gameList.GetCurrentFilter());
+	wString oldFilter(App.Library.Games.GetCurrentFilter());
 
 	//! make sure that all games are added to the gamelist
-	gameList.LoadUnfiltered();
+	App.Library.Games.LoadUnfiltered();
 
-	for (int i = 0; i < gameList.size(); ++i)
+	for (int i = 0; i < App.Library.Games.size(); ++i)
 	{
-		struct discHdr* header = gameList[i];
-		snprintf(gameID, sizeof(gameID), "%s", (char *) header->id);
+		struct discHdr* header = App.Library.Games[i];
+		snprintf(gameID, sizeof(gameID), "%s", (char *)header->id);
 		snprintf(filepath, sizeof(filepath), "%s/%s%s", path, gameID, fileext);
 
 		if (CheckFile(filepath))
@@ -49,13 +48,13 @@ int GetMissingGameFiles(const char * path, const char * fileext, std::vector<std
 			continue;
 
 		//! Not found add to missing list
-		snprintf(gameID, sizeof(gameID), "%s", (char *) header->id);
+		snprintf(gameID, sizeof(gameID), "%s", (char *)header->id);
 		MissingFilesList.push_back(std::string(gameID));
 	}
 
-	if(dvdheader)
+	if (dvdheader)
 	{
-		snprintf(gameID, sizeof(gameID), "%s", (char *) dvdheader->id);
+		snprintf(gameID, sizeof(gameID), "%s", (char *)dvdheader->id);
 		snprintf(filepath, sizeof(filepath), "%s/%s%s", path, gameID, fileext);
 
 		if (!CheckFile(filepath)) {
@@ -65,7 +64,7 @@ int GetMissingGameFiles(const char * path, const char * fileext, std::vector<std
 	}
 
 	//! Bring game list to the old state
-	gameList.FilterList(oldFilter.c_str());
+	App.Library.Games.FilterList(oldFilter.c_str());
 
 	gprintf(" = %i", MissingFilesList.size());
 

@@ -32,156 +32,155 @@
 #include "prompts/TitleBrowser.h"
 #include "system/IosLoader.h"
 #include "usbloader/wbfs.h"
-#include "usbloader/GameList.h"
 #include "utils/tools.h"
 #include "menu.h"
 #include "GameCube/GCGames.h"
 
 static const char * OnOffText[] =
 {
-	trNOOP( "OFF" ),
-	trNOOP( "ON" ),
-	trNOOP( "Auto" )
+	trNOOP("OFF"),
+	trNOOP("ON"),
+	trNOOP("Auto")
 };
 
 static const char * AspectText[] =
 {
-	trNOOP( "Force 4:3" ),
-	trNOOP( "Force 16:9" ),
-	trNOOP( "System Default" )
+	trNOOP("Force 4:3"),
+	trNOOP("Force 16:9"),
+	trNOOP("System Default")
 };
 
 static const char * VideoModeText[] =
 {
-	trNOOP( "System Default" ),
-	trNOOP( "Disc Default" ),
-	trNOOP( "Force PAL50" ),
-	trNOOP( "Force PAL60" ),
-	trNOOP( "Force NTSC" ),
-	trNOOP( "Region Patch" ),
-	trNOOP( "Force PAL480p" ),
-	trNOOP( "Force NTSC480p" ),
+	trNOOP("System Default"),
+	trNOOP("Disc Default"),
+	trNOOP("Force PAL50"),
+	trNOOP("Force PAL60"),
+	trNOOP("Force NTSC"),
+	trNOOP("Region Patch"),
+	trNOOP("Force PAL480p"),
+	trNOOP("Force NTSC480p"),
 };
 
 static const char * VideoPatchDolText[] =
 {
-	trNOOP( "OFF" ),
-	trNOOP( "Region Patch" ),
-	trNOOP( "ON" ),
-	trNOOP( "All" ),
+	trNOOP("OFF"),
+	trNOOP("Region Patch"),
+	trNOOP("ON"),
+	trNOOP("All"),
 };
 
 static const char * LanguageText[] =
 {
-	trNOOP( "Japanese" ),
-	trNOOP( "English" ),
-	trNOOP( "German" ),
-	trNOOP( "French" ),
-	trNOOP( "Spanish" ),
-	trNOOP( "Italian" ),
-	trNOOP( "Dutch" ),
-	trNOOP( "SChinese" ),
-	trNOOP( "TChinese" ),
-	trNOOP( "Korean" ),
-	trNOOP( "Console Default" )
+	trNOOP("Japanese"),
+	trNOOP("English"),
+	trNOOP("German"),
+	trNOOP("French"),
+	trNOOP("Spanish"),
+	trNOOP("Italian"),
+	trNOOP("Dutch"),
+	trNOOP("SChinese"),
+	trNOOP("TChinese"),
+	trNOOP("Korean"),
+	trNOOP("Console Default")
 };
 
 static const char * NandEmuText[] =
 {
-	trNOOP( "OFF" ),
-	trNOOP( "Partial" ),
-	trNOOP( "Full" ),
-	trNOOP( "Neek" )
+	trNOOP("OFF"),
+	trNOOP("Partial"),
+	trNOOP("Full"),
+	trNOOP("Neek")
 };
 
 static const char * HooktypeText[] =
 {
-	trNOOP( "None" ),
-	trNOOP( "VBI (Default)" ),
-	trNOOP( "KPAD Read" ),
-	trNOOP( "Joypad" ),
-	trNOOP( "GXDraw" ),
-	trNOOP( "GXFlush" ),
-	trNOOP( "OSSleepThread" ),
-	trNOOP( "AXNextFrame" ),
+	trNOOP("None"),
+	trNOOP("VBI (Default)"),
+	trNOOP("KPAD Read"),
+	trNOOP("Joypad"),
+	trNOOP("GXDraw"),
+	trNOOP("GXFlush"),
+	trNOOP("OSSleepThread"),
+	trNOOP("AXNextFrame"),
 };
 
 static const char * ChannelLaunchText[] =
 {
-	trNOOP( "Main DOL" ),
-	trNOOP( "Boot Content" ),
+	trNOOP("Main DOL"),
+	trNOOP("Boot Content"),
 };
 
 static const char * GCMode[] =
 {
-	trNOOP( "MIOS (Default & Customs)" ),
-	trNOOP( "Devolution" ),
-	trNOOP( "Nintendont" ),
+	trNOOP("MIOS (Default & Customs)"),
+	trNOOP("Devolution"),
+	trNOOP("Nintendont"),
 };
 
 static const char * GCSourceText[][3] =
 {
-	{ trNOOP( "Main Path" ), "", "" },
-	{ trNOOP( "SD Path" ), "", "" },
-	{ trNOOP( "Auto" ), "", "" },
-	{ trNOOP( "Main Path" ), "/", trNOOP( "SD Path" ) },
-	{ trNOOP( "SD Path" ), "/", trNOOP( "Main Path" ) },
+	{ trNOOP("Main Path"), "", "" },
+	{ trNOOP("SD Path"), "", "" },
+	{ trNOOP("Auto"), "", "" },
+	{ trNOOP("Main Path"), "/", trNOOP("SD Path") },
+	{ trNOOP("SD Path"), "/", trNOOP("Main Path") },
 };
 
 static const char * DMLVideoText[] =
 {
-	trNOOP( "Auto" ),
-	trNOOP( "System Default" ),
-	trNOOP( "Disc Default" ),
-	trNOOP( "Force PAL50" ),
-	trNOOP( "Force PAL60" ),
-	trNOOP( "Force NTSC" ),
+	trNOOP("Auto"),
+	trNOOP("System Default"),
+	trNOOP("Disc Default"),
+	trNOOP("Force PAL50"),
+	trNOOP("Force PAL60"),
+	trNOOP("Force NTSC"),
 	"", // unused
-	trNOOP( "Force PAL480p" ),
-	trNOOP( "Force NTSC480p" ),
-	trNOOP( "None" ),
+	trNOOP("Force PAL480p"),
+	trNOOP("Force NTSC480p"),
+	trNOOP("None"),
 };
 
 static const char * DMLNMMMode[] =
 {
-	trNOOP( "OFF" ),
-	trNOOP( "ON" ),
-	trNOOP( "Debug" ),
+	trNOOP("OFF"),
+	trNOOP("ON"),
+	trNOOP("Debug"),
 };
 
 static const char * DMLDebug[] =
 {
-	trNOOP( "OFF" ),
-	trNOOP( "ON" ),
-	trNOOP( "Debug Wait" ),
+	trNOOP("OFF"),
+	trNOOP("ON"),
+	trNOOP("Debug Wait"),
 };
 
 static const char * DEVOMCText[] =
 {
-	trNOOP( "OFF" ),
-	trNOOP( "ON" ),
-	trNOOP( "Individual" ),
+	trNOOP("OFF"),
+	trNOOP("ON"),
+	trNOOP("Individual"),
 };
 
 static const char * NINMCText[] =
 {
-	trNOOP( "OFF" ),
-	trNOOP( "Individual" ),
-	trNOOP( "ON (Multi)" ),
+	trNOOP("OFF"),
+	trNOOP("Individual"),
+	trNOOP("ON (Multi)"),
 };
 
 static const char * NINCfgText[] =
 {
-	trNOOP( "Delete" ),
-	trNOOP( "Create" ),
-	trNOOP( "No change" ),
+	trNOOP("Delete"),
+	trNOOP("Create"),
+	trNOOP("No change"),
 };
 
 static const char * PrivServText[] =
 {
-	trNOOP( "OFF" ),
-	trNOOP( "NoSSL only" ),
-	trNOOP( "Wiimmfi.de" ),
+	trNOOP("OFF"),
+	trNOOP("NoSSL only"),
+	trNOOP("Wiimmfi.de"),
 };
 
 LoaderSettings::LoaderSettings()
@@ -189,71 +188,71 @@ LoaderSettings::LoaderSettings()
 {
 	int Idx = 0;
 
-	Options->SetName(Idx++, "%s", tr( "Video Mode" ));
-	Options->SetName(Idx++, "%s", tr( "Dol Video Patch" ));
-	Options->SetName(Idx++, "%s", tr( "Sneek Video Patch" ));
-	Options->SetName(Idx++, "%s", tr( "VIDTV Patch" ));
-	Options->SetName(Idx++, "%s", tr( "Aspect Ratio" ));
-	Options->SetName(Idx++, "%s", tr( "Game Language" ));
-	Options->SetName(Idx++, "%s", tr( "Patch Country Strings" ));
-	Options->SetName(Idx++, "%s", tr( "Ocarina" ));
-	Options->SetName(Idx++, "%s", tr( "Private Server" ));
-	Options->SetName(Idx++, "%s", tr( "Loader's IOS" ));
-	Options->SetName(Idx++, "%s", tr( "Game's IOS" ));
-	Options->SetName(Idx++, "%s", tr( "Quick Boot" ));
-	Options->SetName(Idx++, "%s", tr( "Block IOS Reload" ));
-	Options->SetName(Idx++, "%s", tr( "Return To" ));
-	Options->SetName(Idx++, "%s", tr( "Nand Saves Emulation" ));
-	Options->SetName(Idx++, "%s", tr( "Nand Chan. Emulation" ));
-	Options->SetName(Idx++, "%s", tr( "Hooktype" ));
-	Options->SetName(Idx++, "%s", tr( "Wiird Debugger" ));
-	Options->SetName(Idx++, "%s", tr( "Debugger Paused Start" ));
-	Options->SetName(Idx++, "%s", tr( "Channel Launcher" ));
-	Options->SetName(Idx++, "%s", tr( "=== GameCube Settings" ));
-	Options->SetName(Idx++, "%s", tr( "GameCube Source" ));
-	Options->SetName(Idx++, "%s", tr( "GameCube Mode" ));
-	Options->SetName(Idx++, "%s", tr( "--==  DM(L) + Nintendont" ));
-	Options->SetName(Idx++, "%s", tr( "Video Mode" ));
-	Options->SetName(Idx++, "%s", tr( "Progressive Patch" ));
-	Options->SetName(Idx++, "%s", tr( "Force Widescreen" ));
-	Options->SetName(Idx++, "%s", tr( "Debug" ));
-	Options->SetName(Idx++, "%s", tr( "Disc-Select Prompt" ));
-	Options->SetName(Idx++, "%s", tr( "--==   DIOS MIOS (Lite) " ));
-	Options->SetName(Idx++, "%s", tr( "NMM Mode" ));
-	Options->SetName(Idx++, "%s", tr( "PAD Hook" ));
-	Options->SetName(Idx++, "%s", tr( "No Disc+" ));
-	Options->SetName(Idx++, "%s", tr( "Screenshot" ));
-	Options->SetName(Idx++, "%s", tr( "LED Activity" ));
-	Options->SetName(Idx++, "%s", tr( "Japanese Patch" ));
-	Options->SetName(Idx++, "%s", tr( "--==       Nintendont" ));
-	Options->SetName(Idx++, "%s", tr( "Auto Boot" ));
-	Options->SetName(Idx++, "%s", tr( "Settings File" ));
-	Options->SetName(Idx++, "%s", tr( "Video Deflicker" ));
-	Options->SetName(Idx++, "%s", tr( "PAL50 Patch" ));
-	Options->SetName(Idx++, "%s", tr( "WiiU Widescreen" ));
-	Options->SetName(Idx++, "%s", tr( "Video scale" ));
-	Options->SetName(Idx++, "%s", tr( "Video offset" ));
-	Options->SetName(Idx++, "%s", tr( "Remove Read Speed Limit" ));
-	Options->SetName(Idx++, "%s", tr( "Triforce Arcade Mode" ));
-	Options->SetName(Idx++, "%s", tr( "CC Rumble" ));
-	Options->SetName(Idx++, "%s", tr( "Skip IPL" ));
-	Options->SetName(Idx++, "%s", tr( "Memory Card Emulation" ));
-	Options->SetName(Idx++, "%s", tr( "Memory Card Blocks Size" ));
-	Options->SetName(Idx++, "%s", tr( "USB-HID Controller" ));
-	Options->SetName(Idx++, "%s", tr( "GameCube Controller" ));
-	Options->SetName(Idx++, "%s", tr( "Native Controller" ));
-	Options->SetName(Idx++, "%s", tr( "LED Activity" ));
-	Options->SetName(Idx++, "%s", tr( "OSReport" ));
-	Options->SetName(Idx++, "%s", tr( "Log to file" ));
-	Options->SetName(Idx++, "%s", tr( "--==       Devolution" ));
-	Options->SetName(Idx++, "%s", tr( "Memory Card Emulation" ));
-	Options->SetName(Idx++, "%s", tr( "Force Widescreen" ));
-	Options->SetName(Idx++, "%s", tr( "LED Activity" ));
-	Options->SetName(Idx++, "%s", tr( "F-Zero AX" ));
-	Options->SetName(Idx++, "%s", tr( "Timer Fix" ));
-	Options->SetName(Idx++, "%s", tr( "D Buttons" ));
-	Options->SetName(Idx++, "%s", tr( "Crop Overscan" ));
-	Options->SetName(Idx++, "%s", tr( "Disc Read Delay" ));
+	Options->SetName(Idx++, "%s", tr("Video Mode"));
+	Options->SetName(Idx++, "%s", tr("Dol Video Patch"));
+	Options->SetName(Idx++, "%s", tr("Sneek Video Patch"));
+	Options->SetName(Idx++, "%s", tr("VIDTV Patch"));
+	Options->SetName(Idx++, "%s", tr("Aspect Ratio"));
+	Options->SetName(Idx++, "%s", tr("Game Language"));
+	Options->SetName(Idx++, "%s", tr("Patch Country Strings"));
+	Options->SetName(Idx++, "%s", tr("Ocarina"));
+	Options->SetName(Idx++, "%s", tr("Private Server"));
+	Options->SetName(Idx++, "%s", tr("Loader's IOS"));
+	Options->SetName(Idx++, "%s", tr("Game's IOS"));
+	Options->SetName(Idx++, "%s", tr("Quick Boot"));
+	Options->SetName(Idx++, "%s", tr("Block IOS Reload"));
+	Options->SetName(Idx++, "%s", tr("Return To"));
+	Options->SetName(Idx++, "%s", tr("Nand Saves Emulation"));
+	Options->SetName(Idx++, "%s", tr("Nand Chan. Emulation"));
+	Options->SetName(Idx++, "%s", tr("Hooktype"));
+	Options->SetName(Idx++, "%s", tr("Wiird Debugger"));
+	Options->SetName(Idx++, "%s", tr("Debugger Paused Start"));
+	Options->SetName(Idx++, "%s", tr("Channel Launcher"));
+	Options->SetName(Idx++, "%s", tr("=== GameCube Settings"));
+	Options->SetName(Idx++, "%s", tr("GameCube Source"));
+	Options->SetName(Idx++, "%s", tr("GameCube Mode"));
+	Options->SetName(Idx++, "%s", tr("--==  DM(L) + Nintendont"));
+	Options->SetName(Idx++, "%s", tr("Video Mode"));
+	Options->SetName(Idx++, "%s", tr("Progressive Patch"));
+	Options->SetName(Idx++, "%s", tr("Force Widescreen"));
+	Options->SetName(Idx++, "%s", tr("Debug"));
+	Options->SetName(Idx++, "%s", tr("Disc-Select Prompt"));
+	Options->SetName(Idx++, "%s", tr("--==   DIOS MIOS (Lite) "));
+	Options->SetName(Idx++, "%s", tr("NMM Mode"));
+	Options->SetName(Idx++, "%s", tr("PAD Hook"));
+	Options->SetName(Idx++, "%s", tr("No Disc+"));
+	Options->SetName(Idx++, "%s", tr("Screenshot"));
+	Options->SetName(Idx++, "%s", tr("LED Activity"));
+	Options->SetName(Idx++, "%s", tr("Japanese Patch"));
+	Options->SetName(Idx++, "%s", tr("--==       Nintendont"));
+	Options->SetName(Idx++, "%s", tr("Auto Boot"));
+	Options->SetName(Idx++, "%s", tr("Settings File"));
+	Options->SetName(Idx++, "%s", tr("Video Deflicker"));
+	Options->SetName(Idx++, "%s", tr("PAL50 Patch"));
+	Options->SetName(Idx++, "%s", tr("WiiU Widescreen"));
+	Options->SetName(Idx++, "%s", tr("Video scale"));
+	Options->SetName(Idx++, "%s", tr("Video offset"));
+	Options->SetName(Idx++, "%s", tr("Remove Read Speed Limit"));
+	Options->SetName(Idx++, "%s", tr("Triforce Arcade Mode"));
+	Options->SetName(Idx++, "%s", tr("CC Rumble"));
+	Options->SetName(Idx++, "%s", tr("Skip IPL"));
+	Options->SetName(Idx++, "%s", tr("Memory Card Emulation"));
+	Options->SetName(Idx++, "%s", tr("Memory Card Blocks Size"));
+	Options->SetName(Idx++, "%s", tr("USB-HID Controller"));
+	Options->SetName(Idx++, "%s", tr("GameCube Controller"));
+	Options->SetName(Idx++, "%s", tr("Native Controller"));
+	Options->SetName(Idx++, "%s", tr("LED Activity"));
+	Options->SetName(Idx++, "%s", tr("OSReport"));
+	Options->SetName(Idx++, "%s", tr("Log to file"));
+	Options->SetName(Idx++, "%s", tr("--==       Devolution"));
+	Options->SetName(Idx++, "%s", tr("Memory Card Emulation"));
+	Options->SetName(Idx++, "%s", tr("Force Widescreen"));
+	Options->SetName(Idx++, "%s", tr("LED Activity"));
+	Options->SetName(Idx++, "%s", tr("F-Zero AX"));
+	Options->SetName(Idx++, "%s", tr("Timer Fix"));
+	Options->SetName(Idx++, "%s", tr("D Buttons"));
+	Options->SetName(Idx++, "%s", tr("Crop Overscan"));
+	Options->SetName(Idx++, "%s", tr("Disc Read Delay"));
 
 	SetOptionValues();
 
@@ -264,24 +263,24 @@ LoaderSettings::LoaderSettings()
 
 LoaderSettings::~LoaderSettings()
 {
-	if(oldLoaderMode != App.Settings.LoaderMode)
+	if (oldLoaderMode != App.Settings.LoaderMode)
 	{
-		if(App.Settings.LoaderMode & MODE_WIIGAMES && (gameList.GameCount() == 0))
+		if (App.Settings.LoaderMode & MODE_WIIGAMES && (App.Library.Games.GameCount() == 0))
 		{
 			WBFS_ReInit(WBFS_DEVICE_USB);
-			gameList.ReadGameList();
+			App.Library.Games.ReadGameList();
 		}
 
-		gameList.LoadUnfiltered();
-		App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
+		App.Library.Games.LoadUnfiltered();
+		App.Library.DisplayNames.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
 	}
-	
-	if(oldGameCubeSource != App.Settings.GameCubeSource)
+
+	if (oldGameCubeSource != App.Settings.GameCubeSource)
 	{
 		GCGames::Instance()->LoadAllGames();
 	}
-	
-	if(oldLoaderIOS != App.Settings.LoaderIOS)
+
+	if (oldLoaderIOS != App.Settings.LoaderIOS)
 	{
 		// edit meta.xml arguments
 		editMetaArguments();
@@ -296,28 +295,28 @@ void LoaderSettings::SetOptionValues()
 	Options->SetValue(Idx++, "%s", tr(VideoModeText[App.Settings.videomode]));
 
 	//! Settings: Dol Video Patch
-	Options->SetValue(Idx++, "%s", tr( VideoPatchDolText[App.Settings.videoPatchDol] ));
+	Options->SetValue(Idx++, "%s", tr(VideoPatchDolText[App.Settings.videoPatchDol]));
 
 	//! Settings: Sneek Video Patch
-	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.sneekVideoPatch] ));
+	Options->SetValue(Idx++, "%s", tr(OnOffText[App.Settings.sneekVideoPatch]));
 
 	//! Settings: VIDTV Patch
-	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.videopatch] ));
+	Options->SetValue(Idx++, "%s", tr(OnOffText[App.Settings.videopatch]));
 
 	//! Settings: Aspect Ratio
-	Options->SetValue(Idx++, "%s", tr( AspectText[App.Settings.GameAspectRatio] ));
+	Options->SetValue(Idx++, "%s", tr(AspectText[App.Settings.GameAspectRatio]));
 
 	//! Settings: Game Language
-	Options->SetValue(Idx++, "%s", tr( LanguageText[App.Settings.language] ));
+	Options->SetValue(Idx++, "%s", tr(LanguageText[App.Settings.language]));
 
 	//! Settings: Patch Country Strings
-	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.patchcountrystrings] ));
+	Options->SetValue(Idx++, "%s", tr(OnOffText[App.Settings.patchcountrystrings]));
 
 	//! Settings: Ocarina
-	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.ocarina] ));
+	Options->SetValue(Idx++, "%s", tr(OnOffText[App.Settings.ocarina]));
 
 	//! Settings: Private Server
-	Options->SetValue(Idx++, "%s", tr( PrivServText[App.Settings.PrivateServer] ));
+	Options->SetValue(Idx++, "%s", tr(PrivServText[App.Settings.PrivateServer]));
 
 	//! Settings: Loader's IOS
 	if (App.Settings.godmode)
@@ -332,10 +331,10 @@ void LoaderSettings::SetOptionValues()
 		Options->SetValue(Idx++, "********");
 
 	//! Settings: Quick Boot
-	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.quickboot] ));
+	Options->SetValue(Idx++, "%s", tr(OnOffText[App.Settings.quickboot]));
 
 	//! Settings: Block IOS Reload
-	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.BlockIOSReload] ));
+	Options->SetValue(Idx++, "%s", tr(OnOffText[App.Settings.BlockIOSReload]));
 
 	//! Settings: Return To
 	const char* TitleName = NULL;
@@ -346,29 +345,29 @@ void LoaderSettings::SetOptionValues()
 	Options->SetValue(Idx++, "%s", TitleName);
 
 	//! Settings: Nand Emulation
-	Options->SetValue(Idx++, "%s", tr( NandEmuText[App.Settings.NandEmuMode] ));
+	Options->SetValue(Idx++, "%s", tr(NandEmuText[App.Settings.NandEmuMode]));
 
 	//! Settings: Nand Chan. Emulation
-	Options->SetValue(Idx++, "%s", tr( NandEmuText[App.Settings.NandEmuChanMode] ));
+	Options->SetValue(Idx++, "%s", tr(NandEmuText[App.Settings.NandEmuChanMode]));
 
 	//! Settings: Hooktype
-	Options->SetValue(Idx++, "%s", tr( HooktypeText[App.Settings.Hooktype] ));
+	Options->SetValue(Idx++, "%s", tr(HooktypeText[App.Settings.Hooktype]));
 
 	//! Settings: Wiird Debugger
-	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.WiirdDebugger] ));
+	Options->SetValue(Idx++, "%s", tr(OnOffText[App.Settings.WiirdDebugger]));
 
 	//! Settings: Wiird Debugger Pause on Start
-	Options->SetValue(Idx++, "%s", tr( OnOffText[App.Settings.WiirdDebuggerPause] ));
+	Options->SetValue(Idx++, "%s", tr(OnOffText[App.Settings.WiirdDebuggerPause]));
 
 	//! Settings: Channel Launcher
-	Options->SetValue(Idx++, "%s", tr( ChannelLaunchText[App.Settings.UseChanLauncher] ));
+	Options->SetValue(Idx++, "%s", tr(ChannelLaunchText[App.Settings.UseChanLauncher]));
 
 	//! Settings: TITLE - GameCube Settings
 	Options->SetValue(Idx++, "=======");
 
 	//! Settings: GameCube Source
 	Options->SetValue(Idx++, "%s%s%s", tr(GCSourceText[App.Settings.GameCubeSource][0]),
-	                GCSourceText[App.Settings.GameCubeSource][1], tr(GCSourceText[App.Settings.GameCubeSource][2]));
+		GCSourceText[App.Settings.GameCubeSource][1], tr(GCSourceText[App.Settings.GameCubeSource][2]));
 
 	//! Settings: GameCube Mode
 	Options->SetValue(Idx++, "%s", tr(GCMode[App.Settings.GameCubeMode]));
@@ -523,7 +522,7 @@ int LoaderSettings::GetMenuInternal()
 	}
 
 	//! Settings: Sneek Video Patch
-	else if (ret == ++Idx )
+	else if (ret == ++Idx)
 	{
 		if (++App.Settings.sneekVideoPatch >= MAX_ON_OFF) App.Settings.sneekVideoPatch = 0;
 	}
@@ -535,7 +534,7 @@ int LoaderSettings::GetMenuInternal()
 	}
 
 	//! Settings: Aspect Ratio
-	else if (ret == ++Idx )
+	else if (ret == ++Idx)
 	{
 		if (++App.Settings.GameAspectRatio >= ASPECT_MAX) App.Settings.GameAspectRatio = 0;
 	}
@@ -567,23 +566,23 @@ int LoaderSettings::GetMenuInternal()
 	//! Settings: Loader's IOS
 	else if (ret == ++Idx)
 	{
-		if(!App.Settings.godmode)
+		if (!App.Settings.godmode)
 			return MENU_NONE;
 
 		char entered[4];
 		snprintf(entered, sizeof(entered), "%i", App.Settings.LoaderIOS);
-		if(OnScreenNumpad(entered, sizeof(entered)))
+		if (OnScreenNumpad(entered, sizeof(entered)))
 		{
-			if(atoi(entered) == 58) // allow only IOS58 for IOS <200
+			if (atoi(entered) == 58) // allow only IOS58 for IOS <200
 				App.Settings.LoaderIOS = 58;
 			else
 				App.Settings.LoaderIOS = LIMIT(atoi(entered), 200, 255);
 
-			if(NandTitles.IndexOf(TITLE_ID(1, App.Settings.LoaderIOS)) < 0)
+			if (NandTitles.IndexOf(TITLE_ID(1, App.Settings.LoaderIOS)) < 0)
 			{
 				WindowPrompt(tr("Warning:"), tr("This IOS was not found on the titles list. If you are sure you have it installed than ignore this warning."), tr("OK"));
 			}
-			else if(App.Settings.LoaderIOS == 254)
+			else if (App.Settings.LoaderIOS == 254)
 			{
 				WindowPrompt(tr("Warning:"), tr("This IOS is the BootMii ios. If you are sure it is not BootMii and you have something else installed there than ignore this warning."), tr("OK"));
 			}
@@ -593,20 +592,20 @@ int LoaderSettings::GetMenuInternal()
 	//! Settings: Game's IOS
 	else if (ret == ++Idx)
 	{
-		if(!App.Settings.godmode)
+		if (!App.Settings.godmode)
 			return MENU_NONE;
 
 		char entered[4];
 		snprintf(entered, sizeof(entered), "%i", App.Settings.cios);
-		if(OnScreenNumpad(entered, sizeof(entered)))
+		if (OnScreenNumpad(entered, sizeof(entered)))
 		{
 			App.Settings.cios = LIMIT(atoi(entered), 200, 255);
 
-			if(NandTitles.IndexOf(TITLE_ID(1, App.Settings.cios)) < 0)
+			if (NandTitles.IndexOf(TITLE_ID(1, App.Settings.cios)) < 0)
 			{
 				WindowPrompt(tr("Warning:"), tr("This IOS was not found on the titles list. If you are sure you have it installed than ignore this warning."), tr("OK"));
 			}
-			else if(App.Settings.cios == 254)
+			else if (App.Settings.cios == 254)
 			{
 				WindowPrompt(tr("Warning:"), tr("This IOS is the BootMii ios. If you are sure it is not BootMii and you have something else installed there than ignore this warning."), tr("OK"));
 			}
@@ -620,7 +619,7 @@ int LoaderSettings::GetMenuInternal()
 	}
 
 	//! Settings: Block IOS Reload
-	else if (ret == ++Idx )
+	else if (ret == ++Idx)
 	{
 		if (++App.Settings.BlockIOSReload >= 3) App.Settings.BlockIOSReload = 0;
 	}
@@ -635,39 +634,39 @@ int LoaderSettings::GetMenuInternal()
 	}
 
 	//! Settings: Nand Emulation (Saves)
-	else if (ret == ++Idx )
+	else if (ret == ++Idx)
 	{
-		if(!IosLoader::IsD2X(App.Settings.cios))
+		if (!IosLoader::IsD2X(App.Settings.cios))
 			WindowPrompt(tr("Error:"), tr("Nand Emulation is only available on D2X cIOS!"), tr("OK"));
 		else if (++App.Settings.NandEmuMode >= EMUNAND_NEEK) App.Settings.NandEmuMode = EMUNAND_OFF;
 	}
 
 	//! Settings: Nand Emulation (channel / neek)
-	else if (ret == ++Idx )
+	else if (ret == ++Idx)
 	{
-		if(++App.Settings.NandEmuChanMode >= EMUNAND_MAX) App.Settings.NandEmuChanMode = EMUNAND_PARTIAL;
+		if (++App.Settings.NandEmuChanMode >= EMUNAND_MAX) App.Settings.NandEmuChanMode = EMUNAND_PARTIAL;
 	}
 
 	//! Settings: Hooktype
-	else if (ret == ++Idx )
+	else if (ret == ++Idx)
 	{
 		if (++App.Settings.Hooktype >= 8) App.Settings.Hooktype = 0;
 	}
 
 	//! Settings: Wiird Debugger
-	else if (ret == ++Idx )
+	else if (ret == ++Idx)
 	{
 		if (++App.Settings.WiirdDebugger >= MAX_ON_OFF) App.Settings.WiirdDebugger = 0;
 	}
 
 	//! Settings: Wiird Debugger Pause on Start
-	else if (ret == ++Idx )
+	else if (ret == ++Idx)
 	{
 		if (++App.Settings.WiirdDebuggerPause >= MAX_ON_OFF) App.Settings.WiirdDebuggerPause = 0;
 	}
 
 	//! Settings: Channel Launcher
-	else if (ret == ++Idx )
+	else if (ret == ++Idx)
 	{
 		if (++App.Settings.UseChanLauncher >= MAX_ON_OFF) App.Settings.UseChanLauncher = 0;
 	}
@@ -700,9 +699,9 @@ int LoaderSettings::GetMenuInternal()
 	else if (ret == ++Idx)
 	{
 		App.Settings.DMLVideo++;
-		if(App.Settings.DMLVideo == DML_VIDEO_FORCE_PATCH) // Skip Force Patch
+		if (App.Settings.DMLVideo == DML_VIDEO_FORCE_PATCH) // Skip Force Patch
 			App.Settings.DMLVideo++;
-		if(App.Settings.DMLVideo >= DML_VIDEO_MAX_CHOICE) App.Settings.DMLVideo = 0;
+		if (App.Settings.DMLVideo >= DML_VIDEO_MAX_CHOICE) App.Settings.DMLVideo = 0;
 	}
 
 	//! Settings: DML + NIN Progressive Patch
@@ -813,7 +812,7 @@ int LoaderSettings::GetMenuInternal()
 		char entrie[20];
 		snprintf(entrie, sizeof(entrie), "%i", App.Settings.NINVideoScale);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
-		if(ret)
+		if (ret)
 			App.Settings.NINVideoScale = LIMIT(atoi(entrie), 40, 120);
 	}
 
@@ -823,7 +822,7 @@ int LoaderSettings::GetMenuInternal()
 		char entrie[20];
 		snprintf(entrie, sizeof(entrie), "%i", App.Settings.NINVideoOffset);
 		int ret = OnScreenNumpad(entrie, sizeof(entrie));
-		if(ret)
+		if (ret)
 			App.Settings.NINVideoOffset = LIMIT(atoi(entrie), -20, 20);
 	}
 

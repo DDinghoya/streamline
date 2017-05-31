@@ -1,9 +1,9 @@
-#define SVN_REV "1282"
+#define SVN_REV "1283"
 #define SVN_MAJOR "3"
 #define SVN_MINOR "1"
 #define SVN_PATCH "1"
 #define SVN_BRANCH "master"
-#define SVN_DESC "b1278-3-gaa94acde"
+#define SVN_DESC "b1278-4-g01c8e922"
 
 const char *Version_GetMajor()
 {

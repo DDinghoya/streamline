@@ -1,5 +1,4 @@
-#ifndef _DISC_H_
-#define _DISC_H_
+#pragma once
 
 #include <gccore.h> /* for define ATTRIBUTE_PACKED */
 
@@ -11,46 +10,46 @@ extern "C"
 	/* Disc header structure */
 	struct discHdr
 	{
-			/* Game ID */
-			u8 id[6];
+		/* Game ID */
+		u8 id[6];
 
-			/* Game Disc number */
-			u8 disc_no;
+		/* Game Disc number */
+		u8 disc_no;
 
-			/* Game version */
-			u8 disc_ver;
+		/* Game version */
+		u8 disc_ver;
 
-			/* Audio streaming */
-			u8 streaming;
-			u8 bufsize;
+		/* Audio streaming */
+		u8 streaming;
+		u8 bufsize;
 
-			/* Padding */
-			u8 is_ciso;
+		/* Padding */
+		u8 is_ciso;
 
-			/* Unused, on channel list mode this is the full 64 bit tid */
-			u64 tid;
+		/* Unused, on channel list mode this is the full 64 bit tid */
+		u64 tid;
 
-			/* Unused, using in loader internally to detect title type */
-			u8 type;
+		/* Unused, using in loader internally to detect title type */
+		u8 type;
 
-			/* rest of unused */
-			u8 unused[4];
+		/* rest of unused */
+		u8 unused[4];
 
-			/* Magic word */
-			u32 magic;
+		/* Magic word */
+		u32 magic;
 
-			/* Padding */
-			u32 gc_magic;
+		/* Padding */
+		u32 gc_magic;
 
-			/* Game title */
-			char title[64];
+		/* Game title */
+		char title[64];
 
-			/* Encryption/Hashing */
-			u8 encryption;
-			u8 h3_verify;
+		/* Encryption/Hashing */
+		u8 encryption;
+		u8 h3_verify;
 
-			/* Padding */
-			u8 unused3[30];
+		/* Padding */
+		u8 unused3[30];
 	} ATTRIBUTE_PACKED;
 
 	/* Prototypes */
@@ -67,11 +66,9 @@ extern "C"
 	void Disc_SelectVMode(u8 videoselected, bool devolution, u32 *dml_VideoMode, u32 *nin_VideoMode);
 	void Disc_SetVMode(void);
 	s32 Disc_JumpToEntrypoint(s32 hooktype, u32 dolparameter);
-	
+
 	extern GXRModeObj *rmode;
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

@@ -157,8 +157,8 @@ int UpdateGameTDB()
 	remove(ZipPath.c_str());
 
 	//! Reload all titles and reload cached titles because the file changed now.
-	App.Library.GameTitles.SetDefault();
-	App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+	App.Library.DisplayNames.SetDefault();
+	App.Library.DisplayNames.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 
 	return (result ? filesize : -1);
 }

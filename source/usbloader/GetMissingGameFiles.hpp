@@ -1,5 +1,4 @@
-#ifndef GETMISSINGGAMEFILES_HPP_
-#define GETMISSINGGAMEFILES_HPP_
+#pragma once
 
 /**************************************************************************************
  * FindMissingFiles
@@ -10,5 +9,3 @@
  * List - string vector where the IDs of missing game files will be put in.
  **************************************************************************************/
 int GetMissingGameFiles(const char * path, const char * fileext, std::vector<std::string> & List);
-
-#endif

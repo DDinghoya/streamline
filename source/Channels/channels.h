@@ -22,8 +22,7 @@
  * 3. This notice may not be removed or altered from any source
  * distribution.
  ***************************************************************************/
-#ifndef _CHANNELS_H_
-#define _CHANNELS_H_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -35,8 +34,8 @@ using namespace std;
 class Channels
 {
 public:
-	static Channels *Instance(void) { if(!instance) instance = new Channels(); return instance; }
-	static void DestroyInstance(void) { if(instance) delete instance; instance = NULL; }
+	static Channels *Instance(void) { if (!instance) instance = new Channels(); return instance; }
+	static void DestroyInstance(void) { if (instance) delete instance; instance = NULL; }
 
 	static u32 LoadChannel(const u64 &chantitle);
 	static u8 GetRequestedIOS(const u64 &title);
@@ -61,5 +60,3 @@ private:
 	vector<struct discHdr> NandChannels;
 	vector<struct discHdr> EmuChannels;
 };
-
-#endif

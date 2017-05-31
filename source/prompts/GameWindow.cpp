@@ -2,7 +2,6 @@
 #include "GameWindow.hpp"
 #include "usbloader/disc.h"
 #include "usbloader/wbfs.h"
-#include "usbloader/GameList.h"
 #include "usbloader/GameBooter.hpp"
 #include "usbloader/AlternateDOLOffsets.h"
 #include "GameCube/GCGames.h"
@@ -43,9 +42,9 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	int gameIdx;
 
 	//! get the game index to this header
-	for (gameIdx = 0; gameIdx < gameList.size(); ++gameIdx)
+	for (gameIdx = 0; gameIdx < App.Library.Games.size(); ++gameIdx)
 	{
-		if (gameList[gameIdx] == header)
+		if (App.Library.Games[gameIdx] == header)
 		{
 			gameSelected = gameIdx;
 			break;
@@ -53,7 +52,7 @@ GameWindow::GameWindow(GameBrowseMenu *m, struct discHdr *header)
 	}
 
 	//! Set dvd header if the header does not match any of the list games
-	if (gameIdx == gameList.size())
+	if (gameIdx == App.Library.Games.size())
 		dvdheader = header;
 
 	dialogBox = App.Resources.GetImageData(App.Settings.widescreen ? "wdialogue_box_startgame.png" : "dialogue_box_startgame.png");
@@ -446,7 +445,7 @@ void GameWindow::ChangeGame(int EffectDirection)
 	//! Let it finish the current loading though
 	BannerAsync::HaltThread();
 
-	struct discHdr * header = (dvdheader ? dvdheader : gameList[gameSelected]);
+	struct discHdr * header = (dvdheader ? dvdheader : App.Library.Games[gameSelected]);
 	LoadGameSound(header);
 	LoadDiscImage(header->id);
 	SetWindowEffect(EffectDirection, OUT);
@@ -496,10 +495,10 @@ void GameWindow::ChangeGame(int EffectDirection)
 	*/
 
 	diskImg->SetImage(diskImgData);
-	nameTxt->SetText(App.Library.GameTitles.GetTitle(header));
-	playcntTxt->SetTextf("%s: %i", tr("Play Count"), App.Library.GameStatistics.GetPlayCount(header));
+	nameTxt->SetText(App.Library.DisplayNames.GetTitle(header));
+	playcntTxt->SetTextf("%s: %i", tr("Play Count"), App.Library.Statistics.GetPlayCount(header));
 
-	int favoritevar = App.Library.GameStatistics.GetFavoriteRank(header->id);
+	int favoritevar = App.Library.Statistics.GetFavoriteRank(header->id);
 	for (int i = 0; i < FAVORITE_STARS; ++i)
 		FavoriteBtnImg[i]->SetImage(favoritevar >= i + 1 ? imgFavorite : imgNotFavorite);
 
@@ -559,10 +558,10 @@ int GameWindow::MainLoop()
 		Hide();
 
 		// If this function was left then the game start was canceled
-		GameWindow::BootGame(dvdheader ? dvdheader : gameList[gameSelected]);
+		GameWindow::BootGame(dvdheader ? dvdheader : App.Library.Games[gameSelected]);
 
 		// If it returns from that function reload the list
-		gameList.FilterList();
+		App.Library.Games.FilterList();
 
 		// Show the window again
 		Show();
@@ -583,7 +582,7 @@ int GameWindow::MainLoop()
 		Hide();
 
 		wiilight(0);
-		int settret = GameSettingsMenu::Execute(browserMenu, dvdheader ? dvdheader : gameList[gameSelected]);
+		int settret = GameSettingsMenu::Execute(browserMenu, dvdheader ? dvdheader : App.Library.Games[gameSelected]);
 
 		// Show the window again or return to browser on uninstall
 		if (settret == MENU_DISCLIST)
@@ -599,19 +598,19 @@ int GameWindow::MainLoop()
 		Hide();
 
 		// This button can only be clicked when this is not a dvd header
-		struct discHdr *header = gameList[gameSelected];
+		struct discHdr *header = App.Library.Games[gameSelected];
 
 		//enter new game title
 		char entered[60];
-		snprintf(entered, sizeof(entered), "%s", App.Library.GameTitles.GetTitle(header));
+		snprintf(entered, sizeof(entered), "%s", App.Library.DisplayNames.GetTitle(header));
 		int result = OnScreenKeyboard(entered, 60, 0);
 		if (result == 1)
 		{
 			WBFS_RenameGame(header->id, entered);
-			App.Library.GameTitles.SetGameTitle(header->id, entered);
-			wString oldFilter(gameList.GetCurrentFilter());
-			gameList.ReadGameList();
-			gameList.FilterList(oldFilter.c_str());
+			App.Library.DisplayNames.SetGameTitle(header->id, entered);
+			wString oldFilter(App.Library.Games.GetCurrentFilter());
+			App.Library.Games.ReadGameList();
+			App.Library.Games.FilterList(oldFilter.c_str());
 			if (browserMenu) browserMenu->ReloadBrowser();
 		}
 		// Show the window again
@@ -624,22 +623,22 @@ int GameWindow::MainLoop()
 	{
 		if (App.Settings.xflip == XFLIP_YES)
 		{
-			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
+			gameSelected = (gameSelected - 1 + App.Library.Games.size()) % App.Library.Games.size();
 			ChangeGame(LEFT);
 		}
 		else if (App.Settings.xflip == XFLIP_SYSMENU)
 		{
-			gameSelected = (gameSelected + 1) % gameList.size();
+			gameSelected = (gameSelected + 1) % App.Library.Games.size();
 			ChangeGame(LEFT);
 		}
 		else if (App.Settings.xflip == XFLIP_WTF)
 		{
-			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
+			gameSelected = (gameSelected - 1 + App.Library.Games.size()) % App.Library.Games.size();
 			ChangeGame(RIGHT);
 		}
 		else
 		{
-			gameSelected = (gameSelected + 1) % gameList.size();
+			gameSelected = (gameSelected + 1) % App.Library.Games.size();
 			ChangeGame(RIGHT);
 		}
 
@@ -650,22 +649,22 @@ int GameWindow::MainLoop()
 	{
 		if (App.Settings.xflip == XFLIP_YES)
 		{
-			gameSelected = (gameSelected + 1) % gameList.size();
+			gameSelected = (gameSelected + 1) % App.Library.Games.size();
 			ChangeGame(RIGHT);
 		}
 		else if (App.Settings.xflip == XFLIP_SYSMENU)
 		{
-			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
+			gameSelected = (gameSelected - 1 + App.Library.Games.size()) % App.Library.Games.size();
 			ChangeGame(RIGHT);
 		}
 		else if (App.Settings.xflip == XFLIP_WTF)
 		{
-			gameSelected = (gameSelected + 1) % gameList.size();
+			gameSelected = (gameSelected + 1) % App.Library.Games.size();
 			ChangeGame(LEFT);
 		}
 		else
 		{
-			gameSelected = (gameSelected - 1 + gameList.size()) % gameList.size();
+			gameSelected = (gameSelected - 1 + App.Library.Games.size()) % App.Library.Games.size();
 			ChangeGame(LEFT);
 		}
 
@@ -703,11 +702,11 @@ int GameWindow::MainLoop()
 		if (FavoriteBtn[i]->GetState() == STATE_CLICKED)
 		{
 			// This button can only be clicked when this is not a dvd header
-			struct discHdr * header = gameList[gameSelected];
-			int FavoriteRank = (i + 1 == App.Library.GameStatistics.GetFavoriteRank(header->id)) ? 0 : i + 1; // Press the current rank to reset the rank
+			struct discHdr * header = App.Library.Games[gameSelected];
+			int FavoriteRank = (i + 1 == App.Library.Statistics.GetFavoriteRank(header->id)) ? 0 : i + 1; // Press the current rank to reset the rank
 
-			App.Library.GameStatistics.SetFavoriteRank(header->id, FavoriteRank);
-			App.Library.GameStatistics.Save();
+			App.Library.Statistics.SetFavoriteRank(header->id, FavoriteRank);
+			App.Library.Statistics.Save();
 			for (int j = 0; j < FAVORITE_STARS; ++j)
 				FavoriteBtnImg[j]->SetImage(FavoriteRank >= j + 1 ? imgFavorite : imgNotFavorite);
 
@@ -723,7 +722,7 @@ void GameWindow::BootGame(struct discHdr *header)
 {
 	wiilight(0);
 
-	GameCFG* game_cfg = App.Library.GameSettings.GetGameCFG(header->id);
+	GameCFG* game_cfg = App.Library.Settings.GetGameCFG(header->id);
 
 	char IDfull[7];
 	snprintf(IDfull, sizeof(IDfull), "%s", (char *)header->id);
@@ -794,8 +793,8 @@ void GameWindow::BootGame(struct discHdr *header)
 		}
 	}
 
-	App.Library.GameStatistics.SetPlayCount(header->id, App.Library.GameStatistics.GetPlayCount(header->id) + 1);
-	App.Library.GameStatistics.Save();
+	App.Library.Statistics.SetPlayCount(header->id, App.Library.Statistics.GetPlayCount(header->id) + 1);
+	App.Library.Statistics.Save();
 
 	//Just calling that shuts down everything and starts game
 	int ret = GameBooter::BootGame(header);
@@ -803,7 +802,7 @@ void GameWindow::BootGame(struct discHdr *header)
 	//If the launch is canceled, reduce playCount
 	if (ret == -1)
 	{
-		App.Library.GameStatistics.SetPlayCount(header->id, App.Library.GameStatistics.GetPlayCount(header->id) - 1);
-		App.Library.GameStatistics.Save();
+		App.Library.Statistics.SetPlayCount(header->id, App.Library.Statistics.GetPlayCount(header->id) - 1);
+		App.Library.Statistics.Save();
 	}
 }

@@ -29,7 +29,6 @@
 #include "HBC/meta.h"
 #include "prompts/PromptWindows.h"
 #include "language/gettext.h"
-#include "usbloader/GameList.h"
 #include "usbloader/wbfs.h"
 #include "prompts/ProgressWindow.h"
 #include "system/IosLoader.h"
@@ -121,9 +120,9 @@ HardDriveSM::~HardDriveSM()
 			WBFS_OpenPart(App.Settings.partition);
 
 		//! Reload the new game titles
-		gameList.ReadGameList();
-		gameList.LoadUnfiltered();
-		App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
+		App.Library.Games.ReadGameList();
+		App.Library.Games.LoadUnfiltered();
+		App.Library.DisplayNames.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
 		
 		if(oldSettingsUSBAutoMount != App.Settings.USBAutoMount || NewSettingsUSBPort == -1)
 		{

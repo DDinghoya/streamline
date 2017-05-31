@@ -76,7 +76,7 @@ void AppCleanUp(void)
 	BannerAsync::ThreadExit();
 
 	if (App.Settings.CacheTitles)
-		App.Library.GameTitles.WriteCachedTitles(App.Settings.titlestxt_path);
+		App.Library.DisplayNames.WriteCachedTitles(App.Settings.titlestxt_path);
 	App.Settings.Save();
 
 	ExitGUIThreads();
@@ -100,7 +100,7 @@ void AppCleanUp(void)
 	SoundHandler::DestroyInstance();
 	GCGames::DestroyInstance();
 	DeinitNetwork();
-	App.Library.GameTitles.SetDefault();
+	App.Library.DisplayNames.SetDefault();
 
 	ShutdownAudio();
 

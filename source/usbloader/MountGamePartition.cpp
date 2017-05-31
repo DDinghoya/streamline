@@ -8,7 +8,6 @@
 #include "menu/menus.h"
 #include "Input/wpad.h"
 #include "usbloader/wbfs.h"
-#include "usbloader/GameList.h"
 #include "Data/GameTDB.h"
 #include "Debug.h"
 
@@ -17,9 +16,9 @@ static int FindGamePartition()
 	int partCount = DeviceHandler::GetUSBPartitionCount();
 
 	// Loop through all WBFS partitions first to check them in case IOS249 Rev < 18
-	for(int i = 0; i < partCount; ++i)
+	for (int i = 0; i < partCount; ++i)
 	{
-		if(DeviceHandler::GetFilesystemType(USB1+i) != PART_FS_WBFS)
+		if (DeviceHandler::GetFilesystemType(USB1 + i) != PART_FS_WBFS)
 			continue;
 
 		if (WBFS_OpenPart(i) == 0)
@@ -31,15 +30,15 @@ static int FindGamePartition()
 
 	int firstValidPartition = -1;
 
-	if(IosLoader::IsWaninkokoIOS() && NandTitles.VersionOf(TITLE_ID(1, IOS_GetVersion())) < 18)
+	if (IosLoader::IsWaninkokoIOS() && NandTitles.VersionOf(TITLE_ID(1, IOS_GetVersion())) < 18)
 		return -1;
 
 	// Loop through FAT/NTFS/EXT partitions, and find the first partition with games on it (if there is one)
-	for(int i = 0; i < partCount; ++i)
+	for (int i = 0; i < partCount; ++i)
 	{
-		if(DeviceHandler::GetFilesystemType(USB1+i) != PART_FS_NTFS &&
-		   DeviceHandler::GetFilesystemType(USB1+i) != PART_FS_FAT &&
-		   DeviceHandler::GetFilesystemType(USB1+i) != PART_FS_EXT)
+		if (DeviceHandler::GetFilesystemType(USB1 + i) != PART_FS_NTFS &&
+			DeviceHandler::GetFilesystemType(USB1 + i) != PART_FS_FAT &&
+			DeviceHandler::GetFilesystemType(USB1 + i) != PART_FS_EXT)
 		{
 			continue;
 		}
@@ -57,13 +56,13 @@ static int FindGamePartition()
 			return 0;
 		}
 
-		if(firstValidPartition < 0)
+		if (firstValidPartition < 0)
 			firstValidPartition = i;
 
 		WBFS_Close(i);
 	}
 
-	if(firstValidPartition >= 0)
+	if (firstValidPartition >= 0)
 	{
 		App.Settings.partition = firstValidPartition;
 		return 0;
@@ -76,21 +75,21 @@ static int PartitionChoice()
 {
 	int ret = -1;
 
-	int choice = WindowPrompt(tr( "No WBFS or FAT/NTFS/EXT partition found" ), tr( "You can select or format a partition or use the channel loader mode." ), tr( "Select" ), tr( "Format" ), tr( "Channels" ));
+	int choice = WindowPrompt(tr("No WBFS or FAT/NTFS/EXT partition found"), tr("You can select or format a partition or use the channel loader mode."), tr("Select"), tr("Format"), tr("Channels"));
 	if (choice == 0)
 	{
 		App.Settings.LoaderMode = MODE_NANDCHANNELS;
 		return 0;
 	}
-	else if(choice == 1)
+	else if (choice == 1)
 	{
 		int part_num = SelectPartitionMenu();
-		if(part_num >= 0)
+		if (part_num >= 0)
 		{
-			if(IosLoader::IsWaninkokoIOS() && NandTitles.VersionOf(TITLE_ID(1, IOS_GetVersion())) < 18 &&
-			   (DeviceHandler::GetFilesystemType(USB1+part_num) == PART_FS_NTFS ||
-				DeviceHandler::GetFilesystemType(USB1+part_num) == PART_FS_FAT ||
-				DeviceHandler::GetFilesystemType(USB1+part_num) == PART_FS_EXT))
+			if (IosLoader::IsWaninkokoIOS() && NandTitles.VersionOf(TITLE_ID(1, IOS_GetVersion())) < 18 &&
+				(DeviceHandler::GetFilesystemType(USB1 + part_num) == PART_FS_NTFS ||
+					DeviceHandler::GetFilesystemType(USB1 + part_num) == PART_FS_FAT ||
+					DeviceHandler::GetFilesystemType(USB1 + part_num) == PART_FS_EXT))
 			{
 				WindowPrompt(tr("Warning:"), tr("You are trying to select a FAT32/NTFS/EXT partition with cIOS 249 Rev < 18. This is not supported. Continue on your own risk."), tr("OK"));
 			}
@@ -101,13 +100,13 @@ static int PartitionChoice()
 			App.Settings.Save();
 		}
 	}
-	else if(choice == 2)
+	else if (choice == 2)
 	{
-		while(ret < 0 || ret == -666)
+		while (ret < 0 || ret == -666)
 		{
 			int part_num = SelectPartitionMenu();
-			if(part_num >= 0)
-				ret = FormatingPartition(tr( "Formatting, please wait..." ), part_num);
+			if (part_num >= 0)
+				ret = FormatingPartition(tr("Formatting, please wait..."), part_num);
 		}
 	}
 
@@ -124,29 +123,29 @@ int MountGamePartition(bool ShowGUI)
 
 	s32 wbfsinit = WBFS_Init(WBFS_DEVICE_USB);
 
-	if(App.Settings.LoaderMode & MODE_WIIGAMES)
+	if (App.Settings.LoaderMode & MODE_WIIGAMES)
 	{
 		if (wbfsinit < 0)
 		{
-			if(ShowGUI)
-				ShowError("%s %s", tr( "USB Device not initialized." ), tr("Switching to channel list mode."));
+			if (ShowGUI)
+				ShowError("%s %s", tr("USB Device not initialized."), tr("Switching to channel list mode."));
 
 			App.Settings.LoaderMode &= ~MODE_WIIGAMES;
 			App.Settings.LoaderMode |= MODE_NANDCHANNELS;
 		}
 		else
 		{
-			if(App.Settings.MultiplePartitions)
+			if (App.Settings.MultiplePartitions)
 				ret = WBFS_OpenAll();
-			else if(!App.Settings.FirstTimeRun)
+			else if (!App.Settings.FirstTimeRun)
 				ret = WBFS_OpenPart(App.Settings.partition);
 
-			if(ret < 0)
+			if (ret < 0)
 				ret = FindGamePartition();
 
-			if(ret < 0)
+			if (ret < 0)
 			{
-				if(ShowGUI)
+				if (ShowGUI)
 					PartitionChoice();
 				else
 					App.Settings.LoaderMode = MODE_NANDCHANNELS;
@@ -158,18 +157,18 @@ int MountGamePartition(bool ShowGUI)
 	ret = Disc_Init();
 	if (ret < 0)
 	{
-		if(ShowGUI)
-			WindowPrompt(tr( "Error !" ), tr( "Could not initialize DIP module!" ), tr( "OK" ));
+		if (ShowGUI)
+			WindowPrompt(tr("Error !"), tr("Could not initialize DIP module!"), tr("OK"));
 		Sys_LoadMenu();
 	}
 
 	gprintf("LoadTitlesFromGameTDB\n");
-	//! gameList is loaded in GameTitles.LoadTitlesFromGameTDB after cache file load
+	//! gameList is loaded in DisplayNames.LoadTitlesFromGameTDB after cache file load
 	//! for speed up purpose. If titles override active, load game list here.
-	if(App.Settings.titlesOverride)
-		App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+	if (App.Settings.titlesOverride)
+		App.Library.DisplayNames.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 	else
-		gameList.LoadUnfiltered();
+		App.Library.Games.LoadUnfiltered();
 
 	return ret;
 }

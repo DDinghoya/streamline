@@ -13,7 +13,6 @@
 #include "gui_gamegrid.h"
 #include "gui_image_async.h"
 #include "GUI/LoadCoverImage.h"
-#include "usbloader/GameList.h"
 #include "App.h"
 #include "themes/CTheme.h"
 #include "prompts/PromptWindows.h"
@@ -204,7 +203,7 @@ GuiGameGrid::GuiGameGrid(int w, int h, const char *themePath, int offset) :
 {
 	width = w;
 	height = h;
-	listOffset = LIMIT(offset, 0, MAX(0, gameList.size() - 1));
+	listOffset = LIMIT(offset, 0, MAX(0, App.Library.Games.size() - 1));
 	theme_posX = thInt("0 - game grid layout pos x");
 	theme_posY = thInt("20 - game grid layout pos y");
 
@@ -356,7 +355,7 @@ int GuiGameGrid::GetSelectedOption()
 void GuiGameGrid::SetSelectedOption(int ind)
 {
 	LOCK(this);
-	selectedItem = LIMIT(ind, 0, MIN(pagesize, MAX(0, gameList.size() - 1)));
+	selectedItem = LIMIT(ind, 0, MIN(pagesize, MAX(0, App.Library.Games.size() - 1)));
 }
 
 /**
@@ -365,7 +364,7 @@ void GuiGameGrid::SetSelectedOption(int ind)
 void GuiGameGrid::Draw()
 {
 	LOCK(this);
-	if (!this->IsVisible() || !gameList.size() || !game.size()) return;
+	if (!this->IsVisible() || !App.Library.Games.size() || !game.size()) return;
 
 	if (goLeft > 0)
 	{
@@ -409,7 +408,7 @@ void GuiGameGrid::Draw()
 
 	for (int i = 0; i < pagesize; i++)
 		game[i]->Draw();
-	if (gameList.size() > pagesize - 2 * rows)
+	if (App.Library.Games.size() > pagesize - 2 * rows)
 	{
 		btnRight->Draw();
 		btnLeft->Draw();
@@ -435,7 +434,7 @@ void GuiGameGrid::ChangeRows(int n)
 
 void GuiGameGrid::Update(GuiTrigger * t)
 {
-	if (state == STATE_DISABLED || !t || !gameList.size() || !game.size()) return;
+	if (state == STATE_DISABLED || !t || !App.Library.Games.size() || !game.size()) return;
 
 	LOCK(this);
 	if (!(game[0]->GetEffect() || game[0]->GetEffectOnOver()))
@@ -465,7 +464,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 
 	}
 	// navigation
-	if (gameList.size() >= (pagesize - 3 * rows) && goLeft == 0 && goRight == 0)
+	if (App.Library.Games.size() >= (pagesize - 3 * rows) && goLeft == 0 && goRight == 0)
 	{
 		// Left/Right Navigation
 
@@ -505,7 +504,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 		{
 			GuiButton *tmpButton[rows];
 			GuiTooltip *tmpTooltip[rows];
-			listOffset = OFFSETLIMIT(listOffset + rows, rows, gameList.size()); // set the new listOffset
+			listOffset = OFFSETLIMIT(listOffset + rows, rows, App.Library.Games.size()); // set the new listOffset
 			// Save left Tooltip & Button and destroy left Image + Image-Data
 			for (int i = 0; i < rows; i++)
 			{
@@ -531,12 +530,12 @@ void GuiGameGrid::Update(GuiTrigger * t)
 			for (int i = 0; i < rows; i++)
 			{
 				int ii = i + pagesize - rows;
-				gameIndex[ii] = GetGameIndex(ii, rows, listOffset, gameList.size());
+				gameIndex[ii] = GetGameIndex(ii, rows, listOffset, App.Library.Games.size());
 				titleTT[ii] = tmpTooltip[i];
 				coverImg[ii] = NULL;
 				if (gameIndex[ii] != -1)
 				{
-					coverImg[ii] = new GuiImageAsync(GameGridLoadCoverImage, gameList[gameIndex[ii]],
+					coverImg[ii] = new GuiImageAsync(GameGridLoadCoverImage, App.Library.Games[gameIndex[ii]],
 						sizeof(struct discHdr), &noCover);
 					if (coverImg[ii])
 					{
@@ -544,7 +543,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 						coverImg[ii]->SetScale(VALUE4ROWS(rows, 1.0, 0.6, 0.26));
 						coverImg[ii]->SetPosition(0, VALUE4ROWS(rows, 0, -50, -80));
 					}
-					titleTT[ii]->SetText(App.Library.GameTitles.GetTitle(gameList[gameIndex[ii]]));
+					titleTT[ii]->SetText(App.Library.DisplayNames.GetTitle(App.Library.Games[gameIndex[ii]]));
 				}
 				else
 				{
@@ -593,7 +592,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 		{
 			GuiButton *tmpButton[rows];
 			GuiTooltip *tmpTooltip[rows];
-			listOffset = OFFSETLIMIT(listOffset - rows, rows, gameList.size()); // set the new listOffset
+			listOffset = OFFSETLIMIT(listOffset - rows, rows, App.Library.Games.size()); // set the new listOffset
 			// Save right Button & Tooltip and destroy right Image-Data
 			for (int i = 0; i < rows; i++)
 			{
@@ -619,12 +618,12 @@ void GuiGameGrid::Update(GuiTrigger * t)
 
 			for (int i = 0; i < rows; i++)
 			{
-				gameIndex[i] = GetGameIndex(i, rows, listOffset, gameList.size());
+				gameIndex[i] = GetGameIndex(i, rows, listOffset, App.Library.Games.size());
 				titleTT[i] = tmpTooltip[i];
 				coverImg[i] = NULL;
 				if (gameIndex[i] != -1)
 				{
-					coverImg[i] = new GuiImageAsync(GameGridLoadCoverImage, gameList[gameIndex[i]],
+					coverImg[i] = new GuiImageAsync(GameGridLoadCoverImage, App.Library.Games[gameIndex[i]],
 						sizeof(struct discHdr), &noCover);
 					if (coverImg[i])
 					{
@@ -632,7 +631,7 @@ void GuiGameGrid::Update(GuiTrigger * t)
 						coverImg[i]->SetScale(VALUE4ROWS(rows, 1.0, 0.6, 0.26));
 						coverImg[i]->SetPosition(0, VALUE4ROWS(rows, 0, -50, -80));
 					}
-					titleTT[i]->SetText(App.Library.GameTitles.GetTitle(gameList[gameIndex[i]]));
+					titleTT[i]->SetText(App.Library.DisplayNames.GetTitle(App.Library.Games[gameIndex[i]]));
 				}
 				else
 				{
@@ -680,9 +679,9 @@ void GuiGameGrid::Update(GuiTrigger * t)
 
 	if ((btnRowUp->GetState() == STATE_CLICKED))
 	{
-		if ((rows == 1) && (gameList.size() >= 18))
+		if ((rows == 1) && (App.Library.Games.size() >= 18))
 			this->ChangeRows(2);
-		else if ((rows == 2) && (gameList.size() >= 45))
+		else if ((rows == 2) && (App.Library.Games.size() >= 45))
 			this->ChangeRows(3);
 		btnRowUp->ResetState();
 		return;
@@ -729,19 +728,23 @@ void GuiGameGrid::Reload(int Rows, int ListOffset)
 	goRight = 0;
 
 	rows = Rows > 3 ? 3 : (Rows < 1 ? 1 : Rows);
-	if ((gameList.size() < 45) && (rows == 3)) rows = 2;
-	if ((gameList.size() < 18) && (rows == 2)) rows = 1;
+	if ((App.Library.Games.size() < 45) && (rows == 3))
+		rows = 2;
+
+	if ((App.Library.Games.size() < 18) && (rows == 2))
+		rows = 1;
 
 	if (ListOffset >= 0) // if ListOffset < 0 then no change
 		listOffset = ListOffset;
-	listOffset = OFFSETLIMIT(listOffset, rows, gameList.size());
+
+	listOffset = OFFSETLIMIT(listOffset, rows, App.Library.Games.size());
 
 	selectedItem = -1;
 	clickedItem = -1;
 
 	pagesize = ROWS2PAGESIZE(rows);
 
-	if (gameList.size() == 0)
+	if (App.Library.Games.size() == 0)
 	{
 		pagesize = 0;
 		return;
@@ -765,13 +768,13 @@ void GuiGameGrid::Reload(int Rows, int ListOffset)
 		//------------------------
 		// Index
 		//------------------------
-		gameIndex[i] = GetGameIndex(i, rows, listOffset, gameList.size());
+		gameIndex[i] = GetGameIndex(i, rows, listOffset, App.Library.Games.size());
 
 		//------------------------
 		// Tooltip
 		//------------------------
 		if (gameIndex[i] != -1)
-			titleTT[i] = new GuiTooltip(App.Library.GameTitles.GetTitle(gameList[gameIndex[i]]), thInt("255 - tooltip alpha"));
+			titleTT[i] = new GuiTooltip(App.Library.DisplayNames.GetTitle(App.Library.Games[gameIndex[i]]), thInt("255 - tooltip alpha"));
 		else
 			titleTT[i] = new GuiTooltip(NULL, thInt("255 - tooltip alpha"));
 
@@ -779,7 +782,7 @@ void GuiGameGrid::Reload(int Rows, int ListOffset)
 		// ImageData
 		//------------------------
 		//	  if( gameIndex[i] != -1 )
-		//		  cover[i] = LoadCoverImage(&gameList[gameIndex[i]], false /*bool Prefere3D*/);
+		//		  cover[i] = LoadCoverImage(&App.Library.Games[gameIndex[i]], false /*bool Prefere3D*/);
 		//	  else
 		//		  cover[i] = new GuiImageData(NULL);
 
@@ -789,7 +792,7 @@ void GuiGameGrid::Reload(int Rows, int ListOffset)
 		coverImg[i] = NULL;
 		if (gameIndex[i] != -1)
 		{
-			coverImg[i] = new GuiImageAsync(GameGridLoadCoverImage, gameList[gameIndex[i]], sizeof(struct discHdr), &noCover);
+			coverImg[i] = new GuiImageAsync(GameGridLoadCoverImage, App.Library.Games[gameIndex[i]], sizeof(struct discHdr), &noCover);
 			if (coverImg[i])
 			{
 				coverImg[i]->SetWidescreen(App.Settings.widescreen);
@@ -841,4 +844,3 @@ void GuiGameGrid::Reload(int Rows, int ListOffset)
 	}
 	App.Settings.gridRows = rows;
 }
-

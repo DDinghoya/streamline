@@ -17,7 +17,6 @@
 #include "prompts/PromptWindows.h"
 #include "themes/CTheme.h"
 #include "gameinfo.h"
-#include "usbloader/GameList.h"
 #include "Debug.h"
 #include "Data/GameTDB.h"
 #include "BoxCover/BoxCover.hpp"
@@ -26,23 +25,23 @@ static inline const char * ConsoleFromTitleID(const char* TitleID)
 {
 	switch (TitleID[0])
 	{
-		case 'W': return "WiiWare";
-		case 'D': return "VC_Arcade";
-		case 'H': return "Wii_System_Channel";
-		case 'F': return "VC_NES";
-		case 'G': return "GameCube";
-		case 'J': return "VC_SNES";
-		case 'N': return "VC_N64";
-		case 'L': return "VC_Master_System";
-		case 'M': return "VC_Genesis_Megadrive";
-		case 'E': return "VC_NeoGeo";
-		case 'C': return "VC_Commodore";
-		case 'X': return "VC_MSX";
-		case 'P': return "VC_TurboGraphX";
-		case 'Q': return "VC_TurboGraphX-CD";
-		case 'R': return "Wii_Game_Disc";
-		case 'S': return "Wii_Game_Disc";
-		default: return "Unknown";
+	case 'W': return "WiiWare";
+	case 'D': return "VC_Arcade";
+	case 'H': return "Wii_System_Channel";
+	case 'F': return "VC_NES";
+	case 'G': return "GameCube";
+	case 'J': return "VC_SNES";
+	case 'N': return "VC_N64";
+	case 'L': return "VC_Master_System";
+	case 'M': return "VC_Genesis_Megadrive";
+	case 'E': return "VC_NeoGeo";
+	case 'C': return "VC_Commodore";
+	case 'X': return "VC_MSX";
+	case 'P': return "VC_TurboGraphX";
+	case 'Q': return "VC_TurboGraphX-CD";
+	case 'R': return "Wii_Game_Disc";
+	case 'S': return "Wii_Game_Disc";
+	default: return "Unknown";
 	}
 }
 
@@ -50,15 +49,15 @@ static inline const char * HdrTypeText(u8 type)
 {
 	switch (type)
 	{
-	
-		case TYPE_GAME_WII_IMG		: return "Wii_Image";
-		case TYPE_GAME_WII_DISC		: return "Wii_Disc";
-		case TYPE_GAME_GC_IMG		: return "Gamecube_Image";
-		case TYPE_GAME_GC_DISC		: return "Gamecube_Disc";
-		case TYPE_GAME_GC_EXTRACTED	: return "Gamecube_Extracted";
-		case TYPE_GAME_NANDCHAN		: return "Channel_NAND";
-		case TYPE_GAME_EMUNANDCHAN	: return "Channel_EmuNAND";
-		default						: return "Unknown";
+
+	case TYPE_GAME_WII_IMG: return "Wii_Image";
+	case TYPE_GAME_WII_DISC: return "Wii_Disc";
+	case TYPE_GAME_GC_IMG: return "Gamecube_Image";
+	case TYPE_GAME_GC_DISC: return "Gamecube_Disc";
+	case TYPE_GAME_GC_EXTRACTED: return "Gamecube_Extracted";
+	case TYPE_GAME_NANDCHAN: return "Channel_NAND";
+	case TYPE_GAME_EMUNANDCHAN: return "Channel_EmuNAND";
+	default: return "Unknown";
 	}
 }
 
@@ -70,14 +69,14 @@ static int InternalShowGameInfo(struct discHdr *header)
 	App.MainWindow->SetState(STATE_DISABLED);
 
 	char ID[7];
-	strlcpy(ID, (char *) header->id, sizeof(ID));
+	strlcpy(ID, (char *)header->id, sizeof(ID));
 
 	char xmlpath[300];
 	snprintf(xmlpath, sizeof(xmlpath), "%swiitdb.xml", App.Settings.titlestxt_path);
 
 	GameTDB XML_DB;
 
-	if(!XML_DB.OpenFile(xmlpath))
+	if (!XML_DB.OpenFile(xmlpath))
 	{
 		ShowError(tr("Could not open wiitdb.xml."));
 		return -1;
@@ -87,7 +86,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 
 	GameXMLInfo GameInfo;
 
-	if(!XML_DB.GetGameXMLInfo(ID, &GameInfo))
+	if (!XML_DB.GetGameXMLInfo(ID, &GameInfo))
 	{
 		ShowError(tr("Could not find info for this game in the wiitdb.xml."));
 		return -1;
@@ -102,9 +101,9 @@ static int InternalShowGameInfo(struct discHdr *header)
 	int wifiY = 0;
 	int intputX = 200, inputY = -30, txtXOffset = 90;
 	u8 nunchuk = 0, classiccontroller = 0, balanceboard = 0, dancepad = 0, guitar = 0, gamecube = 0, wheel = 0,
-			motionplus = 0, drums = 0, microphone = 0, zapper = 0, nintendods = 0,
-			//vitalitysensor=0,
-			wiispeak = 0;
+		motionplus = 0, drums = 0, microphone = 0, zapper = 0, nintendods = 0,
+		//vitalitysensor=0,
+		wiispeak = 0;
 	int newline = 1;
 	u8 page = 1;
 
@@ -214,12 +213,12 @@ static int InternalShowGameInfo(struct discHdr *header)
 
 	GuiButton LeftBtn(0, 0);
 	LeftBtn.SetTrigger(&trigLeft);
-	if(header->type != TYPE_GAME_WII_DISC && header->type != TYPE_GAME_GC_DISC)
+	if (header->type != TYPE_GAME_WII_DISC && header->type != TYPE_GAME_GC_DISC)
 		gameinfoWindow.Append(&LeftBtn);
 
 	GuiButton RightBtn(0, 0);
 	RightBtn.SetTrigger(&trigRight);
-	if(header->type != TYPE_GAME_WII_DISC && header->type != TYPE_GAME_GC_DISC)
+	if (header->type != TYPE_GAME_WII_DISC && header->type != TYPE_GAME_GC_DISC)
 		gameinfoWindow.Append(&RightBtn);
 
 	GuiButton coverBtn(180, 250);
@@ -251,7 +250,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 	// enable icons for required accessories
 	for (u32 i = 0; i < GameInfo.AccessoirList.size(); ++i)
 	{
-		if(!GameInfo.AccessoirList[i].Required)
+		if (!GameInfo.AccessoirList[i].Required)
 			continue;
 
 		if (strcmp(GameInfo.AccessoirList[i].Name.c_str(), "classiccontroller") == 0) classiccontroller = 1;
@@ -327,7 +326,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 	// look for optional accessories
 	for (u32 i = 0; i < GameInfo.AccessoirList.size(); ++i)
 	{
-		if(GameInfo.AccessoirList[i].Required)
+		if (GameInfo.AccessoirList[i].Required)
 			continue;
 
 		if (strcmp(GameInfo.AccessoirList[i].Name.c_str(), "classiccontroller") == 0) classiccontroller = 1;
@@ -372,12 +371,12 @@ static int InternalShowGameInfo(struct discHdr *header)
 	bool load3DCover = false;
 	char imgPath[150];
 	snprintf(imgPath, sizeof(imgPath), "%s/%s.png", App.Settings.coversFull_path, ID);
-	if(!CheckFile(imgPath))
+	if (!CheckFile(imgPath))
 	{
 		loadFlatCover = true;
 		snprintf(imgPath, sizeof(imgPath), "%s/%s.png", App.Settings.covers2d_path, ID);
 	}
-	if(!CheckFile(imgPath))
+	if (!CheckFile(imgPath))
 	{
 		loadFlatCover = false;
 		load3DCover = true;
@@ -390,7 +389,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 		cover = NULL;
 	}
 
-	if(load3DCover && cover) //! No cover is always 3D box
+	if (load3DCover && cover) //! No cover is always 3D box
 	{
 		coverImg = new GuiImage(cover);
 		coverImg->SetWidescreen(App.Settings.widescreen);
@@ -402,13 +401,13 @@ static int InternalShowGameInfo(struct discHdr *header)
 		boxCov->SetPosition(-1.6f, 0.4f, -27.0f);
 		boxCov->SetEffect(EFFECT_SLIDE_LEFT | EFFECT_SLIDE_IN, 40);
 
-		if(GameInfo.CaseColor == 0xFF0000)
+		if (GameInfo.CaseColor == 0xFF0000)
 		{
 			boxCov->SetBoxColor((GXColor) { 198, 34, 4, 255 });
 		}
-		else if(GameInfo.CaseColor >= 0)
+		else if (GameInfo.CaseColor >= 0)
 		{
-			u8 * Color = (u8 *) &GameInfo.CaseColor;
+			u8 * Color = (u8 *)&GameInfo.CaseColor;
 			boxCov->SetBoxColor((GXColor) { Color[1], Color[2], Color[3], 255 });
 		}
 
@@ -560,31 +559,31 @@ static int InternalShowGameInfo(struct discHdr *header)
 	// # online players
 	if (GameInfo.WifiPlayers > 0)
 	{
-		if(GameInfo.WifiPlayers == 1)
+		if (GameInfo.WifiPlayers == 1)
 			wifiplayersImgData = App.Resources.GetImageData("wifi1.png");
 
-		else if(GameInfo.WifiPlayers == 2)
+		else if (GameInfo.WifiPlayers == 2)
 			wifiplayersImgData = App.Resources.GetImageData("wifi2.png");
 
-		else if(GameInfo.WifiPlayers == 4)
+		else if (GameInfo.WifiPlayers == 4)
 			wifiplayersImgData = App.Resources.GetImageData("wifi4.png");
 
-		else if(GameInfo.WifiPlayers == 6)
+		else if (GameInfo.WifiPlayers == 6)
 			wifiplayersImgData = App.Resources.GetImageData("wifi6.png");
 
-		else if(GameInfo.WifiPlayers == 10)
+		else if (GameInfo.WifiPlayers == 10)
 			wifiplayersImgData = App.Resources.GetImageData("wifi10.png");
 
-		else if(GameInfo.WifiPlayers == 8)
-			wifiplayersImgData =App.Resources.GetImageData("wifi8.png");
+		else if (GameInfo.WifiPlayers == 8)
+			wifiplayersImgData = App.Resources.GetImageData("wifi8.png");
 
-		else if(GameInfo.WifiPlayers == 12)
+		else if (GameInfo.WifiPlayers == 12)
 			wifiplayersImgData = App.Resources.GetImageData("wifi12.png");
 
-		else if(GameInfo.WifiPlayers == 16)
+		else if (GameInfo.WifiPlayers == 16)
 			wifiplayersImgData = App.Resources.GetImageData("wifi16.png");
 
-		else if(GameInfo.WifiPlayers == 32)
+		else if (GameInfo.WifiPlayers == 32)
 			wifiplayersImgData = App.Resources.GetImageData("wifi32.png");
 
 		wifiplayersImg = new GuiImage(wifiplayersImgData);
@@ -666,7 +665,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 	int titlefontsize = 25;
 	if (GameInfo.Title.size() > 0)
 	{
-		titleTxt = new GuiText(GameInfo.Title.c_str(), titlefontsize, ( GXColor ) {0, 0, 0, 255});
+		titleTxt = new GuiText(GameInfo.Title.c_str(), titlefontsize, (GXColor) { 0, 0, 0, 255 });
 		titleTxt->SetMaxWidth(350, SCROLL_HORIZONTAL);
 		titleTxt->SetAlignment(ALIGN_CENTER, ALIGN_TOP);
 		titleTxt->SetPosition(txtXOffset, 12 + titley);
@@ -684,47 +683,47 @@ static int InternalShowGameInfo(struct discHdr *header)
 
 		switch (month)
 		{
-			case 1:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "Jan" ));
-				break;
-			case 2:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "Feb" ));
-				break;
-			case 3:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "Mar" ));
-				break;
-			case 4:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "Apr" ));
-				break;
-			case 5:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "May" ));
-				break;
-			case 6:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "June" ));
-				break;
-			case 7:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "July" ));
-				break;
-			case 8:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "Aug" ));
-				break;
-			case 9:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "Sept" ));
-				break;
-			case 10:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "Oct" ));
-				break;
-			case 11:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "Nov" ));
-				break;
-			case 12:
-				snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr( "Dec" ));
-				break;
+		case 1:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("Jan"));
+			break;
+		case 2:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("Feb"));
+			break;
+		case 3:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("Mar"));
+			break;
+		case 4:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("Apr"));
+			break;
+		case 5:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("May"));
+			break;
+		case 6:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("June"));
+			break;
+		case 7:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("July"));
+			break;
+		case 8:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("Aug"));
+			break;
+		case 9:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("Sept"));
+			break;
+		case 10:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("Oct"));
+			break;
+		case 11:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("Nov"));
+			break;
+		case 12:
+			snprintf(linebuf2, sizeof(linebuf2), "%s%s ", linebuf2, tr("Dec"));
+			break;
 		}
 
 		char linebuf[300];
-		snprintf(linebuf, sizeof(linebuf), "%s : %s%i", tr( "Released" ), linebuf2, year);
-		releasedTxt = new GuiText(linebuf, 16, ( GXColor ) {0, 0, 0, 255});
+		snprintf(linebuf, sizeof(linebuf), "%s : %s%i", tr("Released"), linebuf2, year);
+		releasedTxt = new GuiText(linebuf, 16, (GXColor) { 0, 0, 0, 255 });
 		if (releasedTxt->GetTextWidth() > 300) newline = 2;
 		releasedTxt->SetAlignment(ALIGN_RIGHT, ALIGN_TOP);
 		releasedTxt->SetPosition(-17, 12 + indexy);
@@ -736,8 +735,8 @@ static int InternalShowGameInfo(struct discHdr *header)
 	//publisher
 	if (GameInfo.Publisher.size() != 0)
 	{
-		snprintf(linebuf2, sizeof(linebuf2), "%s %s", tr( "Published by" ), GameInfo.Publisher.c_str());
-		publisherTxt = new GuiText(linebuf2, 16, ( GXColor ) {0, 0, 0, 255});
+		snprintf(linebuf2, sizeof(linebuf2), "%s %s", tr("Published by"), GameInfo.Publisher.c_str());
+		publisherTxt = new GuiText(linebuf2, 16, (GXColor) { 0, 0, 0, 255 });
 		if (publisherTxt->GetTextWidth() > 250) newline = 2;
 		publisherTxt->SetMaxWidth(250, WRAP);
 		publisherTxt->SetAlignment(ALIGN_RIGHT, ALIGN_TOP);
@@ -750,8 +749,8 @@ static int InternalShowGameInfo(struct discHdr *header)
 	//developer
 	if (GameInfo.Developer.size() != 0 && strcasecmp(GameInfo.Developer.c_str(), GameInfo.Publisher.c_str()) != 0)
 	{
-		snprintf(linebuf2, sizeof(linebuf2), "%s %s", tr( "Developed by" ), GameInfo.Developer.c_str());
-		developerTxt = new GuiText(linebuf2, 16, ( GXColor ) {0, 0, 0, 255});
+		snprintf(linebuf2, sizeof(linebuf2), "%s %s", tr("Developed by"), GameInfo.Developer.c_str());
+		developerTxt = new GuiText(linebuf2, 16, (GXColor) { 0, 0, 0, 255 });
 		if (developerTxt->GetTextWidth() > 250) newline = 2;
 		developerTxt->SetMaxWidth(250, WRAP);
 		developerTxt->SetAlignment(ALIGN_RIGHT, ALIGN_TOP);
@@ -765,10 +764,10 @@ static int InternalShowGameInfo(struct discHdr *header)
 	std::vector<GuiText *> categoriesTxt;
 	indexy += 10;
 
-	const std::vector<unsigned int> gameCategories = App.Library.GameCategories[ID];
-	if(gameCategories.size() > 1)
+	const std::vector<unsigned int> gameCategories = App.Library.Categories[ID];
+	if (gameCategories.size() > 1)
 	{
-		categoryTitle = new GuiText(tr("Categories:"), 16, ( GXColor ) {0, 0, 0, 255});
+		categoryTitle = new GuiText(tr("Categories:"), 16, (GXColor) { 0, 0, 0, 255 });
 		categoryTitle->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 		categoryTitle->SetPosition(505, 12 + indexy);
 		indexy += 20;
@@ -777,42 +776,42 @@ static int InternalShowGameInfo(struct discHdr *header)
 
 	for (u32 i = 0; i < gameCategories.size(); ++i)
 	{
-		if(gameCategories[i] == 0)
+		if (gameCategories[i] == 0)
 			continue;
 
-		if(indexy > 170 && gameCategories.size() > i+1)
+		if (indexy > 170 && gameCategories.size() > i + 1)
 		{
-			categoriesTxt.push_back(new GuiText("...", 16, ( GXColor ) {0, 0, 0, 255}));
-			categoriesTxt[categoriesTxt.size()-1]->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-			categoriesTxt[categoriesTxt.size()-1]->SetPosition(515, 12 + indexy);
+			categoriesTxt.push_back(new GuiText("...", 16, (GXColor) { 0, 0, 0, 255 }));
+			categoriesTxt[categoriesTxt.size() - 1]->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+			categoriesTxt[categoriesTxt.size() - 1]->SetPosition(515, 12 + indexy);
 			indexy += 20;
-			InfoWindow.Append(categoriesTxt[categoriesTxt.size()-1]);
+			InfoWindow.Append(categoriesTxt[categoriesTxt.size() - 1]);
 			break;
 		}
 
-		categoriesTxt.push_back(new GuiText(App.Library.GameCategories.CategoryList[gameCategories[i]], 16, ( GXColor ) {0, 0, 0, 255}));
-		categoriesTxt[categoriesTxt.size()-1]->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
-		categoriesTxt[categoriesTxt.size()-1]->SetPosition(515, 12 + indexy);
-		categoriesTxt[categoriesTxt.size()-1]->SetMaxWidth(74, DOTTED);
+		categoriesTxt.push_back(new GuiText(App.Library.Categories.CategoryList[gameCategories[i]], 16, (GXColor) { 0, 0, 0, 255 }));
+		categoriesTxt[categoriesTxt.size() - 1]->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
+		categoriesTxt[categoriesTxt.size() - 1]->SetPosition(515, 12 + indexy);
+		categoriesTxt[categoriesTxt.size() - 1]->SetMaxWidth(74, DOTTED);
 		indexy += 20;
-		InfoWindow.Append(categoriesTxt[categoriesTxt.size()-1]);
+		InfoWindow.Append(categoriesTxt[categoriesTxt.size() - 1]);
 	}
 
 	//genre
 	int genreY = marginY;
-	if(GameInfo.GenreList.size() > 0)
+	if (GameInfo.GenreList.size() > 0)
 	{
-		genreTitleTxt = new GuiText(tr("Genre:"), 16, ( GXColor ) {0, 0, 0, 255});
+		genreTitleTxt = new GuiText(tr("Genre:"), 16, (GXColor) { 0, 0, 0, 255 });
 		genreTitleTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 		genreTitleTxt->SetPosition(205, 12 + genreY);
 		genreY += 20;
 		InfoWindow.Append(genreTitleTxt);
 	}
 
-	genreTxt = new GuiText *[GameInfo.GenreList.size()+1]; //to not alloc a 0 vector
+	genreTxt = new GuiText *[GameInfo.GenreList.size() + 1]; //to not alloc a 0 vector
 	for (u32 i = 0; i < GameInfo.GenreList.size(); ++i)
 	{
-		genreTxt[i] = new GuiText(GameInfo.GenreList[i].c_str(), 16, ( GXColor ) {0, 0, 0, 255});
+		genreTxt[i] = new GuiText(GameInfo.GenreList[i].c_str(), 16, (GXColor) { 0, 0, 0, 255 });
 		genreTxt[i]->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 		genreTxt[i]->SetPosition(215, 12 + genreY);
 		genreY += 20;
@@ -820,8 +819,8 @@ static int InternalShowGameInfo(struct discHdr *header)
 	}
 
 	//online
-	wifiTxt = new GuiText *[GameInfo.WifiFeatureList.size()+1]; //to not alloc a 0 vector
-	for (int i = GameInfo.WifiFeatureList.size()-1; i >= 0 && GameInfo.WifiFeatureList.size() > 0; --i)
+	wifiTxt = new GuiText *[GameInfo.WifiFeatureList.size() + 1]; //to not alloc a 0 vector
+	for (int i = GameInfo.WifiFeatureList.size() - 1; i >= 0 && GameInfo.WifiFeatureList.size() > 0; --i)
 	{
 		if (strcmp(GameInfo.WifiFeatureList[i].c_str(), "Nintendods") == 0)
 		{
@@ -831,7 +830,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 		{
 			snprintf(linebuf2, sizeof(linebuf2), "%s", GameInfo.WifiFeatureList[i].c_str());
 		}
-		wifiTxt[i] = new GuiText(linebuf2, 16, ( GXColor ) {0, 0, 0, 255});
+		wifiTxt[i] = new GuiText(linebuf2, 16, (GXColor) { 0, 0, 0, 255 });
 		wifiTxt[i]->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 		wifiTxt[i]->SetPosition(215, 200 + wifiY);
 		wifiY -= 20;
@@ -839,13 +838,13 @@ static int InternalShowGameInfo(struct discHdr *header)
 	}
 	if (GameInfo.WifiFeatureList.size() > 0)
 	{
-		snprintf(linebuf2, sizeof(linebuf2), "%s:", tr( "WiFi Features" ));
+		snprintf(linebuf2, sizeof(linebuf2), "%s:", tr("WiFi Features"));
 	}
 	else
 	{
 		linebuf2[0] = 0;
 	}
-	wifiTxt[0] = new GuiText(linebuf2, 16, ( GXColor ) {0, 0, 0, 255});
+	wifiTxt[0] = new GuiText(linebuf2, 16, (GXColor) { 0, 0, 0, 255 });
 	wifiTxt[0]->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	wifiTxt[0]->SetPosition(205, 200 + wifiY);
 	InfoWindow.Append(wifiTxt[0]);
@@ -854,7 +853,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 	int pagesize = 12;
 	if (GameInfo.Synopsis.size() != 0)
 	{
-		synopsisTxt = new Text(GameInfo.Synopsis.c_str(), 16, ( GXColor ) {0, 0, 0, 255});
+		synopsisTxt = new Text(GameInfo.Synopsis.c_str(), 16, (GXColor) { 0, 0, 0, 255 });
 		synopsisTxt->SetMaxWidth(350);
 		synopsisTxt->SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 		synopsisTxt->SetPosition(0, 0);
@@ -866,11 +865,11 @@ static int InternalShowGameInfo(struct discHdr *header)
 		txtWindow.Append(&dnBtn);
 	}
 
-	gametdb1Txt = new GuiText("http://gametdb.com", 16, ( GXColor ) {0, 0, 0, 255});
+	gametdb1Txt = new GuiText("http://gametdb.com", 16, (GXColor) { 0, 0, 0, 255 });
 	gametdb1Txt->SetAlignment(ALIGN_LEFT, ALIGN_BOTTOM);
 	gametdb1Txt->SetPosition(40, -15);
 	gameinfoWindow.Append(gametdb1Txt);
-	if(coverImg)
+	if (coverImg)
 	{
 		gameinfoWindow.Append(coverImg);
 		txtWindow.SetAlignment(ALIGN_CENTER, ALIGN_TOP);
@@ -882,7 +881,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 	HaltGui();
 	//App.MainWindow->SetState(STATE_DISABLED);
 	App.MainWindow->Append(&gameinfoWindow);
-	if(boxCov) App.MainWindow->Append(boxCov);
+	if (boxCov) App.MainWindow->Append(boxCov);
 	ResumeGui();
 
 	while (choice == -1)
@@ -897,17 +896,17 @@ static int InternalShowGameInfo(struct discHdr *header)
 		else if (reset == 1)
 			Sys_Reboot();
 
-		else if(LeftBtn.GetState() == STATE_CLICKED)
+		else if (LeftBtn.GetState() == STATE_CLICKED)
 		{
-			if(gameList.size() > 0)
+			if (App.Library.Games.size() > 0)
 				choice = 3;
 			LeftBtn.ResetState();
 			break;
 		}
 
-		else if(RightBtn.GetState() == STATE_CLICKED)
+		else if (RightBtn.GetState() == STATE_CLICKED)
 		{
-			if(gameList.size() > 0)
+			if (App.Library.Games.size() > 0)
 				choice = 4;
 			RightBtn.ResetState();
 			break;
@@ -930,7 +929,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 				page = 1;
 			}
 		}
-		else if(coverBtn.GetState() == STATE_CLICKED && boxCov)
+		else if (coverBtn.GetState() == STATE_CLICKED && boxCov)
 		{
 			boxCov->SetEffect(EFFECT_BOX_FLY_CENTRE, 100);
 			gameinfoWindow.Remove(&nextBtn);
@@ -939,7 +938,7 @@ static int InternalShowGameInfo(struct discHdr *header)
 			gameinfoWindow.Remove(&RightBtn);
 			boxCov->SetZoomable(true);
 
-			while(backBtn.GetState() != STATE_CLICKED && homeBtn.GetState() != STATE_CLICKED)
+			while (backBtn.GetState() != STATE_CLICKED && homeBtn.GetState() != STATE_CLICKED)
 			{
 				usleep(10000);
 				if (shutdown)
@@ -1005,13 +1004,13 @@ static int InternalShowGameInfo(struct discHdr *header)
 
 	HaltGui();
 	gameinfoWindow.SetEffect(EFFECT_SLIDE_LEFT | EFFECT_SLIDE_OUT, 100);
-	if(boxCov) boxCov->SetEffect(EFFECT_SLIDE_LEFT | EFFECT_SLIDE_OUT, 60);
+	if (boxCov) boxCov->SetEffect(EFFECT_SLIDE_LEFT | EFFECT_SLIDE_OUT, 60);
 	ResumeGui();
 
 	while (gameinfoWindow.GetEffect() > 0) usleep(100);
 	HaltGui();
 	App.MainWindow->Remove(&gameinfoWindow);
-	if(boxCov) App.MainWindow->Remove(boxCov);
+	if (boxCov) App.MainWindow->Remove(boxCov);
 	App.MainWindow->SetState(STATE_DEFAULT);
 
 	delete boxCov;
@@ -1078,8 +1077,8 @@ static int InternalShowGameInfo(struct discHdr *header)
 	for (u32 i = 0; i < categoriesTxt.size(); ++i)
 		delete categoriesTxt[i];
 
-	delete [] genreTxt;
-	delete [] wifiTxt;
+	delete[] genreTxt;
+	delete[] wifiTxt;
 
 	ResumeGui();
 
@@ -1090,21 +1089,21 @@ int showGameInfo(int gameSelected, struct discHdr *dvdheader)
 {
 	int choice = 5;
 
-	while(choice > 2)
+	while (choice > 2)
 	{
-		struct discHdr * header = (dvdheader ? dvdheader : gameList[gameSelected]);
+		struct discHdr * header = (dvdheader ? dvdheader : App.Library.Games[gameSelected]);
 
 		choice = InternalShowGameInfo(header);
 
-		if(choice == 3)
+		if (choice == 3)
 		{
 			--gameSelected;
-			if(gameSelected < 0)
-				gameSelected = gameList.size()-1;
+			if (gameSelected < 0)
+				gameSelected = App.Library.Games.size() - 1;
 		}
-		else if(choice == 4)
+		else if (choice == 4)
 		{
-			gameSelected = (gameSelected + 1) % gameList.size();
+			gameSelected = (gameSelected + 1) % App.Library.Games.size();
 		}
 	}
 
@@ -1122,7 +1121,7 @@ bool save_gamelist(bool bCSV) // save gamelist
 
 	// Save the game list.
 	char tmp[256];
-	if(bCSV)
+	if (bCSV)
 		snprintf(tmp, sizeof(tmp), "%sGameList.csv", App.Settings.update_path);
 	else
 		snprintf(tmp, sizeof(tmp), "%sGameList.txt", App.Settings.update_path);
@@ -1134,7 +1133,7 @@ bool save_gamelist(bool bCSV) // save gamelist
 		return false;
 	}
 	//make sure that all games are added to the gamelist
-	gameList.LoadUnfiltered();
+	App.Library.Games.LoadUnfiltered();
 
 	f32 size = 0.0;
 	f32 freespace, used;
@@ -1146,11 +1145,11 @@ bool save_gamelist(bool bCSV) // save gamelist
 	{
 		fprintf(f, "\"ID\",\"Size(GB)\",\"Name\",\"Type\",\"Console\"\n");
 
-		for (i = 0; i < gameList.size(); i++)
+		for (i = 0; i < App.Library.Games.size(); i++)
 		{
-			struct discHdr* header = gameList[i];
+			struct discHdr* header = App.Library.Games[i];
 			WBFS_GameSize(header->id, &size);
-			fprintf(f, "\"%.6s\",\"%.2f\",\"%s\",\"%s\",\"%s\"\n", (char*)header->id, size, App.Library.GameTitles.GetTitle(header), HdrTypeText(header->type), ConsoleFromTitleID((char*)header->id));
+			fprintf(f, "\"%.6s\",\"%.2f\",\"%s\",\"%s\",\"%s\"\n", (char*)header->id, size, App.Library.DisplayNames.GetTitle(header), HdrTypeText(header->type), ConsoleFromTitleID((char*)header->id));
 		}
 	}
 	else
@@ -1158,16 +1157,16 @@ bool save_gamelist(bool bCSV) // save gamelist
 		fprintf(f, "# USB Loader Has Saved this file\n");
 		fprintf(f, "# This file was created based on your list of games and language settings.\n\n");
 
-		fprintf(f, "%.2fGB %s %.2fGB %s\n\n", freespace, tr( "of" ), (freespace + used), tr( "free" ));
+		fprintf(f, "%.2fGB %s %.2fGB %s\n\n", freespace, tr("of"), (freespace + used), tr("free"));
 		fprintf(f, "ID	 Size(GB)  Name        ;   Game type    ;   Console (based on TitleID) \n");
 
-		for (i = 0; i < gameList.size(); i++)
+		for (i = 0; i < App.Library.Games.size(); i++)
 		{
-			struct discHdr* header = gameList[i];
+			struct discHdr* header = App.Library.Games[i];
 			WBFS_GameSize(header->id, &size);
 			fprintf(f, "%.6s", (char*)header->id);
 			fprintf(f, " [%.2f]   ", size);
-			fprintf(f, " %s ; ", App.Library.GameTitles.GetTitle(header));
+			fprintf(f, " %s ; ", App.Library.DisplayNames.GetTitle(header));
 			fprintf(f, " %s ; ", HdrTypeText(header->type));
 			fprintf(f, " %s  ", ConsoleFromTitleID((char*)header->id));
 			fprintf(f, "\n");
@@ -1175,7 +1174,7 @@ bool save_gamelist(bool bCSV) // save gamelist
 	}
 	fclose(f);
 
-	gameList.FilterList();
+	App.Library.Games.FilterList();
 	App.MainWindow->SetState(STATE_DEFAULT);
 	return true;
 }

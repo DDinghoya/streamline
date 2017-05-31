@@ -167,7 +167,7 @@ void GCGames::LoadGameList(const string &path, vector<struct discHdr> &headerLis
 		}
 
 		// if we have titles.txt entry use that
-		const char *title = App.Library.GameTitles.GetTitle(id);
+		const char *title = App.Library.DisplayNames.GetTitle(id);
 
 		// if no titles.txt get title from dir or file name
 		if (strlen(title) == 0 && !App.Settings.ForceDiscTitles && strlen(fname_title) > 0)
@@ -205,7 +205,7 @@ void GCGames::LoadGameList(const string &path, vector<struct discHdr> &headerLis
 				pathList.push_back(gamePath);
 
 				// Save title for next start
-				App.Library.GameTitles.SetGameTitle(tmpHdr.id, tmpHdr.title);
+				App.Library.DisplayNames.SetGameTitle(tmpHdr.id, tmpHdr.title);
 			}
 		}
 	}
@@ -424,7 +424,7 @@ bool GCGames::CopyUSB2SD(const struct discHdr *header)
 	if(choice == 0)
 		return false;
 
-	const char *cpTitle = App.Library.GameTitles.GetTitle(header);
+	const char *cpTitle = App.Library.DisplayNames.GetTitle(header);
 	
 	if(choice == 2)
 	{

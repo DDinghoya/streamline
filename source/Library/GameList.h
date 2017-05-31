@@ -8,7 +8,6 @@
 class GameList
 {
 public:
-	GameList() : selectedGame(0) { };
 	int ReadGameList();
 	int size() const { return FilteredList.size(); }
 	int GameCount() const { return FullGameList.size(); }
@@ -34,7 +33,11 @@ public:
 	void RemovePartition(int part_num);
 	std::vector<struct discHdr *> &GetFilteredList(void) { return FilteredList; }
 	std::vector<struct discHdr> &GetFullGameList(void) { return FullGameList; }
+
 protected:
+	friend class TitleLibrary;
+	GameList() : selectedGame(0) { };
+	~GameList() { };
 	int InternalReadList(int part);
 	void InternalFilterList(std::vector<struct discHdr> &FullList);
 	void InternalLoadUnfiltered(std::vector<struct discHdr> &FullList);
@@ -49,5 +52,3 @@ protected:
 	std::vector<struct discHdr> FullGameList;
 	std::vector<int> GamePartitionList;
 };
-
-extern GameList gameList;

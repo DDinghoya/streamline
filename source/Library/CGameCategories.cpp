@@ -26,7 +26,6 @@
 #include <string.h>
 #include "CGameCategories.hpp"
 #include "App.h"
-#include "usbloader/GameList.h"
 #include "language/gettext.h"
 #include "IO/fileops.h"
 #include "prompts/ProgressWindow.h"
@@ -176,7 +175,7 @@ bool CGameCategories::Save()
 
 			XMLElement *Game = xmlDoc.NewElement("Game");
 			Game->SetAttribute("ID", itr->first.c_str());
-			Game->SetAttribute("Title", App.Library.GameTitles.GetTitle(itr->first.c_str()));
+			Game->SetAttribute("Title", App.Library.DisplayNames.GetTitle(itr->first.c_str()));
 
 			for (u32 i = 0; i < itr->second.size(); ++i)
 			{
@@ -322,7 +321,7 @@ bool CGameCategories::isInCategory(const char *gameID, unsigned int id)
 	for (int i = 0; i < 6 && gameID[i] != 0; ++i)
 		gameID6.push_back(gameID[i]);
 
-	for (map<string, vector<unsigned int> >::iterator itr = App.Library.GameCategories.List.begin(); itr != App.Library.GameCategories.List.end(); itr++)
+	for (map<string, vector<unsigned int> >::iterator itr = App.Library.Categories.List.begin(); itr != App.Library.Categories.List.end(); itr++)
 	{
 		if (itr->first == gameID6)
 		{
@@ -348,25 +347,25 @@ bool CGameCategories::ImportFromGameTDB(const string &xmlpath)
 	StartProgress(tr("Importing categories"), tr("Please wait..."), 0, false, true);
 
 	XML_DB.SetLanguageCode(App.Settings.db_language);
-	wString filter(gameList.GetCurrentFilter());
-	gameList.LoadUnfiltered();
+	wString filter(App.Library.Games.GetCurrentFilter());
+	App.Library.Games.LoadUnfiltered();
 
-	for (int i = 0; i < gameList.size(); ++i)
+	for (int i = 0; i < App.Library.Games.size(); ++i)
 	{
-		ShowProgress(i, gameList.size());
+		ShowProgress(i, App.Library.Games.size());
 
 		vector<string> genreList;
 		string GameType;
 
-		if (XML_DB.GetGameType((const char *)gameList[i]->id, GameType))
+		if (XML_DB.GetGameType((const char *)App.Library.Games[i]->id, GameType))
 		{
 			if (!CategoryList.findCategory(GameType))
 				CategoryList.AddCategory(GameType);
 
-			this->SetCategory(gameList[i]->id, CategoryList.getCurrentID());
+			this->SetCategory(App.Library.Games[i]->id, CategoryList.getCurrentID());
 		}
 
-		if (!XML_DB.GetGenreList((const char *)gameList[i]->id, genreList))
+		if (!XML_DB.GetGenreList((const char *)App.Library.Games[i]->id, genreList))
 			continue;
 
 		for (u32 n = 0; n < genreList.size(); ++n)
@@ -374,13 +373,13 @@ bool CGameCategories::ImportFromGameTDB(const string &xmlpath)
 			if (!CategoryList.findCategory(genreList[n]))
 				CategoryList.AddCategory(genreList[n]);
 
-			this->SetCategory(gameList[i]->id, CategoryList.getCurrentID());
+			this->SetCategory(App.Library.Games[i]->id, CategoryList.getCurrentID());
 		}
 
 	}
 
 	XML_DB.CloseFile();
-	gameList.FilterList(filter.c_str());
+	App.Library.Games.FilterList(filter.c_str());
 
 	ProgressStop();
 

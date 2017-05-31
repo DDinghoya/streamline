@@ -1,6 +1,5 @@
 #include <string.h>
 #include "App.h"
-#include "usbloader/GameList.h"
 #include "Channels/channels.h"
 #include "Data/GameTDB.h"
 #include "Version.h"
@@ -42,10 +41,10 @@ const char * CGameTitles::GetTitle(const char * id) const
 			return TitleList[i].Title.c_str();
 	}
 
-	for(int i = 0; i < gameList.size(); ++i)
+	for(int i = 0; i < App.Library.Games.size(); ++i)
 	{
-		if(strncasecmp(id, (char *) gameList[i]->id, 6) == 0)
-			return gameList[i]->title;
+		if(strncasecmp(id, (char *)App.Library.Games[i]->id, 6) == 0)
+			return App.Library.Games[i]->title;
 
 	}
 
@@ -202,7 +201,7 @@ void CGameTitles::WriteCachedTitles(const char * path)
 
 void CGameTitles::GetMissingTitles(std::vector<std::string> &MissingTitles, bool removeUnused)
 {
-	std::vector<struct discHdr *> &FullList = gameList.GetFilteredList();
+	std::vector<struct discHdr *> &FullList = App.Library.Games.GetFilteredList();
 	std::vector<bool> UsedCachedList(TitleList.size(), false);
 
 	for(u32 i = 0; i < FullList.size(); ++i)
@@ -253,7 +252,7 @@ void CGameTitles::LoadTitlesFromGameTDB(const char * path, bool removeUnused)
 	Filepath += "wiitdb.xml";
 
 	//! Read game list
-	gameList.LoadUnfiltered();
+	App.Library.Games.LoadUnfiltered();
 
 	//! Removed unused cache titles and get the still missing ones
 	std::vector<std::string> MissingTitles;

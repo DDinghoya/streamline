@@ -1,14 +1,11 @@
 #include <stdio.h>
 #include <string.h>
-
 #include "App.h"
 #include "CGameStatistics.h"
 #include "newtitles.h"
 
 #define NEW_SECONDS (24 * 60 * 60)
 #define GAMETITLES  "GameTimestamps.txt"
-
-//CNewTitles *CNewTitles::instance = NULL;
 
 CNewTitles::CNewTitles()
 {
@@ -120,7 +117,7 @@ void CNewTitles::CheckGame(const u8 *titleid)
 	}
 	else
 	{
-		GameStatus *Status = App.Library.GameStatistics.GetGameStatus(titleid);
+		GameStatus *Status = App.Library.Statistics.GetGameStatus(titleid);
 		t->isNew = (Status == NULL || Status->PlayCount == 0);
 	}
 
@@ -139,7 +136,8 @@ void CNewTitles::CheckGame(const u8 *titleid)
 
 bool CNewTitles::IsNew(const u8 *titleid) const
 {
-	if (!titleid) return false;
+	if (!titleid) 
+		return false;
 
 	Title *t = firstTitle;
 
@@ -157,7 +155,8 @@ bool CNewTitles::IsNew(const u8 *titleid) const
 
 void CNewTitles::Remove(const u8 *titleid)
 {
-	if (titleid == NULL) return;
+	if (titleid == NULL) 
+		return;
 
 	Title *t = firstTitle, *prev = NULL;
 	while (t != NULL)
@@ -180,7 +179,8 @@ void CNewTitles::Remove(const u8 *titleid)
 
 void CNewTitles::Save(void)
 {
-	if (!isDirty) return;
+	if (!isDirty) 
+		return;
 
 	char path[255];
 	snprintf(path, sizeof(path), "%s/%s", App.Settings.titlestxt_path, GAMETITLES);
@@ -195,5 +195,6 @@ void CNewTitles::Save(void)
 		fprintf(fp, "%.6s:%lu\n", t->titleId, t->timestamp);
 		t = t->next;
 	}
+
 	fclose(fp);
 }

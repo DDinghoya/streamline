@@ -35,7 +35,6 @@
 #include "prompts/PromptWindows.h"
 #include "prompts/ProgressWindow.h"
 #include "prompts/filebrowser.h"
-#include "usbloader/GameList.h"
 #include "usbloader/neek.hpp"
 #include "language/gettext.h"
 #include "wad/nandtitle.h"
@@ -92,15 +91,15 @@ FeatureSettingsMenu::~FeatureSettingsMenu()
 			App.Settings.titlesOverride = OFF;
 
 		//! Remove cached titles and reload new titles
-		App.Library.GameTitles.SetDefault();
+		App.Library.DisplayNames.SetDefault();
 		if(App.Settings.titlesOverride) {
-			App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+			App.Library.DisplayNames.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 		}
 		else
 		{
 			//! Don't override titles, in other words read them from disc header or directory names
-			gameList.ReadGameList();
-			gameList.LoadUnfiltered();
+			App.Library.Games.ReadGameList();
+			App.Library.Games.LoadUnfiltered();
 		}
 	}
 }
@@ -210,14 +209,14 @@ int FeatureSettingsMenu::GetMenuInternal()
 		{
 			char xmlpath[300];
 			snprintf(xmlpath, sizeof(xmlpath), "%swiitdb.xml", App.Settings.titlestxt_path);
-			if(!App.Library.GameCategories.ImportFromGameTDB(xmlpath))
+			if(!App.Library.Categories.ImportFromGameTDB(xmlpath))
 			{
 				WindowPrompt(tr("Error"), tr("Could not open the WiiTDB.xml file."), tr("OK"));
 			}
 			else
 			{
-				App.Library.GameCategories.Save();
-				App.Library.GameCategories.CategoryList.goToFirst();
+				App.Library.Categories.Save();
+				App.Library.Categories.CategoryList.goToFirst();
 				WindowPrompt(tr("Import Categories"), tr("Import operation successfully completed."), tr("OK"));
 			}
 		}
@@ -235,8 +234,8 @@ int FeatureSettingsMenu::GetMenuInternal()
 			char nandPath[ISFS_MAXPATH];
 			bool noErrors = true;
 			bool skipErrors = false;
-			wString filter(gameList.GetCurrentFilter());
-			gameList.LoadUnfiltered();
+			wString filter(App.Library.Games.GetCurrentFilter());
+			App.Library.Games.LoadUnfiltered();
 
 			//! extract the Mii file
 			snprintf(nandPath, sizeof(nandPath), "/shared2/menu/FaceLib/RFL_DB.dat");
@@ -247,24 +246,24 @@ int FeatureSettingsMenu::GetMenuInternal()
 			if(!CheckFile(filePath))
 				NandTitle::ExtractDir(nandPath, filePath);
 
-			for(int i = 0; i < gameList.size(); ++i)
+			for(int i = 0; i < App.Library.Games.size(); ++i)
 			{
-				if(   gameList[i]->type != TYPE_GAME_WII_IMG
-				   && gameList[i]->type != TYPE_GAME_NANDCHAN)
+				if(App.Library.Games[i]->type != TYPE_GAME_WII_IMG
+				   && App.Library.Games[i]->type != TYPE_GAME_NANDCHAN)
 					continue;
 
-				if(gameList[i]->tid != 0) //! Channels
+				if(App.Library.Games[i]->tid != 0) //! Channels
 				{
-					snprintf(nandPath, sizeof(nandPath), "/title/%08x/%08x/data", (unsigned int) (gameList[i]->tid  >> 32), (unsigned int) gameList[i]->tid );
+					snprintf(nandPath, sizeof(nandPath), "/title/%08x/%08x/data", (unsigned int) (App.Library.Games[i]->tid  >> 32), (unsigned int)App.Library.Games[i]->tid );
 					snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuChanPath, nandPath);
 				}
 				else //! Wii games
 				{
-					snprintf(nandPath, sizeof(nandPath), "/title/00010000/%02x%02x%02x%02x", gameList[i]->id[0], gameList[i]->id[1], gameList[i]->id[2], gameList[i]->id[3]);
+					snprintf(nandPath, sizeof(nandPath), "/title/00010000/%02x%02x%02x%02x", App.Library.Games[i]->id[0], App.Library.Games[i]->id[1], App.Library.Games[i]->id[2], App.Library.Games[i]->id[3]);
 					snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuPath, nandPath);
 				}
 
-				ShowProgress(tr("Extracting files:"), App.Library.GameTitles.GetTitle(gameList[i]), 0, 0, -1, true, false);
+				ShowProgress(tr("Extracting files:"), App.Library.DisplayNames.GetTitle(App.Library.Games[i]), 0, 0, -1, true, false);
 
 				int ret = NandTitle::ExtractDir(nandPath, filePath);
 				if(ret == PROGRESS_CANCELED)
@@ -273,7 +272,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 				}
 				else if(ret < 0) //! Games with installable channels: Mario Kart, Wii Fit, etc.
 				{
-					snprintf(nandPath, sizeof(nandPath), "/title/00010004/%02x%02x%02x%02x", gameList[i]->id[0], gameList[i]->id[1], gameList[i]->id[2], gameList[i]->id[3]);
+					snprintf(nandPath, sizeof(nandPath), "/title/00010004/%02x%02x%02x%02x", App.Library.Games[i]->id[0], App.Library.Games[i]->id[1], App.Library.Games[i]->id[2], App.Library.Games[i]->id[3]);
 					snprintf(filePath, sizeof(filePath), "%s%s", App.Settings.NandEmuPath, nandPath);
 					ret = NandTitle::ExtractDir(nandPath, filePath);
 				}
@@ -281,7 +280,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 				{
 					noErrors = false;
 					char text[200];
-					snprintf(text, sizeof(text), "%s %s. %s. %s", tr("Could not extract files for:"), App.Library.GameTitles.GetTitle(gameList[i]), tr("Savegame might not exist for this game."), tr("Continue?"));
+					snprintf(text, sizeof(text), "%s %s. %s. %s", tr("Could not extract files for:"), App.Library.DisplayNames.GetTitle(App.Library.Games[i]), tr("Savegame might not exist for this game."), tr("Continue?"));
 
 					ProgressStop();
 					int ret = WindowPrompt(tr("Error"), text, tr("Yes"), tr("No"), tr("Skip Errors"));
@@ -302,7 +301,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 				else
 					WindowPrompt(tr("Process finished."), tr("Errors occured."), tr("OK"));
 			}
-			gameList.FilterList(filter.c_str());
+			App.Library.Games.FilterList(filter.c_str());
 		}
 	}
 
@@ -466,7 +465,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 				
 				// Refresh new EmuNAND content
 				Channels::Instance()->GetEmuChannelList();
-				App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+				App.Library.DisplayNames.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 			}
 		}
 		else if(choice == 2)		// Folder mode
@@ -556,7 +555,7 @@ int FeatureSettingsMenu::GetMenuInternal()
 						
 					// Refresh new EmuNAND content
 					Channels::Instance()->GetEmuChannelList();
-					App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
+					App.Library.DisplayNames.LoadTitlesFromGameTDB(App.Settings.titlestxt_path);
 				}
 				else
 				{

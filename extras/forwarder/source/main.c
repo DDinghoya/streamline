@@ -173,8 +173,10 @@ int main(int argc, char **argv)
 		strcat(filepath, "boot.dol");
 		exeFile = fopen(filepath, "rb");
 	}
+
 	if (!exeFile)
 		exeFile = open_file(DeviceName[SD], filepath);
+
 	// if app not found on SD Card try USB
 	if (exeFile == NULL)
 	{

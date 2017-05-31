@@ -57,7 +57,8 @@ bool cfg_parsefile(char *fname, int size)
 
 	while (fgets(line, sizeof(line), f))
 	{
-		if (line[0] == '#') continue;
+		if (line[0] == '#') 
+			continue;
 
 		char * value = cfg_parseline(line);
 		if (value)

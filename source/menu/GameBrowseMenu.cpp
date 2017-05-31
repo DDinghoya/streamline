@@ -18,7 +18,6 @@
 #include "language/gettext.h"
 #include "usbloader/wbfs.h"
 #include "usbloader/wdvd.h"
-#include "usbloader/GameList.h"
 #include "Net/networkops.h"
 #include "Net/update.h"
 #include "Net/ImageDownloader.h"
@@ -57,7 +56,7 @@ GameBrowseMenu::GameBrowseMenu()
 	carouselBackground = NULL;
 	gridBackground = NULL;
 	WDVD_GetCoverStatus(&DiscDriveCoverOld);
-	gameList.FilterList();
+	App.Library.Games.FilterList();
 	HDDSizeCallback.SetCallback(this, &GameBrowseMenu::UpdateFreeSpace);
 
 	btnInstall = App.Resources.GetImageData("button_install.png");
@@ -562,7 +561,7 @@ void GameBrowseMenu::ReloadBrowser()
 	RemoveAll();
 	App.MainWindow->Remove(searchBar);
 
-	gamecntTxt->SetText(fmt("%s: %i", tr( "Games" ), gameList.size()));
+	gamecntTxt->SetText(fmt("%s: %i", tr( "Games" ), App.Library.Games.size()));
 
 	const char * sortTTText = NULL;
 	GuiImageData * sortImgData = NULL;
@@ -607,7 +606,7 @@ void GameBrowseMenu::ReloadBrowser()
 		favoriteBtn->SetImageOver(favoriteBtnImg_g);
 	}
 
-	if (*gameList.GetCurrentFilter())
+	if (*App.Library.Games.GetCurrentFilter())
 	{
 		if (!show_searchwindow) searchBtn->SetEffect(EFFECT_PULSE, 10, 105);
 		searchBtn->SetImage(searchBtnImg);
@@ -644,8 +643,8 @@ void GameBrowseMenu::ReloadBrowser()
 	}
 
 	//! Check if the loaded setting is still in range
-	App.Settings.SelectedGame = LIMIT(App.Settings.SelectedGame, 0, gameList.size()-1);
-	App.Settings.GameListOffset = LIMIT(App.Settings.GameListOffset, 0, gameList.size()-1);
+	App.Settings.SelectedGame = LIMIT(App.Settings.SelectedGame, 0, App.Library.Games.size()-1);
+	App.Settings.GameListOffset = LIMIT(App.Settings.GameListOffset, 0, App.Library.Games.size()-1);
 
 	delete gameBrowser;
 	delete searchBar;
@@ -655,9 +654,9 @@ void GameBrowseMenu::ReloadBrowser()
 	if (App.Settings.gameDisplay == LIST_MODE)
 	{
 		//! only one image, reload it since it won't be changeable later
-		if(gameList.size() == 1)
-			LoadCover(gameList[0]);
-		if(gameList.size() > 0)
+		if(App.Library.Games.size() == 1)
+			LoadCover(App.Library.Games[0]);
+		if(App.Library.Games.size() > 0)
 			Append(gameCoverImg);
 		DownloadBtn->SetSize(160, 224);
 		listBtn->SetImage(listBtnImg);
@@ -960,14 +959,14 @@ int GameBrowseMenu::MainLoop()
 		if (choice == 1)
 		{
 			this->SetState(STATE_DISABLED);
-			if(!(App.Settings.LoaderMode & MODE_WIIGAMES) && (gameList.GameCount() == 0))
+			if(!(App.Settings.LoaderMode & MODE_WIIGAMES) && (App.Library.Games.GameCount() == 0))
 			{
 				if(WBFS_ReInit(WBFS_DEVICE_USB) < 0)
 					ShowError(tr("Failed to initialize the USB storage device."));
 				else
 				{
-					gameList.ReadGameList();
-					App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
+					App.Library.Games.ReadGameList();
+					App.Library.DisplayNames.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
 					if(App.Settings.ShowFreeSpace)
 					{
 						ThreadedTask::Instance()->AddCallback(&HDDSizeCallback);
@@ -998,14 +997,14 @@ int GameBrowseMenu::MainLoop()
 			App.Settings.Load();
 			gprintf("\tLoading language...%s\n", App.Settings.LoadLanguage(App.Settings.language_path, CONSOLE_DEFAULT) ? "done" : "failed");
 			
-			gprintf("\tLoading game settings...%s\n", App.Library.GameSettings.Load(App.Settings.ConfigPath) ? "done" : "failed");
-			gprintf("\tLoading game statistics...%s\n", App.Library.GameStatistics.Load(App.Settings.ConfigPath) ? "done" : "failed");
+			gprintf("\tLoading game settings...%s\n", App.Library.Settings.Load(App.Settings.ConfigPath) ? "done" : "failed");
+			gprintf("\tLoading game statistics...%s\n", App.Library.Statistics.Load(App.Settings.ConfigPath) ? "done" : "failed");
 			
 			App.Theme.LoadFont(App.Settings.theme_path);
 			gprintf("\tLoading theme...%s\n", App.Theme.Load(App.Settings.theme) ? "done" : "failed (using default)");
 			
 			bgMusic->Resume();
-			gameList.FilterList();
+			App.Library.Games.FilterList();
 			ReloadBrowser();
 			BannerAsync::ResumeThread();
 			ResumeGui();
@@ -1044,12 +1043,12 @@ int GameBrowseMenu::MainLoop()
 		else
 			App.Settings.GameSort |= SORT_FAVORITE;
 
-		gameList.FilterList();
+		App.Library.Games.FilterList();
 
-		if((App.Settings.GameSort & SORT_FAVORITE) && gameList.size() == 0)
+		if((App.Settings.GameSort & SORT_FAVORITE) && App.Library.Games.size() == 0)
 		{
 			App.Settings.GameSort &= ~SORT_FAVORITE;
-			gameList.FilterList();
+			App.Library.Games.FilterList();
 			ShowError(tr("No favorites selected."));
 		}
 		else
@@ -1060,10 +1059,10 @@ int GameBrowseMenu::MainLoop()
 	{
 		gprintf("\tsearchBtn Clicked\n");
 		show_searchwindow = !show_searchwindow;
-		gameList.FilterList();
+		App.Library.Games.FilterList();
 		ReloadBrowser();
 		searchBtn->ResetState();
-		if(show_searchwindow && wcslen(gameList.GetCurrentFilter()) == 0)
+		if(show_searchwindow && wcslen(App.Library.Games.GetCurrentFilter()) == 0)
 			GridRowsPreSearch = App.Settings.gridRows; //! store old rows amount
 	}
 
@@ -1071,13 +1070,13 @@ int GameBrowseMenu::MainLoop()
 	{
 		if (searchChar > 27) //! Character clicked
 		{
-			int len = gameList.GetCurrentFilter() ? wcslen(gameList.GetCurrentFilter()) : 0;
+			int len = App.Library.Games.GetCurrentFilter() ? wcslen(App.Library.Games.GetCurrentFilter()) : 0;
 			wchar_t newFilter[len + 2];
-			if (gameList.GetCurrentFilter()) wcscpy(newFilter, gameList.GetCurrentFilter());
+			if (App.Library.Games.GetCurrentFilter()) wcscpy(newFilter, App.Library.Games.GetCurrentFilter());
 			newFilter[len] = searchChar;
 			newFilter[len + 1] = 0;
 
-			gameList.FilterList(newFilter);
+			App.Library.Games.FilterList(newFilter);
 		}
 		else if (searchChar == 27) //! Close
 		{
@@ -1086,23 +1085,23 @@ int GameBrowseMenu::MainLoop()
 		}
 		else if (searchChar == 7) //! Clear
 		{
-			gameList.FilterList(L"");
+			App.Library.Games.FilterList(L"");
 			App.Settings.gridRows = GridRowsPreSearch; //! restore old rows amount so we don't stay on one row
 		}
 		else if (searchChar == 8) //! Backspace
 		{
-			int len = wcslen(gameList.GetCurrentFilter());
+			int len = wcslen(App.Library.Games.GetCurrentFilter());
 			wchar_t newFilter[len + 1];
-			if (gameList.GetCurrentFilter()) wcscpy(newFilter, gameList.GetCurrentFilter());
+			if (App.Library.Games.GetCurrentFilter()) wcscpy(newFilter, App.Library.Games.GetCurrentFilter());
 			newFilter[len > 0 ? len - 1 : 0] = 0;
-			gameList.FilterList(newFilter);
+			App.Library.Games.FilterList(newFilter);
 			if(len == 1)
 				App.Settings.gridRows = GridRowsPreSearch; //! restore old rows amount so we don't stay on one row
 		}
 		else if (searchChar == 6)
 		{
 			App.Settings.SearchMode = App.Settings.SearchMode == SEARCH_BEGINNING ? SEARCH_CONTENT : SEARCH_BEGINNING;
-			gameList.FilterList();
+			App.Library.Games.FilterList();
 		}
 		ReloadBrowser();
 		return MENU_NONE;
@@ -1133,7 +1132,7 @@ int GameBrowseMenu::MainLoop()
 			App.Settings.GameSort |= SORT_ABC;
 		}
 
-		gameList.FilterList();
+		App.Library.Games.FilterList();
 		ReloadBrowser();
 	}
 
@@ -1197,7 +1196,7 @@ int GameBrowseMenu::MainLoop()
 		gprintf("\tgameinfo Clicked\n");
 		int SelectedGame = GetSelectedGame();
 		gameInfo->ResetState();
-		if (SelectedGame >= 0 && SelectedGame < (s32) gameList.size())
+		if (SelectedGame >= 0 && SelectedGame < (s32)App.Library.Games.size())
 		{
 			SetState(STATE_DISABLED);
 			int choice = showGameInfo(SelectedGame, 0);
@@ -1215,7 +1214,7 @@ int GameBrowseMenu::MainLoop()
 			if(WindowPrompt(tr( "Parental Control" ), tr( "Are you sure you want to lock USB Loader GX?" ), tr( "Yes" ), tr( "No" )) == 1)
 			{
 				App.Settings.godmode = 0;
-				gameList.FilterList();
+				App.Library.Games.FilterList();
 				ReloadBrowser();
 			}
 		}
@@ -1230,7 +1229,7 @@ int GameBrowseMenu::MainLoop()
 				if(result == 1)
 					WindowPrompt( tr( "Correct Password" ), tr( "All the features of USB Loader GX are unlocked." ), tr( "OK" ));
 				App.Settings.godmode = 1;
-				gameList.FilterList();
+				App.Library.Games.FilterList();
 				ReloadBrowser();
 			}
 			else if(result < 0)
@@ -1263,7 +1262,7 @@ int GameBrowseMenu::MainLoop()
 		App.MainWindow->SetState(STATE_DEFAULT);
 		if(promptMenu.categoriesChanged())
 		{
-			gameList.FilterList();
+			App.Library.Games.FilterList();
 			ReloadBrowser();
 		}
 	}
@@ -1282,7 +1281,7 @@ int GameBrowseMenu::MainLoop()
 		{
 			App.Settings.LoaderMode = choice;
 
-			if((App.Settings.LoaderMode & MODE_WIIGAMES) && (gameList.GameCount() == 0))
+			if((App.Settings.LoaderMode & MODE_WIIGAMES) && (App.Library.Games.GameCount() == 0))
 			{
 				s32 wbfsinit = WBFS_Init(WBFS_DEVICE_USB);
 				if (wbfsinit < 0)
@@ -1295,7 +1294,7 @@ int GameBrowseMenu::MainLoop()
 				{
 					WBFS_ReInit(WBFS_DEVICE_USB);
 				}
-				gameList.ReadGameList();
+				App.Library.Games.ReadGameList();
 
 				if(App.Settings.ShowFreeSpace)
 				{
@@ -1304,9 +1303,9 @@ int GameBrowseMenu::MainLoop()
 				}
 			}
 
-			wString oldFilter(gameList.GetCurrentFilter());
-			App.Library.GameTitles.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
-			gameList.FilterList(oldFilter.c_str());
+			wString oldFilter(App.Library.Games.GetCurrentFilter());
+			App.Library.DisplayNames.LoadTitlesFromGameTDB(App.Settings.titlestxt_path, false);
+			App.Library.Games.FilterList(oldFilter.c_str());
 			ReloadBrowser();
 		}
 		loaderModeBtn->ResetState();
@@ -1315,7 +1314,7 @@ int GameBrowseMenu::MainLoop()
 	else if (App.Settings.gameDisplay == LIST_MODE && idBtn->GetState() == STATE_CLICKED)
 	{
 		gprintf("\tidBtn Clicked\n");
-		struct discHdr * header = gameList[GetSelectedGame()];
+		struct discHdr * header = App.Library.Games[GetSelectedGame()];
 		//enter new game ID
 		char entered[7];
 		snprintf(entered, sizeof(entered), "%s", (char *) header->id);
@@ -1323,9 +1322,9 @@ int GameBrowseMenu::MainLoop()
 		if (result == 1)
 		{
 			WBFS_ReIDGame(header->id, entered);
-			wString oldFilter(gameList.GetCurrentFilter());
-			gameList.ReadGameList();
-			gameList.FilterList(oldFilter.c_str());
+			wString oldFilter(App.Library.Games.GetCurrentFilter());
+			App.Library.Games.ReadGameList();
+			App.Library.Games.FilterList(oldFilter.c_str());
 			ReloadBrowser();
 		}
 		idBtn->ResetState();
@@ -1335,9 +1334,9 @@ int GameBrowseMenu::MainLoop()
 	{
 		gameSelectedOld = GetSelectedGame();
 		int gameSelected = gameSelectedOld;
-		if(gameSelected >= 0 && gameSelected < (s32) gameList.size())
+		if(gameSelected >= 0 && gameSelected < (s32)App.Library.Games.size())
 		{
-			struct discHdr *header = gameList[gameSelected];
+			struct discHdr *header = App.Library.Games[gameSelected];
 			LoadCover(header);
 			UpdateGameInfoText(header->id);
 		}
@@ -1352,8 +1351,8 @@ int GameBrowseMenu::MainLoop()
 
 	gameClicked = gameBrowser ? gameBrowser->GetClickedOption() : -1;
 
-	if(gameClicked >= 0 && gameClicked < (s32) gameList.size())
-		OpenClickedGame(gameList[gameClicked]);
+	if(gameClicked >= 0 && gameClicked < (s32)App.Library.Games.size())
+		OpenClickedGame(App.Library.Games[gameClicked]);
 
 	return returnMenu;
 }
@@ -1559,7 +1558,7 @@ int GameBrowseMenu::OpenClickedGame(struct discHdr *header)
 
 	if (choice == 1)
 	{
-		gameList.FilterList();
+		App.Library.Games.FilterList();
 		ReloadBrowser();
 		if(App.Settings.ShowFreeSpace)
 		{

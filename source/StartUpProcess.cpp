@@ -17,7 +17,6 @@
 #include "usbloader/usbstorage2.h"
 #include "usbloader/MountGamePartition.h"
 #include "usbloader/GameBooter.hpp"
-#include "usbloader/GameList.h"
 #include "utils/tools.h"
 #include "sys.h"
 #include "Version.h"
@@ -268,11 +267,11 @@ int StartUpProcess::Execute()
 
 	gprintf("\tLoading config...%s\n", App.Settings.Load() ? "done" : "failed");
 	gprintf("\tLoading language...%s\n", App.Settings.LoadLanguage(App.Settings.language_path, CONSOLE_DEFAULT) ? "done" : "failed");
-	gprintf("\tLoading game settings...%s\n", App.Library.GameSettings.Load(App.Settings.ConfigPath) ? "done" : "failed");
-	gprintf("\tLoading game statistics...%s\n", App.Library.GameStatistics.Load(App.Settings.ConfigPath) ? "done" : "failed");
-	gprintf("\tLoading game categories...%s\n", App.Library.GameCategories.Load(App.Settings.ConfigPath) ? "done" : "failed");
+	gprintf("\tLoading game settings...%s\n", App.Library.Settings.Load(App.Settings.ConfigPath) ? "done" : "failed");
+	gprintf("\tLoading game statistics...%s\n", App.Library.Statistics.Load(App.Settings.ConfigPath) ? "done" : "failed");
+	gprintf("\tLoading game categories...%s\n", App.Library.Categories.Load(App.Settings.ConfigPath) ? "done" : "failed");
 	if (App.Settings.CacheTitles)
-		gprintf("\tLoading cached titles...%s\n", App.Library.GameTitles.ReadCachedTitles(App.Settings.titlestxt_path) ? "done" : "failed (using default)");
+		gprintf("\tLoading cached titles...%s\n", App.Library.DisplayNames.ReadCachedTitles(App.Settings.titlestxt_path) ? "done" : "failed (using default)");
 	if (App.Settings.LoaderIOS != IOS_GetVersion())
 	{
 		SetTextf("Reloading to config file's cIOS...\n");
@@ -365,17 +364,17 @@ int StartUpProcess::QuickGameBoot(const char * gameID)
 	MountGamePartition(false);
 
 	struct discHdr *header = NULL;
-	for (int i = 0; i < gameList.size(); ++i)
+	for (int i = 0; i < App.Library.Games.size(); ++i)
 	{
-		if (strncasecmp((char *)gameList[i]->id, gameID, 6) == 0)
-			header = gameList[i];
+		if (strncasecmp((char *)App.Library.Games[i]->id, gameID, 6) == 0)
+			header = App.Library.Games[i];
 	}
 
 	if (!header)
 		return -1;
 
-	App.Library.GameStatistics.SetPlayCount(header->id, App.Library.GameStatistics.GetPlayCount(header->id) + 1);
-	App.Library.GameStatistics.Save();
+	App.Library.Statistics.SetPlayCount(header->id, App.Library.Statistics.GetPlayCount(header->id) + 1);
+	App.Library.Statistics.Save();
 
 	return GameBooter::BootGame(header);
 }

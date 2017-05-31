@@ -13,7 +13,6 @@
 #include <unistd.h>
 #include "gui_image_async.h"
 #include "gui_gamecarousel.h"
-#include "usbloader/GameList.h"
 #include "App.h"
 #include "GUI/LoadCoverImage.h"
 #include "themes/CTheme.h"
@@ -51,8 +50,8 @@ GuiGameCarousel::GuiGameCarousel(int w, int h, const char *themePath, int offset
 {
 	width = w;
 	height = h;
-	pagesize = (gameList.size() < 11) ? gameList.size() : 11;
-	listOffset = (gameList.size() < 11) ? LIMIT(offset, 0, MAX(0, gameList.size()-1)) : LIMIT(offset, 0, MAX(0, gameList.size()-1))-2;
+	pagesize = (App.Library.Games.size() < 11) ? App.Library.Games.size() : 11;
+	listOffset = (App.Library.Games.size() < 11) ? LIMIT(offset, 0, MAX(0, App.Library.Games.size() - 1)) : LIMIT(offset, 0, MAX(0, App.Library.Games.size() - 1)) - 2;
 	selectable = true;
 	selectedItem = -1;
 	clickedItem = -1;
@@ -144,27 +143,27 @@ GuiGameCarousel::~GuiGameCarousel()
 
 void GuiGameCarousel::setListOffset(int off)
 {
-	LOCK( this );
-	if(gameList.size() < 11)
-		listOffset = MIN(off, gameList.size()-1);
+	LOCK(this);
+	if (App.Library.Games.size() < 11)
+		listOffset = MIN(off, App.Library.Games.size() - 1);
 	else
-		listOffset = MIN(off, gameList.size()) - 2;
+		listOffset = MIN(off, App.Library.Games.size()) - 2;
 
 	Refresh();
 }
 
 int GuiGameCarousel::getListOffset() const
 {
-	if(gameList.size() < 11)
+	if (App.Library.Games.size() < 11)
 		return listOffset;
 	else
-		return (listOffset + 2) % gameList.size();
+		return (listOffset + 2) % App.Library.Games.size();
 }
 
 void GuiGameCarousel::SetSelectedOption(int ind)
 {
 	LOCK(this);
-	selectedItem = LIMIT(ind, 0, MIN(pagesize, MAX(0, gameList.size()-1)));
+	selectedItem = LIMIT(ind, 0, MIN(pagesize, MAX(0, App.Library.Games.size() - 1)));
 }
 
 void GuiGameCarousel::Refresh()
@@ -174,13 +173,13 @@ void GuiGameCarousel::Refresh()
 		//------------------------
 		// Index
 		//------------------------
-		gameIndex[i] = GetGameIndex( i, listOffset, gameList.size() );
+		gameIndex[i] = GetGameIndex(i, listOffset, App.Library.Games.size());
 
 		//------------------------
 		// Image
 		//------------------------
 		delete coverImg[i];
-		coverImg[i] = new (std::nothrow) GuiImageAsync(GameCarouselLoadCoverImage, gameList[gameIndex[i]], sizeof(struct discHdr), &noCover);
+		coverImg[i] = new (std::nothrow) GuiImageAsync(GameCarouselLoadCoverImage, App.Library.Games[gameIndex[i]], sizeof(struct discHdr), &noCover);
 		if (coverImg[i]) coverImg[i]->SetWidescreen(App.Settings.widescreen);
 
 		//------------------------
@@ -203,8 +202,8 @@ void GuiGameCarousel::Refresh()
 
 void GuiGameCarousel::SetFocus(int f)
 {
-	LOCK( this );
-	if (!gameList.size()) return;
+	LOCK(this);
+	if (!App.Library.Games.size()) return;
 
 	for (int i = 0; i < pagesize; i++)
 		game[i]->ResetState();
@@ -214,7 +213,7 @@ void GuiGameCarousel::SetFocus(int f)
 
 void GuiGameCarousel::ResetState()
 {
-	LOCK( this );
+	LOCK(this);
 	if (state != STATE_DISABLED)
 	{
 		state = STATE_DEFAULT;
@@ -229,7 +228,7 @@ void GuiGameCarousel::ResetState()
 
 int GuiGameCarousel::GetClickedOption()
 {
-	LOCK( this );
+	LOCK(this);
 	int found = -1;
 	if (clickedItem >= 0)
 	{
@@ -245,7 +244,7 @@ int GuiGameCarousel::GetClickedOption()
 
 int GuiGameCarousel::GetSelectedOption()
 {
-	LOCK( this );
+	LOCK(this);
 	int found = -1;
 	for (int i = 0; i < pagesize; i++)
 	{
@@ -264,15 +263,15 @@ int GuiGameCarousel::GetSelectedOption()
  */
 void GuiGameCarousel::Draw()
 {
-	LOCK( this );
-	if (!this->IsVisible() || !gameList.size()) return;
+	LOCK(this);
+	if (!this->IsVisible() || !App.Library.Games.size()) return;
 
 	for (int i = 0; i < pagesize; i++)
 		game[i]->Draw();
 
 	gamename->Draw();
 
-	if (gameList.size() > 6)
+	if (App.Library.Games.size() > 6)
 	{
 		btnRight->Draw();
 		btnLeft->Draw();
@@ -288,8 +287,8 @@ void GuiGameCarousel::Draw()
 
 void GuiGameCarousel::Update(GuiTrigger * t)
 {
-	LOCK( this );
-	if (state == STATE_DISABLED || !t || !gameList.size() || !pagesize) return;
+	LOCK(this);
+	if (state == STATE_DISABLED || !t || !App.Library.Games.size() || !pagesize) return;
 
 	btnRight->Update(t);
 	btnLeft->Update(t);
@@ -323,13 +322,13 @@ void GuiGameCarousel::Update(GuiTrigger * t)
 		if (selectedItem >= 0)
 		{
 			game[selectedItem]->SetEffect(EFFECT_SCALE, 1, 130);
-			gamename->SetText(App.Library.GameTitles.GetTitle(gameList[gameIndex[selectedItem]]));
+			gamename->SetText(App.Library.DisplayNames.GetTitle(App.Library.Games[gameIndex[selectedItem]]));
 		}
-		else gamename->SetText((char*) NULL);
+		else gamename->SetText((char*)NULL);
 		if (selectedItem_old >= 0) game[selectedItem_old]->SetEffect(EFFECT_SCALE, -1, 100);
 	}
 	// navigation
-	if (gameList.size() > 6)
+	if (App.Library.Games.size() > 6)
 	{
 
 		int newspeed = 0;
@@ -339,8 +338,8 @@ void GuiGameCarousel::Update(GuiTrigger * t)
 			u32 buttons = t->wpad.btns_h | t->wupcdata.btns_h;
 			u32 buttonsPAD = t->pad.btns_h;
 			if (!((buttons & WPAD_BUTTON_A) || (buttons & WPAD_BUTTON_MINUS) ||
-				  (buttons & WPAD_CLASSIC_BUTTON_A) || (buttons & WPAD_CLASSIC_BUTTON_MINUS) ||
-				  (buttonsPAD & PAD_BUTTON_A) || (buttonsPAD & PAD_TRIGGER_L)  || t->Left()))
+				(buttons & WPAD_CLASSIC_BUTTON_A) || (buttons & WPAD_CLASSIC_BUTTON_MINUS) ||
+				(buttonsPAD & PAD_BUTTON_A) || (buttonsPAD & PAD_TRIGGER_L) || t->Left()))
 			{
 				btnLeft->ResetState();
 				return;
@@ -355,8 +354,8 @@ void GuiGameCarousel::Update(GuiTrigger * t)
 			u32 buttons = t->wpad.btns_h | t->wupcdata.btns_h;
 			u32 buttonsPAD = t->pad.btns_h;
 			if (!((buttons & WPAD_BUTTON_A) || (buttons & WPAD_BUTTON_PLUS) ||
-				  (buttons & WPAD_CLASSIC_BUTTON_A) || (buttons & WPAD_CLASSIC_BUTTON_PLUS) ||
-				  (buttonsPAD & PAD_BUTTON_A) || (buttonsPAD & PAD_TRIGGER_R)  || t->Right()))
+				(buttons & WPAD_CLASSIC_BUTTON_A) || (buttons & WPAD_CLASSIC_BUTTON_PLUS) ||
+				(buttonsPAD & PAD_BUTTON_A) || (buttonsPAD & PAD_TRIGGER_R) || t->Right()))
 			{
 				btnRight->ResetState();
 				return;
@@ -383,7 +382,7 @@ void GuiGameCarousel::Update(GuiTrigger * t)
 		if (speed > 0) // rotate right
 		{
 			GuiButton *tmpButton;
-			listOffset = OFFSETLIMIT(listOffset - 1, gameList.size()); // set the new listOffset
+			listOffset = OFFSETLIMIT(listOffset - 1, App.Library.Games.size()); // set the new listOffset
 			// Save right Button + TollTip and destroy right Image + Image-Data
 			delete coverImg[pagesize - 1];
 			coverImg[pagesize - 1] = NULL;
@@ -399,26 +398,26 @@ void GuiGameCarousel::Update(GuiTrigger * t)
 			}
 			// set saved Button & gameIndex to right
 			gameIndex[0] = listOffset;
-			coverImg[0] = new GuiImageAsync(GameCarouselLoadCoverImage, gameList[gameIndex[0]], sizeof(struct discHdr),
-					&noCover);
-			coverImg[0] ->SetWidescreen(App.Settings.widescreen);
+			coverImg[0] = new GuiImageAsync(GameCarouselLoadCoverImage, App.Library.Games[gameIndex[0]], sizeof(struct discHdr),
+				&noCover);
+			coverImg[0]->SetWidescreen(App.Settings.widescreen);
 
 			game[0] = tmpButton;
-			game[0] ->SetImage(coverImg[0]);
+			game[0]->SetImage(coverImg[0]);
 
 			for (int i = 0; i < pagesize; i++)
 			{
 				game[i]->StopEffect();
 				game[i]->ResetState();
 				game[i]->SetEffect(EFFECT_GOROUND, speed, DEG_OFFSET, RADIUS, 270 - (pagesize - 2 * i + 1) * DEG_OFFSET
-						/ 2, 1, 0, RADIUS);
+					/ 2, 1, 0, RADIUS);
 				game[i]->UpdateEffects(); // rotate one step for liquid scrolling
 			}
 		}
 		else if (speed < 0) // rotate left
 		{
 			GuiButton *tmpButton;
-			listOffset = OFFSETLIMIT(listOffset + 1, gameList.size()); // set the new listOffset
+			listOffset = OFFSETLIMIT(listOffset + 1, App.Library.Games.size()); // set the new listOffset
 			// Save left Button + TollTip and destroy left Image + Image-Data
 			delete coverImg[0];
 			coverImg[0] = NULL;
@@ -434,20 +433,20 @@ void GuiGameCarousel::Update(GuiTrigger * t)
 			}
 			// set saved Button & gameIndex to right
 			int ii = pagesize - 1;
-			gameIndex[ii] = OFFSETLIMIT(listOffset + ii, gameList.size());
-			coverImg[ii] = new GuiImageAsync(GameCarouselLoadCoverImage, gameList[gameIndex[ii]],
-					sizeof(struct discHdr), &noCover);
-			coverImg[ii] ->SetWidescreen(App.Settings.widescreen);
+			gameIndex[ii] = OFFSETLIMIT(listOffset + ii, App.Library.Games.size());
+			coverImg[ii] = new GuiImageAsync(GameCarouselLoadCoverImage, App.Library.Games[gameIndex[ii]],
+				sizeof(struct discHdr), &noCover);
+			coverImg[ii]->SetWidescreen(App.Settings.widescreen);
 
 			game[ii] = tmpButton;
-			game[ii] ->SetImage(coverImg[ii]);
+			game[ii]->SetImage(coverImg[ii]);
 
 			for (int i = 0; i < pagesize; i++)
 			{
 				game[i]->StopEffect();
 				game[i]->ResetState();
 				game[i]->SetEffect(EFFECT_GOROUND, speed, DEG_OFFSET, RADIUS, 270 - (pagesize - 2 * i - 3) * DEG_OFFSET
-						/ 2, 1, 0, RADIUS);
+					/ 2, 1, 0, RADIUS);
 				game[i]->UpdateEffects(); // rotate one step for liquid scrolling
 			}
 		}
@@ -455,4 +454,3 @@ void GuiGameCarousel::Update(GuiTrigger * t)
 	}
 	if (updateCB) updateCB(this);
 }
-

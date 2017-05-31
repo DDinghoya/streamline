@@ -20,13 +20,12 @@ misrepresented as being the original software.
 3. This notice may not be removed or altered from any source
 distribution.
 */
-#ifndef _BANNERASYNC_H_
-#define _BANNERASYNC_H_
+#pragma once
 
 #include <vector>
 #include <queue>
 #include <string>
-#include "usbloader/GameList.h"
+#include "App.h"
 #include "Banner.h"
 
 using namespace std;
@@ -35,7 +34,7 @@ class BannerAsync : public Banner
 {
 public:
 
-	BannerAsync( const discHdr *header );
+	BannerAsync(const discHdr *header);
 	virtual ~BannerAsync();
 
 	static void ThreadInit(void);
@@ -60,5 +59,3 @@ private:
 	static bool SleepThread;
 	static bool CloseThread;
 };
-
-#endif /*_GUIIMAGEASYNC_H_*/

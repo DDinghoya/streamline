@@ -5,7 +5,6 @@
 #include "Input/wpad.h"
 #include "App.h"
 #include "themes/CTheme.h"
-#include "usbloader/GameList.h"
 
 class cSearchButton
 {
@@ -69,7 +68,7 @@ GuiSearchBar::GuiSearchBar() :
 	searchModeBtn = new cSearchButton(charstr, &keyImageData, &keyOverImageData, 10, 10, &trig, btnSoundOver, btnSoundClick);
 	this->Append(&searchModeBtn->button);
 
-	text.SetText(gameList.GetCurrentFilter());
+	text.SetText(App.Library.Games.GetCurrentFilter());
 	text.SetPosition(55, 15);
 	text.SetAlignment(ALIGN_LEFT, ALIGN_TOP);
 	text.SetWidescreen(App.Settings.widescreen);
@@ -185,7 +184,7 @@ void GuiSearchBar::FilterList(std::vector<struct discHdr *> &List, wString &Game
 	{
 		struct discHdr *header = List.at(i);
 
-		wchar_t *gameName = charToWideChar(App.Library.GameTitles.GetTitle(header));
+		wchar_t *gameName = charToWideChar(App.Library.DisplayNames.GetTitle(header));
 		if (!gameName)
 		{
 			List.erase(List.begin() + i);

@@ -39,56 +39,56 @@ CategorySelectPrompt::CategorySelectPrompt(struct discHdr * header)
 
 void CategorySelectPrompt::onResetChanges()
 {
-	App.Library.GameCategories.Load(App.Settings.ConfigPath);
+	App.Library.Categories.Load(App.Settings.ConfigPath);
 }
 
 void CategorySelectPrompt::onBrowserRefresh()
 {
 	browser->Clear();
-	App.Library.GameCategories.CategoryList.goToFirst();
+	App.Library.Categories.CategoryList.goToFirst();
 	do
 	{
 		bool checked = false;
-		const vector<unsigned int> gameCat = App.Library.GameCategories[gameHeader->id];
+		const vector<unsigned int> gameCat = App.Library.Categories[gameHeader->id];
 
 		for (u32 i = 0; i < gameCat.size(); ++i)
 		{
-			if (gameCat[i] == App.Library.GameCategories.CategoryList.getCurrentID())
+			if (gameCat[i] == App.Library.Categories.CategoryList.getCurrentID())
 			{
 				checked = true;
 				break;
 			}
 		}
 
-		browser->AddEntrie(tr(App.Library.GameCategories.CategoryList.getCurrentName().c_str()), checked);
-	} while (App.Library.GameCategories.CategoryList.goToNext());
+		browser->AddEntrie(tr(App.Library.Categories.CategoryList.getCurrentName().c_str()), checked);
+	} while (App.Library.Categories.CategoryList.goToNext());
 
-	App.Library.GameCategories.CategoryList.goToFirst();
+	App.Library.Categories.CategoryList.goToFirst();
 	browser->RefreshList();
 }
 
 void CategorySelectPrompt::OnCheckboxClick(GuiCheckbox *checkBox, int index)
 {
-	App.Library.GameCategories.CategoryList.goToFirst();
+	App.Library.Categories.CategoryList.goToFirst();
 	for (int i = 0; i < index; ++i)
-		App.Library.GameCategories.CategoryList.goToNext();
+		App.Library.Categories.CategoryList.goToNext();
 
-	if (App.Library.GameCategories.CategoryList.getCurrentID() == 0)
+	if (App.Library.Categories.CategoryList.getCurrentID() == 0)
 	{
 		checkBox->SetChecked(true);
 		return;
 	}
 
-	const vector<unsigned int> gameCat = App.Library.GameCategories[gameHeader->id];
+	const vector<unsigned int> gameCat = App.Library.Categories[gameHeader->id];
 
 	u32 i;
 	for (i = 0; i < gameCat.size(); ++i)
 	{
-		if (gameCat[i] == App.Library.GameCategories.CategoryList.getCurrentID())
+		if (gameCat[i] == App.Library.Categories.CategoryList.getCurrentID())
 		{
 			if (!checkBox->IsChecked())
 			{
-				App.Library.GameCategories.RemoveCategory((const char *)gameHeader->id, gameCat[i]);
+				App.Library.Categories.RemoveCategory((const char *)gameHeader->id, gameCat[i]);
 				markChanged();
 			}
 			break;
@@ -97,7 +97,7 @@ void CategorySelectPrompt::OnCheckboxClick(GuiCheckbox *checkBox, int index)
 
 	if (i == gameCat.size() && checkBox->IsChecked())
 	{
-		App.Library.GameCategories.SetCategory(gameHeader->id, App.Library.GameCategories.CategoryList.getCurrentID());
+		App.Library.Categories.SetCategory(gameHeader->id, App.Library.Categories.CategoryList.getCurrentID());
 		markChanged();
 	}
 }

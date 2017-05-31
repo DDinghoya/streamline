@@ -22,7 +22,6 @@
 #include "wbfs_fat.h"
 #include "prompts/ProgressWindow.h"
 #include "usbloader/wbfs.h"
-#include "usbloader/GameList.h"
 #include "utils/tools.h"
 #include "wbfs_rw.h"
 
@@ -39,7 +38,7 @@ extern int install_abort_signal;
 inline bool isGameID(const char *id)
 {
 	for (int i = 0; i < 6; i++)
-		if (!isalnum((int) id[i]))
+		if (!isalnum((int)id[i]))
 			return false;
 
 	return true;
@@ -55,7 +54,7 @@ s32 Wbfs_Fat::Open()
 {
 	Close();
 
-	if(partition < (u32) DeviceHandler::GetUSBPartitionCount())
+	if (partition < (u32)DeviceHandler::GetUSBPartitionCount())
 	{
 		PartitionHandle *usbHandle = DeviceHandler::Instance()->GetUSBHandleFromPartition(partition);
 		int portPart = DeviceHandler::PartitionToPortPartition(partition);
@@ -94,13 +93,13 @@ wbfs_disc_t* Wbfs_Fat::OpenDisc(u8 *discid)
 		int fd;
 		fd = open(fname, O_RDONLY);
 		if (fd == -1) return NULL;
-		wbfs_disc_t *iso_file = (wbfs_disc_t *) calloc(sizeof(wbfs_disc_t), 1);
+		wbfs_disc_t *iso_file = (wbfs_disc_t *)calloc(sizeof(wbfs_disc_t), 1);
 		if (iso_file == NULL) return NULL;
 		// mark with a special wbfs_part
 		wbfs_iso_file.wbfs_sec_sz = hdd_sector_size[usbport];
 		iso_file->p = &wbfs_iso_file;
-		iso_file->header = (wbfs_disc_info_t*) malloc(sizeof(wbfs_disc_info_t));
-		if(!iso_file->header)
+		iso_file->header = (wbfs_disc_info_t*)malloc(sizeof(wbfs_disc_info_t));
+		if (!iso_file->header)
 		{
 			free(iso_file);
 			return NULL;
@@ -114,7 +113,7 @@ wbfs_disc_t* Wbfs_Fat::OpenDisc(u8 *discid)
 	if (!part) return NULL;
 
 	wbfs_disc_t *disc = wbfs_open_disc(part, discid);
-	if(!disc)
+	if (!disc)
 	{
 		ClosePart(part);
 		return NULL;
@@ -151,12 +150,12 @@ s32 Wbfs_Fat::GetCount(u32 *count)
 
 s32 Wbfs_Fat::GetHeaders(struct discHdr *outbuf, u32 cnt, u32 len)
 {
-	if(cnt*len > fat_hdr_count*sizeof(struct discHdr))
+	if (cnt*len > fat_hdr_count * sizeof(struct discHdr))
 		return -1;
 
 	memcpy(outbuf, fat_hdr_list, cnt*len);
 
-	if(fat_hdr_list)
+	if (fat_hdr_list)
 		free(fat_hdr_list);
 	fat_hdr_list = NULL;
 	fat_hdr_count = 0;
@@ -166,7 +165,7 @@ s32 Wbfs_Fat::GetHeaders(struct discHdr *outbuf, u32 cnt, u32 len)
 
 s32 Wbfs_Fat::AddGame(void)
 {
-	static struct discHdr header ATTRIBUTE_ALIGN( 32 );
+	static struct discHdr header ATTRIBUTE_ALIGN(32);
 	char path[MAX_FAT_PATH];
 	wbfs_t *part = NULL;
 	s32 ret;
@@ -179,13 +178,13 @@ s32 Wbfs_Fat::AddGame(void)
 	part = CreatePart(header.id, path);
 	if (!part) return -1;
 	/* Add game to device */
-	partition_selector_t part_sel = (partition_selector_t) App.Settings.InstallPartitions;
+	partition_selector_t part_sel = (partition_selector_t)App.Settings.InstallPartitions;
 
 	ret = wbfs_add_disc(part, __ReadDVD, NULL, ShowProgress, part_sel, 0);
 	wbfs_trim(part);
 	ClosePart(part);
 
-	if(install_abort_signal)
+	if (install_abort_signal)
 		RemoveGame(header.id);
 	if (ret < 0) return ret;
 
@@ -219,7 +218,7 @@ s32 Wbfs_Fat::RemoveGame(u8 *discid)
 		snprintf(name, sizeof(name), dirent->d_name);
 		if (name[0] == '.') continue;
 		if (name[6] != '_') continue;
-		if (strncasecmp(name, (char*) discid, 6) != 0) continue;
+		if (strncasecmp(name, (char*)discid, 6) != 0) continue;
 		p = strrchr(name, '.');
 		if (!p) continue;
 		if (strcasecmp(p, ".txt") != 0) continue;
@@ -241,9 +240,9 @@ s32 Wbfs_Fat::DiskSpace(f32 *used, f32 *free)
 	static int game_count = 0;
 
 	//! Since it's freaken slow, only refresh on new gamecount
-	if(used_cached == 0.0 || game_count != gameList.GameCount())
+	if (used_cached == 0.0 || game_count != App.Library.Games.GameCount())
 	{
-		game_count = gameList.GameCount();
+		game_count = App.Library.Games.GameCount();
 	}
 	else
 	{
@@ -262,8 +261,8 @@ s32 Wbfs_Fat::DiskSpace(f32 *used, f32 *free)
 	if (ret) return -1;
 
 	/* FS size in GB */
-	size = (f32) wbfs_fat_vfs.f_frsize * (f32) wbfs_fat_vfs.f_blocks / GB_SIZE;
-	*free = free_cached = (f32) wbfs_fat_vfs.f_frsize * (f32) wbfs_fat_vfs.f_bfree / GB_SIZE;
+	size = (f32)wbfs_fat_vfs.f_frsize * (f32)wbfs_fat_vfs.f_blocks / GB_SIZE;
+	*free = free_cached = (f32)wbfs_fat_vfs.f_frsize * (f32)wbfs_fat_vfs.f_bfree / GB_SIZE;
 	*used = used_cached = size - *free;
 
 	return 0;
@@ -271,10 +270,10 @@ s32 Wbfs_Fat::DiskSpace(f32 *used, f32 *free)
 
 s32 Wbfs_Fat::RenameGame(u8 *discid, const void *newname)
 {
-	wbfs_t *part = OpenPart((char *) discid);
+	wbfs_t *part = OpenPart((char *)discid);
 	if (!part) return -1;
 
-	s32 ret = wbfs_ren_disc(part, discid, (u8*) newname);
+	s32 ret = wbfs_ren_disc(part, discid, (u8*)newname);
 
 	ClosePart(part);
 
@@ -283,10 +282,10 @@ s32 Wbfs_Fat::RenameGame(u8 *discid, const void *newname)
 
 s32 Wbfs_Fat::ReIDGame(u8 *discid, const void *newID)
 {
-	wbfs_t *part = OpenPart((char *) discid);
+	wbfs_t *part = OpenPart((char *)discid);
 	if (!part) return -1;
 
-	s32 ret = wbfs_rID_disc(part, discid, (u8*) newID);
+	s32 ret = wbfs_rID_disc(part, discid, (u8*)newID);
 
 	ClosePart(part);
 
@@ -297,7 +296,7 @@ s32 Wbfs_Fat::ReIDGame(u8 *discid, const void *newID)
 		s32 cnt = 0x31;
 
 		Filename(discid, fname, sizeof(fname), NULL);
-		Filename((u8*) newID, fnamenew, sizeof(fnamenew), NULL);
+		Filename((u8*)newID, fnamenew, sizeof(fnamenew), NULL);
 
 		int stringlength = strlen(fname);
 
@@ -317,7 +316,7 @@ s32 Wbfs_Fat::ReIDGame(u8 *discid, const void *newID)
 u64 Wbfs_Fat::EstimateGameSize()
 {
 	wbfs_t *part = NULL;
-	u64 size = (u64) 143432 * 2 * 0x8000ULL;
+	u64 size = (u64)143432 * 2 * 0x8000ULL;
 	u32 n_sector = size / hdd_sector_size[usbport];
 
 	// init a temporary dummy part
@@ -327,7 +326,7 @@ u64 Wbfs_Fat::EstimateGameSize()
 	wbfs_set_force_mode(0);
 	if (!part) return -1;
 
-	partition_selector_t part_sel = (partition_selector_t) App.Settings.InstallPartitions;
+	partition_selector_t part_sel = (partition_selector_t)App.Settings.InstallPartitions;
 
 	u64 estimated_size = wbfs_estimate_disc(part, __ReadDVD, NULL, part_sel);
 
@@ -364,19 +363,19 @@ bool Wbfs_Fat::CheckLayoutB(char *fname, int len, u8* id, char *fname_title)
 void Wbfs_Fat::AddHeader(struct discHdr *discHeader)
 {
 	//! First allocate before reallocating
-	if(!fat_hdr_list)
+	if (!fat_hdr_list)
 		fat_hdr_list = (struct discHdr *) malloc(sizeof(struct discHdr));
 
-	struct discHdr *tmpList = (struct discHdr *) realloc(fat_hdr_list, (fat_hdr_count+1) * sizeof(struct discHdr));
-	if(!tmpList)
+	struct discHdr *tmpList = (struct discHdr *) realloc(fat_hdr_list, (fat_hdr_count + 1) * sizeof(struct discHdr));
+	if (!tmpList)
 		return; //out of memory, keep the list until now and stop
 
-	for(int j = 0; j < 6; ++j)
-		discHeader->id[j] = toupper((int) discHeader->id[j]);
+	for (int j = 0; j < 6; ++j)
+		discHeader->id[j] = toupper((int)discHeader->id[j]);
 
 	fat_hdr_list = tmpList;
 	memcpy(&fat_hdr_list[fat_hdr_count], discHeader, sizeof(struct discHdr));
-	App.Library.GameTitles.SetGameTitle(discHeader->id, discHeader->title);
+	App.Library.DisplayNames.SetGameTitle(discHeader->id, discHeader->title);
 	fat_hdr_count++;
 }
 
@@ -396,7 +395,7 @@ s32 Wbfs_Fat::GetHeadersCount()
 	DIR *dir_iter;
 	struct dirent *dirent;
 
-	if(fat_hdr_list)
+	if (fat_hdr_list)
 		free(fat_hdr_list);
 	fat_hdr_list = NULL;
 	fat_hdr_count = 0;
@@ -418,8 +417,8 @@ s32 Wbfs_Fat::GetHeadersCount()
 		*fname_title = 0;
 
 		const char * fileext = strrchr(fname, '.');
-		if(fileext && (strcasecmp(fileext, ".wbfs") == 0 ||
-		   strcasecmp(fileext, ".iso") == 0 || strcasecmp(fileext, ".ciso") == 0))
+		if (fileext && (strcasecmp(fileext, ".wbfs") == 0 ||
+			strcasecmp(fileext, ".iso") == 0 || strcasecmp(fileext, ".ciso") == 0))
 		{
 			// usb:/wbfs/GAMEID.wbfs
 			// or usb:/wbfs/GAMEID.iso
@@ -438,26 +437,26 @@ s32 Wbfs_Fat::GetHeadersCount()
 		{
 			snprintf(fname, sizeof(fname), "%s/%s", path, dirent->d_name);
 
-			if(stat(fname, &st) != 0)
+			if (stat(fname, &st) != 0)
 				continue;
 
-			is_dir = S_ISDIR( st.st_mode );
-			if(!is_dir) continue;
+			is_dir = S_ISDIR(st.st_mode);
+			if (!is_dir) continue;
 
 			snprintf(fname, sizeof(fname), "%s", dirent->d_name);
 
 			len = strlen(fname);
 			if (len < 6) continue; // less than "GAMEID"
 
-			if(len == 6)
+			if (len == 6)
 			{
 				// usb:/wbfs/GAMEID/GAMEID.wbfs
-				if(!isGameID(fname))
+				if (!isGameID(fname))
 					continue;
-				
+
 				memcpy(id, fname, 6);
 			}
-			else if(len >= 8 ) // GAMEID_Title or Title_[GameID]
+			else if (len >= 8) // GAMEID_Title or Title_[GameID]
 			{
 				int lay_a = 0;
 				int lay_b = 0;
@@ -471,7 +470,7 @@ s32 Wbfs_Fat::GetHeadersCount()
 					// usb:/wbfs/GAMEID_TITLE/GAMEID.wbfs
 					memcpy(id, fname, 6);
 
-					if(isGameID((char*) id))
+					if (isGameID((char*)id))
 					{
 						lay_a = 1;
 						snprintf(fname_title, sizeof(fname_title), &fname[7]);
@@ -483,13 +482,13 @@ s32 Wbfs_Fat::GetHeadersCount()
 			else // Todo : Add usb:/wbfs/Title/GAMEID.wbfs
 				continue;
 
-			
+
 			// check ahead, make sure it succeeds
-			snprintf(fpath, sizeof(fpath), "%s/%s/%.6s.wbfs", path, dirent->d_name, (char *) id);
+			snprintf(fpath, sizeof(fpath), "%s/%s/%.6s.wbfs", path, dirent->d_name, (char *)id);
 		}
 
 		// if we have titles.txt entry use that
-		title = App.Library.GameTitles.GetTitle(id);
+		title = App.Library.DisplayNames.GetTitle(id);
 		// if no titles.txt get title from dir or file name
 		if (strlen(title) == 0 && !App.Settings.ForceDiscTitles && strlen(fname_title) > 0)
 			title = fname_title;
@@ -498,14 +497,14 @@ s32 Wbfs_Fat::GetHeadersCount()
 		{
 			memset(&tmpHdr, 0, sizeof(tmpHdr));
 			memcpy(tmpHdr.id, id, 6);
-			strncpy(tmpHdr.title, title, sizeof(tmpHdr.title)-1);
+			strncpy(tmpHdr.title, title, sizeof(tmpHdr.title) - 1);
 			tmpHdr.magic = 0x5D1C9EA3;
 			AddHeader(&tmpHdr);
 			continue;
 		}
 
 		// Check for existing wbfs/iso/ciso file in the directory
-		if(is_dir)
+		if (is_dir)
 		{
 			if (stat(fpath, &st) != 0)
 			{
@@ -522,7 +521,7 @@ s32 Wbfs_Fat::GetHeadersCount()
 
 		fileext = strrchr(fpath, '.');
 		// Sanity check
-		if(!fileext)
+		if (!fileext)
 			continue;
 
 		// else read it from file directly
@@ -551,7 +550,7 @@ s32 Wbfs_Fat::GetHeadersCount()
 
 			u32 size;
 			// Get header
-			int ret = wbfs_get_disc_info(part, 0, (u8*) &tmpHdr, sizeof(struct discHdr), &size);
+			int ret = wbfs_get_disc_info(part, 0, (u8*)&tmpHdr, sizeof(struct discHdr), &size);
 			ClosePart(part);
 			if (ret == 0)
 			{
@@ -619,7 +618,7 @@ int Wbfs_Fat::FindFilename(u8 *id, char *fname, int len)
 	DIR *dir_iter;
 	struct dirent *dirent;
 	char gameID[7];
-	snprintf(gameID, sizeof(gameID), (char *) id);
+	snprintf(gameID, sizeof(gameID), (char *)id);
 	char path[MAX_FAT_PATH];
 	strcpy(path, wbfs_fs_drive);
 	strcat(path, wbfs_fat_dir);
@@ -630,35 +629,35 @@ int Wbfs_Fat::FindFilename(u8 *id, char *fname, int len)
 
 	while ((dirent = readdir(dir_iter)) != 0)
 	{
-		if(strcasestr(dirent->d_name, gameID) == NULL) continue;
+		if (strcasestr(dirent->d_name, gameID) == NULL) continue;
 
 		if (dirent->d_name[0] == '.') continue;
 		int n = strlen(dirent->d_name);
 		if (n < 6) continue;
 
 		const char *fileext = strrchr(dirent->d_name, '.');
-		if(fileext && (strcasecmp(fileext, ".wbfs") == 0 ||
-		   strcasecmp(fileext, ".iso") == 0 || strcasecmp(fileext, ".ciso") == 0))
+		if (fileext && (strcasecmp(fileext, ".wbfs") == 0 ||
+			strcasecmp(fileext, ".iso") == 0 || strcasecmp(fileext, ".ciso") == 0))
 		{
 			// TITLE [GAMEID].wbfs
 			char fn_title[TITLE_LEN];
 			u8 fn_id[8];
 			int n = fileext - dirent->d_name; // length withouth .wbfs
 			if (!CheckLayoutB(dirent->d_name, n, fn_id, fn_title)) continue;
-			if (strncasecmp((char*) fn_id, gameID, 6) != 0) continue;
+			if (strncasecmp((char*)fn_id, gameID, 6) != 0) continue;
 			snprintf(fname, len, "%s/%s", path, dirent->d_name);
 			if (stat(fname, &st) == 0) break;
 		}
 
 		snprintf(fname, len, "%s/%s", path, dirent->d_name);
 
-		if(stat(fname, &st) != 0)
+		if (stat(fname, &st) != 0)
 		{
 			*fname = 0;
 			continue;
 		}
 
-		if (S_ISDIR( st.st_mode ))
+		if (S_ISDIR(st.st_mode))
 		{
 			// look for .wbfs file
 			snprintf(fname, len, "%s/%s/%.6s.wbfs", path, dirent->d_name, gameID);
@@ -693,7 +692,7 @@ wbfs_t* Wbfs_Fat::OpenPart(char *fname)
 	wbfs_set_force_mode(1);
 
 	part = wbfs_open_partition(split_read_sector, nop_rw_sector, //readonly //split_write_sector,
-			&split, hdd_sector_size[usbport], split.total_sec, 0, 0);
+		&split, hdd_sector_size[usbport], split.total_sec, 0, 0);
 
 	wbfs_set_force_mode(0);
 
@@ -706,7 +705,7 @@ wbfs_t* Wbfs_Fat::OpenPart(char *fname)
 void Wbfs_Fat::ClosePart(wbfs_t* part)
 {
 	if (!part) return;
-	split_info_t *s = (split_info_t*) part->callback_data;
+	split_info_t *s = (split_info_t*)part->callback_data;
 	wbfs_close(part);
 	if (s) split_close(s);
 }
@@ -740,11 +739,11 @@ wbfs_t* Wbfs_Fat::CreatePart(u8 *id, char *path)
 {
 	char fname[MAX_FAT_PATH];
 	wbfs_t *part = NULL;
-	u64 size = (u64) 143432 * 2 * 0x8000ULL;
+	u64 size = (u64)143432 * 2 * 0x8000ULL;
 	u32 n_sector = size / 512;
 	int ret;
 
-	if(!CreateSubfolder(path)) // game subdir
+	if (!CreateSubfolder(path)) // game subdir
 	{
 		ProgressStop();
 		ShowError(tr("Error creating path: %s"), path);
@@ -754,10 +753,10 @@ wbfs_t* Wbfs_Fat::CreatePart(u8 *id, char *path)
 	// 1 cluster less than 4gb
 	u64 OPT_split_size = 4LL * 1024 * 1024 * 1024 - 32 * 1024;
 
-	if(App.Settings.GameSplit == GAMESPLIT_NONE && DeviceHandler::GetFilesystemType(USB1+App.Settings.partition) != PART_FS_FAT)
-		OPT_split_size = (u64) 100LL * 1024 * 1024 * 1024 - 32 * 1024;
+	if (App.Settings.GameSplit == GAMESPLIT_NONE && DeviceHandler::GetFilesystemType(USB1 + App.Settings.partition) != PART_FS_FAT)
+		OPT_split_size = (u64)100LL * 1024 * 1024 * 1024 - 32 * 1024;
 
-	else if(App.Settings.GameSplit == GAMESPLIT_2GB)
+	else if (App.Settings.GameSplit == GAMESPLIT_2GB)
 		// 1 cluster less than 2gb
 		OPT_split_size = (u64)2LL * 1024 * 1024 * 1024 - 32 * 1024;
 
@@ -795,7 +794,7 @@ void Wbfs_Fat::mk_gameid_title(struct discHdr *header, char *name, int re_space,
 	char title[100];
 	char id[7];
 
-	snprintf(id, sizeof(id), (char *) header->id);
+	snprintf(id, sizeof(id), (char *)header->id);
 	snprintf(title, sizeof(title), header->title);
 	CleanTitleCharacters(title);
 
@@ -838,7 +837,7 @@ void Wbfs_Fat::CleanTitleCharacters(char *title)
 	// replace silly chars with '_'
 	for (i = 0; i < len; i++)
 	{
-		if (strchr(invalid_path, title[i]) || iscntrl((int) title[i]))
+		if (strchr(invalid_path, title[i]) || iscntrl((int)title[i]))
 		{
 			title[i] = '_';
 		}
